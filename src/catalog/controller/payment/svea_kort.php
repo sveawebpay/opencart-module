@@ -33,7 +33,7 @@ class ControllerPaymentsveakort extends Controller {
              
         //New SHAHO edit
         //Import SVEA files
-        include('svea/svea_bv-old/SveaConfig.php');
+        include('svea/SveaConfig.php');
     
     
         //SVEA config settings
@@ -153,6 +153,7 @@ class ControllerPaymentsveakort extends Controller {
         $order->paymentMethod = 'CARD';
                 
         $paymentRequest->createPaymentMessage();
+
         $request = http_build_query($paymentRequest,'','&');
        
         echo '<html><head>

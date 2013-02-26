@@ -6,9 +6,7 @@
             <option value="true">Företag</option>
             <option value="false" selected="selected">Privat</option>
         </select><br /><br />
-        <?php if($countryCode == "SE"){?>
         <a id="getSSN" class="button"><span>Hämta personnr</span></a>
-        <?php } ?>
     </div>
     <br />
     
@@ -49,11 +47,7 @@ $('a#checkout').click(function() {
 <?php if (isset($invoiceFee)): ?>
 $('div.checkout-product table tfoot').append('<tr><td></td><td></td><td></td><td>Tillägg faktura:</td><td><?php echo $invoiceFee;?> kr</td></tr>');
 <?php endif; ?>
-
-<?php if($countryCode == "SE"){?>
 $("a#checkout").hide();
-<?php }?>
-
 $('#svea_fakt_div').hide();
 
 $('#getSSN').click(function() {
@@ -72,7 +66,9 @@ $('#getSSN').click(function() {
     		url: 'index.php?route=payment/svea_fakt/getAddress',
             data: {ssn: ssnNo, company: company},
     		success: function(msg) {
+    			
                 eval(msg);
+                
     		}		
     	});
     }

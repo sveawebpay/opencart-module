@@ -3,7 +3,7 @@
         <?php if (isset($delbet_fail)):
             echo $delbet_fail;
         else: ?>
-            Personnr: <input type="text" id="ssn" name="ssn" maxlength="10" /><a id="getPlan" class="button"><span>Payment Options</span></a>
+            Personnr: <input type="text" id="ssn" name="ssn" maxlength="10" /><a id="getSSN" class="button"><span>Hämta personnr</span></a>
         <?php endif; ?>
     </div>
     
@@ -33,11 +33,12 @@
 $('a#checkout').click(function() {
     
     var ssnNo = $('#ssn').val();
-    //var adressSelector = $('#svea_delbet_address').val();
+    var adressSelector = $('#svea_delbet_address').val();
     var paymentSelector = $('#svea_delbet_alt').val();
+    
 	$.ajax({ 
 		type: 'GET',
-        data: {ssn: ssnNo, paySel: paymentSelector},// addSel: adressSelector,
+        data: {ssn: ssnNo, addSel: adressSelector, paySel: paymentSelector},
 		url: 'index.php?route=payment/svea_delbet/confirm',
 		success: function(data) {
             if (data == 978){
@@ -53,7 +54,7 @@ $("a#checkout").hide();
 $('#svea_delbet_tr').hide();
 $('#svea_delbetalt_tr').hide();
 
-$('#getPlan').click(function() {
+$('#getSSN').click(function() {
    
     var ssnNo = $('#ssn').val();
     $("#svea_delbet_err").empty();
@@ -61,10 +62,9 @@ $('#getPlan').click(function() {
     $("#svea_delbet_alt").empty();
     
     if(ssnNo == ''){
-        alert('V�nligen fyll i personnr');
+        alert('Vänligen fyll i personnr');
     }else{
         getPaymentOptions();
-        /*
     	$.ajax({ 
     		type: 'GET',
     		url: 'index.php?route=payment/svea_delbet/getAddress',
@@ -73,7 +73,6 @@ $('#getPlan').click(function() {
                 eval(msg);                
     		}		
     	});
-        */
     }
 });
 

@@ -1,6 +1,6 @@
 <?php
 /**
- ** 
+ * 
  *@package com.epayment.util.implementation.xml;
  */
 class SveaXMLBuilder {

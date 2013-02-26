@@ -66,63 +66,28 @@
 				</select>
 		  </td>
         </tr>
-        
         <tr>
-            <td><?php echo $entry_sweden; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username_SE; ?>:</td>
+            <td><?php echo $entry_username; ?>:</td>
             <td>
-                <input name="svea_fakt_username_SE" type="text" value="<?php echo $svea_fakt_username_SE; ?>" />
+                <input name="svea_fakt_username" type="text" value="<?php echo $svea_fakt_username; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_password_SE; ?>:</td>
+            <td><?php echo $entry_password; ?>:</td>
             <td>
-                <input name="svea_fakt_password_SE" type="password" value="<?php echo $svea_fakt_password_SE; ?>" />
+                <input name="svea_fakt_password" type="password" value="<?php echo $svea_fakt_password; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_clientno_SE; ?>:</td>
+            <td><?php echo $entry_clientno; ?>:</td>
             <td>
-                <input name="svea_fakt_clientno_SE" type="text" value="<?php echo $svea_fakt_clientno_SE; ?>" />
+                <input name="svea_fakt_clientno" type="text" value="<?php echo $svea_fakt_clientno; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_invoicefee_SE; ?>:</td>
+            <td><?php echo $entry_invoicefee; ?>:</td>
             <td>
-                <input name="svea_invoicefee_SE" type="text" value="<?php echo $svea_invoicefee_SE; ?>" /> kr
-            </td>
-        </tr>
-        
-        
-        <tr>
-            <td><?php echo $entry_netherlands; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username_NL; ?>:</td>
-            <td>
-                <input name="svea_fakt_username_NL" type="text" value="<?php echo $svea_fakt_username_NL; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_password_NL; ?>:</td>
-            <td>
-                <input name="svea_fakt_password_NL" type="password" value="<?php echo $svea_fakt_password_NL; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_clientno_NL; ?>:</td>
-            <td>
-                <input name="svea_fakt_clientno_NL" type="text" value="<?php echo $svea_fakt_clientno_NL; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_invoicefee_NL; ?>:</td>
-            <td>
-                <input name="svea_invoicefee_NL" type="text" value="<?php echo $svea_invoicefee_NL; ?>" /> Euro
+                <input name="svea_invoicefee" type="text" value="<?php echo $svea_invoicefee; ?>" /> kr
             </td>
         </tr>
       </table>
