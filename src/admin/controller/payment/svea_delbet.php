@@ -33,7 +33,7 @@ class ControllerPaymentsveadelbet extends Controller {
         
 		$this->data['tab_general'] = $this->language->get('tab_general');
         
-        //Definitions lang
+        //Definitions lang //Anneli
         $this->data['entry_username'] = $this->language->get('entry_username');
         $this->data['entry_testmode'] = $this->language->get('entry_testmode');
         $this->data['entry_password'] = $this->language->get('entry_password');

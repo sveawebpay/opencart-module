@@ -1,7 +1,7 @@
 <?php 
 class ControllerPaymentsveafakt extends Controller {
 	private $error = array(); 
-	 
+	 //
 	public function index() { 
 		$this->load->language('payment/svea_fakt');
 
@@ -32,19 +32,35 @@ class ControllerPaymentsveafakt extends Controller {
         
 		$this->data['tab_general']        = $this->language->get('tab_general');
         
-        //Definitions lang
-        $this->data['entry_username']   = $this->language->get('entry_username');
-        $this->data['entry_testmode']   = $this->language->get('entry_testmode');
-        $this->data['entry_password']   = $this->language->get('entry_password');
-        $this->data['entry_clientno']   = $this->language->get('entry_clientno');
-        $this->data['entry_invoicefee'] = $this->language->get('entry_invoicefee');
+        //Definitions lang SE
+        $this->data['entry_sweden']        = $this->language->get('entry_sweden');
+        $this->data['entry_username_SE']   = $this->language->get('entry_username_SE');
+        $this->data['entry_password_SE']   = $this->language->get('entry_password_SE');
+        $this->data['entry_clientno_SE']   = $this->language->get('entry_clientno_SE');
+        $this->data['entry_invoicefee_SE'] = $this->language->get('entry_invoicefee_SE');
         
-        //Definitions settings
+        //Definitions lang NL
+        $this->data['entry_netherlands']   = $this->language->get('entry_netherlands');
+        $this->data['entry_username_NL']   = $this->language->get('entry_username_NL');
+        $this->data['entry_password_NL']   = $this->language->get('entry_password_NL');
+        $this->data['entry_clientno_NL']   = $this->language->get('entry_clientno_NL');
+        $this->data['entry_invoicefee_NL'] = $this->language->get('entry_invoicefee_NL');
+        
+        $this->data['entry_testmode']   = $this->language->get('entry_testmode');
+        
+        //Definitions settings SE
+        $this->data['svea_fakt_username_SE']   = $this->config->get('svea_fakt_username_SE');
+        $this->data['svea_fakt_password_SE']   = $this->config->get('svea_fakt_password_SE');
+        $this->data['svea_fakt_clientno_SE']   = $this->config->get('svea_fakt_clientno_SE');
+        $this->data['svea_invoicefee_SE']      = $this->config->get('svea_invoicefee_SE');
+        
+        //Definitions settings NL
+        $this->data['svea_fakt_username_NL']   = $this->config->get('svea_fakt_username_NL');
+        $this->data['svea_fakt_password_NL']   = $this->config->get('svea_fakt_password_NL');
+        $this->data['svea_fakt_clientno_NL']   = $this->config->get('svea_fakt_clientno_NL');
+        $this->data['svea_invoicefee_NL']      = $this->config->get('svea_invoicefee_NL');
+        
         $this->data['svea_fakt_sort_order'] = $this->config->get('svea_fakt_sort_order');
-        $this->data['svea_fakt_username']   = $this->config->get('svea_fakt_username');
-        $this->data['svea_fakt_password']   = $this->config->get('svea_fakt_password');
-        $this->data['svea_fakt_clientno']   = $this->config->get('svea_fakt_clientno');
-        $this->data['svea_invoicefee']      = $this->config->get('svea_invoicefee');
         $this->data['svea_fakt_testmode']   = $this->config->get('svea_fakt_testmode');
         
         

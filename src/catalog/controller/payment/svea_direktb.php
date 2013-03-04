@@ -31,7 +31,7 @@ class ControllerPaymentsveadirektb extends Controller {
             
         //New SHAHO edit
         //Import SVEA files
-        include('svea/SveaConfig.php');
+        include('svea/svea_bv-old/SveaConfig.php');
     
         //SVEA config settings
         $config = SveaConfig::getConfig();
@@ -155,7 +155,6 @@ class ControllerPaymentsveadirektb extends Controller {
         $paymentRequest->createPaymentMessage();
         
         $request = http_build_query($paymentRequest,'','&');
-       
         echo '<html><head>
                 <script type="text/javascript">
                     function doPost(){
@@ -232,7 +231,7 @@ class ControllerPaymentsveadirektb extends Controller {
 			'common/header'
 		);
         		
-        $this->data['text_message'] = "DessvÃ¤rre misslyckades betalningen.<br />Med anledningen: <br /><br />".$this->responseCodes($rejection)."<br /><br /><br />";
+        $this->data['text_message'] = "Dessvärre misslyckades betalningen.<br />Med anledningen: <br /><br />".$this->responseCodes($rejection)."<br /><br /><br />";
         $this->data['heading_title'] = "Betalning misslyckades";
         $this->data['footer'] = "";
                                 
