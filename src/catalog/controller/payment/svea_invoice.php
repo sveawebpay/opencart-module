@@ -1,6 +1,6 @@
 <?php
 
-class ControllerPaymentsveafakt extends Controller {
+class ControllerPaymentsveainvoice extends Controller {
 
     protected function index() {
         $this->data['button_confirm'] = $this->language->get('button_confirm');
@@ -30,17 +30,17 @@ class ControllerPaymentsveafakt extends Controller {
 
         $this->id = 'payment';
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_fakt.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/svea_fakt.tpl';
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_invoice.tpl')) {
+            $this->template = $this->config->get('config_template') . '/template/payment/svea_invoice.tpl';
         } else {
-            $this->template = 'default/template/payment/svea_fakt.tpl';
+            $this->template = 'default/template/payment/svea_invoice.tpl';
         }
 
         $this->render();
     }
 
     private function responseCodes($err) {
-        $this->load->language('payment/svea_fakt');
+        $this->load->language('payment/svea_invoice');
 
         switch ($err) {
 
@@ -75,7 +75,7 @@ class ControllerPaymentsveafakt extends Controller {
 
     public function confirm() {
         $this->load->model('checkout/order');
-        $this->load->model('payment/svea_fakt');
+        $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/coupon');
         include('svea/svea_soap/SveaConfig.php');
 
@@ -101,14 +101,14 @@ class ControllerPaymentsveafakt extends Controller {
         //Settings and fees
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
-        $username = $this->config->get('svea_fakt_username_' . $countryCode);
-        $pass = $this->config->get('svea_fakt_password_' . $countryCode);
-        $clientNo = $this->config->get('svea_fakt_clientno_' . $countryCode);
+        $username = $this->config->get('svea_invoice_username_' . $countryCode);
+        $pass = $this->config->get('svea_invoice_password_' . $countryCode);
+        $clientNo = $this->config->get('svea_invoice_clientno_' . $countryCode);
 
         $invoiceFee = $this->config->get('svea_invoicefee_' . $countryCode);
         $shipping = $this->cart->hasShipping();
         //$invoiceFee = $this->config->get('svea_invoicefee');
-        $testMode = $this->config->get('svea_fakt_testmode');
+        $testMode = $this->config->get('svea_invoice_testmode');
         //get svea_soap class library for WebserviceEu and set testmode
         $con = SveaConfig::getConfig();
         $con->setTestMode($testMode);
@@ -314,7 +314,7 @@ class ControllerPaymentsveafakt extends Controller {
                     }
 
 
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_fakt_order_status_id'));
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
                     echo 978;
                 } else {
 
@@ -327,18 +327,18 @@ class ControllerPaymentsveafakt extends Controller {
                 include ('svea/phpintegration/src/Includes.php');
               
                 $con = SveaConfig::getConfig();
-                $con->setTestMode($this->config->get('svea_fakt_testmode')); //set false if not in testmode
+                $con->setTestMode($this->config->get('svea_invoice_testmode')); //set false if not in testmode
 
-                $this->load->model('payment/svea_fakt');
+                $this->load->model('payment/svea_invoice');
                 $this->load->model('checkout/order');
                 $company = ($_GET['company'] == 'true') ? true : false;
                 //Get order information
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
                 $countryCode = $order['payment_iso_code_2'];
-                $username = $this->config->get('svea_fakt_username_' . $countryCode);
-                $pass = $this->config->get('svea_fakt_password_' . $countryCode);
-                $clientNo = $this->config->get('svea_fakt_clientno_' . $countryCode);
+                $username = $this->config->get('svea_invoice_username_' . $countryCode);
+                $pass = $this->config->get('svea_invoice_password_' . $countryCode);
+                $clientNo = $this->config->get('svea_invoice_clientno_' . $countryCode);
                 
                 $auth = new SveaAuth();
                 $auth->Username = $username;
@@ -357,9 +357,9 @@ class ControllerPaymentsveafakt extends Controller {
                 $response = $request->GetAddresses($object);
 
                 if (isset($response->GetAddressesResult->ErrorMessage)) {
-                    echo '  $("#svea_fakt_div").hide();
-                            $("#svea_fakt_err").show();
-                            $("#svea_fakt_err") . append("' . $response->GetAddressesResult->ErrorMessage . '");
+                    echo '  $("#svea_invoice_div").hide();
+                            $("#svea_invoice_err").show();
+                            $("#svea_invoice_err") . append("' . $response->GetAddressesResult->ErrorMessage . '");
                             $("a#checkout") . hide();
                         ';
                 } elseif (is_array($response->GetAddressesResult->Addresses->CustomerAddress)) {
@@ -375,11 +375,11 @@ class ControllerPaymentsveafakt extends Controller {
                         $addressSelector = (isset($info->AddressSelector)) ? $info->AddressSelector : "";
 
                         //Send back to user
-                        echo '$("#svea_fakt_address").append(\'<option id="adress_' . $key . '" value="' . $addressSelector . '">' . $legelName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');';
+                        echo '$("#svea_invoice_address").append(\'<option id="adress_' . $key . '" value="' . $addressSelector . '">' . $legelName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');';
                     }
 
-                    echo "$(\"#svea_fakt_err\").hide();";
-                    echo "$(\"#svea_fakt_div\").show();";
+                    echo "$(\"#svea_invoice_err\").hide();";
+                    echo "$(\"#svea_invoice_div\").show();";
                     echo "$(\"a#checkout\").show();";
                 } else if (isset($response->GetAddressesResult->Addresses->CustomerAddress)) {
                     $customerAddress = $response->GetAddressesResult->Addresses->CustomerAddress;
@@ -395,15 +395,15 @@ class ControllerPaymentsveafakt extends Controller {
                     $addressSelector = (isset($customerAddress->AddressSelector)) ? $customerAddress->AddressSelector : "";
                     //Send back to user
                     echo '
-        		$("#svea_fakt_address").append(\'<option id="adress" value="' . $addressSelector . '">' . $legalName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');
-                        $("#svea_fakt_div").show();
-                        $("#svea_fakt_err").hide();
+        		$("#svea_invoice_address").append(\'<option id="adress" value="' . $addressSelector . '">' . $legalName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');
+                        $("#svea_invoice_div").show();
+                        $("#svea_invoice_err").hide();
                         $("a#checkout").show();
                 ';
                 } else {
-                    echo '  $("#svea_fakt_div") . hide();
-                            $("#svea_fakt_err").show();
-                            $("#svea_fakt_err").append("No address was found.");
+                    echo '  $("#svea_invoice_div") . hide();
+                            $("#svea_invoice_err").show();
+                            $("#svea_invoice_err").append("No address was found.");
                             $("a#checkout").hide();
         		  ';
                 }

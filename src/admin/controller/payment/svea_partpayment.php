@@ -1,16 +1,16 @@
 <?php 
-class ControllerPaymentsveadelbet extends Controller {
+class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array(); 
 	 
 	public function index() { 
-		$this->load->language('payment/svea_delbet');
+		$this->load->language('payment/svea_partpayment');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		
 		$this->load->model('setting/setting');
 				
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
-			$this->model_setting_setting->editSetting('svea_delbet', $this->request->post);
+			$this->model_setting_setting->editSetting('svea_partpayment', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 			
@@ -41,11 +41,11 @@ class ControllerPaymentsveadelbet extends Controller {
         $this->data['entry_invoicefee'] = $this->language->get('entry_invoicefee');
         
         //Definitions settings
-        $this->data['svea_delbet_sort_order'] = $this->config->get('svea_delbet_sort_order');
+        $this->data['svea_partpayment_sort_order'] = $this->config->get('svea_partpayment_sort_order');
         $this->data['svea_username'] = $this->config->get('svea_username');
         $this->data['svea_password'] = $this->config->get('svea_password');
-        $this->data['svea_delbet_clientno'] = $this->config->get('svea_delbet_clientno');
-        $this->data['svea_delbet_testmode'] = $this->config->get('svea_delbet_testmode');
+        $this->data['svea_partpayment_clientno'] = $this->config->get('svea_partpayment_clientno');
+        $this->data['svea_partpayment_testmode'] = $this->config->get('svea_partpayment_testmode');
         
         
  		if (isset($this->error['warning'])) {
@@ -69,54 +69,54 @@ class ControllerPaymentsveadelbet extends Controller {
    		);
 		
    		$this->document->breadcrumbs[] = array(
-       		'href'      => HTTPS_SERVER . 'index.php?route=payment/svea_delbet&token=' . $this->session->data['token'],
+       		'href'      => HTTPS_SERVER . 'index.php?route=payment/svea_partpayment&token=' . $this->session->data['token'],
        		'text'      => $this->language->get('heading_title'),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_delbet&token=' . $this->session->data['token'];
+		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_partpayment&token=' . $this->session->data['token'];
 
 		$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];	
 		
-		if (isset($this->request->post['svea_delbet_order_status_id'])) {
-			$this->data['svea_delbet_order_status_id'] = $this->request->post['svea_delbet_order_status_id'];
+		if (isset($this->request->post['svea_partpayment_order_status_id'])) {
+			$this->data['svea_partpayment_order_status_id'] = $this->request->post['svea_partpayment_order_status_id'];
 		} else {
-			$this->data['svea_delbet_order_status_id'] = $this->config->get('svea_delbet_order_status_id'); 
+			$this->data['svea_partpayment_order_status_id'] = $this->config->get('svea_partpayment_order_status_id'); 
 		} 
 		
 		$this->load->model('localisation/order_status');
 		
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		
-		if (isset($this->request->post['svea_delbet_geo_zone_id'])) {
-			$this->data['svea_delbet_geo_zone_id'] = $this->request->post['svea_delbet_geo_zone_id'];
+		if (isset($this->request->post['svea_partpayment_geo_zone_id'])) {
+			$this->data['svea_partpayment_geo_zone_id'] = $this->request->post['svea_partpayment_geo_zone_id'];
 		} else {
-			$this->data['svea_delbet_geo_zone_id'] = $this->config->get('svea_delbet_geo_zone_id'); 
+			$this->data['svea_partpayment_geo_zone_id'] = $this->config->get('svea_partpayment_geo_zone_id'); 
 		} 
 		
 		$this->load->model('localisation/geo_zone');						
 		
 		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 		
-		if (isset($this->request->post['svea_delbet_status'])) {
-			$this->data['svea_delbet_status'] = $this->request->post['svea_delbet_status'];
+		if (isset($this->request->post['svea_partpayment_status'])) {
+			$this->data['svea_partpayment_status'] = $this->request->post['svea_partpayment_status'];
 		} else {
-			$this->data['svea_delbet_status'] = $this->config->get('svea_delbet_status');
+			$this->data['svea_partpayment_status'] = $this->config->get('svea_partpayment_status');
 		}
 		
-		if (isset($this->request->post['svea_delbet_sort_order'])) {
-			$this->data['svea_delbet_sort_order'] = $this->request->post['svea_delbet_sort_order'];
+		if (isset($this->request->post['svea_partpayment_sort_order'])) {
+			$this->data['svea_partpayment_sort_order'] = $this->request->post['svea_partpayment_sort_order'];
 		} else {
-			$this->data['svea_delbet_sort_order'] = $this->config->get('svea_delbet_sort_order');
+			$this->data['svea_partpayment_sort_order'] = $this->config->get('svea_partpayment_sort_order');
 		}
         
         if (isset($this->request->post['svea_testmode'])) {
-			$this->data['svea_delbet_testmode'] = $this->request->post['svea_delbet_testmode'];
+			$this->data['svea_partpayment_testmode'] = $this->request->post['svea_partpayment_testmode'];
 		} else {
-			$this->data['svea_delbet_testmode'] = $this->config->get('svea_delbet_testmode');
+			$this->data['svea_partpayment_testmode'] = $this->config->get('svea_partpayment_testmode');
 		}
 		
-		$this->template = 'payment/svea_delbet.tpl';
+		$this->template = 'payment/svea_partpayment.tpl';
 		$this->children = array(
 			'common/header',	
 			'common/footer'	
@@ -126,7 +126,7 @@ class ControllerPaymentsveadelbet extends Controller {
 	}
 	
 	private function validate() {
-		if (!$this->user->hasPermission('modify', 'payment/svea_delbet')) {
+		if (!$this->user->hasPermission('modify', 'payment/svea_partpayment')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 				

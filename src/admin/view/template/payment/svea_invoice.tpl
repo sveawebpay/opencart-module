@@ -11,6 +11,10 @@
     <div class="buttons"><a onclick="$('#form').submit();" class="button"><span><?php echo $button_save; ?></span></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a></div>
   </div>
   <div class="content">
+    <div class="breadcrumb">
+    <a class="button" href="<?php echo HTTPS_SERVER . 'index.php?route=payment/svea_invoice/sveaOrdersList&token=' . $this->session->data['token'] ?>">Deliver Orders</a>
+  </div>
+
     <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
       <table class="form">
         <tr>
@@ -31,10 +35,10 @@
         </tr>
         <tr>
           <td><?php echo $entry_geo_zone; ?></td>
-          <td><select name="svea_fakt_geo_zone_id">
+          <td><select name="svea_invoice_geo_zone_id">
               <option value="0"><?php echo $text_all_zones; ?></option>
               <?php foreach ($geo_zones as $geo_zone) { ?>
-              <?php if ($geo_zone['geo_zone_id'] == $svea_fakt_geo_zone_id) { ?>
+              <?php if ($geo_zone['geo_zone_id'] == $svea_invoice_geo_zone_id) { ?>
               <option value="<?php echo $geo_zone['geo_zone_id']; ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
               <?php } else { ?>
               <option value="<?php echo $geo_zone['geo_zone_id']; ?>"><?php echo $geo_zone['name']; ?></option>
@@ -44,8 +48,8 @@
         </tr>
         <tr>
           <td><?php echo $entry_status; ?></td>
-          <td><select name="svea_fakt_status">
-              <?php if ($svea_fakt_status) { ?>
+          <td><select name="svea_invoice_status">
+              <?php if ($svea_invoice_status) { ?>
               <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
               <option value="0"><?php echo $text_disabled; ?></option>
               <?php } else { ?>
@@ -56,13 +60,13 @@
         </tr>
         <tr>
           <td><?php echo $entry_sort_order; ?></td>
-          <td><input type="text" name="svea_fakt_sort_order" value="<?php echo $svea_fakt_sort_order; ?>" size="1" /></td>
+          <td><input type="text" name="svea_invoice_sort_order" value="<?php echo $svea_invoice_sort_order; ?>" size="1" /></td>
         </tr>
 		<tr>
           <td><?php echo $entry_testmode; ?>:</td>
-          <td><select name="svea_fakt_testmode">
-				<option value="1" <?php if($svea_fakt_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
-				<option value="0" <?php if($svea_fakt_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
+          <td><select name="svea_invoice_testmode">
+				<option value="1" <?php if($svea_invoice_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
+				<option value="0" <?php if($svea_invoice_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
 				</select>
 		  </td>
         </tr>
@@ -74,19 +78,19 @@
         <tr>
             <td><?php echo $entry_username_SE; ?>:</td>
             <td>
-                <input name="svea_fakt_username_SE" type="text" value="<?php echo $svea_fakt_username_SE; ?>" />
+                <input name="svea_invoice_username_SE" type="text" value="<?php echo $svea_invoice_username_SE; ?>" />
             </td>
         </tr>
         <tr>
             <td><?php echo $entry_password_SE; ?>:</td>
             <td>
-                <input name="svea_fakt_password_SE" type="password" value="<?php echo $svea_fakt_password_SE; ?>" />
+                <input name="svea_invoice_password_SE" type="password" value="<?php echo $svea_invoice_password_SE; ?>" />
             </td>
         </tr>
         <tr>
             <td><?php echo $entry_clientno_SE; ?>:</td>
             <td>
-                <input name="svea_fakt_clientno_SE" type="text" value="<?php echo $svea_fakt_clientno_SE; ?>" />
+                <input name="svea_invoice_clientno_SE" type="text" value="<?php echo $svea_invoice_clientno_SE; ?>" />
             </td>
         </tr>
         <tr>
@@ -104,19 +108,19 @@
         <tr>
             <td><?php echo $entry_username_NL; ?>:</td>
             <td>
-                <input name="svea_fakt_username_NL" type="text" value="<?php echo $svea_fakt_username_NL; ?>" />
+                <input name="svea_invoice_username_NL" type="text" value="<?php echo $svea_invoice_username_NL; ?>" />
             </td>
         </tr>
         <tr>
             <td><?php echo $entry_password_NL; ?>:</td>
             <td>
-                <input name="svea_fakt_password_NL" type="password" value="<?php echo $svea_fakt_password_NL; ?>" />
+                <input name="svea_invoice_password_NL" type="password" value="<?php echo $svea_invoice_password_NL; ?>" />
             </td>
         </tr>
         <tr>
             <td><?php echo $entry_clientno_NL; ?>:</td>
             <td>
-                <input name="svea_fakt_clientno_NL" type="text" value="<?php echo $svea_fakt_clientno_NL; ?>" />
+                <input name="svea_invoice_clientno_NL" type="text" value="<?php echo $svea_invoice_clientno_NL; ?>" />
             </td>
         </tr>
         <tr>

@@ -1,11 +1,11 @@
 <?php
 // Heading
-$_['heading_title']      = 'Svea Fakturering';
+$_['heading_title']      = 'Svea Delbetalning';
 
 // Text
 $_['text_payment']       = 'Betalning';
-$_['text_success']       = 'Lyckat: Du har nu modifierat Svea faktura betalmodul!';
-$_['text_svea_fakt']     = '<img src="view/image/payment/svea_faktura.png" alt="Svea Faktura" title="Svea Faktura" />';
+$_['text_success']       = 'Lyckat: Du har nu modifierat Svea Delbetalning betalmodul!';
+$_['text_svea_delbet']   = '<img src="view/image/payment/svea_partpayment.png" alt="Svea Delbetalning" title="Svea Delbetalning" />';
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
@@ -16,8 +16,7 @@ $_['entry_username']     = 'Användarnamn:';
 $_['entry_testmode']     = 'Testläge:';
 $_['entry_password']     = 'Lösenord:';
 $_['entry_clientno']     = 'Klientnr:';
-$_['entry_invoicefee']   = 'Faktureringsavgift:';
 
 // Error
-$_['error_permission']   = 'Varning: Du har inte tillåtelse att modifiera Svea Faktura betalmodul!';
+$_['error_permission']   = 'Varning: Du har inte tillåtelse att modifiera Svea Delbetalning betalmodul!';
 ?>
