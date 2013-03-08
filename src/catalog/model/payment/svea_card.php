@@ -1,13 +1,13 @@
 <?php 
-class ModelPaymentsveakort extends Model {
+class ModelPaymentsveacard extends Model {
   	public function getMethod($address) {
-		$this->load->language('payment/svea_kort');
-		$this->load->model('payment/svea_kort');
+		$this->load->language('payment/svea_card');
+		$this->load->model('payment/svea_card');
 
-		if ($this->config->get('svea_kort_status')) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('svea_kort_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		if ($this->config->get('svea_card_status')) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('svea_card_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 		
-      		if (!$this->config->get('svea_kort_geo_zone_id')) {
+      		if (!$this->config->get('svea_card_geo_zone_id')) {
         		$status = TRUE;
       		} elseif ($query->num_rows) {
         		$status = TRUE;
@@ -22,10 +22,10 @@ class ModelPaymentsveakort extends Model {
 	
 		if ($status) {  
       		$method_data = array( 
-        		'id'         => 'svea_kort',
-                'code'       => 'svea_kort',
+        		'id'         => 'svea_card',
+                'code'       => 'svea_card',
         		'title'      => $this->language->get('text_title'),
-				'sort_order' => $this->config->get('svea_kort_sort_order')
+				'sort_order' => $this->config->get('svea_card_sort_order')
       		);
     	}
         

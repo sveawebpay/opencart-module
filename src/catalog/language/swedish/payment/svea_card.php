@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']      = 'Svea Kort Betalning <img src="admin/view/image/payment/svea_kort.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
+$_['text_title']      = 'Svea Kort Betalning <img src="admin/view/image/payment/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
 
 //Error responses
 $_['response_100']   = 'Internfel';

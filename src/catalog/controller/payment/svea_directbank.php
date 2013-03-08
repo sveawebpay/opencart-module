@@ -1,5 +1,5 @@
 <?php
-class ControllerPaymentsveadirektb extends Controller {
+class ControllerPaymentsveadirectbank extends Controller {
 	protected function index() {
     	$this->data['button_confirm'] = $this->language->get('button_confirm');
 		$this->data['button_back'] = $this->language->get('button_back');
@@ -12,14 +12,14 @@ class ControllerPaymentsveadirektb extends Controller {
 		
 		$this->id = 'payment';
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_direktb.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/svea_direktb.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_directbank.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/payment/svea_directbank.tpl';
 		} else {
-			$this->template = 'default/template/payment/svea_direktb.tpl';
+			$this->template = 'default/template/payment/svea_directbank.tpl';
 		}	
 		
         
-       $this->data['continue'] = 'index.php?route=payment/svea_direktb/redirectSvea';
+       $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
         
         
 		$this->render();
@@ -35,8 +35,8 @@ class ControllerPaymentsveadirektb extends Controller {
     
         //SVEA config settings
         $config = SveaConfig::getConfig();
-        $config->merchantId = $this->config->get('svea_direktb_merchant_id'); 
-        $config->secret = $this->config->get('svea_direktb_sw'); 
+        $config->merchantId = $this->config->get('svea_directbank_merchant_id'); 
+        $config->secret = $this->config->get('svea_directbank_sw'); 
         $paymentRequest = new SveaPaymentRequest();
         $order = new SveaOrder();
         $paymentRequest->order = $order;
@@ -165,7 +165,7 @@ class ControllerPaymentsveadirektb extends Controller {
                 <body onload="doPost()">
                 ';
         //Check for testmode
-        if ($this->config->get('svea_direktb_testmode') == '1'){
+        if ($this->config->get('svea_directbank_testmode') == '1'){
         	echo $paymentRequest->getPaymentForm(true);
         }else{
         	echo $paymentRequest->getPaymentForm(false);
@@ -181,7 +181,7 @@ class ControllerPaymentsveadirektb extends Controller {
     public function responseSvea(){
         
         $this->load->model('checkout/order');
-		$this->load->model('payment/svea_direktb');
+		$this->load->model('payment/svea_directbank');
         
         
         require_once('svea/SveaConfig.php');   
@@ -190,7 +190,7 @@ class ControllerPaymentsveadirektb extends Controller {
         $response = $_REQUEST['response'];
         $mac = $_REQUEST['mac'];
         $merchantid = $_REQUEST['merchantid'];
-        $secretWord = $this->config->get('svea_direktb_sw');
+        $secretWord = $this->config->get('svea_directbank_sw');
         
         $resp = new SveaPaymentResponse($response);
         
@@ -231,7 +231,7 @@ class ControllerPaymentsveadirektb extends Controller {
 			'common/header'
 		);
         		
-        $this->data['text_message'] = "Dessvärre misslyckades betalningen.<br />Med anledningen: <br /><br />".$this->responseCodes($rejection)."<br /><br /><br />";
+        $this->data['text_message'] = "Dessvï¿½rre misslyckades betalningen.<br />Med anledningen: <br /><br />".$this->responseCodes($rejection)."<br /><br /><br />";
         $this->data['heading_title'] = "Betalning misslyckades";
         $this->data['footer'] = "";
                                 
@@ -243,7 +243,7 @@ class ControllerPaymentsveadirektb extends Controller {
     }
     
     private function responseCodes($err){
-        $this->load->language('payment/svea_direktb');
+        $this->load->language('payment/svea_directbank');
         
         switch ($err){
             case "100" :

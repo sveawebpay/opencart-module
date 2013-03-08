@@ -5,7 +5,7 @@ $_['heading_title']      = 'Svea Direct payment';
 // Text
 $_['text_payment']       = 'Payment';
 $_['text_success']       = 'Success: You have modified Svea Direct Payment module!';
-$_['text_svea_direktb']  = '<img src="view/image/payment/svea_direktb.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
+$_['text_svea_directbank']  = '<img src="view/image/payment/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
 
 // Entry
 $_['entry_order_status'] = 'Order Status:';

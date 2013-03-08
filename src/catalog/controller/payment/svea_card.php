@@ -1,5 +1,5 @@
 <?php
-class ControllerPaymentsveakort extends Controller {
+class ControllerPaymentsveacard extends Controller {
 	protected function index() {
     	$this->data['button_confirm'] = $this->language->get('button_confirm');
 		$this->data['button_back'] = $this->language->get('button_back');
@@ -14,14 +14,14 @@ class ControllerPaymentsveakort extends Controller {
 		
 		$this->id = 'payment';
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_kort.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/svea_kort.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/payment/svea_card.tpl';
 		} else {
-			$this->template = 'default/template/payment/svea_kort.tpl';
+			$this->template = 'default/template/payment/svea_card.tpl';
 		}	
 		
         
-       $this->data['continue'] = 'index.php?route=payment/svea_kort/redirectSvea';
+       $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
         
         
 		$this->render();
@@ -38,8 +38,8 @@ class ControllerPaymentsveakort extends Controller {
     
         //SVEA config settings
         $config = SveaConfig::getConfig();
-        $config->merchantId = $this->config->get('svea_kort_merchant_id'); 
-        $config->secret = $this->config->get('svea_kort_sw'); 
+        $config->merchantId = $this->config->get('svea_card_merchant_id'); 
+        $config->secret = $this->config->get('svea_card_sw'); 
         $paymentRequest = new SveaPaymentRequest();
         $order = new SveaOrder();
         $paymentRequest->order = $order;
@@ -147,7 +147,7 @@ class ControllerPaymentsveakort extends Controller {
         //Set base data for the order
         $order->amount = number_format(round($totalPrice,2),2,'','');
         $order->customerRefno = $this->session->data['order_id'].'test2';
-        $order->returnUrl = HTTP_SERVER.'index.php?route=payment/svea_kort/responseSvea';
+        $order->returnUrl = HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea';
         $order->vat = number_format(round($totalTax,2),2,'','');
         $order->currency = $this->session->data['currency'];
         $order->paymentMethod = 'CARD';
@@ -166,7 +166,7 @@ class ControllerPaymentsveakort extends Controller {
                 <body onload="doPost()">
                 ';
         //Check for testmode
-        if ($this->config->get('svea_kort_testmode') == '1'){
+        if ($this->config->get('svea_card_testmode') == '1'){
         	echo $paymentRequest->getPaymentForm(true);
         }else{
         	echo $paymentRequest->getPaymentForm(false);
@@ -183,7 +183,7 @@ class ControllerPaymentsveakort extends Controller {
     public function responseSvea(){
         
         $this->load->model('checkout/order');
-		$this->load->model('payment/svea_kort');
+		$this->load->model('payment/svea_card');
         
         
         require_once('svea/SveaConfig.php');   
@@ -192,7 +192,7 @@ class ControllerPaymentsveakort extends Controller {
         $response = $_REQUEST['response'];
         $mac = $_REQUEST['mac'];
         $merchantid = $_REQUEST['merchantid'];
-        $secretWord = $this->config->get('svea_kort_sw');
+        $secretWord = $this->config->get('svea_card_sw');
         
         $resp = new SveaPaymentResponse($response);
         
@@ -201,7 +201,7 @@ class ControllerPaymentsveakort extends Controller {
         
         if($resp->validateMac($mac,$secretWord) == true){
             if ($resp->statuscode == '0'){
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_kort_order_status_id'));
+                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'));
             
                 header("Location: index.php?route=checkout/success");
                 flush();
@@ -243,7 +243,7 @@ class ControllerPaymentsveakort extends Controller {
     }
     
     private function responseCodes($err){
-        $this->load->language('payment/svea_kort');
+        $this->load->language('payment/svea_card');
         
         switch ($err){
             case "100" :

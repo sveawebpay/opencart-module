@@ -5,7 +5,7 @@ $_['heading_title']      = 'Svea Kortbetalning';
 // Text
 $_['text_payment']       = 'Betalning';
 $_['text_success']       = 'Lyckat: Du har modifierat Sveas Kortbetalningsmodul';
-$_['text_svea_kort']     = '<img src="view/image/payment/svea_kort.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
+$_['text_svea_card']     = '<img src="view/image/payment/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';

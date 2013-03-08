@@ -1,16 +1,16 @@
 <?php 
-class ControllerPaymentsveakort extends Controller {
+class ControllerPaymentsveacard extends Controller {
 	private $error = array(); 
 	 
 	public function index() { 
-		$this->load->language('payment/svea_kort');
+		$this->load->language('payment/svea_card');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		
 		$this->load->model('setting/setting');
 				
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
-			$this->model_setting_setting->editSetting('svea_kort', $this->request->post);
+			$this->model_setting_setting->editSetting('svea_card', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 			
@@ -38,10 +38,10 @@ class ControllerPaymentsveakort extends Controller {
         $this->data['entry_sw']           = $this->language->get('entry_sw');
         
         //Definitions settings
-        $this->data['svea_kort_sort_order']  = $this->config->get('svea_kort_sort_order');
-        $this->data['svea_kort_merchant_id'] = $this->config->get('svea_kort_merchant_id');
-        $this->data['svea_kort_sw']          = $this->config->get('svea_kort_sw');
-        $this->data['svea_kort_testmode']    = $this->config->get('svea_kort_testmode');
+        $this->data['svea_card_sort_order']  = $this->config->get('svea_card_sort_order');
+        $this->data['svea_card_merchant_id'] = $this->config->get('svea_card_merchant_id');
+        $this->data['svea_card_sw']          = $this->config->get('svea_card_sw');
+        $this->data['svea_card_testmode']    = $this->config->get('svea_card_testmode');
         
         
  		if (isset($this->error['warning'])) {
@@ -65,54 +65,54 @@ class ControllerPaymentsveakort extends Controller {
    		);
 		
    		$this->document->breadcrumbs[] = array(
-       		'href'      => HTTPS_SERVER . 'index.php?route=payment/svea_kort&token=' . $this->session->data['token'],
+       		'href'      => HTTPS_SERVER . 'index.php?route=payment/svea_card&token=' . $this->session->data['token'],
        		'text'      => $this->language->get('heading_title'),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_kort&token=' . $this->session->data['token'];
+		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_card&token=' . $this->session->data['token'];
 
 		$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];	
 		
-		if (isset($this->request->post['svea_kort_order_status_id'])) {
-			$this->data['svea_kort_order_status_id'] = $this->request->post['svea_kort_order_status_id'];
+		if (isset($this->request->post['svea_card_order_status_id'])) {
+			$this->data['svea_card_order_status_id'] = $this->request->post['svea_card_order_status_id'];
 		} else {
-			$this->data['svea_kort_order_status_id'] = $this->config->get('svea_kort_order_status_id'); 
+			$this->data['svea_card_order_status_id'] = $this->config->get('svea_card_order_status_id'); 
 		} 
 		
 		$this->load->model('localisation/order_status');
 		
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 		
-		if (isset($this->request->post['svea_kort_geo_zone_id'])) {
-			$this->data['svea_kort_geo_zone_id'] = $this->request->post['svea_kort_geo_zone_id'];
+		if (isset($this->request->post['svea_card_geo_zone_id'])) {
+			$this->data['svea_card_geo_zone_id'] = $this->request->post['svea_card_geo_zone_id'];
 		} else {
-			$this->data['svea_kort_geo_zone_id'] = $this->config->get('svea_kort_geo_zone_id'); 
+			$this->data['svea_card_geo_zone_id'] = $this->config->get('svea_card_geo_zone_id'); 
 		} 
 		
 		$this->load->model('localisation/geo_zone');						
 		
 		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 		
-		if (isset($this->request->post['svea_kort_status'])) {
-			$this->data['svea_kort_status'] = $this->request->post['svea_kort_status'];
+		if (isset($this->request->post['svea_card_status'])) {
+			$this->data['svea_card_status'] = $this->request->post['svea_card_status'];
 		} else {
-			$this->data['svea_kort_status'] = $this->config->get('svea_kort_status');
+			$this->data['svea_card_status'] = $this->config->get('svea_card_status');
 		}
 		
-		if (isset($this->request->post['svea_kort_sort_order'])) {
-			$this->data['svea_kort_sort_order'] = $this->request->post['svea_kort_sort_order'];
+		if (isset($this->request->post['svea_card_sort_order'])) {
+			$this->data['svea_card_sort_order'] = $this->request->post['svea_card_sort_order'];
 		} else {
-			$this->data['svea_kort_sort_order'] = $this->config->get('svea_kort_sort_order');
+			$this->data['svea_card_sort_order'] = $this->config->get('svea_card_sort_order');
 		}
         
-        if (isset($this->request->post['svea_kort_testmode'])) {
-			$this->data['svea_kort_testmode'] = $this->request->post['svea_kort_testmode'];
+        if (isset($this->request->post['svea_card_testmode'])) {
+			$this->data['svea_card_testmode'] = $this->request->post['svea_card_testmode'];
 		} else {
-			$this->data['svea_kort_testmode'] = $this->config->get('svea_kort_testmode');
+			$this->data['svea_card_testmode'] = $this->config->get('svea_card_testmode');
 		}
 		
-		$this->template = 'payment/svea_kort.tpl';
+		$this->template = 'payment/svea_card.tpl';
 		$this->children = array(
 			'common/header',	
 			'common/footer'	
@@ -122,7 +122,7 @@ class ControllerPaymentsveakort extends Controller {
 	}
 	
 	private function validate() {
-		if (!$this->user->hasPermission('modify', 'payment/svea_kort')) {
+		if (!$this->user->hasPermission('modify', 'payment/svea_card')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 				

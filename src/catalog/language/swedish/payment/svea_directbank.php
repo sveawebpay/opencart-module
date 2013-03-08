@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title'] = 'Svea Direktbetalning <img src="admin/view/image/payment/svea_direktb.png" alt="Svea Kortbetalning" title="SVEA Direktbetalning" />';
+$_['text_title'] = 'Svea Direktbetalning <img src="admin/view/image/payment/svea_directbank.png" alt="Svea Kortbetalning" title="SVEA Direktbetalning" />';
 
 //Error responses
 $_['response_1']   = 'Payment Cancelled';
