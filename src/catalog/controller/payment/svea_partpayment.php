@@ -1,8 +1,8 @@
 <?php
-class ControllerPaymentsveadelbet extends Controller {
+class ControllerPaymentsveapartpayment extends Controller {
 
     protected function index() {
-        $this->load->language('payment/svea_delbet');
+        $this->load->language('payment/svea_partpayment');
         $this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->data['button_back'] = $this->language->get('button_back');
 
@@ -19,24 +19,24 @@ class ControllerPaymentsveadelbet extends Controller {
         $total = $this->cart->getTotal() + $shippingCost;
         /* WIP make dynamic and recalculate $total with right currency
           if ($total < 1000) {
-          $this->data['delbet_fail'] = $this->language->get('text_delbet_fail');
+          $this->data['partpayment_fail'] = $this->language->get('text_partpayment_fail');
           }
          * 
          */
 
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_delbet.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/svea_delbet.tpl';
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl')) {
+            $this->template = $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl';
         } else {
-            $this->template = 'default/template/payment/svea_delbet.tpl';
-            $this->data['delbet_fail'] = $this->language->get('text_delbet_fail');
+            $this->template = 'default/template/payment/svea_partpayment.tpl';
+            $this->data['partpayment_fail'] = $this->language->get('text_partpayment_fail');
         }
         $this->render();
     }
 
 
     private function responseCodes($err){
-        $this->load->language('payment/svea_delbet');
+        $this->load->language('payment/svea_partpayment');
         switch ($err){
             case "CusomterCreditRejected" :
                 return $this->language->get('response_CusomterCreditRejected');
@@ -72,7 +72,7 @@ class ControllerPaymentsveadelbet extends Controller {
 
     public function confirm() {
         $this->load->model('checkout/order');
-        $this->load->model('payment/svea_delbet');
+        $this->load->model('payment/svea_partpayment');
         include('svea/svea_soap/SveaConfig.php');
         $this->load->model('checkout/coupon');
     // Get the products in the cart
@@ -241,7 +241,7 @@ class ControllerPaymentsveadelbet extends Controller {
 
         //If response accepted redirect to thankyou page
         if ($response == 1) {
-            $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_delbet_order_status_id'));
+            $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'));
             echo 978;
         } else {
 
@@ -252,12 +252,12 @@ class ControllerPaymentsveadelbet extends Controller {
     /** Only use in nordic countrys and for companys who cant shop here anyway
       public function getAddress() {
 
-      $this->load->model('payment/svea_delbet');
+      $this->load->model('payment/svea_partpayment');
 
       $username = $this->config->get('svea_username');
       $pass = $this->config->get('svea_password');
-      $clientNo = $this->config->get('svea_delbet_clientno');
-      $testMode = $this->config->get('svea_delbet_testmode');
+      $clientNo = $this->config->get('svea_partpayment_clientno');
+      $testMode = $this->config->get('svea_partpayment_testmode');
 
 
       $request = Array(
@@ -288,9 +288,9 @@ class ControllerPaymentsveadelbet extends Controller {
       $response = $client->GetAddresses($data);
 
       if (isset($response->GetAddressesResult->ErrorMessage)) {
-      echo '  $("#svea_delbet_fakt").hide();
-      $("#svea_delbet_err").show();
-      $("#svea_delbet_err").append("' . $response->GetAddressesResult->ErrorMessage . '");
+      echo '  $("#svea_partpayment_fakt").hide();
+      $("#svea_partpayment_err").show();
+      $("#svea_partpayment_err").append("' . $response->GetAddressesResult->ErrorMessage . '");
       $("a#checkout").hide();
       ';
       } else if (is_array($response->GetAddressesResult->Addresses->CustomerAddress)) {
@@ -308,11 +308,11 @@ class ControllerPaymentsveadelbet extends Controller {
 
 
       //Send back to user
-      echo '$("#svea_delbet_address").append(\'<option id="adress_' . $key . '" value="' . $addressSelector . '">' . $legelName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');';
+      echo '$("#svea_partpayment_address").append(\'<option id="adress_' . $key . '" value="' . $addressSelector . '">' . $legelName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');';
       }
-      echo "$(\"#svea_delbet_tr\").show();";
-      echo "$(\"#svea_delbet_address\").show();";
-      echo "$(\"#svea_delbet_err\").hide();";
+      echo "$(\"#svea_partpayment_tr\").show();";
+      echo "$(\"#svea_partpayment_address\").show();";
+      echo "$(\"#svea_partpayment_err\").hide();";
       echo "$(\"a#checkout\").show();";
       } else if (isset($response->GetAddressesResult->Addresses->CustomerAddress)) {
 
@@ -330,16 +330,16 @@ class ControllerPaymentsveadelbet extends Controller {
 
       //Send back to user
       echo '
-      $("#svea_delbet_address").append(\'<option id="adress" value="' . $addressSelector . '">' . $legalName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');
-      $("#svea_delbet_address").show();
-      $("#svea_delbet_tr").show();
-      $("#svea_delbet_err").hide();
+      $("#svea_partpayment_address").append(\'<option id="adress" value="' . $addressSelector . '">' . $legalName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');
+      $("#svea_partpayment_address").show();
+      $("#svea_partpayment_tr").show();
+      $("#svea_partpayment_err").hide();
       $("a#checkout").show();
       ';
       } else {
-      echo '  $("#svea_delbet_tr").hide();
-      $("#svea_delbet_err").show();
-      $("#svea_delbet_err").append("No address was found.");
+      echo '  $("#svea_partpayment_tr").hide();
+      $("#svea_partpayment_err").show();
+      $("#svea_partpayment_err").append("No address was found.");
       $("a#checkout").hide();
       ';
       }
@@ -349,7 +349,7 @@ class ControllerPaymentsveadelbet extends Controller {
     public function getPaymentOptions() {
         include('svea/svea_soap/SveaConfig.php');
         $this->load->model('checkout/order');
-        $testMode = $this->config->get('svea_delbet_testmode');
+        $testMode = $this->config->get('svea_partpayment_testmode');
         //get svea_soap class library for WebserviceEu and set testmode
         $con = SveaConfig::getConfig();
         $con->setTestMode($testMode);
@@ -359,7 +359,7 @@ class ControllerPaymentsveadelbet extends Controller {
         $auth = new SveaAuth();
         $auth->Username = $this->config->get('svea_username');
         $auth->Password = $this->config->get('svea_password');
-        $auth->ClientNumber = $this->config->get('svea_delbet_clientno');
+        $auth->ClientNumber = $this->config->get('svea_partpayment_clientno');
 
         //make request
         $object = new SveaRequest();
@@ -369,7 +369,7 @@ class ControllerPaymentsveadelbet extends Controller {
 
         /*
           $this->load->model('checkout/order');
-          $this->load->model('payment/svea_delbet');
+          $this->load->model('payment/svea_partpayment');
 
           // Get the products in the cart
           $products = $this->cart->getProducts();
@@ -377,8 +377,8 @@ class ControllerPaymentsveadelbet extends Controller {
           //Settings and fees'
           $username = $this->config->get('svea_username');
           $pass = $this->config->get('svea_password');
-          $clientNo = $this->config->get('svea_delbet_clientno');
-          $testMode = $this->config->get('svea_delbet_testmode');
+          $clientNo = $this->config->get('svea_partpayment_clientno');
+          $testMode = $this->config->get('svea_partpayment_testmode');
           $shipping = $this->cart->hasShipping();
 
           //Product rows
@@ -431,7 +431,7 @@ class ControllerPaymentsveadelbet extends Controller {
           }
           $n++;
           }
-		$this->load->model('payment/svea_delbet');
+		$this->load->model('payment/svea_partpayment');
           //The createOrder Data
           $request = Array(
           "Auth" => Array(
@@ -481,10 +481,10 @@ class ControllerPaymentsveadelbet extends Controller {
                     } /* else {
                       $description = 'Delbetala p� ' . $ss->ContractLengthInMonths . ' m�nader, (' . $ss->MonthlyAnnuity . ' kr/m�n)';
                       } */
-                    echo '$("#svea_delbet_alt").append("<option id=\"paymentOption' . $key . '\" value=\"' . $ss->CampaignCode . '\">' . $description . '</option>");';
+                    echo '$("#svea_partpayment_alt").append("<option id=\"paymentOption' . $key . '\" value=\"' . $ss->CampaignCode . '\">' . $description . '</option>");';
                 }
 
-                echo "$(\"#svea_delbet_alt\").show();",
+                echo "$(\"#svea_partpayment_alt\").show();",
                 "$(\"a#checkout\").show();";
             } else {
                 $this->ShowErrorMessage();
@@ -495,10 +495,10 @@ class ControllerPaymentsveadelbet extends Controller {
     
     private function ShowErrorMessage($response = null) {
         $message = ($response !== null && isset($response->ErrorMessage)) ? $response->ErrorMessage : "Could not get any partpayment alternatives.";
-         echo '$("#svea_delbet_div").hide();
-              $("#svea_delbet_alt").hide();
-              $("#svea_delbet_err").show();
-              $("#svea_delbet_err").append("' . $message . '");
+         echo '$("#svea_partpayment_div").hide();
+              $("#svea_partpayment_alt").hide();
+              $("#svea_partpayment_err").show();
+              $("#svea_partpayment_err").append("' . $message . '");
               $("a#checkout").hide();';
     }
 }
