@@ -1,7 +1,7 @@
 <?php
 // Text
 $_['text_title']      = 'Svea Card payment <img src="admin/view/image/payment/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
-
+$_['unit']              = 'pcs';
 //Error responses
 $_['response_100']   = 'Internal Error';
 $_['response_105']   = 'Invalid transaction status';

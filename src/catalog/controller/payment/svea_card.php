@@ -30,12 +30,13 @@ class ControllerPaymentsveacard extends Controller {
     
     public function redirectSvea(){ 
         $this->load->model('checkout/coupon');
-             
-        //New SHAHO edit
-        //Import SVEA files
-        include('svea/SveaConfig.php');
-    
-    
+        $this->load->model('payment/svea_card');
+        $this->load->model('localisation/currency');
+        $this->load->language('payment/svea_card');
+        include('svea/src/Includes.php');
+        $orderbuilder = WebPay::createOrder();
+       
+    /**
         //SVEA config settings
         $config = SveaConfig::getConfig();
         $config->merchantId = $this->config->get('svea_card_merchant_id'); 
@@ -44,29 +45,51 @@ class ControllerPaymentsveacard extends Controller {
         $order = new SveaOrder();
         $paymentRequest->order = $order;
         
+     * 
+     */
         //Settings and fees'     
         $shipping = $this->cart->hasShipping();
-        $totalPrice = 0;
-        $totalTax = 0;    
+      
+       // $totalPrice = 0;
+        //$totalTax = 0;    
         
-        // Get the products in the cart
-		$products = $this->cart->getProducts();
-        
+            
         //Get coupons
         if (isset($this->session->data['coupon'])){
             $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
         }
-
+      
+        //get the currency value 
+        $currencyValue = $this->model_localisation_currency->getCurrencyByCode($this->session->data['currency']);
+       
+      
         //Product rows   
+         // Get the products in the cart
+        $products = $this->cart->getProducts();  
         foreach($products as $product){
-
+            //get tax
             if (floatval(VERSION) >= 1.5){
-                $tax = $this->tax->getTax($product['price'],$product['tax_class_id']);
+                //$tax = $this->tax->getTax($product['price'],$product['tax_class_id']);
+                $taxClass = $this->model_payment_svea_card->getPaymentTaxRateIdByTaxClass(10);//e.g. 86
+                $taxRate = $this->model_payment_svea_card->getTaxRate($taxClass[0]['tax_rate_id']);//e.g. 86
+                $tax = $taxRate['rate'];
             }else{
                 $tax = ($this->tax->getRate($product['tax_class_id'])/100)*$product['price'];
-            }         
-            $productPrice = $product['price'] + $tax;
-
+               
+            }
+            //get product price in right currency
+            $productPrice = round($product['price'] * $currencyValue['value'], 2);
+          
+            $orderbuilder->addOrderRow(Item::orderRow()
+                    ->setAmountIncVat($productPrice)
+                    ->setVatPercent(round($tax))
+                    ->setName($product['name'])
+                    ->setDescription($product['model'])
+                    ->setQuantity($product['quantity'])
+                    ->setUnit($this->language->get('unit'))
+                    );
+                  
+            /**
             $orderRow = new SveaOrderRow();
             $orderRow->amount = number_format(round($productPrice,2),2,'','');
             $orderRow->vat = number_format(round($tax,2),2,'','');
@@ -77,16 +100,21 @@ class ControllerPaymentsveacard extends Controller {
             //Add the order rows to your order
             $order->addOrderRow($orderRow);
             
+            
             //Update totals
             $totalPrice = $totalPrice + ($productPrice * $product['quantity']);
             $totalTax = $totalTax + ($tax * $product['quantity']);        
             
+             * 
+             */
         }
 
         
         //Shipping Fee
         if ($shipping == '1'){
             $shipping_info = $this->session->data['shipping_method'];
+            
+           // this is the cost in default value - $shipping_info['cost'];
             if (floatval(VERSION) >= 1.5){
                 $shippingTax = $this->tax->getTax($shipping_info['cost'],$shipping_info['tax_class_id']);
             }else{
@@ -95,7 +123,13 @@ class ControllerPaymentsveacard extends Controller {
             $shippingPrice = $shipping_info['cost'] + $shippingTax;
             
             if ($shipping_info['cost'] > 0){
-                
+                $orderbuilder
+                ->addFee(Item::shippingFee()              
+                    ->setAmountExVat($shipping_info['cost'])
+                    ->setVatPercent(25)//hardcoded
+                    ->setName(urlencode($shipping_info['title']))
+                        );
+                /**
                 //Parameters for order rows
                 $orderRow = new SveaOrderRow();
                 $orderRow->amount = number_format(round($shippingPrice,2),2,'','');
@@ -110,10 +144,12 @@ class ControllerPaymentsveacard extends Controller {
                 $totalPrice = $totalPrice + $shippingPrice;
                 $totalTax = $totalTax + $shippingTax;
    
+                 * 
+                 */
             }
             
         }
-        
+       
         
         //Add coupon
         if (isset($coupon)){
@@ -127,7 +163,11 @@ class ControllerPaymentsveacard extends Controller {
             }
             
             $couponTax = $discount * 0.2;
-
+            $orderbuilder->addDiscount(Item::fixedDiscount()
+                    ->setAmountExVat($coupon['discount'])
+                    ->setName($coupon['name'])
+                    );
+/**
             //Parameters for order rows
             $orderRow = new SveaOrderRow();
             $orderRow->amount = number_format(round(-$discount,2),2,'','');
@@ -142,8 +182,23 @@ class ControllerPaymentsveacard extends Controller {
             //Totals
             $totalPrice -= $discount;                   
             $totalTax -= $couponTax;
+ * 
+ */
         }
+     $form = $orderbuilder
+        ->setClientOrderNumber($this->session->data['order_id'].'test2'.+1)
         
+        ->setCountryCode("SE")
+        ->setOrderDate(date("Y-m-d, h:m:s"))
+        ->setCurrency('SEJ')//$this->session->data['currency'])
+        ->setTestmode()       
+            
+        ->usePayPageCardOnly()
+              ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
+            //->setMerchantIdBasedAuthorization($this->config->get('svea_card_merchant_id'), $this->config->get('svea_card_sw'))
+            ->setReturnUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
+              ->getPaymentForm();
+      /**
         //Set base data for the order
         $order->amount = number_format(round($totalPrice,2),2,'','');
         $order->customerRefno = $this->session->data['order_id'].'test2';
@@ -153,9 +208,13 @@ class ControllerPaymentsveacard extends Controller {
         $order->paymentMethod = 'CARD';
                 
         $paymentRequest->createPaymentMessage();
-
         $request = http_build_query($paymentRequest,'','&');
        
+       * 
+       */
+      print_r($form->completeHtmlFormWithSubmitButton);
+      /**
+      die();
         echo '<html><head>
                 <script type="text/javascript">
                     function doPost(){
@@ -177,26 +236,28 @@ class ControllerPaymentsveacard extends Controller {
         ';
         
         exit();
-        
+        **/
     }
     
     public function responseSvea(){
-        
+       
         $this->load->model('checkout/order');
-		$this->load->model('payment/svea_card');
+        $this->load->model('payment/svea_card');
         
-        
-        require_once('svea/SveaConfig.php');   
-    
+        include('svea/src/Includes.php'); //NEW LINE
+       //require_once('svea/SveaConfig.php');   
+      
         //GETs
         $response = $_REQUEST['response'];
         $mac = $_REQUEST['mac'];
         $merchantid = $_REQUEST['merchantid'];
         $secretWord = $this->config->get('svea_card_sw');
-        
-        $resp = new SveaPaymentResponse($response);
-        
-        
+       
+       //$resp = new SveaPaymentResponse($response);
+        $resp = new SveaResponse($_REQUEST,"8a9cece566e808da63c6f07ff415ff9e127909d000d259aba24daa2fed6d9e3f8b0b62e8ad1fa91c7d7cd6fc3352deaae66cdb533123edf127ad7d1f4c77e7a3"); //NEW LINE
+      
+          var_dump($resp);
+        /**
         $d['order_id'] = $resp->customerRefno;
         
         if($resp->validateMac($mac,$secretWord) == true){
@@ -212,6 +273,9 @@ class ControllerPaymentsveacard extends Controller {
         }else{
             $this->renderFailure("Could not validate mac");
         }
+         * 
+         * 
+         */
     }
     
     private function renderFailure($rejection)

@@ -1,7 +1,7 @@
 <?php
 // Text
 $_['text_title']      = 'Svea Kort Betalning <img src="admin/view/image/payment/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
-
+$_['unit']              = 'st';
 //Error responses
 $_['response_100']   = 'Internfel';
 $_['response_105']   = 'Felaktig transaktionsstatus';
