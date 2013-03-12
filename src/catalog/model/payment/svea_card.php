@@ -1,5 +1,5 @@
 <?php 
-class ModelPaymentsveacard extends Model {
+class ModelPaymentsveakort extends Model {
   	public function getMethod($address) {
 		$this->load->language('payment/svea_card');
 		$this->load->model('payment/svea_card');
@@ -32,5 +32,17 @@ class ModelPaymentsveacard extends Model {
     	
         return $method_data;
   	}
+	
+	public function getTaxRate($tax_rate_id) {
+		$query = $this->db->query("SELECT tr.tax_rate_id, tr.name AS name, tr.rate, tr.type, tr.geo_zone_id, gz.name AS geo_zone, tr.date_added, tr.date_modified FROM " . DB_PREFIX . "tax_rate tr LEFT JOIN " . DB_PREFIX . "geo_zone gz ON (tr.geo_zone_id = gz.geo_zone_id) WHERE tr.tax_rate_id = '" . (int)$tax_rate_id . "'");
+		
+		return $query->row;
+	}
+	
+	public function getPaymentTaxRateIdByTaxClass($tax_class) {
+      	$query = $this->db->query("SELECT tax_rate_id FROM " . DB_PREFIX . "tax_rule WHERE tax_class_id = '" . (int)$tax_class . "' ORDER BY priority DESC");
+		
+		return $query->rows;
+	}
 }
 ?>
