@@ -23,9 +23,9 @@
         </tr>
         <tr>
           <td><?php echo $entry_order_status; ?></td>
-          <td><select name="svea_fakt_order_status_id">
+          <td><select name="svea_invoice_order_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-              <?php if ($order_status['order_status_id'] == $svea_fakt_order_status_id) { ?>
+              <?php if ($order_status['order_status_id'] == $svea_invoice_order_status_id) { ?>
               <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
               <?php } else { ?>
               <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -97,6 +97,15 @@
             <td><?php echo $entry_invoicefee_SE; ?>:</td>
             <td>
                 <input name="svea_invoicefee_SE" type="text" value="<?php echo $svea_invoicefee_SE; ?>" /> kr
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_invoicefee_usetax; ?>:</td>
+            <td>
+                <select name="svea_invoicefee_usetax_SE">
+                  <option value="1" <?php if($svea_invoicefee_usetax_SE == '1'){ echo 'selected="selected"';}?> ><?php echo $entry_yes; ?></option>
+                  <option value="0" <?php if($svea_invoicefee_usetax_SE == '0'){ echo 'selected="selected"';}?> ><?php echo $entry_no; ?></option>
+                </select>
             </td>
         </tr>
         

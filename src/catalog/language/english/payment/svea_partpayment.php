@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title'] = 'Svea Partpayment <img src="admin/view/image/payment/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
+$_['text_title'] = '<img src="admin/view/image/payment/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
 $_['text_ssn'] = 'Personnr';
 $_['text_partpayment_fail']   = 'Partpayment not possible if total less than 1000 kr';
 
