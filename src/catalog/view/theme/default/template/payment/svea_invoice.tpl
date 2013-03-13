@@ -64,7 +64,7 @@ $('a#checkout').click(function() {
 	});
 });
 <?php if (isset($invoiceFee)): ?>
-$('div.checkout-product table tfoot').append('<tr><td></td><td></td><td></td><td>Tillägg invoiceura:</td><td><?php echo $invoiceFee;?> kr</td></tr>');
+$('div.checkout-product table tfoot').append('<tr><td class="price" colspan="4"><b>Invoice fee:</b></td><td class="total"><?php echo $invoiceFee;?> kr</td></tr>');
 <?php endif; ?>
 
 <?php if($countryCode == "SE"){?>

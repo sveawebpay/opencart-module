@@ -18,14 +18,12 @@ class ControllerPaymentsveainvoice extends Controller {
         //Invoice Fee
         $invoiceFee = $this->config->get('svea_invoicefee');
         if ($invoiceFee > 0) {
-            $this->data['invoiceFee'] = $invoiceFee;
+            $this->data['invoiceFee'] = $invoiceFee;            
         }
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
-
-
 
         $this->id = 'payment';
 
@@ -126,12 +124,12 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setAmountExVat($productPriceExVat)
                         ->setAmountIncVat($productPriceIncVat)
                         ->setName($product['name'])
-                        ->setUnit('st')
-                        ->setArticleNumber($product['product_id']) 
+                        ->setUnit('st')//($this->language->get('unit'))
+                        ->setArticleNumber($product['product_id'])
+                        ->setDescription($product['model'])
                     );
 
         }
-        
         
         
         //Invoice Fee
@@ -155,7 +153,7 @@ class ControllerPaymentsveainvoice extends Controller {
             $invoiceFeeIncVat = $invoiceFeeExVat + $invoiceTax;
             
             $invoiceFee_ex = $invoiceFee / (($flatTax / 100) + 1);
-
+          
             //$orderRow->Description = "Svea Invoicefee"; //get language for customer
             //$orderRow->PricePerUnit = $invoiceFee_ex;
             //$orderRow->NumberOfUnits = $product['quantity'];
@@ -164,9 +162,9 @@ class ControllerPaymentsveainvoice extends Controller {
         }
         
         $taxes = $this->cart->getTaxes();
-        print_r($invoiceFeeUseTax);
-        print_r($taxes);
-        die();
+       // print_r($invoiceFeeUseTax);
+       // print_r($taxes);
+        //die();
         
         
         //Shipping Fee
@@ -271,8 +269,8 @@ class ControllerPaymentsveainvoice extends Controller {
                             ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode),$this->config->get('svea_invoice_password_' . $countryCode),$this->config->get('svea_invoice_clientno_' . $countryCode))
                           ->doRequest();
                 
-                print_r($svea->accepted); 
-                die();
+               // print_r($svea->accepted); 
+                //die();
                 
                 $response = array();
 
@@ -336,13 +334,13 @@ class ControllerPaymentsveainvoice extends Controller {
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
                 $testMode = $this->config->get('svea_invoice_testmode'); //set false if not in testmode
                 $countryCode = $order['payment_iso_code_2'];
-                 
+                           
                 
                 $svea = WebPay::getAddresses()
                     ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode), $this->config->get('svea_invoice_password_' . $countryCode), $this->config->get('svea_invoice_clientno_' . $countryCode)) 
                     ->setOrderTypeInvoice()                                              
                     ->setCountryCode($countryCode);
-                
+
                 //Testmode
                 if($this->config->get('svea_invoice_testmode') == 1)
                     $svea = $svea->setTestmode();
