@@ -18,14 +18,12 @@ class ControllerPaymentsveainvoice extends Controller {
         //Invoice Fee
         $invoiceFee = $this->config->get('svea_invoicefee');
         if ($invoiceFee > 0) {
-            $this->data['invoiceFee'] = $invoiceFee;
+            $this->data['invoiceFee'] = $invoiceFee;            
         }
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
-
-
 
         $this->id = 'payment';
 
@@ -115,12 +113,12 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setAmountExVat($productPriceExVat)
                         ->setAmountIncVat($productPriceIncVat)
                         ->setName($product['name'])
-                        ->setUnit('st')
-                        ->setArticleNumber($product['product_id']) 
+                        ->setUnit('st')//($this->language->get('unit'))
+                        ->setArticleNumber($product['product_id'])
+                        ->setDescription($product['model'])
                     );
 
         }
-        
         
         
         //Invoice Fee
@@ -136,6 +134,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
             $invoiceFeeExVat  = $invoiceFee;
             $invoiceFeeIncVat = $invoiceFeeExVat + $invoiceTax;
+
                    
             $svea = $svea
                     ->addFee(
@@ -260,6 +259,7 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setIpAddress($order['ip'])      
                          ->setPhoneNumber($order['telephone'])           
                          );
+<<<<<<< HEAD
             
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
             $svea = $svea
@@ -267,6 +267,76 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setInitials("SB")                 //SET
                         ->setBirthDate(1923, 12, 20)        //SET
                     );
+=======
+                
+                //Testmode
+                if($this->config->get('svea_invoice_testmode') == 1)
+                    $svea = $svea->setTestmode();
+                
+                      
+                $svea = $svea 
+                          ->setCountryCode($countryCode)
+                          ->setCurrency($this->session->data['currency'])
+                          ->setClientOrderNumber($this->session->data['order_id'])
+                          ->setOrderDate(date('c'))
+                          ->useInvoicePayment()
+                            ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode),$this->config->get('svea_invoice_password_' . $countryCode),$this->config->get('svea_invoice_clientno_' . $countryCode))
+                          ->doRequest();
+                
+               // print_r($svea->accepted); 
+                //die();
+                
+                $response = array();
+
+                //If response accepted redirect to thankyou page
+                if ($svea->accepted == 1) {
+                    
+                    /*
+                    if ($invoiceFee > 0) {
+
+
+                        $order_id = $this->session->data['order_id'];
+                        $invoiceTaxPrice = $invoiceFee - $invoiceFee_ex;
+
+                        if (floatval(VERSION) >= 1.5) {
+
+                            $this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` (order_id,product_id,name,model,price,total,tax,quantity) 
+                                VALUES ('" . $order_id . "','','Faktureringsavgift','','" . $invoiceFee_ex . "','" . $invoiceFee_ex . "','" . $invoiceTaxPrice . "','1')");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee . ", text = CONCAT(FORMAT(value,0), 'kr')  
+                                WHERE order_id = '" . $order_id . "' AND code = 'total'");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceTaxPrice . ", text = CONCAT(FORMAT(value,0), 'kr')  
+                                WHERE order_id = '" . $order_id . "' AND code = 'tax'");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee_ex . ", text = CONCAT(FORMAT(value,0), 'kr')  
+                                WHERE order_id = '" . $order_id . "' AND code = 'sub_total'");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = total+" . $invoiceFee . " 
+                                WHERE order_id = '" . $order_id . "'");
+                        } else {
+
+                            $this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` (order_id,product_id,name,model,price,total,tax,quantity) 
+                                  VALUES ('" . $order_id . "','','Faktureringsavgift','','" . $invoiceFee_ex . "','" . $invoiceFee_ex . "','" . $invoiceTaxPrice . "','1')");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee . ", text = CONCAT(FORMAT(value,0), 'kr')  
+                                WHERE order_id = '" . $order_id . "' AND sort_order = '99'");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceTaxPrice . ", text = CONCAT(FORMAT(value,0), 'kr')  
+                                  WHERE order_id = '" . $order_id . "' AND sort_order = '5'");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee_ex . ", text = CONCAT(FORMAT(value,0), 'kr')  
+                                  WHERE order_id = '" . $order_id . "' AND sort_order = '0'");
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = total+" . $invoiceFee . " 
+                                WHERE order_id = '" . $order_id . "'");
+                        }
+                    } */
+
+
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
+                    
+                    $response = array("success" => true);
+                } else {
+                    
+                    $response = array("error" => $svea->errormessage);
+                    //$this->responseCodes($response)
+                }
+                
+                echo json_encode($response);
+>>>>>>> origin/develop
             }
         }
             
@@ -312,13 +382,13 @@ class ControllerPaymentsveainvoice extends Controller {
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
                 $testMode = $this->config->get('svea_invoice_testmode'); //set false if not in testmode
                 $countryCode = $order['payment_iso_code_2'];
-                 
+                           
                 
                 $svea = WebPay::getAddresses()
                     ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode), $this->config->get('svea_invoice_password_' . $countryCode), $this->config->get('svea_invoice_clientno_' . $countryCode)) 
                     ->setOrderTypeInvoice()                                              
                     ->setCountryCode($countryCode);
-                
+
                 //Testmode
                 if($this->config->get('svea_invoice_testmode') == 1)
                     $svea = $svea->setTestmode();

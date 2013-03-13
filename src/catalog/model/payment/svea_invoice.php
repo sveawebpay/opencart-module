@@ -32,5 +32,6 @@ class ModelPaymentsveainvoice extends Model {
     	
         return $method_data;
   	}
+      
 }
 ?>
