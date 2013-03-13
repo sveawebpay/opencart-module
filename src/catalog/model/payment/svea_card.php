@@ -1,5 +1,5 @@
 <?php 
-class ModelPaymentsveakort extends Model {
+class ModelPaymentsveacard extends Model {
   	public function getMethod($address) {
 		$this->load->language('payment/svea_card');
 		$this->load->model('payment/svea_card');

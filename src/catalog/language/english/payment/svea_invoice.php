@@ -14,4 +14,8 @@ $_['response_OrderOverClientLimit']   = 'The order exceeds your highest order am
 $_['response_CustomerSveaRejected']   = 'The customer has a poor credit history at Svea';
 $_['response_CustomerCreditNoSuchEntity']   = 'The customer is not listed with the credit limit supplier';
 
+
+//Order definitions
+$_['text_svea_fee']   = 'SVEA Invoice fee';
+$_['unit']            = 'pcs';
 ?>
