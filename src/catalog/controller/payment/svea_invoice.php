@@ -88,15 +88,13 @@ class ControllerPaymentsveainvoice extends Controller {
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
 
-
-
         //Check if company or private
         $company = ($_GET['company'] == 'true') ? true : false;
         
         
-        
         // Get the products in the cart
         $products = $this->cart->getProducts();
+        
         //Product rows     
         foreach ($products as $product) {
             
@@ -267,14 +265,14 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setInitials("SB")                 //SET
                         ->setBirthDate(1923, 12, 20)        //SET
                     );
+            }
 
             }   
              
             //Testmode
             if($this->config->get('svea_invoice_testmode') == 1)
                 $svea = $svea->setTestmode();
-            
-                  
+     
             $svea = $svea 
                       ->setCountryCode($countryCode)
                       ->setCurrency($this->session->data['currency'])
@@ -305,9 +303,6 @@ class ControllerPaymentsveainvoice extends Controller {
             
             echo json_encode($response);
 
-            
-        }
-        
         }
             
             public function getAddress() {
