@@ -122,10 +122,10 @@ class ControllerPaymentsveainvoice extends Controller {
         
         
         //Invoice Fee
-        if ($this->config->get('handling_status') == 1) {
+        if ($this->config->get('svea_fee_status') == 1) {
             
-            $invoiceFee = $this->currency->format($this->config->get('handling_fee'),'',false,false);
-            $invoiceFeeTaxId = $this->config->get('handling_tax_class_id');
+            $invoiceFee = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
+            $invoiceFeeTaxId = $this->config->get('svea_fee_tax_class_id');
             
             $invoiceTax = 0;
             
@@ -161,8 +161,8 @@ class ControllerPaymentsveainvoice extends Controller {
             $svea = $svea
                     ->addFee(
                         Item::shippingFee()
-                            ->setAmountExVat($productPriceExVat)
-                            ->setAmountIncVat($productPriceIncVat)
+                            ->setAmountExVat($shippingExVat)
+                            ->setAmountIncVat($shippingIncVat)
                             ->setName($shipping_info["title"])
                             ->setDescription($shipping_info["text"])
                             ->setUnit($this->language->get('pcs'))
@@ -259,7 +259,7 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setIpAddress($order['ip'])      
                          ->setPhoneNumber($order['telephone'])           
                          );
-<<<<<<< HEAD
+
             
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
             $svea = $svea
@@ -267,111 +267,48 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setInitials("SB")                 //SET
                         ->setBirthDate(1923, 12, 20)        //SET
                     );
-=======
+
+            }   
+             
+            //Testmode
+            if($this->config->get('svea_invoice_testmode') == 1)
+                $svea = $svea->setTestmode();
+            
+                  
+            $svea = $svea 
+                      ->setCountryCode($countryCode)
+                      ->setCurrency($this->session->data['currency'])
+                      ->setClientOrderNumber($this->session->data['order_id'])
+                      ->setOrderDate(date('c'))
+                      ->useInvoicePayment()
+                        ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode),$this->config->get('svea_invoice_password_' . $countryCode),$this->config->get('svea_invoice_clientno_' . $countryCode))
+                      ->doRequest();
+            
+           // print_r($svea->accepted); 
+            //die();
+            
+            $response = array();
+
+            //If response accepted redirect to thankyou page
+            if ($svea->accepted == 1) {
                 
-                //Testmode
-                if($this->config->get('svea_invoice_testmode') == 1)
-                    $svea = $svea->setTestmode();
+
+
+                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
                 
-                      
-                $svea = $svea 
-                          ->setCountryCode($countryCode)
-                          ->setCurrency($this->session->data['currency'])
-                          ->setClientOrderNumber($this->session->data['order_id'])
-                          ->setOrderDate(date('c'))
-                          ->useInvoicePayment()
-                            ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode),$this->config->get('svea_invoice_password_' . $countryCode),$this->config->get('svea_invoice_clientno_' . $countryCode))
-                          ->doRequest();
+                $response = array("success" => true);
+            } else {
                 
-               // print_r($svea->accepted); 
-                //die();
-                
-                $response = array();
-
-                //If response accepted redirect to thankyou page
-                if ($svea->accepted == 1) {
-                    
-                    /*
-                    if ($invoiceFee > 0) {
-
-
-                        $order_id = $this->session->data['order_id'];
-                        $invoiceTaxPrice = $invoiceFee - $invoiceFee_ex;
-
-                        if (floatval(VERSION) >= 1.5) {
-
-                            $this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` (order_id,product_id,name,model,price,total,tax,quantity) 
-                                VALUES ('" . $order_id . "','','Faktureringsavgift','','" . $invoiceFee_ex . "','" . $invoiceFee_ex . "','" . $invoiceTaxPrice . "','1')");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee . ", text = CONCAT(FORMAT(value,0), 'kr')  
-                                WHERE order_id = '" . $order_id . "' AND code = 'total'");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceTaxPrice . ", text = CONCAT(FORMAT(value,0), 'kr')  
-                                WHERE order_id = '" . $order_id . "' AND code = 'tax'");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee_ex . ", text = CONCAT(FORMAT(value,0), 'kr')  
-                                WHERE order_id = '" . $order_id . "' AND code = 'sub_total'");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = total+" . $invoiceFee . " 
-                                WHERE order_id = '" . $order_id . "'");
-                        } else {
-
-                            $this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` (order_id,product_id,name,model,price,total,tax,quantity) 
-                                  VALUES ('" . $order_id . "','','Faktureringsavgift','','" . $invoiceFee_ex . "','" . $invoiceFee_ex . "','" . $invoiceTaxPrice . "','1')");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee . ", text = CONCAT(FORMAT(value,0), 'kr')  
-                                WHERE order_id = '" . $order_id . "' AND sort_order = '99'");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceTaxPrice . ", text = CONCAT(FORMAT(value,0), 'kr')  
-                                  WHERE order_id = '" . $order_id . "' AND sort_order = '5'");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order_total` SET value = value+" . $invoiceFee_ex . ", text = CONCAT(FORMAT(value,0), 'kr')  
-                                  WHERE order_id = '" . $order_id . "' AND sort_order = '0'");
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = total+" . $invoiceFee . " 
-                                WHERE order_id = '" . $order_id . "'");
-                        }
-                    } */
-
-
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
-                    
-                    $response = array("success" => true);
-                } else {
-                    
-                    $response = array("error" => $svea->errormessage);
-                    //$this->responseCodes($response)
-                }
-                
-                echo json_encode($response);
->>>>>>> origin/develop
+                $response = array("error" => $svea->errormessage);
+                //$this->responseCodes($response)
             }
-        }
             
-        //Testmode
-        if($this->config->get('svea_invoice_testmode') == 1)
-            $svea = $svea->setTestmode();
-        
-        //The rest            
-        $svea = $svea 
-                  ->setCountryCode($countryCode)
-                  ->setCurrency($this->session->data['currency'])
-                  ->setClientOrderNumber($this->session->data['order_id'])
-                  ->setOrderDate(date('c'))
-                  ->useInvoicePayment()
-                    ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode),$this->config->get('svea_invoice_password_' . $countryCode),$this->config->get('svea_invoice_clientno_' . $countryCode))
-                  ->doRequest();    
+            echo json_encode($response);
 
-        
-        $response = array();
-
-        //If response accepted redirect to thankyou page
-        if ($svea->accepted == 1) {
-
-            $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
             
-            $response = array("success" => true);
-        } else {
-            
-            $response = array("error" => $svea->errormessage);
-            //$this->responseCodes($response)
         }
         
-        echo json_encode($response);
-    }
-
+        }
             
             public function getAddress() {
                 include('svea/Includes.php');
