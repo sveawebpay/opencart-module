@@ -19,7 +19,7 @@
       <table class="form">
         <tr>
             <td>Version</td>
-            <td>1.3</td>
+            <td>2.0.0</td>
         </tr>
         <tr>
           <td><?php echo $entry_order_status; ?></td>
@@ -71,75 +71,157 @@
 		  </td>
         </tr>
         
+        <!-- Sweden credentials -->
         <tr>
             <td><?php echo $entry_sweden; ?></td>
             <td></td>
         </tr>
         <tr>
-            <td><?php echo $entry_username_SE; ?>:</td>
+            <td><?php echo $entry_username; ?>:</td>
             <td>
                 <input name="svea_invoice_username_SE" type="text" value="<?php echo $svea_invoice_username_SE; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_password_SE; ?>:</td>
+            <td><?php echo $entry_password; ?>:</td>
             <td>
                 <input name="svea_invoice_password_SE" type="password" value="<?php echo $svea_invoice_password_SE; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_clientno_SE; ?>:</td>
+            <td><?php echo $entry_clientno; ?>:</td>
             <td>
                 <input name="svea_invoice_clientno_SE" type="text" value="<?php echo $svea_invoice_clientno_SE; ?>" />
             </td>
         </tr>
+        
+        <!-- Finland credentials -->
         <tr>
-            <td><?php echo $entry_invoicefee_SE; ?>:</td>
+            <td><?php echo $entry_finland; ?></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
             <td>
-                <input name="svea_invoicefee_SE" type="text" value="<?php echo $svea_invoicefee_SE; ?>" /> kr
+                <input name="svea_invoice_username_FI" type="text" value="<?php echo $svea_invoice_username_FI; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_invoicefee_usetax; ?>:</td>
+            <td><?php echo $entry_password; ?>:</td>
             <td>
-                <select name="svea_invoicefee_usetax_SE">
-                  <option value="1" <?php if($svea_invoicefee_usetax_SE == '1'){ echo 'selected="selected"';}?> ><?php echo $entry_yes; ?></option>
-                  <option value="0" <?php if($svea_invoicefee_usetax_SE == '0'){ echo 'selected="selected"';}?> ><?php echo $entry_no; ?></option>
-                </select>
+                <input name="svea_invoice_password_FI" type="password" value="<?php echo $svea_invoice_password_FI; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_invoice_clientno_FI" type="text" value="<?php echo $svea_invoice_clientno_FI; ?>" />
+            </td>
+        </tr>
+
+        
+        <!-- Denmark credentials -->
+        <tr>
+            <td><?php echo $entry_denmark; ?></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
+            <td>
+                <input name="svea_invoice_username_DK" type="text" value="<?php echo $svea_invoice_username_DK; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_invoice_password_DK" type="password" value="<?php echo $svea_invoice_password_DK; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_invoice_clientno_DK" type="text" value="<?php echo $svea_invoice_clientno_DK; ?>" />
             </td>
         </tr>
         
         
+        <!-- Norway credentials -->
+        <tr>
+            <td><?php echo $entry_norway; ?></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
+            <td>
+                <input name="svea_invoice_username_NO" type="text" value="<?php echo $svea_invoice_username_NO; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_invoice_password_NO" type="password" value="<?php echo $svea_invoice_password_NO; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_invoice_clientno_NO" type="text" value="<?php echo $svea_invoice_clientno_NO; ?>" />
+            </td>
+        </tr>
+        
+        
+        <!-- Netherlands credentials -->
         <tr>
             <td><?php echo $entry_netherlands; ?></td>
             <td></td>
         </tr>
         <tr>
-            <td><?php echo $entry_username_NL; ?>:</td>
+            <td><?php echo $entry_username; ?>:</td>
             <td>
                 <input name="svea_invoice_username_NL" type="text" value="<?php echo $svea_invoice_username_NL; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_password_NL; ?>:</td>
+            <td><?php echo $entry_password; ?>:</td>
             <td>
                 <input name="svea_invoice_password_NL" type="password" value="<?php echo $svea_invoice_password_NL; ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo $entry_clientno_NL; ?>:</td>
+            <td><?php echo $entry_clientno; ?>:</td>
             <td>
                 <input name="svea_invoice_clientno_NL" type="text" value="<?php echo $svea_invoice_clientno_NL; ?>" />
             </td>
         </tr>
+        
+        
+        <!-- Germany credentials -->
         <tr>
-            <td><?php echo $entry_invoicefee_NL; ?>:</td>
+            <td><?php echo $entry_germany; ?></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
             <td>
-                <input name="svea_invoicefee_NL" type="text" value="<?php echo $svea_invoicefee_NL; ?>" /> Euro
+                <input name="svea_invoice_username_DE" type="text" value="<?php echo $svea_invoice_username_DE; ?>" />
             </td>
         </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_invoice_password_DE" type="password" value="<?php echo $svea_invoice_password_DE; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_invoice_clientno_DE" type="text" value="<?php echo $svea_invoice_clientno_DE; ?>" />
+            </td>
+        </tr>
+
       </table>
     </form>
   </div>
+  <div style="height:100px"></div>
 </div>
 <?php echo $footer; ?>

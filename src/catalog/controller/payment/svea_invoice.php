@@ -36,38 +36,15 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->render();
     }
 
-    private function responseCodes($err) {
+    private function responseCodes($err,$msg = "") {
         $this->load->language('payment/svea_invoice');
+        
+        $definition = $this->language->get("response_$err");
+        
+        if (preg_match("/^response/", $definition))
+             $definition = $this->language->get("response_error"). " $msg";
 
-        switch ($err) {
-
-            case "CusomterCreditRejected" :
-                return $this->language->get('response_CusomterCreditRejected');
-                break;
-            case "CustomerOverCreditLimit" :
-                return $this->language->get('response_CustomerOverCreditLimit');
-                break;
-            case "CustomerAbuseBlock" :
-                return $this->language->get('response_CustomerAbuseBlock');
-                break;
-            case "OrderExpired" :
-                return $this->language->get('response_OrderExpired');
-                break;
-            case "ClientOverCreditLimit" :
-                return $this->language->get('response_ClientOverCreditLimit');
-                break;
-            case "OrderOverSveaLimit" :
-                return $this->language->get('response_OrderOverSveaLimit');
-                break;
-            case "OrderOverClientLimit" :
-                return $this->language->get('response_OrderOverClientLimit');
-                break;
-            case "CustomerSveaRejected" :
-                return $this->language->get('response_CustomerSveaRejected');
-                break;
-            case "CustomerCreditNoSuchEntity" :
-                return $this->language->get('response_CustomerCreditNoSuchEntity');
-        }
+        return $definition;
     }
 
     public function confirm() {
@@ -235,7 +212,6 @@ class ControllerPaymentsveainvoice extends Controller {
         //Set order detials if company or private
         if ($company == TRUE){
             
-            //$ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : null;
             
             $item = Item::companyCustomer();
             
@@ -314,10 +290,10 @@ class ControllerPaymentsveainvoice extends Controller {
                 $response = array("success" => true);
             } else {
                 
-                $response = array("error" => $svea->errormessage);
-                //$this->responseCodes($response)
+                $response = array("error" => $this->responseCodes($this->resultcode,$svea->errormessage));
+                
             }
-            
+
             echo json_encode($response);
 
         }
@@ -370,67 +346,9 @@ class ControllerPaymentsveainvoice extends Controller {
                     
                     
                 }
-                
-                
-                
+
                 echo json_encode($result);
-                //print_r($svea);
-                /*
-                die();
-                
-                if (isset($response->GetAddressesResult->ErrorMessage)) {
-                    echo '  $("#svea_invoice_div").hide();
-                            $("#svea_invoice_err").show();
-                            $("#svea_invoice_err") . append("' . $response->GetAddressesResult->ErrorMessage . '");
-                            $("a#checkout") . hide();
-                        ';
-                } elseif (is_array($response->GetAddressesResult->Addresses->CustomerAddress)) {
-                    foreach ($response->GetAddressesResult->Addresses->CustomerAddress as $key => $info) {
 
-                        $addressline1 = (isset($info->AddressLine1)) ? $info->AddressLine1 : "";
-                        $addressline2 = (isset($info->AddressLine2)) ? $info->AddressLine2 : "";
-                        $address = ($addressline1 !== "" && $addressline2 !== "") ? $addressline1 . " - " . $addressline2 : $addressline1 . $addressline2;
-                        
-                        $legelName = (isset($info->LegalName)) ? $info->LegalName : "";
-                        $postCode = (isset($info->Postcode)) ? $info->Postcode : "";
-                        $city = (isset($info->Postarea)) ? $info->Postarea : "";
-                        $addressSelector = (isset($info->AddressSelector)) ? $info->AddressSelector : "";
-
-                        //Send back to user
-                        echo '$("#svea_invoice_address").append(\'<option id="adress_' . $key . '" value="' . $addressSelector . '">' . $legelName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');';
-                    }
-
-                    echo "$(\"#svea_invoice_err\").hide();";
-                    echo "$(\"#svea_invoice_div\").show();";
-                    echo "$(\"a#checkout\").show();";
-                } else if (isset($response->GetAddressesResult->Addresses->CustomerAddress)) {
-                    $customerAddress = $response->GetAddressesResult->Addresses->CustomerAddress;
-
-                    $addressline1 = (isset($customerAddress->AddressLine1)) ? $customerAddress->AddressLine1 : "";
-                    $addressline2 = (isset($customerAddress->AddressLine2)) ? $customerAddress->AddressLine2 : "";
-
-                    $address = ($addressline1 !== "" && $addressline2 !== "") ? $addressline1 . " - " . $addressline2 : $addressline1 . $addressline2;
-
-                    $legalName = (isset($customerAddress->LegalName)) ? $customerAddress->LegalName : "";
-                    $postCode = (isset($customerAddress->Postcode)) ? $customerAddress->Postcode : "";
-                    $city = (isset($customerAddress->Postarea)) ? $customerAddress->Postarea : "";
-                    $addressSelector = (isset($customerAddress->AddressSelector)) ? $customerAddress->AddressSelector : "";
-                    //Send back to user
-                    echo '
-        		$("#svea_invoice_address").append(\'<option id="adress" value="' . $addressSelector . '">' . $legalName . ', ' . $address . ', ' . $postCode . ' ' . $city . '</option>\');
-                        $("#svea_invoice_div").show();
-                        $("#svea_invoice_err").hide();
-                        $("a#checkout").show();
-                ';
-                } else {
-                    echo '  $("#svea_invoice_div") . hide();
-                            $("#svea_invoice_err").show();
-                            $("#svea_invoice_err").append("No address was found.");
-                            $("a#checkout").hide();
-        		  ';
-                }
-                
-                */
             }
 
         }
