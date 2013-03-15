@@ -1,40 +1,42 @@
 <?php
 class ControllerPaymentsveacard extends Controller {
-	protected function index() {
+    protected function index() {
     	$this->data['button_confirm'] = $this->language->get('button_confirm');
-		$this->data['button_back'] = $this->language->get('button_back');
-        
-		
+        $this->data['button_back'] = $this->language->get('button_back');    
 
-		if ($this->request->get['route'] != 'checkout/guest_step_3') {
-			$this->data['back'] = 'index.php?route=checkout/payment';
-		} else {
-			$this->data['back'] = 'index.php?rout=checkout/guest_step_2';
-		}
-		
-		$this->id = 'payment';
+        if ($this->request->get['route'] != 'checkout/guest_step_3') {
+            $this->data['back'] = 'index.php?route=checkout/payment';
+        } else {
+            $this->data['back'] = 'index.php?rout=checkout/guest_step_2';
+        }
+        //Get the country
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $this->data['countryCode'] = $order_info['payment_iso_code_2'];
+        $this->id = 'payment';
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/svea_card.tpl';
-		} else {
-			$this->template = 'default/template/payment/svea_card.tpl';
-		}	
-		
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {
+            $this->template = $this->config->get('config_template') . '/template/payment/svea_card.tpl';
+        } else {
+            $this->template = 'default/template/payment/svea_card.tpl';
+        }
         
-       $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
+        $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';        
         
-        
-		$this->render();
-	}
-    
+        $this->render();
+    }    
     
     public function redirectSvea(){ 
         $this->load->model('checkout/coupon');
+        $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
         $this->load->model('localisation/currency');
         $this->load->language('payment/svea_card');
-        include('svea/src/Includes.php');
-        $orderbuilder = WebPay::createOrder();
+        include('svea/Includes.php');
+        $svea = WebPay::createOrder();
+        
+          //Get order information
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+    
        
     /**
         //SVEA config settings
@@ -46,158 +48,112 @@ class ControllerPaymentsveacard extends Controller {
         $paymentRequest->order = $order;
         
      * 
-     */
-        //Settings and fees'     
-        $shipping = $this->cart->hasShipping();
-      
-       // $totalPrice = 0;
-        //$totalTax = 0;    
-        
-            
-        //Get coupons
-        if (isset($this->session->data['coupon'])){
-            $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-        }
-      
-        //get the currency value 
-        $currencyValue = $this->model_localisation_currency->getCurrencyByCode($this->session->data['currency']);
-       
-      
-        //Product rows   
-         // Get the products in the cart
+     */       
+       //Product rows         
         $products = $this->cart->getProducts();  
         foreach($products as $product){
-            //get tax
-            if (floatval(VERSION) >= 1.5){
-                //$tax = $this->tax->getTax($product['price'],$product['tax_class_id']);
-                $taxClass = $this->model_payment_svea_card->getPaymentTaxRateIdByTaxClass(10);//e.g. 86
-                $taxRate = $this->model_payment_svea_card->getTaxRate($taxClass[0]['tax_rate_id']);//e.g. 86
-                $tax = $taxRate['rate'];
-            }else{
-                $tax = ($this->tax->getRate($product['tax_class_id'])/100)*$product['price'];
-               
-            }
-            //get product price in right currency
-            $productPrice = round($product['price'] * $currencyValue['value'], 2);
+             //Get the tax, difference in version 1.4.x
+            $productTax = (floatval(VERSION) >= 1.5) ? $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false) : $this->currency->format($this->tax->getRate($product['tax_class_id']));
+            
+            //Get and set prices
+            $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+            $productPriceIncVat = $productPriceExVat + $productTax;
           
-            $orderbuilder->addOrderRow(Item::orderRow()
-                    ->setAmountIncVat($productPrice)
-                    ->setVatPercent(round($tax))
-                    ->setName($product['name'])
-                    ->setDescription($product['model'])
-                    ->setQuantity($product['quantity'])
-                    ->setUnit($this->language->get('unit'))
+            $svea = $svea
+                    ->addOrderRow(Item::orderRow()
+                        ->setQuantity($product['quantity'])
+                        ->setAmountExVat($productPriceExVat)    
+                        ->setAmountIncVat($productPriceIncVat)
+                        ->setName($product['name'])
+                        ->setUnit($this->language->get('unit'))
+                        ->setArticleNumber($product['product_id'])
+                        ->setDescription($product['model'])   
                     );
                   
-            /**
-            $orderRow = new SveaOrderRow();
-            $orderRow->amount = number_format(round($productPrice,2),2,'','');
-            $orderRow->vat = number_format(round($tax,2),2,'','');
-            $orderRow->name = urlencode($product['name']);
-            $orderRow->quantity = $product['quantity'];
-            $orderRow->unit = "st";
-            
-            //Add the order rows to your order
-            $order->addOrderRow($orderRow);
-            
-            
-            //Update totals
-            $totalPrice = $totalPrice + ($productPrice * $product['quantity']);
-            $totalTax = $totalTax + ($tax * $product['quantity']);        
-            
-             * 
-             */
         }
 
         
         //Shipping Fee
-        if ($shipping == '1'){
-            $shipping_info = $this->session->data['shipping_method'];
-            
-           // this is the cost in default value - $shipping_info['cost'];
-            if (floatval(VERSION) >= 1.5){
-                $shippingTax = $this->tax->getTax($shipping_info['cost'],$shipping_info['tax_class_id']);
-            }else{
-                $shippingTax = ($this->tax->getRate($shipping_info['tax_class_id'])/100)*$shipping_info['cost'];
-            }
-            $shippingPrice = $shipping_info['cost'] + $shippingTax;
-            
+        if ( $this->cart->hasShipping() == 1){
+            $shipping_info = $this->session->data['shipping_method'];            
+            $shippingCost = $this->currency->format($shipping_info["cost"],'',false,false);            
+            $shippingTax = (floatval(VERSION) >= 1.5) ? $this->tax->getTax($shippingCost, $shipping_info["tax_class_id"]) : $this->tax->getRate($shipping_info["tax_class_id"]) ;
+
             if ($shipping_info['cost'] > 0){
-                $orderbuilder
+                $svea
                 ->addFee(Item::shippingFee()              
-                    ->setAmountExVat($shipping_info['cost'])
-                    ->setVatPercent(25)//hardcoded
-                    ->setName(urlencode($shipping_info['title']))
-                        );
-                /**
-                //Parameters for order rows
-                $orderRow = new SveaOrderRow();
-                $orderRow->amount = number_format(round($shippingPrice,2),2,'','');
-                $orderRow->vat = number_format(round($shippingTax,2),2,'','');
-                $orderRow->name = urlencode($shipping_info['title']);
-                $orderRow->quantity = '1';
-                $orderRow->unit = "st";
+                    ->setAmountExVat($shippingCost)
+                    ->setAmountIncVat( $shippingCost + $shippingTax)
+                    ->setName($shipping_info['title'])
+                    ->setDescription($shipping_info['text'])
+                    ->setUnit($this->language->get('unit'))
+                    );              
                 
-                //Add the order rows to your order
-                $order->addOrderRow($orderRow);
-                
-                $totalPrice = $totalPrice + $shippingPrice;
-                $totalTax = $totalTax + $shippingTax;
-   
-                 * 
-                 */
             }
             
         }
-       
+
+         
         
         //Add coupon
-        if (isset($coupon)){
+        if (isset($this->session->data['coupon'])){
+        $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
 
-            $totalCartPrice =  $this->cart->getTotal();
-
-            if ($coupon['type'] == 'F') {
-                $discount = $coupon['discount'] * 1.25;
-            } elseif ($coupon['type'] == 'P') {
-                $discount = (($coupon['discount'] / 100) * $totalCartPrice);
-            }
-            
-            $couponTax = $discount * 0.2;
-            $orderbuilder->addDiscount(Item::fixedDiscount()
-                    ->setAmountExVat($coupon['discount'])
-                    ->setName($coupon['name'])
-                    );
-/**
-            //Parameters for order rows
-            $orderRow = new SveaOrderRow();
-            $orderRow->amount = number_format(round(-$discount,2),2,'','');
-            $orderRow->vat = number_format(round(-$couponTax,2),2,'','');
-            $orderRow->name = $coupon['name'];
-            $orderRow->quantity = '1';
-            $orderRow->unit = "st";
-            
-            //Add the order rows to your order
-            $order->addOrderRow($orderRow);
-            
-            //Totals
-            $totalPrice -= $discount;                   
-            $totalTax -= $couponTax;
- * 
- */
+        $totalPrice = $this->cart->getTotal();
+       
+        if ($coupon['type'] == 'F') {   
+            $discount = $this->currency->format($coupon['discount'],'',false,false);
+            $svea = $svea
+                    ->addDiscount(
+                        Item::fixedDiscount()                
+                            ->setAmountIncVat($discount)
+                            ->setName($coupon['name'])
+                            ->setUnit($this->language->get('unit'))
+                        );
+        } elseif ($coupon['type'] == 'P') {
+            $svea = $svea
+                    ->addDiscount(
+                        Item::relativeDiscount()                
+                            ->setDiscountPercent($coupon['discount'])
+                            ->setName($coupon['name'])
+                            ->setUnit($this->language->get('unit'))
+                        );                
+                }
         }
-     $form = $orderbuilder
-        ->setClientOrderNumber($this->session->data['order_id'].'test2'.+1)
-        
-        ->setCountryCode("SE")
-        ->setOrderDate(date("Y-m-d, h:m:s"))
-        ->setCurrency('SEJ')//$this->session->data['currency'])
-        ->setTestmode()       
+       
+        //Get vouchers
+        if (isset($this->session->data['voucher'])) {
+            $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
+
+            $totalPrice = $this->cart->getTotal();
             
-        ->usePayPageCardOnly()
-              ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
-            //->setMerchantIdBasedAuthorization($this->config->get('svea_card_merchant_id'), $this->config->get('svea_card_sw'))
-            ->setReturnUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
-              ->getPaymentForm();
+            $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
+            
+            $svea = $svea
+                    ->addDiscount(
+                        Item::fixedDiscount()                
+                            ->setAmountIncVat($voucherAmount)
+                            ->setName($voucher['code'])
+                            ->setDescription($voucher["message"])
+                            ->setUnit($this->language->get('unit'))
+                        );
+
+        }
+       
+        //testmode
+          //Testmode
+        if($this->config->get('svea_invoice_testmode') == 1)
+                $svea = $svea->setTestmode();
+         $svea = $svea 
+                ->setCountryCode($order['payment_iso_code_2'])
+                ->setCurrency($this->session->data['currency'])
+                ->setClientOrderNumber($this->session->data['order_id'])
+                ->setOrderDate(date('c'))
+                ->usePayPageCardOnly()
+                    ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
+                    //->setMerchantIdBasedAuthorization($this->config->get('svea_card_merchant_id'), $this->config->get('svea_card_sw'))
+                    ->setReturnUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
+                    ->getPaymentForm();
       /**
         //Set base data for the order
         $order->amount = number_format(round($totalPrice,2),2,'','');
@@ -212,7 +168,7 @@ class ControllerPaymentsveacard extends Controller {
        
        * 
        */
-      print_r($form->completeHtmlFormWithSubmitButton);
+      print_r($svea->completeHtmlFormWithSubmitButton);
       /**
       die();
         echo '<html><head>
