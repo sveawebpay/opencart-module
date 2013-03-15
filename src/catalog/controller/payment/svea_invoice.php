@@ -221,54 +221,73 @@ class ControllerPaymentsveainvoice extends Controller {
 
         }
         
+
         
+        preg_match_all('!\d+!',$order['payment_address_1'],$houseNoArr);
+        $houseNo = $houseNoArr[0][0];
+        
+        preg_match_all('!\w+!',$order['payment_address_1'],$streetArr);
+        $street = $streetArr[0][0];
+        
+
+        
+
         //Set order detials if company or private
         if ($company == TRUE){
             
-            $svea = $svea
-                    ->addCustomerDetails(Item::companyCustomer()
-                         ->setNationalIdNumber($_GET['ssn']) 
-                         ->setEmail($order['email'])
-                         ->setCompanyName("TestCompagniet")        //SET
+            //$ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : null;
+            
+            $item = Item::companyCustomer();
+            
+            $item = $item->setEmail($order['email'])
+                         ->setCompanyName($order['payment_company']) 
+                         ->setStreetAddress($street,$houseNo) 
                          ->setZipCode($order['payment_postcode'])            
                          ->setLocality($order['payment_city'])
                          ->setIpAddress($order['ip'])      
-                         ->setPhoneNumber($order['telephone'])           
-                         );
+                         ->setPhoneNumber($order['telephone']);
+
             
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
-                $svea = $svea
-                        ->addCustomerDetails(Item::individualCustomer()
-                            ->setVatNumber("NL2345234")  //SET
-                            ->setStreetAddress($order['payment_address_1'])   
-                        );
+                
+                $item = $item->setVatNumber($_GET['vatno']);
+            }else{
+                $item = $item->setNationalIdNumber($_GET['ssn']);
             }
+            
+             $svea = $svea->addCustomerDetails($item);
             
         }else{
             
-            $svea = $svea
-                    ->addCustomerDetails(Item::individualCustomer()
-                         ->setNationalIdNumber($_GET['ssn']) 
+            $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
+            
+            $item = Item::individualCustomer();
+                         
+            $item = $item->setNationalIdNumber($ssn) 
                          ->setEmail($order['email'])
                          ->setName($order['payment_firstname'],$order['payment_lastname'])               
-                         ->setStreetAddress($order['payment_address_1'],'1')   //SET
+                         ->setStreetAddress($street,$houseNo)  
                          ->setZipCode($order['payment_postcode'])            
                          ->setLocality($order['payment_city'])
                          ->setIpAddress($order['ip'])      
-                         ->setPhoneNumber($order['telephone'])           
-                         );
+                         ->setPhoneNumber($order['telephone']);
+            
+            
 
             
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
-            $svea = $svea
-                    ->addCustomerDetails(Item::individualCustomer()
-                        ->setInitials("SB")                 //SET
-                        ->setBirthDate(1923, 12, 20)        //SET
-                    );
+            
+            $item = $item->setInitials($_GET['initials'])
+                         ->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);        
+            
             }
+            
+            
+            $svea = $svea->addCustomerDetails($item);
 
             }   
-             
+            
+            
             //Testmode
             if($this->config->get('svea_invoice_testmode') == 1)
                 $svea = $svea->setTestmode();
@@ -281,9 +300,7 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->useInvoicePayment()
                         ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode),$this->config->get('svea_invoice_password_' . $countryCode),$this->config->get('svea_invoice_clientno_' . $countryCode))
                       ->doRequest();
-            
-           // print_r($svea->accepted); 
-            //die();
+
             
             $response = array();
 
@@ -340,7 +357,10 @@ class ControllerPaymentsveainvoice extends Controller {
                 }else{
                     
                     foreach ($svea->customerIdentity as $ci){
-                        $result[] = array("fullName" => $ci->fullName,
+                        
+                        $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
+                        
+                        $result[] = array("fullName" => $name,
                                           "street"    => $ci->street,
                                           "zipCode"   => $ci->zipCode,
                                           "locality"  => $ci->locality,
