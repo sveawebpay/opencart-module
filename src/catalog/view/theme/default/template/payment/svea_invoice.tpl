@@ -14,7 +14,7 @@
     </div>
     <br />
     
-    <div id="svea_invoice_err" class="right" style="color:red; clear:both; "></div><br />
+    <div id="svea_invoice_err" class="right" style="color:red; clear:both; margin-bottom:20px"></div><br />
     
     
     <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){ ?>
@@ -122,7 +122,7 @@ $('a#checkout').click(function() {
             if(json.success){
                 location = '<?php echo $continue; ?>';
             }else{
-                alert(json.error);
+                $("#svea_invoice_err").show().append('<br>'+json.error);
             }
             
             $('#sveaLoading').remove();         
