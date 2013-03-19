@@ -1,10 +1,11 @@
 <?php
 
-$_['text_title']      = '<img src="admin/view/image/payment/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
-$_['unit']              = 'pcs';
+$_['text_title']     = '<img src="admin/view/image/payment/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
+$_['unit']           = 'pcs';
 
 //Error responses
-$_['response_100']   = 'Internal Error';
+$_['error_heading']   = 'Payment error ';
+$_['response_100']   = 'Invalid. Contact integrator';
 $_['response_105']   = 'Invalid transaction status';
 $_['response_106']   = 'Failure at third party';
 $_['response_107']   = 'Transaction rejected by bank';

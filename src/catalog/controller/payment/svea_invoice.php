@@ -151,7 +151,7 @@ class ControllerPaymentsveainvoice extends Controller {
             $totalPrice = $this->cart->getTotal();
         
             if ($coupon['type'] == 'F') {
-                $discount = $this->currency->format($coupon['discount'],'',false,false);;
+                $discount = $this->currency->format($coupon['discount'],'',false,false);
                 
                 $svea = $svea
                         ->addDiscount(

@@ -12,6 +12,16 @@
   
     
 <div class="right">
-    <a id="checkout" class="button" href="<?php echo $continue; ?>"><span><?php echo $button_confirm; ?></span></a>
+     <?php 
+        echo $form_start_tag,
+            $input_message,
+            $merchant_id,
+            $input_mac;
+    ?>
+     <input id="checkout" class="button" type='submit' name='submit' value='<?php echo $submitMessage ?>' />
+    <?php
+        echo $form_end_tag;
+    ?>
+   <!-- <a id="checkout" class="button" href="<?php echo $continue; ?>"><span><?php echo $button_confirm; ?></span></a>-->
 </div>
 </div>
