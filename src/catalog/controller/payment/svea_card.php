@@ -1,6 +1,9 @@
 <?php
 class ControllerPaymentsveacard extends Controller {
     protected function index() {
+        
+        //set template
+        
     	$this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->data['button_back'] = $this->language->get('button_back');    
 
@@ -22,10 +25,9 @@ class ControllerPaymentsveacard extends Controller {
         
         $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';        
         
-        $this->render();
-    }    
+       //create order
     
-    public function redirectSvea(){ 
+   // public function redirectSvea(){ 
         $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
@@ -37,18 +39,6 @@ class ControllerPaymentsveacard extends Controller {
           //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
     
-       
-    /**
-        //SVEA config settings
-        $config = SveaConfig::getConfig();
-        $config->merchantId = $this->config->get('svea_card_merchant_id'); 
-        $config->secret = $this->config->get('svea_card_sw'); 
-        $paymentRequest = new SveaPaymentRequest();
-        $order = new SveaOrder();
-        $paymentRequest->order = $order;
-        
-     * 
-     */       
        //Product rows         
         $products = $this->cart->getProducts();  
         foreach($products as $product){
@@ -69,10 +59,7 @@ class ControllerPaymentsveacard extends Controller {
                         ->setArticleNumber($product['product_id'])
                         ->setDescription($product['model'])   
                     );
-                  
         }
-
-        
         //Shipping Fee
         if ( $this->cart->hasShipping() == 1){
             $shipping_info = $this->session->data['shipping_method'];            
@@ -87,14 +74,10 @@ class ControllerPaymentsveacard extends Controller {
                     ->setName($shipping_info['title'])
                     ->setDescription($shipping_info['text'])
                     ->setUnit($this->language->get('unit'))
-                    );              
-                
+                    ); 
             }
             
         }
-
-         
-        
         //Add coupon
         if (isset($this->session->data['coupon'])){
         $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
@@ -139,103 +122,96 @@ class ControllerPaymentsveacard extends Controller {
                         );
 
         }
-       
-        //testmode
+     $payPageLanguage = "";
+     switch ($order['payment_iso_code_2']) {
+         case "DE":
+             $payPageLanguage = "de";
+
+             break;
+         case "NL":
+             $payPageLanguage = "nl";
+
+             break;
+         case "SE":
+             $payPageLanguage = "sv";
+
+             break;
+         case "NO":
+             $payPageLanguage = "no";
+
+             break;
+         case "DK":
+             $payPageLanguage = "da";
+
+             break;
+         case "FI":
+             $payPageLanguage = "fi";
+
+             break;
+
+         default:
+             $payPageLanguage = "en";
+             break;
+     }
+        
           //Testmode
-        if($this->config->get('svea_invoice_testmode') == 1)
-                $svea = $svea->setTestmode();
-         $svea = $svea 
+        if($this->config->get('svea_invoice_testmode') == 1){
+              $svea = $svea->setTestmode();
+        } 
+     
+         $form = $svea 
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
-                ->setClientOrderNumber($this->session->data['order_id'])
+                ->setClientOrderNumber($this->session->data['order_id'].  rand(1, 100000))//remove rand after developing
                 ->setOrderDate(date('c'))
                 ->usePayPageCardOnly()
                     ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
-                    //->setMerchantIdBasedAuthorization($this->config->get('svea_card_merchant_id'), $this->config->get('svea_card_sw'))
+                    ->setMerchantIdBasedAuthorization($this->config->get('svea_card_merchant_id'),$this->config->get('svea_card_sw'))
                     ->setReturnUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
+                    ->setPayPageLanguage($payPageLanguage)
                     ->getPaymentForm();
-      /**
-        //Set base data for the order
-        $order->amount = number_format(round($totalPrice,2),2,'','');
-        $order->customerRefno = $this->session->data['order_id'].'test2';
-        $order->returnUrl = HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea';
-        $order->vat = number_format(round($totalTax,2),2,'','');
-        $order->currency = $this->session->data['currency'];
-        $order->paymentMethod = 'CARD';
-                
-        $paymentRequest->createPaymentMessage();
-        $request = http_build_query($paymentRequest,'','&');
-       
-       * 
-       */
-      print_r($svea->completeHtmlFormWithSubmitButton);
-      /**
-      die();
-        echo '<html><head>
-                <script type="text/javascript">
-                    function doPost(){
-                            document.forms[0].submit();
-                        }
-                </script>
-                </head>
-                <body onload="doPost()">
-                ';
-        //Check for testmode
-        if ($this->config->get('svea_card_testmode') == '1'){
-        	echo $paymentRequest->getPaymentForm(true);
-        }else{
-        	echo $paymentRequest->getPaymentForm(false);
-        }
-        
-        echo '
-            </body></html>
-        ';
-        
-        exit();
-        **/
+        //print form with hidden buttons
+        $fields = $form->htmlFormFieldsAsArray;
+        $this->data['form_start_tag'] = $fields['form_start_tag'];
+        $this->data['merchant_id'] = $fields['input_merchantId'];
+        $this->data['input_message'] = $fields['input_message'];
+        $this->data['input_mac'] = $fields['input_mac'];
+        // $this->data['noscript_p_tag'] = $fields['noscript_p_tag'];
+        $this->data['input_submit'] = $fields['input_submit'];        
+        $this->data['form_end_tag'] = $fields['form_end_tag'];
+        $this->data['submitMessage'] = $this->language->get('button_confirm');
+         
+        $this->render();       
     }
     
-    public function responseSvea(){
-       
+    public function responseSvea(){       
         $this->load->model('checkout/order');
-        $this->load->model('payment/svea_card');
-        
-        include('svea/src/Includes.php'); //NEW LINE
-       //require_once('svea/SveaConfig.php');   
-      
-        //GETs
-        $response = $_REQUEST['response'];
-        $mac = $_REQUEST['mac'];
-        $merchantid = $_REQUEST['merchantid'];
-        $secretWord = $this->config->get('svea_card_sw');
-       
+        $this->load->model('payment/svea_card');  
+        $this->load->language('payment/svea_card');
+        include('svea/Includes.php'); 
+             
        //$resp = new SveaPaymentResponse($response);
-        $resp = new SveaResponse($_REQUEST,"8a9cece566e808da63c6f07ff415ff9e127909d000d259aba24daa2fed6d9e3f8b0b62e8ad1fa91c7d7cd6fc3352deaae66cdb533123edf127ad7d1f4c77e7a3"); //NEW LINE
+        $resp = new SveaResponse($_REQUEST,$this->config->get('svea_card_sw')); 
       
-          var_dump($resp);
-        /**
-        $d['order_id'] = $resp->customerRefno;
+          $this->session->data['order_id'] = $resp->response->clientOrderNumber;
         
-        if($resp->validateMac($mac,$secretWord) == true){
-            if ($resp->statuscode == '0'){
+        if($resp->response->resultcode != '0'){
+            if ($resp->response->accepted == '1'){
                 $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'));
             
                 header("Location: index.php?route=checkout/success");
                 flush();
             }else{
-                $this->session->data['error_warning'] = $this->responseCodes($resp->statuscode);
-                $this->renderFailure($resp->statuscode);
+                $this->session->data['error_warning'] = $this->responseCodes($resp->response->resultcode, $resp->response->errormessage);
+                $this->renderFailure($resp->response);
             }
         }else{
-            $this->renderFailure("Could not validate mac");
+            $this->renderFailure($resp->response);
         }
-         * 
-         * 
-         */
+        
     }
     
-    private function renderFailure($rejection)
-    {
+    private function renderFailure($rejection){
         $this->data['continue'] = 'index.php?route=checkout/cart';
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl';
@@ -250,60 +226,30 @@ class ControllerPaymentsveacard extends Controller {
 			'common/column_left',
 			'common/header'
 		);
-        		
-        $this->data['text_message'] = "Dessvärre misslyckades betalningen.<br />Med anledningen: <br /><br />".$this->responseCodes($rejection)."<br /><br /><br />";
-        $this->data['heading_title'] = "Betalning misslyckades";
+        	
+        $this->data['text_message'] = "<br />".  $this->responseCodes($rejection->resultcode, $rejection->errormessage)."<br /><br /><br />";
+        $this->data['heading_title'] = $this->language->get('error_heading');
         $this->data['footer'] = "";
                                 
         $this->data['button_continue'] = $this->language->get('button_continue');
 		$this->data['button_back'] = $this->language->get('button_back');
             
         $this->data['continue'] = 'index.php?route=checkout/cart';              
-		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+        $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
     
-    private function responseCodes($err){
-        $this->load->language('payment/svea_card');
+     private function responseCodes($err,$msg = "") {
+        $err = strstr($err, "(", TRUE);
+        $this->load->language('payment/svea_invoice');
         
-        switch ($err){
-            case "100" :
-                return $this->language->get('response_100');
-                break;
-            case "105" :
-                return $this->language->get('response_105');
-                break;
-            case "106" :
-                return $this->language->get('response_106');
-                break;
-            case "107" :
-                return $this->language->get('response_107');
-                break;
-            case "108" :
-                return $this->language->get('response_108');
-                break;
-            case "109" :
-                return $this->language->get('response_109');
-                break;
-            case "114" :
-                return $this->language->get('response_114');
-                break;
-            case "121" :
-                return $this->language->get('response_121');
-                break;
-            case "122" :
-                return $this->language->get('response_122');
-                break;
-            case "123" :
-                return $this->language->get('response_123');
-                break;
-            case "127" :
-                return $this->language->get('response_127');
-                break;
-            case "129" :
-                return $this->language->get('response_129');
-                break;
-        }
+        $definition = $this->language->get("response_$err");
+        
+        if (preg_match("/^response/", $definition))
+             $definition = $this->language->get("response_error"). " $msg";
+      
+        return $definition;
     }
+    
     
 }
 ?>

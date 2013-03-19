@@ -1,9 +1,10 @@
 <?php
 
-$_['text_title']      = '<img src="admin/view/image/payment/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
-$_['unit']              = 'pcs';
+$_['text_title']     = '<img src="admin/view/image/payment/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
+$_['unit']           = 'pcs';
 
 //Error responses
+$_['error_heading']   = 'Payment error ';
 $_['response_100']   = 'Internal Error';
 $_['response_105']   = 'Invalid transaction status';
 $_['response_106']   = 'Failure at third party';

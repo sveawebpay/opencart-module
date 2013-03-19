@@ -81,5 +81,6 @@
       </table>
     </form>
   </div>
+   <div style="height:100px"></div>
 </div>
 <?php echo $footer; ?>
