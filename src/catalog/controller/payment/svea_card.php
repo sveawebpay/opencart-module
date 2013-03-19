@@ -37,8 +37,7 @@ class ControllerPaymentsveacard extends Controller {
         $svea = WebPay::createOrder();
         
           //Get order information
-        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-    
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);    
        //Product rows         
         $products = $this->cart->getProducts();  
         foreach($products as $product){
