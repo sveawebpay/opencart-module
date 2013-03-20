@@ -11,9 +11,6 @@
     <div class="buttons"><a onclick="$('#form').submit();" class="button"><span><?php echo $button_save; ?></span></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a></div>
   </div>
   <div class="content">
-    <div class="breadcrumb">
-    <a class="button" href="<?php echo HTTPS_SERVER . 'index.php?route=payment/svea_invoice/sveaOrdersList&token=' . $this->session->data['token'] ?>">Deliver Orders</a>
-  </div>
 
     <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
       <table class="form">
