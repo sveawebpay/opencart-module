@@ -75,7 +75,7 @@ class ControllerPaymentsveainvoice extends Controller {
             
             //Get the tax, difference in version 1.4.x
             $productTax = (floatval(VERSION) >= 1.5) ? $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false) : $this->currency->format($this->tax->getRate($product['tax_class_id']));
-            
+
             //Get and set prices
             $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
             $productPriceIncVat = $productPriceExVat + $productTax;
@@ -107,7 +107,6 @@ class ControllerPaymentsveainvoice extends Controller {
 
             $invoiceFeeExVat  = $invoiceFee;
             $invoiceFeeIncVat = $invoiceFeeExVat + $invoiceTax;
-
                    
             $svea = $svea
                     ->addFee(
@@ -247,15 +246,13 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setPhoneNumber($order['telephone']);
             
             
-
-            
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
-            
-            $item = $item->setInitials($_GET['initials'])
-                         ->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);        
-            
+                $item = $item->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);        
             }
             
+            if($order["payment_iso_code_2"] == "NL"){
+                $item = $item->setInitials($_GET['initials']);        
+            }
             
             $svea = $svea->addCustomerDetails($item);
 
@@ -275,7 +272,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setPasswordBasedAuthorization($this->config->get('svea_invoice_username_' . $countryCode),$this->config->get('svea_invoice_password_' . $countryCode),$this->config->get('svea_invoice_clientno_' . $countryCode))
                       ->doRequest();
 
-            
+
             $response = array();
 
             //If response accepted redirect to thankyou page
