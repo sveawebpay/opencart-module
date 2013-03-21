@@ -210,29 +210,7 @@ class ControllerPaymentsveadirectbank extends Controller {
         }else{
             $this->renderFailure($resp->response);
         }
-    }
-        /**
-        print_r($resp);
-        $d['order_id'] = $resp->customerRefno;
-        
-        
-        if($resp->validateMac($mac,$secretWord) == true){
-            if ($resp->statuscode == '0'){
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_kort_order_status_id'));
-            
-                header("Location: index.php?route=checkout/success");
-                flush();
-            }else{
-                $this->session->data['error_warning'] = $this->responseCodes($resp->statuscode);
-                $this->renderFailure($resp->statuscode);
-            }
-        }else{
-            $this->renderFailure("Could not validate mac");
-        }
-        
-    }
-         * 
-         */
+    }       
     
     
     private function renderFailure($rejection){

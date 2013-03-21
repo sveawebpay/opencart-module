@@ -8,7 +8,7 @@ require_once SVEA_REQUEST_DIR . '/Includes.php';
  * @author Anneli Halld'n, Daniel Brolund for Svea Webpay
  * @package BuildOrder/CreateOrder
 */
-class createOrderBuilder {
+class CreateOrderBuilder {
 
      /**
      * @var Array Rows containing Product rows
@@ -76,8 +76,8 @@ class createOrderBuilder {
     /**
      * @param type $orderrows
      */
-    public function __construct() {
-        $this->conf = SveaConfig::getConfig();
+    public function __construct($config) {
+        $this->conf = $config;
     }
     
     /**
@@ -96,7 +96,7 @@ class createOrderBuilder {
     /**
      * New!
      * @param type $orderRow
-     * @return \createOrderBuilder
+     * @return \CreateOrderBuilder
      */
     public function addOrderRow($itemOrderRowObject){
         if(is_array($itemOrderRowObject)){
@@ -112,7 +112,7 @@ class createOrderBuilder {
     /**
      * New!
      * @param type $itemFeeObject
-     * @return \createOrderBuilder
+     * @return \CreateOrderBuilder
      */
     public function addFee($itemFeeObject){    
          if(is_array($itemFeeObject)){
@@ -136,7 +136,7 @@ class createOrderBuilder {
     /**
      * New!
      * @param type $itemDiscounObject
-     * @return \createOrderBuilder
+     * @return \CreateOrderBuilder
      */
     public function addDiscount($itemDiscounObject){
          if(is_array($itemDiscounObject)){
