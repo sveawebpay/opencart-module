@@ -129,9 +129,9 @@
         </tr>
             
         
-        <!-- Norway credentials -->
+        <!-- Denmark credentials -->
         <tr>
-            <td><?php echo $entry_norway; ?></td>
+            <td><?php echo $entry_denmark; ?></td>
             <td></td>
         </tr> 
         <tr>
