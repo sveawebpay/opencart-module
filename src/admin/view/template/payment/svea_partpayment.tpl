@@ -14,7 +14,7 @@
       <table class="form">
         <tr>
             <td>Version</td>
-            <td>1.3</td>
+            <td>2.0.0</td>
         </tr>
         <tr>
           <td><?php echo $entry_order_status; ?></td>
@@ -65,27 +65,196 @@
 				</select>
 		  </td>
         </tr>
+        
+        
+        <!-- Sweden credentials -->
+        <tr>
+            <td><?php echo $entry_sweden; ?></td>
+            <td></td>
+        </tr> 
         <tr>
             <td><?php echo $entry_username; ?>:</td>
             <td>
-                <input name="svea_username" type="text" value="<?php echo $svea_username; ?>" />
+                <input name="svea_partpayment_username_SE" type="text" value="<?php echo $svea_partpayment_username_SE; ?>" />
             </td>
         </tr>
         <tr>
             <td><?php echo $entry_password; ?>:</td>
             <td>
-                <input name="svea_password" type="password" value="<?php echo $svea_password; ?>" />
+                <input name="svea_partpayment_password_SE" type="password" value="<?php echo $svea_partpayment_password_SE; ?>" />
             </td>
         </tr>
         <tr>
             <td><?php echo $entry_clientno; ?>:</td>
             <td>
-                <input name="svea_partpayment_clientno" type="text" value="<?php echo $svea_partpayment_clientno; ?>" />
+                <input name="svea_partpayment_clientno_SE" type="text" value="<?php echo $svea_partpayment_clientno_SE; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_min_amount; ?>:</td>
+            <td>
+                <input name="svea_partpayment_min_amount_SE" type="text" value="<?php echo $svea_partpayment_min_amount_SE; ?>" />
+            </td>
+        </tr>
+        
+        
+        <!-- Finland credentials -->
+        <tr>
+            <td><?php echo $entry_finland; ?></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
+            <td>
+                <input name="svea_partpayment_username_FI" type="text" value="<?php echo $svea_partpayment_username_FI; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_partpayment_password_FI" type="password" value="<?php echo $svea_partpayment_password_FI; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_partpayment_clientno_FI" type="text" value="<?php echo $svea_partpayment_clientno_FI; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_min_amount; ?>:</td>
+            <td>
+                <input name="svea_partpayment_min_amount_FI" type="text" value="<?php echo $svea_partpayment_min_amount_FI; ?>" />
+            </td>
+        </tr>
+            
+        
+        <!-- Norway credentials -->
+        <tr>
+            <td><?php echo $entry_norway; ?></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
+            <td>
+                <input name="svea_partpayment_username_DK" type="text" value="<?php echo $svea_partpayment_username_DK; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_partpayment_password_DK" type="password" value="<?php echo $svea_partpayment_password_DK; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_partpayment_clientno_DK" type="text" value="<?php echo $svea_partpayment_clientno_DK; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_min_amount; ?>:</td>
+            <td>
+                <input name="svea_partpayment_min_amount_DK" type="text" value="<?php echo $svea_partpayment_min_amount_DK; ?>" />
+            </td>
+        </tr>
+        
+        
+        <!-- Norway credentials -->
+        <tr>
+            <td><?php echo $entry_norway; ?></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
+            <td>
+                <input name="svea_partpayment_username_NO" type="text" value="<?php echo $svea_partpayment_username_NO; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_partpayment_password_NO" type="password" value="<?php echo $svea_partpayment_password_NO; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_partpayment_clientno_NO" type="text" value="<?php echo $svea_partpayment_clientno_NO; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_min_amount; ?>:</td>
+            <td>
+                <input name="svea_partpayment_min_amount_NO" type="text" value="<?php echo $svea_partpayment_min_amount_NO; ?>" />
+            </td>
+        </tr>
+        
+        
+        <!-- Netherlands credentials -->
+        <tr>
+            <td><?php echo $entry_netherlands; ?></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
+            <td>
+                <input name="svea_partpayment_username_NL" type="text" value="<?php echo $svea_partpayment_username_NL; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_partpayment_password_NL" type="password" value="<?php echo $svea_partpayment_password_NL; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_partpayment_clientno_NL" type="text" value="<?php echo $svea_partpayment_clientno_NL; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_min_amount; ?>:</td>
+            <td>
+                <input name="svea_partpayment_min_amount_NL" type="text" value="<?php echo $svea_partpayment_min_amount_NL; ?>" />
+            </td>
+        </tr>
+
+        
+        <!-- Germany credentials -->
+        <tr>
+            <td><?php echo $entry_germany; ?></td>
+            <td></td>
+        </tr> 
+        <tr>
+            <td><?php echo $entry_username; ?>:</td>
+            <td>
+                <input name="svea_partpayment_username_DE" type="text" value="<?php echo $svea_partpayment_username_DE; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_password; ?>:</td>
+            <td>
+                <input name="svea_partpayment_password_DE" type="password" value="<?php echo $svea_partpayment_password_DE; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_clientno; ?>:</td>
+            <td>
+                <input name="svea_partpayment_clientno_DE" type="text" value="<?php echo $svea_partpayment_clientno_DE; ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $entry_min_amount; ?>:</td>
+            <td>
+                <input name="svea_partpayment_min_amount_DE" type="text" value="<?php echo $svea_partpayment_min_amount_DE; ?>" />
             </td>
         </tr>
 
       </table>
     </form>
   </div>
+  <div style="height:100px"></div>
 </div>
 <?php echo $footer; ?>

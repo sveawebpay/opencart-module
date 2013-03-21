@@ -33,19 +33,62 @@ class ControllerPaymentsveapartpayment extends Controller {
         
 		$this->data['tab_general'] = $this->language->get('tab_general');
         
-        //Definitions lang //Anneli
-        $this->data['entry_username'] = $this->language->get('entry_username');
-        $this->data['entry_testmode'] = $this->language->get('entry_testmode');
-        $this->data['entry_password'] = $this->language->get('entry_password');
-        $this->data['entry_clientno'] = $this->language->get('entry_clientno');
-        $this->data['entry_invoicefee'] = $this->language->get('entry_invoicefee');
+        //Credentials
+        $this->data['entry_username']      = $this->language->get('entry_username');
+        $this->data['entry_password']      = $this->language->get('entry_password');
+        $this->data['entry_clientno']      = $this->language->get('entry_clientno');
         
-        //Definitions settings
-        $this->data['svea_partpayment_sort_order'] = $this->config->get('svea_partpayment_sort_order');
-        $this->data['svea_username'] = $this->config->get('svea_username');
-        $this->data['svea_password'] = $this->config->get('svea_password');
-        $this->data['svea_partpayment_clientno'] = $this->config->get('svea_partpayment_clientno');
-        $this->data['svea_partpayment_testmode'] = $this->config->get('svea_partpayment_testmode');
+        $this->data['entry_sweden']        = $this->language->get('entry_sweden');
+        $this->data['entry_finland']       = $this->language->get('entry_finland');
+        $this->data['entry_denmark']       = $this->language->get('entry_denmark');
+        $this->data['entry_norway']        = $this->language->get('entry_norway');
+        $this->data['entry_germany']       = $this->language->get('entry_germany');
+        $this->data['entry_netherlands']   = $this->language->get('entry_netherlands');
+
+        $this->data['entry_testmode']      = $this->language->get('entry_testmode');
+        $this->data['entry_yes']           = $this->language->get('entry_yes');
+        $this->data['entry_no']            = $this->language->get('entry_no');
+        $this->data['entry_min_amount']    = $this->language->get('entry_min_amount');
+        
+        //Definitions settings SE
+        $this->data['svea_partpayment_username_SE']   = $this->config->get('svea_partpayment_username_SE');
+        $this->data['svea_partpayment_password_SE']   = $this->config->get('svea_partpayment_password_SE');
+        $this->data['svea_partpayment_clientno_SE']   = $this->config->get('svea_partpayment_clientno_SE');
+        $this->data['svea_partpayment_min_amount_SE'] = $this->config->get('svea_partpayment_min_amount_SE');
+        
+        //Definitions settings FI
+        $this->data['svea_partpayment_username_FI']   = $this->config->get('svea_partpayment_username_FI');
+        $this->data['svea_partpayment_password_FI']   = $this->config->get('svea_partpayment_password_FI');
+        $this->data['svea_partpayment_clientno_FI']   = $this->config->get('svea_partpayment_clientno_FI');
+        $this->data['svea_partpayment_min_amount_FI'] = $this->config->get('svea_partpayment_min_amount_FI');
+        
+        //Definitions settings DK
+        $this->data['svea_partpayment_username_DK']   = $this->config->get('svea_partpayment_username_DK');
+        $this->data['svea_partpayment_password_DK']   = $this->config->get('svea_partpayment_password_DK');
+        $this->data['svea_partpayment_clientno_DK']   = $this->config->get('svea_partpayment_clientno_DK');
+        $this->data['svea_partpayment_min_amount_DK'] = $this->config->get('svea_partpayment_min_amount_DK');
+        
+        //Definitions settings NO
+        $this->data['svea_partpayment_username_NO']   = $this->config->get('svea_partpayment_username_NO');
+        $this->data['svea_partpayment_password_NO']   = $this->config->get('svea_partpayment_password_NO');
+        $this->data['svea_partpayment_clientno_NO']   = $this->config->get('svea_partpayment_clientno_NO');
+        $this->data['svea_partpayment_min_amount_NO'] = $this->config->get('svea_partpayment_min_amount_NO');
+        
+        //Definitions settings NL
+        $this->data['svea_partpayment_username_NL']   = $this->config->get('svea_partpayment_username_NL');
+        $this->data['svea_partpayment_password_NL']   = $this->config->get('svea_partpayment_password_NL');
+        $this->data['svea_partpayment_clientno_NL']   = $this->config->get('svea_partpayment_clientno_NL');
+        $this->data['svea_partpayment_min_amount_NL'] = $this->config->get('svea_partpayment_min_amount_NL');
+        
+        //Definitions settings DE
+        $this->data['svea_partpayment_username_DE']   = $this->config->get('svea_partpayment_username_DE');
+        $this->data['svea_partpayment_password_DE']   = $this->config->get('svea_partpayment_password_DE');
+        $this->data['svea_partpayment_clientno_DE']   = $this->config->get('svea_partpayment_clientno_DE');
+        $this->data['svea_partpayment_min_amount_DE'] = $this->config->get('svea_partpayment_min_amount_DE');
+
+        
+        $this->data['svea_partpayment_sort_order']    = $this->config->get('svea_partpayment_sort_order');
+        $this->data['svea_partpayment_testmode']      = $this->config->get('svea_partpayment_testmode');
         
         
  		if (isset($this->error['warning'])) {

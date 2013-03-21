@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']           = 'Svea Invoice - <a href="#">Delvier orders</a>';
+$_['heading_title']           = 'Svea Invoice';
 
 // Text
 $_['text_payment']            = 'Payment';

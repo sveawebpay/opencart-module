@@ -1,21 +1,18 @@
 <?php
 // Text
-$_['text_title'] = '<img src="admin/view/image/payment/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
-$_['text_ssn'] = 'Social Securitynumber';
+$_['text_title']              = '<img src="admin/view/image/payment/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
+$_['text_ssn']                = 'Social Security No';
+$_['text_private_or_company'] = 'Type';
+$_['text_company']            = 'Business';
+$_['text_private']            = 'Private';
+$_['text_get_address']        = 'Get address';
+$_['text_invoice_address']    = 'Invoice address';
+$_['text_birthdate']          = 'Birth date';
+$_['text_vat_no']             = 'VAT no';
+$_['text_initials']           = 'Initials';
+
 
 //Error responses
-$_['response_CusomterCreditRejected']   = 'Cannot get credit rating information';
-$_['response_CustomerOverCreditLimit']   = 'Store or Sveas credit limit overused';
-$_['response_CustomerAbuseBlock']   = 'This customer is blocked or has shown strange/unusual behavior';
-$_['response_OrderExpired']   = 'The order is too old and can no longer be invoiced against';
-$_['response_ClientOverCreditLimit']   = 'The order would cause the client to exceed Sveas credit limit';
-$_['response_OrderOverSveaLimit']   = 'The order exceeds the highest order amount permitted at Svea';
-$_['response_OrderOverClientLimit']   = 'The order exceeds your highest order amount permitted';
-$_['response_CustomerSveaRejected']   = 'The customer has a poor credit history at Svea';
-$_['response_CustomerCreditNoSuchEntity']   = 'The customer is not listed with the credit limit supplier';
-
-
-
 $_['response_20000'] = "Order closed";
 $_['response_20001'] = "Order denied";
 $_['response_20002'] = "Something wrong with order";

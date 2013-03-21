@@ -1,10 +1,50 @@
 <div class="buttons">
     <div class="right">
-        <?php if (isset($partpayment_fail)):
-            echo $partpayment_fail;
-        else: ?>
-            Personnr: <input type="text" id="ssn" name="ssn" maxlength="10" /><a id="getPlan" class="button"><span>Payment Options</span></a>
-        <?php endif; ?>
+        
+        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
+        <?php echo $this->language->get('text_ssn')?>: <input type="text" id="ssn" name="ssn" /><br /><br />
+        <? }else{
+        
+            //Days, to 31
+            $days = "";
+            $zero = "";
+            for($d = 1; $d <= 31; $d++){
+                
+                $val = $d;
+                if($d < 10)
+                    $val = "$d";
+                    
+                $days .= "<option value='$val'>$d</option>";
+            }
+            $birthDay = "<select name='birthDay' id='birthDay'>$days</select>";
+            
+            
+            //Months to 12
+            $months = "";
+            for($m = 1; $m <= 12; $m++){
+                $val = $m;
+                if($m < 10)
+                    $val = "$m";
+                
+                $months .= "<option value='$val'>$m</option>";
+            }
+            $birthMonth = "<select name='birthMonth' id='birthMonth'>$months</select>";
+            
+            //Years from 1913 to 1996
+            $years = '';
+            for($y = 1913; $y <= 1996; $y++){    
+                $years .= "<option value='$y'>$y</option>";
+            }
+            $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
+        
+        ?>
+           <span id="sveaBirthDateCont"><?php echo $this->language->get('text_birthdate')?>: <?php echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
+        <?php if($countryCode == "NL"){ ?>   
+           <?php echo $this->language->get('text_initials')?>: <input type="text" id="initials" name="initials" />
+        <? }?>   
+           </span>
+        <? }?>
+        <br /><br /><a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_payment_options')?></span></a>
     </div>
     
     <br />
@@ -12,81 +52,118 @@
     </div>
     
     <div class="right" id="svea_partpayment_tr" style="clear:both; margin-top:15px;">
-        Faktureringsadress:
+        <?php echo $this->language->get('text_invoice_address')?>:<br />
         <select name="svea_partpayment_address" id="svea_partpayment_address">
         </select>
     </div>
     
     <br />
     <div class="right" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;">
-        Betalningsalternativ:
+        <?php echo $this->language->get('text_payment_options')?>:<br />
         <select name="svea_partpayment_alt" id="svea_partpayment_alt">
         </select>
     </div>
     <br />
+
     <div class="right" style="clear:both; margin-top:15px;">
         <a id="checkout"  class="button"><span><?php echo $button_confirm; ?></span></a>
     </div>
   
 </div>
 <script type="text/javascript"><!--
-$('a#checkout').click(function() {
-    
-    var ssnNo = $('#ssn').val();
-    //var adressSelector = $('#svea_partpayment_address').val();
-    var paymentSelector = $('#svea_partpayment_alt').val();
-	$.ajax({ 
-		type: 'GET',
-        data: {ssn: ssnNo, paySel: paymentSelector},// addSel: adressSelector,
-		url: 'index.php?route=payment/svea_partpayment/confirm',
-		success: function(data) {
-            if (data == 978){
-                location = '<?php echo $continue; ?>';
-            }else{
-                alert(data);
-            }          
-		}		
-	});
-});
 
+
+//Loader
+var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
 $("a#checkout").hide();
 $('#svea_partpayment_tr').hide();
 $('#svea_partpaymentalt_tr').hide();
 
+
+$('a#checkout').click(function() {
+    
+    //Show loader
+    $(this).parent().after().append(sveaLoading);
+    
+    var ssnNo = $('#ssn').val();
+    var paymentSelector = $('#svea_partpayment_alt').val();
+    var Initials = $("#initials").val();
+    var birthDay = $("#birthDay").val();
+    var birthMonth = $("#birthMonth").val();
+    var birthYear = $("#birthYear").val();
+    
+	$.ajax({ 
+		type: 'GET',
+        data: {ssn: ssnNo, paySel: paymentSelector,initials: Initials, birthDay: birthDay, birthMonth: birthMonth, birthYear: birthYear},
+		url: 'index.php?route=payment/svea_partpayment/confirm',
+		success: function(data) {
+            
+            var json = JSON.parse(data);
+            
+            if(json.success){
+                location = '<?php echo $continue; ?>';
+            }else{
+                $("#svea_partpayment_err").show().append('<br>'+json.error);
+            }
+            
+            $('#sveaLoading').remove();          
+		}		
+	});
+});
+
+
+
 $('#getPlan').click(function() {
-   
+    
+    //Show loader
+    $(this).parent().after().append(sveaLoading);
     var ssnNo = $('#ssn').val();
     $("#svea_partpayment_err").empty();
     $("#svea_partpayment_address").empty();
     $("#svea_partpayment_alt").empty();
     
+    
     if(ssnNo == ''){
-        alert('Vänligen fyll i personnr');
+        alert('VÃ¤nligen fyll i personnr');
     }else{
-        getPaymentOptions();
-        /*
+        
+        
     	$.ajax({ 
     		type: 'GET',
-    		url: 'index.php?route=payment/svea_partpayment/getAddress',
+    		url: 'index.php?route=payment/svea_partpayment/getAddressAndPaymentOptions',
             data: {ssn: ssnNo},
     		success: function(msg) {    			
-                eval(msg);                
+                var json = JSON.parse(msg);
+                
+                if(json.addresses.error){
+                    $("#svea_partpayment_err").show().append('<br>'+json.addresses.error);
+                }else if(json.paymentOptions.error){
+                    $("#svea_partpayment_err").show().append('<br>'+json.paymentOptions.error);
+                }else{
+                    
+                    if (json.addresses.length > 0){
+                        $.each(json.addresses,function(key,value){
+                            $("#svea_partpayment_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
+                        });
+                        
+                        $("#svea_partpayment_tr").show();
+                    }
+                    
+                    $.each(json.paymentOptions,function(key,value){
+                        $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+'</option>');
+                    });
+                    
+                    $("#svea_partpaymentalt_tr").show();
+                    
+                    $("#svea_partpayment_err").hide();
+                    $("a#checkout").show();
+                }
+
+                $('#sveaLoading').remove();             
     		}		
     	});
-        */
+        
     }
 });
 
-function getPaymentOptions(){
-    
-    $.ajax({ 
-    		type: 'GET',
-    		url: 'index.php?route=payment/svea_partpayment/getPaymentOptions',
-            data: {pay:1},
-    		success: function(msg) {
-                eval(msg);
-                $('#svea_partpaymentalt_tr').show();
-    		}		
-    	});
-}
 //--></script>

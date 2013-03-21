@@ -3,6 +3,9 @@
 class ControllerPaymentsveainvoice extends Controller {
 
     protected function index() {
+        $this->load->language('payment/svea_invoice');
+        
+        //Definitions
         $this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->data['button_back'] = $this->language->get('button_back');
 
@@ -14,17 +17,12 @@ class ControllerPaymentsveainvoice extends Controller {
             $this->data['back'] = 'index.php?rout=checkout/guest_step_2';
         }
 
-
-        //Invoice Fee
-        $invoiceFee = $this->config->get('svea_invoicefee');
-        if ($invoiceFee > 0) {
-            $this->data['invoiceFee'] = $invoiceFee;            
-        }
-
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
-
+        
+        
+        
         $this->id = 'payment';
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_invoice.tpl')) {
@@ -88,7 +86,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setAmountExVat($productPriceExVat)
                         ->setAmountIncVat($productPriceIncVat)
                         ->setName($product['name'])
-                        ->setUnit('st')//($this->language->get('unit'))
+                        ->setUnit($this->language->get('unit'))//($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
                         ->setDescription($product['model'])
                     );
@@ -117,7 +115,7 @@ class ControllerPaymentsveainvoice extends Controller {
                             ->setAmountExVat($invoiceFeeExVat)
                             ->setAmountIncVat($invoiceFeeIncVat)
                             ->setName($this->language->get('text_svea_fee'))
-                            ->setUnit($this->language->get('pcs'))
+                            ->setUnit($this->language->get('unit'))
                         );
         }
         
@@ -140,7 +138,7 @@ class ControllerPaymentsveainvoice extends Controller {
                             ->setAmountIncVat($shippingIncVat)
                             ->setName($shipping_info["title"])
                             ->setDescription($shipping_info["text"])
-                            ->setUnit($this->language->get('pcs'))
+                            ->setUnit($this->language->get('unit'))
                        );
             
         }
@@ -160,7 +158,7 @@ class ControllerPaymentsveainvoice extends Controller {
                             Item::fixedDiscount()                
                                 ->setAmountIncVat($discount)
                                 ->setName($coupon['name'])
-                                ->setUnit($this->language->get('pcs'))
+                                ->setUnit($this->language->get('unit'))
                             );
             
             
@@ -171,7 +169,7 @@ class ControllerPaymentsveainvoice extends Controller {
                             Item::relativeDiscount()                
                                 ->setDiscountPercent($coupon['discount'])
                                 ->setName($coupon['name'])
-                                ->setUnit($this->language->get('pcs'))
+                                ->setUnit($this->language->get('unit'))
                             );
                 
                 }
@@ -193,7 +191,7 @@ class ControllerPaymentsveainvoice extends Controller {
                             ->setAmountIncVat($voucherAmount)
                             ->setName($voucher['code'])
                             ->setDescription($voucher["message"])
-                            ->setUnit($this->language->get('pcs'))
+                            ->setUnit($this->language->get('unit'))
                         );
 
         }
