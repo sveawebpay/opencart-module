@@ -14,8 +14,9 @@ class WebPay {
      * Start Building Order Request to create order for all Payments
      * @return \createOrder
      */
-    public static function createOrder() {
-        return new createOrderBuilder();
+    public static function createOrder($config = null) {
+        $config = $config==null ? SveaConfig::getDefaultConfig() : $config;
+        return new CreateOrderBuilder($config);
     }
     
     /**
