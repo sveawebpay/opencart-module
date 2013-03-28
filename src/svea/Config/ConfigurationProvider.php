@@ -1,35 +1,15 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author anne-hal
  */
 interface ConfigurationProvider {
     public function getUsername($type, $country);
     public function getPassword($type, $country);
-}
-
-/**
- * Description of ConfigurationProvider
- *
- * @author anne-hal
- */
-class SveaConfigurationProvider implements ConfigurationProvider {
-    
-    public $environment;
-
-    public function __construct($enviromentConfig) {
-        $this->environment = $enviromentConfig;
-    }
-
-    public function getUsername($type, $country) {
-        return $this->environment['credentials'][$country]['auth']['INVOICE']['username'];
-    }
-
-    public function getPassword($type, $country) {
-        return $this->environment['credentials'][$country]['auth']['PAYMENTPLAN']['password'];
-    }
-    //put your code here
+    public function getclientNumber($type, $country);
+    public function getMerchantId($type, $country);
+    public function getSecret($type, $country);
+    public function getEndPoint($type);
 }
 
 ?>
