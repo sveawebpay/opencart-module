@@ -14,8 +14,8 @@ require_once SVEA_REQUEST_DIR . '/Config/SveaConfig.php';
  * @package HostedRequests/Helper
  */
 class PaymentForm {
-    
-    public $testmode;
+
+
     public $endPointUrl;
     public $xmlMessage;
     public $xmlMessageBase64;
@@ -23,7 +23,7 @@ class PaymentForm {
     public $secretWord;
     public $mac;
     public $completeHtmlFormWithSubmitButton;
-    public $htmlFormFieldsAsArray = array();  
+    public $htmlFormFieldsAsArray = array();
     private $submitMessage;
     private $noScriptMessage;
 
@@ -37,16 +37,16 @@ class PaymentForm {
          $this->rawFields['message'] = $this->xmlMessageBase64;
          $this->rawFields['mac'] = $this->mac;
          $this->rawFields['htmlFormMethod'] = 'post';
-         $this->rawFields['htmlFormAction'] = $this->endPointUrl;//$this->testmode ? SveaConfig::SWP_TEST_URL : SveaConfig::SWP_PROD_URL;
+         $this->rawFields['htmlFormAction'] = $this->endPointUrl;
     }
 
     public function setSubmitMessage($countryCode = FALSE){
         switch ($countryCode) {
-            case "SE": 
+            case "SE":
                 $this->submitMessage = "Betala";
                 $this->noScriptMessage = "Javascript är inaktiverat i er webbläsare, så ni får manuellt omdirigera till paypage";
                 break;
-            default: 
+            default:
                 $this->submitMessage = "Submit";
                 $this->noScriptMessage = "Javascript is inactivated in your browser, you will manually have to redirect to the paypage";
                 break;
@@ -88,5 +88,3 @@ class PaymentForm {
     }
 
 }
-
-?>
