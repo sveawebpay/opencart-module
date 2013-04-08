@@ -11,25 +11,31 @@ require_once '/../Includes.php';
  * @author anne-hal
  */
 class OpencartSveaConfig implements ConfigurationProvider{
-    
+
     public $config;
-    
+
     public function __construct($config) {
         $this->config = $config;
     }
-   
+
     public function getEndPoint($type) {
+        $type = strtoupper($type);
           if($type == "HOSTED"){
             return   SveaConfig::SWP_TEST_URL;
         }elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
-             SveaConfig::SWP_TEST_WS_URL;
+             return SveaConfig::SWP_TEST_WS_URL;
         }  else {
            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
-        }          
+        }
     }
 
     public function getMerchantId($type, $country) {
-        return $this->config->get('svea_card_merchant_id');
+        $card = $this->config->get('svea_card_merchant_id_prod');
+        if($card == ""){
+            return $this->config->get('svea_directbank_merchant_id_prod');
+        }else{
+            return $card;
+        }
     }
 
     public function getPassword($type, $country) {
@@ -38,13 +44,18 @@ class OpencartSveaConfig implements ConfigurationProvider{
     }
 
     public function getSecret($type, $country) {
-        return "secret";
+        $secret = $this->config->get('svea_card_sw_prod');
+        if($secret == ""){
+            return $this->config->get('svea_directbank_sw_prod');
+        }  else {
+            return $secret;
+        }
     }
 
     public function getUsername($type, $country) {
         $lowertype = strtolower($type);
         return $this->config->get('svea_'.$lowertype.'_username_' . $country);
-     
+
     }
 
     public function getclientNumber($type, $country) {

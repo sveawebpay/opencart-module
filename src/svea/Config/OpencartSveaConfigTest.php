@@ -11,22 +11,23 @@ require_once '/../Includes.php';
  * @author anne-hal
  */
 class OpencartSveaConfigTest implements ConfigurationProvider{
-    
+
     public $config;
-    
+
     public function __construct($config) {
         $this->config = $config;
     }
 
         public function getEndPoint($type) {
+        $type = strtoupper($type);
         if($type == "HOSTED"){
             return   SveaConfig::SWP_TEST_URL;;
         }elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
-             SveaConfig::SWP_TEST_WS_URL;
+             return SveaConfig::SWP_TEST_WS_URL;
         }  else {
            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
-        }      
-       
+        }
+
     }
 
     public function getMerchantId($type, $country) {
@@ -55,7 +56,7 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
     public function getUsername($type, $country) {
         $lowertype = strtolower($type);
         return $this->config->get('svea_'.$lowertype.'_username_' . $country);
-     
+
     }
 
     public function getclientNumber($type, $country) {
