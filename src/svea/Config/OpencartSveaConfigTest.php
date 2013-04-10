@@ -11,9 +11,9 @@ require_once '/../Includes.php';
  * @author anne-hal
  */
 class OpencartSveaConfigTest implements ConfigurationProvider{
-    
+
     public $config;
-    
+
     public function __construct($config) {
         $this->config = $config;
     }
@@ -25,40 +25,45 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
              SveaConfig::SWP_TEST_WS_URL;
         }  else {
            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
-        }      
-       
+        }
+
     }
 
     public function getMerchantId($type, $country) {
-        $card = $this->config->get('svea_card_merchant_id_test');
+        $country = strtoupper($country);
+        $card = $this->config->get('svea_card_merchant_id_test_'.$country);
         if($card == ""){
-            return $this->config->get('svea_directbank_merchant_id_test');
+            return $this->config->get('svea_directbank_merchant_id_test_'.$country);
         }else{
             return $card;
         }
     }
 
     public function getPassword($type, $country) {
+        $country = strtoupper($country);
         $lowertype = strtolower($type);
         return $this->config->get('svea_'.$lowertype.'_password_' . $country);
     }
 
     public function getSecret($type, $country) {
-        $secret = $this->config->get('svea_card_sw_test');
+        $country = strtoupper($country);
+        $secret = $this->config->get('svea_card_sw_test_'.$country);
         if($secret == ""){
-            return $this->config->get('svea_directbank_sw_test');
+            return $this->config->get('svea_directbank_sw_test'.$country);
         }  else {
             return $secret;
         }
     }
 
     public function getUsername($type, $country) {
+        $country = strtoupper($country);
         $lowertype = strtolower($type);
         return $this->config->get('svea_'.$lowertype.'_username_' . $country);
-     
+
     }
 
     public function getclientNumber($type, $country) {
+        $country = strtoupper($country);
         $lowertype = strtolower($type);
         return $this->config->get('svea_'.$lowertype.'_clientno_' . $country);
     }

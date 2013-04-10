@@ -11,13 +11,13 @@ require_once '/../Includes.php';
  * @author anne-hal
  */
 class OpencartSveaConfig implements ConfigurationProvider{
-    
+
     public $config;
-    
+
     public function __construct($config) {
         $this->config = $config;
     }
-   
+
     public function getEndPoint($type) {
           if($type == "HOSTED"){
             return   SveaConfig::SWP_TEST_URL;
@@ -25,29 +25,44 @@ class OpencartSveaConfig implements ConfigurationProvider{
              SveaConfig::SWP_TEST_WS_URL;
         }  else {
            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
-        }          
+        }
     }
 
     public function getMerchantId($type, $country) {
-        return $this->config->get('svea_card_merchant_id');
+        $country = strtoupper($country);
+        $card = $this->config->get('svea_card_merchant_id_prod_'.$country);
+        if($card == ""){
+            return $this->config->get('svea_directbank_merchant_id_prod_'.$country);
+        }else{
+            return $card;
+        }
     }
 
     public function getPassword($type, $country) {
+        $country = strtoupper($country);
         $lowertype = strtolower($type);
         return$this->config->get('svea_'.$lowertype.'_password_' . $country);
     }
 
     public function getSecret($type, $country) {
-        return "secret";
+        $country = strtoupper($country);
+        $secret = $this->config->get('svea_card_sw_prod_'.$country);
+        if($secret == ""){
+            return $this->config->get('svea_directbank_sw_prod'.$country);
+        }  else {
+            return $secret;
+        }
     }
 
     public function getUsername($type, $country) {
+        $country = strtoupper($country);
         $lowertype = strtolower($type);
         return $this->config->get('svea_'.$lowertype.'_username_' . $country);
-     
+
     }
 
     public function getclientNumber($type, $country) {
+        $country = strtoupper($country);
         $lowertype = strtolower($type);
         return $this->config->get('svea_'.$lowertype.'_clientno_' . $country);
     }
