@@ -14,8 +14,8 @@
       <table class="form">
         <tbody>
             <tr>
-                <td>Module</td>
-                <td> Version 2.0</td>
+                <td>Version</td>
+                <td>2.0.0</td>
             </tr>
             <tr>
                 <td><?php echo $entry_order_status; ?></td>
