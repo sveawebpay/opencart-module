@@ -75,7 +75,7 @@
         </table>
         <!-- Mode specific -->
          <div class="htabs" id="htabs" >
-             <a href="#tab-card_test" style="display: inline">test</a>
+             <a href="#tab-card_test" style="display: inline">Test</a>
              <a href="#tab-card_prod" style="display: inline">Prod</a>
         </div>
         <!-- Countrycode and testmode specific -->
