@@ -98,8 +98,14 @@
                         <tr>
                             <td><?php echo $entry_clientno; ?>:</td>
                             <td>
-                                <input name="<?php echo $code['name_clientno']; ?>" type="password"
+                                <input name="<?php echo $code['name_clientno']; ?>" type="text"
                                        value="<?php echo $code['value_clientno']; ?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><?php echo $entry_min_amount; ?>:</td>
+                            <td>
+                                <input name="<?php $code['min_amount_name']; ?>" type="text" value="<?php echo $code['min_amount_value']; ?>" />
                             </td>
                         </tr>
                     </tbody>

@@ -46,7 +46,7 @@ class ControllerPaymentsveacard extends Controller {
         foreach($products as $product){
              //Get the tax, difference in version 1.4.x
             $productTax = (floatval(VERSION) >= 1.5) ? $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false) : $this->currency->format($this->tax->getRate($product['tax_class_id']));
-            print_r($productTax);
+
             //Get and set prices
             $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
             $productPriceIncVat = $productPriceExVat + $productTax;

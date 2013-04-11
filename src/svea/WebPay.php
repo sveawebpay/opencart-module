@@ -41,6 +41,7 @@ class WebPay {
     public static function deliverOrder($config = NULL) {
          $config = $config == null ?SveaConfig::getDefaultConfig() : $config;
         return new deliverOrderBuilder($config);
+       // return new OrderBuilder();
     }
 
     /**
@@ -52,6 +53,7 @@ class WebPay {
     public static function closeOrder($config = NULL) {
          $config = $config == null ? SveaConfig::getDefaultConfig() : $config;
         return new closeOrderBuilder($config);
+       // return new OrderBuilder();
     }
 
     /**
