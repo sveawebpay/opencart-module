@@ -130,12 +130,10 @@ class HostedRowFormatter {
 
             $tempRow->setAmount(- round($row->amount * 100));
 
-
-            if($this->totalVat > 0) {
-                $vat = $this->totalVat * $discountInPercent;
-                $tempRow->setVat(-round($vat));
-
-            }
+           // if($this->totalVat > 0) {
+            $vat = $this->totalVat * $discountInPercent;
+            $tempRow->setVat(-round($vat));
+        //    }
 
             if(isset($row->unit)) {
                 $tempRow->setUnit($row->unit);
@@ -181,9 +179,9 @@ class HostedRowFormatter {
 
 
 
-            if($this->totalVat > 0) {
+           // if($this->totalVat > 0) {
                 $tempRow->setVat(- round(($this->totalVat * $discountCounter)));
-            }
+          //  }
 
             $tempRow->setQuantity(1);
             $this->totalAmount -= $tempRow->amount;
