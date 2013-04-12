@@ -110,7 +110,8 @@
                         <tr>
                             <td><?php echo $entry_min_amount; ?>:</td>
                             <td>
-                                <input name="<?php $code['min_amount_name']; ?>" type="text" value="<?php echo $code['min_amount_value']; ?>" />
+                                <input name="<?php echo $code['min_amount_name']; ?>" type="text"
+                                       value="<?php echo $code['min_amount_value']; ?>" />
                             </td>
                         </tr>
                     </tbody>
