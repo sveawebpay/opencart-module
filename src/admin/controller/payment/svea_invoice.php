@@ -48,6 +48,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['entry_yes']           = $this->language->get('entry_yes');
         $this->data['entry_no']            = $this->language->get('entry_no');
 
+        $this->data['version']  = floatval(VERSION);
 
         $cred = array();
         $cred[] = array("lang" => "SE","value_username" => $this->config->get('svea_invoice_username_SE'),"name_username" => 'svea_invoice_username_SE',"value_password" => $this->config->get('svea_invoice_password_SE'),"name_password" => 'svea_invoice_password_SE',"value_clientno" => $this->config->get('svea_invoice_clientno_SE'),"name_clientno" => 'svea_invoice_clientno_SE');

@@ -74,20 +74,31 @@
             </tbody>
         </table>
         <!-- Mode specific -->
+         <?php if($version >= 1.5){ ?>
          <div class="htabs" id="htabs" >
              <a href="#tab-card_test" style="display: inline">Test</a>
              <a href="#tab-card_prod" style="display: inline">Prod</a>
         </div>
+         <?php } ?>
         <!-- Countrycode and testmode specific -->
         <!--Test -->
-        <div id="tab-card_test" style="display: inline;">
+           <div id="tab-card_test" style="display: inline;">
+          <?php if($version >= 1.5){ ?>
+
             <div id="vtabs" class="vtabs">
                 <?php foreach ($test as $code){ ?>
                     <a href="#tab-card_test_<?php echo $code['lang'] ?>"><?php echo $code['lang'] ?></a>
                 <?php } ?>
             </div>
+        <?php } else{ ?>
+
+        <h2>Test credentials</h2>
+        <?php } ?>
         <?php foreach($test as $code){ ?>
             <div id="tab-card_test_<?php echo $code['lang'] ?>" class="vtabs-content">
+                <?php if($version < 1.5){ ?>
+                <h3><?php echo $code['lang'];  ?></h3>
+                <?php } ?>
                 <table class="form">
                     <tbody>
 
@@ -111,16 +122,24 @@
         <?php } ?>
         </div>
 <!--Prod -->
+
      <div id="tab-card_prod" style="display: inline;">
+          <?php if($version >= 1.5){ ?>
             <div id="vtabs" class="vtabs">
                 <?php foreach ($prod as $code){ ?>
                     <a href="#tab-card_prod_<?php echo $code['lang'] ?>"><?php echo $code['lang'] ?></a>
                 <?php } ?>
             </div>
+     <?php } else{ ?>
 
+        <h2>Prod credentials</h2>
+        <?php } ?>
 
         <?php foreach($prod as $code){ ?>
             <div id="tab-card_prod_<?php echo $code['lang'] ?>" class="vtabs-content">
+                 <?php if($version < 1.5){ ?>
+                <h3><?php echo $code['lang'];  ?></h3>
+                <?php } ?>
                 <table class="form">
                     <tbody>
 
@@ -144,10 +163,10 @@
         <?php } ?>
         </div>
     </div>
-  </form>
+      </form>
     </div>
     <div style="height:100px"></div>
-</div>
+    </div>
 <script type="text/javascript"><!--
 $('#tab-card_test a').tabs();
 $('#tab-card_prod a').tabs();

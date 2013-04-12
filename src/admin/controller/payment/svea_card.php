@@ -46,6 +46,7 @@ class ControllerPaymentsveacard extends Controller {
                 $this->data['svea_card_sort_order']  = $this->config->get('svea_card_sort_order');
                 $this->data['svea_card_testmode']    = $this->config->get('svea_card_testmode');
 
+                $this->data['version']  = floatval(VERSION);
                 //test tabs
                 $lang_test = array();
                 $lang_test[] = array("lang" => "SE","value_merchant" => $this->config->get('svea_card_merchant_id_test_SE'),"name_merchant" => 'svea_card_merchant_id_test_SE',"value_sw" => $this->config->get('svea_card_sw_test_SE'),"name_sw" => 'svea_card_sw_test_SE');

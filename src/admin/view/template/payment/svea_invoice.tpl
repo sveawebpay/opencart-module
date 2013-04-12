@@ -73,13 +73,18 @@
       </table>
         <!-- Countrycode specific -->
         <div id="tab-invoice" style="display: inline;">
+             <?php if($version >= 1.5){ ?>
             <div id="vtabs" class="vtabs">
                 <?php foreach ($credentials as $code){ ?>
                     <a href="#tab-invoice_<?php echo $code['lang'] ?>"><?php echo $code['lang'] ?></a>
                 <?php } ?>
             </div>
+             <?php } ?>
         <?php foreach($credentials as $code){ ?>
             <div id="tab-invoice_<?php echo $code['lang'] ?>" class="vtabs-content">
+                 <?php if($version < 1.5){ ?>
+                 <h3><?php echo $code['lang']; ?></h3>
+                 <?php } ?>
                 <table class="form">
                     <tbody>
 
