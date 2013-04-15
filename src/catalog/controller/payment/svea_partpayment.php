@@ -48,7 +48,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/coupon');
-        $this->load->model('checkout/voucher');
+        floatval(VERSION) >= 1.5 ? $this->load->model('checkout/voucher') : $this->load->model('checkout/extension');
 
         //Load SVEA includes
         include('svea/Includes.php');
@@ -144,12 +144,11 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
 
 
-        //Get vouchers
+        //Get vouchers WIP For version 1.4!
         if (isset($this->session->data['voucher'])) {
-            $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
+            $voucher = floatval(VERSION) >= 1.5 ? $this->model_checkout_voucher->getVoucher($this->session->data['voucher']) : $this->model_checkout_extension->getExtensions($this->session->data['voucher']);
 
             $totalPrice = $this->cart->getTotal();
-
             $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
 
             $svea = $svea
@@ -268,24 +267,24 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/order');
-
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
 
         //Testmode
-        $conf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-
-        $svea = WebPay::getPaymentPlanParams($conf);
-        $svea = $svea->doRequest();
+        $sveaConf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $svea = WebPay::getPaymentPlanParams($sveaConf);
+        $svea = $svea->setCountryCode($countryCode)
+                    ->doRequest();
 
         $result = array();
-
         if (isset($svea->errormessage)) {
             $result = array("error" => $svea->errormessage);
         }else{
             foreach ($svea->campaignCodes as $cc){
                 $result[] = array("campaignCode" => $cc->campaignCode,
-                                  "description"    => $cc->description);
+                                  "description"    => $cc->description,
+                                    "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$order['currency']);
+
             }
         }
 
@@ -300,7 +299,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         $countryCode = $order['payment_iso_code_2'];
 
         $paymentOptions = $this->getPaymentOptions();
-
 
         if ($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO")
             $adresses = $this->getAddress($_GET['ssn']);

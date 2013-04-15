@@ -105,7 +105,7 @@
                         <tr>
                             <td><?php echo $entry_clientno; ?>:</td>
                             <td>
-                                <input name="<?php echo $code['name_clientno']; ?>" type="password"
+                                <input name="<?php echo $code['name_clientno']; ?>" type="text"
                                        value="<?php echo $code['value_clientno']; ?>" />
                             </td>
                         </tr>

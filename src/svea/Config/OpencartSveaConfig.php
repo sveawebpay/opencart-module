@@ -43,11 +43,13 @@ class OpencartSveaConfig implements ConfigurationProvider{
     public function getPassword($type, $country) {
         $country = strtoupper($country);
         $lowertype = strtolower($type);
-        return$this->config->get('svea_'.$lowertype.'_password_' . $country);
+        if($lowertype == "paymentplan"){
+             return $this->config->get('svea_partpayment_password_' . $country);
+        }
+        return $this->config->get('svea_'.$lowertype.'_password_' . $country);
     }
 
     public function getSecret($type, $country) {
-
         $country = strtoupper($country);
         $secret = $this->config->get('svea_card_sw_prod_'.$country);
         if($secret == ""){
@@ -60,6 +62,9 @@ class OpencartSveaConfig implements ConfigurationProvider{
     public function getUsername($type, $country) {
         $country = strtoupper($country);
         $lowertype = strtolower($type);
+        if($lowertype == "paymentplan"){
+             return $this->config->get('svea_partpayment_username_' . $country);
+        }
         return $this->config->get('svea_'.$lowertype.'_username_' . $country);
 
     }
@@ -67,6 +72,9 @@ class OpencartSveaConfig implements ConfigurationProvider{
     public function getclientNumber($type, $country) {
         $country = strtoupper($country);
         $lowertype = strtolower($type);
+        if($lowertype == "paymentplan"){
+            return $this->config->get('svea_partpayment_clientno_' . $country);
+        }
         return $this->config->get('svea_'.$lowertype.'_clientno_' . $country);
     }
 }
