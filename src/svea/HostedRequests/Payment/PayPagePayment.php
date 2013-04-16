@@ -15,7 +15,7 @@ class PayPagePayment extends HostedPayment {
     public $excludedPaymentMethods;
     public $langCode = "en";
     /**
-     * 
+     *
      * @param type $order
      */
     public function __construct($order) {
@@ -38,22 +38,22 @@ class PayPagePayment extends HostedPayment {
      * Set specific paymentmethod
      * @param type $paymentMethod ex. "DBSEBSE"
      * @return \PayPagePayment
-     
+
     public function setPaymentMethod($paymentMethod) {
         $this->paymentMethod = $paymentMethod;
         return $this;
     }
-     * 
+     *
      */
 
-    /** 
+    /**
      * Exclude specific payment methods.
      * @params type Paymentmethod $paymentMethod ex. PaymentMethod::DBSEBSE,Paymentmethod::SVEAINVOICE_SE
-     * Flexible number of params                              
+     * Flexible number of params
      * @return \PayPagePayment
-     */     
+     */
     public function excludePaymentMethods() {
-        $excludes = func_get_args();       
+        $excludes = func_get_args();
         foreach ($excludes as $method) {
              if($method == PaymentMethod::INVOICE){
                $this->excludedPaymentMethods[] ="SVEAINVOICEEU_".$this->order->countryCode;
@@ -62,68 +62,76 @@ class PayPagePayment extends HostedPayment {
                 $this->excludedPaymentMethods[] = "SVEASPLITEU_".$this->order->countryCode;
             }  else {
                  $this->excludedPaymentMethods[] = $method;
-            }             
-          
-        }       
-        return $this;  
+            }
+
+        }
+        return $this;
     }
-     /** 
-     * 
+     /**
+     *
      * @return \PayPagePayment
      */
     public function includePaymentMethods() {
         //get parameters sent no matter how many
         $include = func_get_args();
-        //exclude all functions       
+        //exclude all functions
         $this->excludedPaymentMethods[] = SystemPaymentMethod::BANKAXESS;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::KORTCERT;
-        $this->excludedPaymentMethods[] = SystemPaymentMethod::KORTSKRILL;
+        $this->excludedPaymentMethods[] = SystemPaymentMethod::SKRILL;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::INVOICESE;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::PAYMENTPLANSE;
         $this->excludedPaymentMethods[] = "SVEAINVOICEEU_".$this->order->countryCode;
         $this->excludedPaymentMethods[] = "SVEASPLITEU_".$this->order->countryCode;
-        $this->excludedPaymentMethods[] = SystemPaymentMethod::PAYPAL;        
+        $this->excludedPaymentMethods[] = SystemPaymentMethod::PAYPAL;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::DBSWEDBANKSE;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::DBSHBSE;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::DBSEBFTGSE;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::DBSEBSE;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::DBNORDEASE;
-        
+
         //remove the include functions from the excludedPaymentMethods
         foreach ($include as $key => $value) {
             $trimmed = trim($value);
             $cleanValue = strtoupper($trimmed);
-            if ($this->excludedPaymentMethods[$key] == $cleanValue){
-                 unset($this->excludedPaymentMethods[$key]);
-            }  elseif ($cleanValue == PaymentMethod::INVOICE) {
-                $this->excludedPaymentMethods[] = SystemPaymentMethod::INVOICESE;
-                $this->excludedPaymentMethods[] = "SVEAINVOICEEU_".$this->order->countryCode;
-            }  elseif ($cleanValue == PaymentMethod::PAYMENTPLAN) {
-                $this->excludedPaymentMethods[] = SystemPaymentMethod::PAYMENTPLANSE;
-                $this->excludedPaymentMethods[] = "SVEASPLITEU_".$this->order->countryCode;
+            //loop through the include requests
+            foreach ($this->excludedPaymentMethods as $k => $v) {
+                //unset if a match in exlude array
+                if($cleanValue == $v){
+                     unset($this->excludedPaymentMethods[$k]);
+                //unset the invoice methods if INVOICE is desired
+                }elseif ($cleanValue == PaymentMethod::INVOICE) {
+                    if($v == "SVEAINVOICEEU_".$this->order->countryCode || $k == SystemPaymentMethod::INVOICESE){
+                        unset($this->excludedPaymentMethods[$k]);
+                    }
+                //unset the paymentplan methods if PAYMENTPLAN is desired
+                }elseif($cleanValue == PaymentMethod::PAYMENTPLAN){
+                    if($k == "SVEASPLITEU_".$this->order->countryCode || $k == SystemPaymentMethod::PAYMENTPLANSE){
+                        unset($this->excludedPaymentMethods[$k]);
+                    }
+                }
             }
-               
+
         }
         return $this;
     }
 
-    /** 
+    /**
      * Exclude all cardpayments
      * @return \PayPagePayment
-     */     
+     */
     public function excludeCardPaymentMethods() {
         $this->excludedPaymentMethods[] = SystemPaymentMethod::KORTCERT;
-        $this->excludedPaymentMethods[] = SystemPaymentMethod::KORTSKRILL;
+        $this->excludedPaymentMethods[] = SystemPaymentMethod::SKRILL;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::KORTWN;
         return $this;
     }
-    
 
-    /** 
+
+    /**
      * Exclude all direct bank payments
      * @return \PayPagePayment
-     * 
-     */     
+     *
+     */
     public function excludeDirectPaymentMethods() {
         $this->excludedPaymentMethods[] = SystemPaymentMethod::BANKAXESS;
         $this->excludedPaymentMethods[] = SystemPaymentMethod::DBNORDEASE;
@@ -133,9 +141,10 @@ class PayPagePayment extends HostedPayment {
         $this->excludedPaymentMethods[] = SystemPaymentMethod::DBSWEDBANKSE;
         return $this;
     }
-    
-    
+
+
     /**
+     * Required
      * Set return Url for redirect when payment is completed
      * @param type $returnUrlAsString
      * @return \HostedPayment
@@ -144,9 +153,9 @@ class PayPagePayment extends HostedPayment {
         $this->returnUrl = $returnUrlAsString;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param type $cancelUrlAsString
      * @return \HostedPayment
      */
@@ -154,20 +163,26 @@ class PayPagePayment extends HostedPayment {
         $this->cancelUrl = $cancelUrlAsString;
         return $this;
     }
-    
+
     /**
      * Alternative drop or change file in Config/SveaConfig.php
      * Note! This fuction may change in future updates.
      * @param type $merchantId
      * @param type $secret
      * @return \HostedPayment
-     */
+
     public function setMerchantIdBasedAuthorization($merchantId,$secret){
         $this->order->conf->merchantId = $merchantId;
         $this->order->conf->secret = $secret;
         return $this;
     }
-    
+     *
+     */
+     /**
+     * @param type $languageCodeAsISO639
+     * @return \HostedPayment|\PayPagePayment
+     */
+
     public function setPayPageLanguage($languageCodeAsISO639){
         switch ($languageCodeAsISO639) {
             case "sv":
@@ -205,18 +220,16 @@ class PayPagePayment extends HostedPayment {
             case "it":
                 $this->langCode = $languageCodeAsISO639;
 
-                break;     
+                break;
             case "nl":
                 $this->langCode = $languageCodeAsISO639;
 
-                break;     
+                break;
             default:
                  $this->langCode = "en";
                 break;
         }
-        
+
         return $this;
     }
 }
-
-?>

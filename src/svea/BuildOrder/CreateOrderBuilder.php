@@ -8,7 +8,7 @@ require_once SVEA_REQUEST_DIR . '/Includes.php';
  * @author Anneli Halld'n, Daniel Brolund for Svea Webpay
  * @package BuildOrder/CreateOrder
 */
-class createOrderBuilder {
+class CreateOrderBuilder {
 
      /**
      * @var Array Rows containing Product rows
@@ -22,7 +22,7 @@ class createOrderBuilder {
      * @var  Array InvoiceFeeRows containing invoiceFee rows
      */
     public $invoiceFeeRows = array();
-    /**    
+    /**
      * @var testmode. False means in production mode
      */
     public $testmode = false;
@@ -61,7 +61,7 @@ class createOrderBuilder {
      * @var Your customer Reference number
      */
     public $customerReference;
-    
+
     /**
      * @var Instance of class SveaConfig
      */
@@ -71,24 +71,28 @@ class createOrderBuilder {
      * @var CustomerIdentity values
      */
     public $customerIdentity;
-    
-   
+
+
     /**
      * @param type $orderrows
      */
-    public function __construct() {
-        $this->conf = SveaConfig::getConfig();
+    public function __construct($config) {
+        $this->conf = $config;
     }
-    
+
     /**
      * When function is called it turns into testmode
      * @return \createOrder
-     */
+
     public function setTestmode() {
         $this->testmode = TRUE;
         return $this;
     }
-    
+     *
+     * @param type $itemCustomerObject
+     * @return \createOrder|\CreateOrderBuilder
+     */
+
      public function addCustomerDetails($itemCustomerObject){
         $this->customerIdentity = $itemCustomerObject;
         return $this;
@@ -96,7 +100,7 @@ class createOrderBuilder {
     /**
      * New!
      * @param type $orderRow
-     * @return \createOrderBuilder
+     * @return \CreateOrderBuilder
      */
     public function addOrderRow($itemOrderRowObject){
         if(is_array($itemOrderRowObject)){
@@ -105,23 +109,23 @@ class createOrderBuilder {
             }
         }  else {
              array_push($this->orderRows, $itemOrderRowObject);
-        }      
+        }
        return $this;
     }
-   
+
     /**
      * New!
      * @param type $itemFeeObject
-     * @return \createOrderBuilder
+     * @return \CreateOrderBuilder
      */
-    public function addFee($itemFeeObject){    
+    public function addFee($itemFeeObject){
          if(is_array($itemFeeObject)){
             foreach ($itemFeeObject as $row) {
                 if (get_class($row) == "ShippingFee") {
                      array_push($this->shippingFeeRows, $row);
                 }else{
                      array_push($this->invoiceFeeRows, $row);
-                }               
+                }
             }
         } else {
              if (get_class($itemFeeObject) == "ShippingFee") {
@@ -129,14 +133,14 @@ class createOrderBuilder {
             }else{
                  array_push($this->invoiceFeeRows, $itemFeeObject);
             }
-        }     
-      
+        }
+
        return $this;
     }
     /**
      * New!
      * @param type $itemDiscounObject
-     * @return \createOrderBuilder
+     * @return \CreateOrderBuilder
      */
     public function addDiscount($itemDiscounObject){
          if(is_array($itemDiscounObject)){
@@ -146,7 +150,7 @@ class createOrderBuilder {
                 }else{
                      array_push($this->relativeDiscountRows, $row);
                 }
-               
+
             }
         }  else {
              if (get_class($itemDiscounObject) == "FixedDiscount") {
@@ -154,10 +158,10 @@ class createOrderBuilder {
             }else{
                  array_push($this->relativeDiscountRows, $itemDiscounObject);
             }
-        }      
+        }
        return $this;
     }
-  
+
 
     /**
      * @param type $countryCodeAsString ex. "SE"
@@ -178,7 +182,7 @@ class createOrderBuilder {
         $this->currency = $currency;
         return $this;
     }
-   
+
     /**
      * @param type $customerReferenceAsString ex. "test".rand(0 9999)
      * @return \createOrder
@@ -187,7 +191,7 @@ class createOrderBuilder {
         $this->customerReference = $customerReferenceAsString;
         return $this;
     }
-    
+
     /**
      * @param type $clientOrderNumberAsString
      * @return \createOrder
@@ -269,7 +273,7 @@ class createOrderBuilder {
         $this->sendAutomaticGiroPaymentForm = $sendAutomaticGiroPaymentFormAsBool;
         return new PaymentPlanPayment($this);
     }
-   
+
    /**
      * For testfunctions
      * @param type $func
@@ -280,5 +284,3 @@ class createOrderBuilder {
         return $this;
     }
 }
-
-?>
