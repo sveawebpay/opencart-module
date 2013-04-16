@@ -45,7 +45,8 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     public function confirm() {
-
+         $this->load->language('payment/svea_invoice');
+         $this->load->language('total/svea_invoice');
         //Load models
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_invoice');
@@ -73,13 +74,17 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //Product rows
         foreach ($products as $product) {
-
-            //Get the tax, difference in version 1.4.x
-            $productTax = (floatval(VERSION) >= 1.5) ? $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false) : $this->currency->format($this->tax->getRate($product['tax_class_id']));
-            //Get and set prices
             $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
-            $productPriceIncVat = $productPriceExVat + $productTax;
+            //Get the tax, difference in version 1.4.x
+            if(floatval(VERSION) >= 1.5){
+                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
+                 $productPriceIncVat = $productPriceExVat + $productTax;
+            }  else {
 
+                $taxRate = $this->currency->format($this->tax->getRate($product['tax_class_id']));
+                $productPriceIncVat = (($taxRate * 0.01) +1) * $productPriceExVat;
+
+            }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
@@ -97,21 +102,27 @@ class ControllerPaymentsveainvoice extends Controller {
         //Invoice Fee
         if ($this->config->get('svea_fee_status') == 1) {
 
-            $invoiceFee = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
+            $invoiceFeeExTax = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
             $invoiceFeeTaxId = $this->config->get('svea_fee_tax_class_id');
 
             $invoiceTax = 0;
 
-            if($invoiceFeeTaxId > 0)
-                $invoiceTax = (floatval(VERSION) >= 1.5) ? $this->tax->getTax($invoiceFee, $invoiceFeeTaxId) : $this->tax->getRate($invoiceFeeTaxId);
+            if($invoiceFeeTaxId > 0){
+                    if(floatval(VERSION) >= 1.5){
+                   $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
+                    $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
+               }  else {
 
-            $invoiceFeeExVat  = $invoiceFee;
-            $invoiceFeeIncVat = $invoiceFeeExVat + $invoiceTax;
+                   $taxRate = $this->currency->format($this->tax->getRate($invoiceFeeTaxId));
+                   $invoiceFeeIncVat = (($taxRate * 0.01) +1) * $invoiceFeeExTax;
 
+               }
+            }
+         
             $svea = $svea
                     ->addFee(
                         Item::invoiceFee()
-                            ->setAmountExVat($invoiceFeeExVat)
+                            ->setAmountExVat($invoiceFeeExTax)
                             ->setAmountIncVat($invoiceFeeIncVat)
                             ->setName($this->language->get('text_svea_fee'))
                             ->setUnit($this->language->get('unit'))
@@ -121,14 +132,16 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //Shipping Fee
         if ($this->cart->hasShipping() == 1) {
-            $shipping_info = $this->session->data['shipping_method'];
-            $shippingCost = $this->currency->format($shipping_info["cost"],'',false,false);
+           $shipping_info = $this->session->data['shipping_method'];
+            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
 
-            $shippingTax = (floatval(VERSION) >= 1.5) ? $this->tax->getTax($shippingCost, $shipping_info["tax_class_id"]) : $this->tax->getRate($shipping_info["tax_class_id"]) ;
-
-
-            $shippingExVat  = $shippingCost;
-            $shippingIncVat = $shippingExVat + $shippingTax;
+            if (floatval(VERSION) >= 1.5){
+                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
+                $shippingIncVat = $shippingExVat + $shippingTax;
+            }else{
+                $taxRate = $this->currency->format($this->tax->getRate($shipping_info['tax_class_id']));
+                $shippingIncVat = (($taxRate * 0.01) +1) * $shippingExVat;
+            }
 
             $svea = $svea
                     ->addFee(

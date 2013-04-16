@@ -150,7 +150,7 @@ $('#getPlan').click(function() {
                     }
 
                     $.each(json.paymentOptions,function(key,value){
-                        $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+'</option>');
+                         $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.price_per_month+')</option>');
                     });
 
                     $("#svea_partpaymentalt_tr").show();
