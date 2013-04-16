@@ -44,12 +44,17 @@ class ControllerPaymentsveacard extends Controller {
        //Product rows
         $products = $this->cart->getProducts();
         foreach($products as $product){
-             //Get the tax, difference in version 1.4.x
-            $productTax = (floatval(VERSION) >= 1.5) ? $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false) : $this->currency->format($this->tax->getRate($product['tax_class_id']));
+           $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+            //Get the tax, difference in version 1.4.x
+            if(floatval(VERSION) >= 1.5){
+                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
+                 $productPriceIncVat = $productPriceExVat + $productTax;
+            }  else {
 
-            //Get and set prices
-            $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
-            $productPriceIncVat = $productPriceExVat + $productTax;
+                $taxRate = $this->currency->format($this->tax->getRate($product['tax_class_id']));
+                $productPriceIncVat = (($taxRate * 0.01) +1) * $productPriceExVat;
+
+            }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
@@ -61,17 +66,24 @@ class ControllerPaymentsveacard extends Controller {
                         ->setDescription($product['model'])
                     );
         }
+
         //Shipping Fee
         if ( $this->cart->hasShipping() == 1){
             $shipping_info = $this->session->data['shipping_method'];
-            $shippingCost = $this->currency->format($shipping_info["cost"],'',false,false);
-            $shippingTax = (floatval(VERSION) >= 1.5) ? $this->tax->getTax($shippingCost, $shipping_info["tax_class_id"]) : $this->tax->getRate($shipping_info["tax_class_id"]) ;
+            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
 
+            if (floatval(VERSION) >= 1.5){
+                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
+                $shippingIncVat = $shippingExVat + $shippingTax;
+            }else{
+                $taxRate = $this->currency->format($this->tax->getRate($shipping_info['tax_class_id']));
+                $shippingIncVat = (($taxRate * 0.01) +1) * $shippingExVat;
+            }
             if ($shipping_info['cost'] > 0){
                 $svea
                 ->addFee(Item::shippingFee()
-                    ->setAmountExVat($shippingCost)
-                    ->setAmountIncVat( $shippingCost + $shippingTax)
+                    ->setAmountExVat($shippingExVat)
+                    ->setAmountIncVat( $shippingExVat + $shippingTax)
                     ->setName($shipping_info['title'])
                     ->setDescription($shipping_info['text'])
                     ->setUnit($this->language->get('unit'))
@@ -79,6 +91,7 @@ class ControllerPaymentsveacard extends Controller {
             }
 
         }
+
         //Add coupon
         if (isset($this->session->data['coupon'])){
         $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);

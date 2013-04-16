@@ -43,7 +43,8 @@ class ControllerPaymentsveapartpayment extends Controller {
     }
 
     public function confirm() {
-
+        $this->load->language('payment/svea_partpayment');
+        $this->load->language('payment/svea_partpayment');
         //Load models
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_partpayment');
@@ -67,14 +68,17 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         //Product rows
         foreach ($products as $product) {
-
-            //Get the tax, difference in version 1.4.x
-            $productTax = (floatval(VERSION) >= 1.5) ? $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false) : $this->currency->format($this->tax->getRate($product['tax_class_id']));
-
-            //Get and set prices
             $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
-            $productPriceIncVat = $productPriceExVat + $productTax;
 
+            if(floatval(VERSION) >= 1.5){
+                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
+                 $productPriceIncVat = $productPriceExVat + $productTax;
+            }  else {
+
+                $taxRate = $this->currency->format($this->tax->getRate($product['tax_class_id']));
+                $productPriceIncVat = (($taxRate * 0.01) +1) * $productPriceExVat;
+
+            }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
@@ -92,13 +96,15 @@ class ControllerPaymentsveapartpayment extends Controller {
         //Shipping Fee
         if ($this->cart->hasShipping() == 1) {
             $shipping_info = $this->session->data['shipping_method'];
-            $shippingCost = $this->currency->format($shipping_info["cost"],'',false,false);
+            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
 
-            $shippingTax = (floatval(VERSION) >= 1.5) ? $this->tax->getTax($shippingCost, $shipping_info["tax_class_id"]) : $this->tax->getRate($shipping_info["tax_class_id"]) ;
-
-
-            $shippingExVat  = $shippingCost;
-            $shippingIncVat = $shippingExVat + $shippingTax;
+              if (floatval(VERSION) >= 1.5){
+                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
+                $shippingIncVat = $shippingExVat + $shippingTax;
+            }else{
+                $taxRate = $this->currency->format($this->tax->getRate($shipping_info['tax_class_id']));
+                $shippingIncVat = (($taxRate * 0.01) +1) * $shippingExVat;
+            }
 
             $svea = $svea
                     ->addFee(
@@ -280,10 +286,11 @@ class ControllerPaymentsveapartpayment extends Controller {
         if (isset($svea->errormessage)) {
             $result = array("error" => $svea->errormessage);
         }else{
+            $currency = floatval(VERSION) >= 1.5 ? $order['currency_code'] : $order['currency'];
             foreach ($svea->campaignCodes as $cc){
                 $result[] = array("campaignCode" => $cc->campaignCode,
                                   "description"    => $cc->description,
-                                    "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$order['currency']);
+                                    "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$currency);
 
             }
         }
