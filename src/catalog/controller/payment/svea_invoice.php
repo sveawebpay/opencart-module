@@ -180,6 +180,8 @@ class ControllerPaymentsveainvoice extends Controller {
                   //If DeliverOrder returns true, send true to veiw
                     if($deliverObj->accepted == 1){
                        $response = array("success" => true);
+                       //update order status for delivered
+                       $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_auto_deliver_status_id'));
                     //I not, send error codes
                     }  else {
                         $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
@@ -187,14 +189,14 @@ class ControllerPaymentsveainvoice extends Controller {
                 //if auto deliver not set, send true to view
                 }  else {
                      $response = array("success" => true);
+                    //update order status for created
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
                 }
 
             //else send errors to view
             }  else {
                 $response = array("error" => $this->responseCodes($this->resultcode,$svea->errormessage));
             }
-
-            $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
 
             echo json_encode($response);
 
