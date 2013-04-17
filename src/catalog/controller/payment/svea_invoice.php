@@ -314,7 +314,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         Item::invoiceFee()
                             ->setAmountExVat($invoiceFeeExTax)
                             ->setAmountIncVat($invoiceFeeIncVat)
-                            ->setName($this->language->get('text_svea_fee'))
+                            ->setDescription($this->language->get('text_svea_fee'))
                             ->setUnit($this->language->get('unit'))
                         );
 
