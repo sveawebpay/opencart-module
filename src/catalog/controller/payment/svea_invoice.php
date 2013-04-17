@@ -45,8 +45,10 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     public function confirm() {
+
         $this->load->language('payment/svea_invoice');
         $this->load->language('total/svea_fee');
+
         //Load models
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_invoice');
@@ -71,14 +73,18 @@ class ControllerPaymentsveainvoice extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
+
         //Products
         $svea = $this->formatOrderRows($svea,$products);
         if ($this->config->get('svea_fee_status') == 1) {
             $svea = $this->formatInvoiceFeeRows($svea);
+
         }
         //Shipping
         if ($this->cart->hasShipping() == 1) {
+
             $svea = $this->formatShippingFeeRows($svea);
+
         }
         //Get coupons
         if (isset($this->session->data['coupon'])) {
@@ -146,6 +152,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->doRequest();
 
             //If CreateOrder accepted redirect to thankyou page
+
             if ($svea->accepted == 1) {
                 $response = array();
                 //If Auto deliver order is set, DeliverOrder

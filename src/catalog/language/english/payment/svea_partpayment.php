@@ -38,4 +38,5 @@ $_['response_40004'] = "Could not find any addresses for this customer";
 $_['response_50000'] = "Client is not authorized for this method";
 $_['response_error'] = "Error: ";
 
+$_['unit']           = 'pcs';
 ?>

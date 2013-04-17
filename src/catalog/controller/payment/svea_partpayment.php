@@ -44,7 +44,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     public function confirm() {
         $this->load->language('payment/svea_partpayment');
-        $this->load->language('payment/svea_partpayment');
+
         //Load models
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_partpayment');
@@ -64,11 +64,13 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
+
         //products
         $svea = $this->formatOrderRows($svea,$products);
         //Shipping
         if ($this->cart->hasShipping() == 1) {
             $svea = $this->formatShippingFeeRows($svea);
+
         }
         //Get coupons
         if (isset($this->session->data['coupon'])) {
