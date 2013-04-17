@@ -171,21 +171,20 @@ class ControllerPaymentsveacard extends Controller {
          $form = $svea
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
-                ->setClientOrderNumber($this->session->data['order_id'].  rand(1, 100000))//remove rand after developing
+                ->setClientOrderNumber($this->session->data['order_id'])
                 ->setOrderDate(date('c'))
                 ->usePayPageCardOnly()
                     ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
-                   // ->setMerchantIdBasedAuthorization($this->config->get('svea_card_merchant_id'),$this->config->get('svea_card_sw'))
                     ->setReturnUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
                     ->setPayPageLanguage($payPageLanguage)
                     ->getPaymentForm();
+
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
         $this->data['form_start_tag'] = $fields['form_start_tag'];
         $this->data['merchant_id'] = $fields['input_merchantId'];
         $this->data['input_message'] = $fields['input_message'];
         $this->data['input_mac'] = $fields['input_mac'];
-        // $this->data['noscript_p_tag'] = $fields['noscript_p_tag'];
         $this->data['input_submit'] = $fields['input_submit'];
         $this->data['form_end_tag'] = $fields['form_end_tag'];
         $this->data['submitMessage'] = $this->language->get('button_confirm');

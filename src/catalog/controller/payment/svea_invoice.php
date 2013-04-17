@@ -46,7 +46,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
     public function confirm() {
          $this->load->language('payment/svea_invoice');
-         $this->load->language('total/svea_invoice');
+         $this->load->language('total/svea_fee');
         //Load models
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_invoice');
@@ -97,7 +97,7 @@ class ControllerPaymentsveainvoice extends Controller {
                     );
 
         }
-
+        
 
         //Invoice Fee
         if ($this->config->get('svea_fee_status') == 1) {
@@ -124,7 +124,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         Item::invoiceFee()
                             ->setAmountExVat($invoiceFeeExTax)
                             ->setAmountIncVat($invoiceFeeIncVat)
-                            ->setName($this->language->get('text_svea_fee'))
+                            ->setDescription($this->language->get('text_svea_fee'))
                             ->setUnit($this->language->get('unit'))
                         );
         }
@@ -149,7 +149,6 @@ class ControllerPaymentsveainvoice extends Controller {
                             ->setAmountExVat($shippingExVat)
                             ->setAmountIncVat($shippingIncVat)
                             ->setName($shipping_info["title"])
-                            ->setDescription($shipping_info["text"])
                             ->setUnit($this->language->get('unit'))
                        );
 
@@ -281,7 +280,8 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->setOrderDate(date('c'))
                       ->useInvoicePayment()
                         ->doRequest();
-
+            
+            //die(print_r($svea));
 
             $response = array();
 

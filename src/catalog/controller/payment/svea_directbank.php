@@ -176,7 +176,7 @@ class ControllerPaymentsveadirectbank extends Controller {
          $form = $svea
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
-                ->setClientOrderNumber($this->session->data['order_id'].  rand(1, 100000))//remove rand after developing
+                ->setClientOrderNumber($this->session->data['order_id'])//remove rand after developing
                 ->setOrderDate(date('c'))
                 ->usePayPageDirectBankOnly()
                     ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_directbank/responseSvea')
@@ -189,7 +189,6 @@ class ControllerPaymentsveadirectbank extends Controller {
         $this->data['merchant_id'] = $fields['input_merchantId'];
         $this->data['input_message'] = $fields['input_message'];
         $this->data['input_mac'] = $fields['input_mac'];
-        // $this->data['noscript_p_tag'] = $fields['noscript_p_tag'];
         $this->data['input_submit'] = $fields['input_submit'];
         $this->data['form_end_tag'] = $fields['form_end_tag'];
         $this->data['submitMessage'] = $this->language->get('button_confirm');

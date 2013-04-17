@@ -44,7 +44,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     public function confirm() {
         $this->load->language('payment/svea_partpayment');
-        $this->load->language('payment/svea_partpayment');
+
         //Load models
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_partpayment');
@@ -85,7 +85,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                         ->setAmountExVat($productPriceExVat)
                         ->setAmountIncVat($productPriceIncVat)
                         ->setName($product['name'])
-                        ->setUnit('st')//($this->language->get('unit'))
+                        ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
                         ->setDescription($product['model'])
                     );
@@ -113,7 +113,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                             ->setAmountIncVat($shippingIncVat)
                             ->setName($shipping_info["title"])
                             ->setDescription($shipping_info["text"])
-                            ->setUnit($this->language->get('pcs'))
+                            ->setUnit($this->language->get('unit'))
                        );
 
         }

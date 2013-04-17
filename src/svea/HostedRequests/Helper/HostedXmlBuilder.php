@@ -121,7 +121,8 @@ class HostedXmlBuilder {
         if (!empty($orderRow->quantity) && $orderRow->quantity != null) {
             $this->XMLWriter->writeElement("quantity", $orderRow->quantity);
         }
-
+        
+        
         $this->XMLWriter->endElement();
     }
 }

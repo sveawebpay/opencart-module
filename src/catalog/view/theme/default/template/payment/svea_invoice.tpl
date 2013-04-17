@@ -189,6 +189,7 @@ $('#getSSN').click(function() {
 
                     }else{
                         $("#svea_invoice_address").hide();
+                        $("#SveaAddressDiv").remove();
                         $("#svea_invoice_div").append('<div id="SveaAddressDiv"><strong>'+json[0].fullName+'</strong><br> '+json[0].street+' <br>'+json[0].zipCode+' '+json[0].locality+'</div>');
                     }
 
