@@ -23,15 +23,13 @@ class ControllerPaymentsveainvoice extends Controller {
 		$this->data['text_disabled']      = $this->language->get('text_disabled');
 		$this->data['text_all_zones']     = $this->language->get('text_all_zones');
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
+		$this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
 		$this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
 		$this->data['entry_status']       = $this->language->get('entry_status');
 		$this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
-
 		$this->data['button_save']        = $this->language->get('button_save');
 		$this->data['button_cancel']      = $this->language->get('button_cancel');
-
 		$this->data['tab_general']        = $this->language->get('tab_general');
-
         //Credentials
         $this->data['entry_username']      = $this->language->get('entry_username');
         $this->data['entry_password']      = $this->language->get('entry_password');
@@ -47,8 +45,11 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['entry_testmode']      = $this->language->get('entry_testmode');
         $this->data['entry_auto_deliver']  = $this->language->get('entry_auto_deliver');
         $this->data['entry_auto_deliver_text'] = $this->language->get('entry_auto_deliver_text');
-        $this->data['entry_yes']           = $this->language->get('entry_yes');
-        $this->data['entry_no']            = $this->language->get('entry_no');
+        $this->data['entry_distribution_type'] = $this->language->get('entry_distribution_type');
+        $this->data['entry_post']           = $this->language->get('entry_post');
+        $this->data['entry_email']          = $this->language->get('entry_email');
+        $this->data['entry_yes']            = $this->language->get('entry_yes');
+        $this->data['entry_no']             = $this->language->get('entry_no');
 
         $this->data['version']  = floatval(VERSION);
 
@@ -65,7 +66,8 @@ class ControllerPaymentsveainvoice extends Controller {
 
         $this->data['svea_invoice_sort_order']    = $this->config->get('svea_invoice_sort_order');
         $this->data['svea_invoice_testmode']      = $this->config->get('svea_invoice_testmode');
-        $this->data['svea_invoice_auto_deliver']          = $this->config->get('svea_invoice_auto_deliver');
+        $this->data['svea_invoice_auto_deliver']  = $this->config->get('svea_invoice_auto_deliver');
+
 
 
  		if (isset($this->error['warning'])) {
@@ -98,17 +100,31 @@ class ControllerPaymentsveainvoice extends Controller {
 		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_invoice&token=' . $this->session->data['token'];
 		$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
 
-
+                //order status
 		if (isset($this->request->post['svea_invoice_order_status_id'])) {
 			$this->data['svea_invoice_order_status_id'] = $this->request->post['svea_invoice_order_status_id'];
 		} else {
 			$this->data['svea_invoice_order_status_id'] = $this->config->get('svea_invoice_order_status_id');
 		}
+                //autodeliver order status
+		if (isset($this->request->post['svea_invoice_auto_deliver_status_id'])) {
+			$this->data['svea_invoice_auto_deliver_status_id'] = $this->request->post['svea_invoice_auto_deliver_status_id'];
+		} else {
+			$this->data['svea_invoice_auto_deliver_status_id'] = $this->config->get('svea_invoice_auto_deliver_status_id');
+		}
+                //invoice distribution type
+		if (isset($this->request->post['svea_invoice_distribution_type'])) {
+			$this->data['svea_invoice_distribution_type'] = $this->request->post['svea_invoice_distribution_type'];
+		} else {
+			$this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_auto_deliver_status_id');
+		}
+
+
 
 		$this->load->model('localisation/order_status');
 
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-
+                //geozone
 		if (isset($this->request->post['svea_invoice_geo_zone_id'])) {
 			$this->data['svea_invoice_geo_zone_id'] = $this->request->post['svea_invoice_geo_zone_id'];
 		} else {
@@ -120,24 +136,25 @@ class ControllerPaymentsveainvoice extends Controller {
 
 		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
-
+                //invoice status
 		if (isset($this->request->post['svea_invoice_status'])) {
 			$this->data['svea_invoice_status'] = $this->request->post['svea_invoice_status'];
 		} else {
 			$this->data['svea_invoice_status'] = $this->config->get('svea_invoice_status');
 		}
-
+                //sort order
 		if (isset($this->request->post['svea_invoice_sort_order'])) {
 			$this->data['svea_invoice_sort_order'] = $this->request->post['svea_invoice_sort_order'];
 		} else {
 			$this->data['svea_invoice_sort_order'] = $this->config->get('svea_invoice_sort_order');
 		}
-
+                //testmode
                 if (isset($this->request->post['svea_invoice_testmode'])) {
 			$this->data['svea_invoice_testmode'] = $this->request->post['svea_invoice_testmode'];
 		} else {
 			$this->data['svea_invoice_testmode'] = $this->config->get('svea_invoice_testmode');
 		}
+                //auto deliver
                 if (isset($this->request->post['svea_invoice_auto_deliver'])) {
 			$this->data['svea_invoice_auto_deliver'] = $this->request->post['svea_invoice_auto_deliver'];
 		} else {

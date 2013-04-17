@@ -90,22 +90,14 @@ class ControllerPaymentsveainvoice extends Controller {
             $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
             $svea = $this->formatVoucher($svea,$voucher);
        }
-
-
-
         preg_match_all('!\d+!',$order['payment_address_1'],$houseNoArr);
         $houseNo = $houseNoArr[0][0];
 
         preg_match_all('!\w+!',$order['payment_address_1'],$streetArr);
         $street = $streetArr[0][0];
 
-
-
-
         //Set order detials if company or private
         if ($company == TRUE){
-
-
             $item = Item::companyCustomer();
 
             $item = $item->setEmail($order['email'])
@@ -116,18 +108,14 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setIpAddress($order['ip'])
                          ->setPhoneNumber($order['telephone']);
 
-
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
 
                 $item = $item->setVatNumber($_GET['vatno']);
             }else{
                 $item = $item->setNationalIdNumber($_GET['ssn']);
             }
-
              $svea = $svea->addCustomerDetails($item);
-
         }else{
-
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
             $item = Item::individualCustomer();
@@ -141,22 +129,14 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setIpAddress($order['ip'])
                          ->setPhoneNumber($order['telephone']);
 
-
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
                 $item = $item->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);
             }
-
             if($order["payment_iso_code_2"] == "NL"){
                 $item = $item->setInitials($_GET['initials']);
             }
-
             $svea = $svea->addCustomerDetails($item);
-
             }
-
-
-
-
             $svea = $svea
                       ->setCountryCode($countryCode)
                       ->setCurrency($this->session->data['currency'])

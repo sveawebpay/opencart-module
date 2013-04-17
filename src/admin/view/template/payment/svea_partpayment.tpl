@@ -18,18 +18,6 @@
                 <td>2.0.0</td>
             </tr>
             <tr>
-              <td><?php echo $entry_order_status; ?></td>
-              <td><select name="svea_partpayment_order_status_id">
-                  <?php foreach ($order_statuses as $order_status) { ?>
-                  <?php if ($order_status['order_status_id'] == $svea_partpayment_order_status_id) { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select></td>
-            </tr>
-            <tr>
               <td><?php echo $entry_geo_zone; ?></td>
               <td><select name="svea_partpayment_geo_zone_id">
                   <option value="0"><?php echo $text_all_zones; ?></option>
@@ -59,7 +47,7 @@
               <td><input type="text" name="svea_partpayment_sort_order" value="<?php echo $svea_partpayment_sort_order; ?>" size="1" /></td>
             </tr>
             <tr>
-              <td><?php echo $entry_testmode; ?>:</td>
+              <td><?php echo $entry_testmode; ?></td>
               <td>
                 <select name="svea_partpayment_testmode">
                     <option value="1" <?php if($svea_partpayment_testmode == '1'){ echo 'selected="selected"';} ?> ><?php echo $text_enabled; ?></option>
@@ -68,11 +56,38 @@
                 </td>
             </tr>
             <tr>
-                <td><?php echo $entry_auto_deliver; ?>:<span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
+              <td><?php echo $entry_order_status; ?><span class="help"><?php echo $entry_order_status_text ?></span></td>
+              <td><select name="svea_partpayment_order_status_id">
+                  <?php foreach ($order_statuses as $order_status) { ?>
+                  <?php if ($order_status['order_status_id'] == $svea_partpayment_order_status_id) { ?>
+                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select></td>
+            </tr>
+            <tr>
+                <td><?php echo $entry_auto_deliver; ?><span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
                 <td>
                     <select name="svea_partpayment_auto_deliver">
-                        <option value="0" <?php if($svea_partpayment_auto_deliver == '0'){ echo 'selected="selected"';} ?> ><?php echo $text_disabled; ?></option>
-                        <option value="1" <?php if($svea_partpayment_auto_deliver == '1'){ echo 'selected="selected"';} ?> ><?php echo $text_enabled; ?></option>
+                        <option value="0" <?php if($svea_partpayment_auto_deliver == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
+                        <option value="1" <?php if($svea_partpayment_auto_deliver == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
+                    </select>
+                    <span class="help"><?php echo $entry_order_status; ?></span>
+                    <select name="svea_partpayment_auto_deliver_status_id">
+                     <?php foreach ($order_statuses as $deliver_status) { ?>
+                        <?php if ($deliver_status['order_status_id'] == $svea_partpayment_auto_deliver_status_id) { ?>
+                        <option value="<?php echo $deliver_status['order_status_id']; ?>" selected="selected"><?php echo $deliver_status['name']; ?></option>
+                        <?php } else { ?>
+                        <option value="<?php echo $deliver_status['order_status_id']; ?>"><?php echo $deliver_status['name']; ?></option>
+                        <?php } ?>
+                    <?php } ?>
+                    </select>
+                    <span class="help"><?php echo $entry_distribution_type; ?></span>
+                    <select name="svea_partpayment_distribution_type">
+                        <option value="Post" <?php if($svea_partpayment_distribution_type == 'Post'){ echo 'selected="selected"';}?> ><?php echo $entry_post; ?></option>
+                        <option value="Email" <?php if($svea_partpayment_distribution_type == 'Email'){ echo 'selected="selected"';}?> ><?php echo $entry_email; ?></option>
                     </select>
                 </td>
             </tr>
@@ -96,28 +111,28 @@
                     <tbody>
 
                         <tr>
-                            <td><?php echo $entry_username; ?>:</td>
+                            <td><?php echo $entry_username; ?></td>
                             <td>
                                 <input name="<?php echo $code['name_username']; ?>" type="text"
                                        value="<?php echo $code['value_username']; ?>" />
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $entry_password; ?>:</td>
+                            <td><?php echo $entry_password; ?></td>
                             <td>
                                 <input name="<?php echo $code['name_password']; ?>" type="password"
                                        value="<?php echo $code['value_password']; ?>" />
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $entry_clientno; ?>:</td>
+                            <td><?php echo $entry_clientno; ?></td>
                             <td>
                                 <input name="<?php echo $code['name_clientno']; ?>" type="text"
                                        value="<?php echo $code['value_clientno']; ?>" />
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $entry_min_amount; ?>:</td>
+                            <td><?php echo $entry_min_amount; ?></td>
                             <td>
                                 <input name="<?php echo $code['min_amount_name']; ?>" type="text"
                                        value="<?php echo $code['min_amount_value']; ?>" />
@@ -138,196 +153,3 @@ $('#tab-partpayment a').tabs();
 
 //--></script>
 <?php echo $footer; ?>
-        <!--
-
-        <tr>
-            <td><?php echo $entry_sweden; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username; ?>:</td>
-            <td>
-                <input name="svea_partpayment_username_SE" type="text" value="<?php echo $svea_partpayment_username_SE; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_password; ?>:</td>
-            <td>
-                <input name="svea_partpayment_password_SE" type="password" value="<?php echo $svea_partpayment_password_SE; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_clientno; ?>:</td>
-            <td>
-                <input name="svea_partpayment_clientno_SE" type="text" value="<?php echo $svea_partpayment_clientno_SE; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_min_amount; ?>:</td>
-            <td>
-                <input name="svea_partpayment_min_amount_SE" type="text" value="<?php echo $svea_partpayment_min_amount_SE; ?>" />
-            </td>
-        </tr>
-
-
-
-        <tr>
-            <td><?php echo $entry_finland; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username; ?>:</td>
-            <td>
-                <input name="svea_partpayment_username_FI" type="text" value="<?php echo $svea_partpayment_username_FI; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_password; ?>:</td>
-            <td>
-                <input name="svea_partpayment_password_FI" type="password" value="<?php echo $svea_partpayment_password_FI; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_clientno; ?>:</td>
-            <td>
-                <input name="svea_partpayment_clientno_FI" type="text" value="<?php echo $svea_partpayment_clientno_FI; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_min_amount; ?>:</td>
-            <td>
-                <input name="svea_partpayment_min_amount_FI" type="text" value="<?php echo $svea_partpayment_min_amount_FI; ?>" />
-            </td>
-        </tr>
-
-
-
-        <tr>
-            <td><?php echo $entry_denmark; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username; ?>:</td>
-            <td>
-                <input name="svea_partpayment_username_DK" type="text" value="<?php echo $svea_partpayment_username_DK; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_password; ?>:</td>
-            <td>
-                <input name="svea_partpayment_password_DK" type="password" value="<?php echo $svea_partpayment_password_DK; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_clientno; ?>:</td>
-            <td>
-                <input name="svea_partpayment_clientno_DK" type="text" value="<?php echo $svea_partpayment_clientno_DK; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_min_amount; ?>:</td>
-            <td>
-                <input name="svea_partpayment_min_amount_DK" type="text" value="<?php echo $svea_partpayment_min_amount_DK; ?>" />
-            </td>
-        </tr>
-
-
-
-        <tr>
-            <td><?php echo $entry_norway; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username; ?>:</td>
-            <td>
-                <input name="svea_partpayment_username_NO" type="text" value="<?php echo $svea_partpayment_username_NO; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_password; ?>:</td>
-            <td>
-                <input name="svea_partpayment_password_NO" type="password" value="<?php echo $svea_partpayment_password_NO; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_clientno; ?>:</td>
-            <td>
-                <input name="svea_partpayment_clientno_NO" type="text" value="<?php echo $svea_partpayment_clientno_NO; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_min_amount; ?>:</td>
-            <td>
-                <input name="svea_partpayment_min_amount_NO" type="text" value="<?php echo $svea_partpayment_min_amount_NO; ?>" />
-            </td>
-        </tr>
-
-
-
-        <tr>
-            <td><?php echo $entry_netherlands; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username; ?>:</td>
-            <td>
-                <input name="svea_partpayment_username_NL" type="text" value="<?php echo $svea_partpayment_username_NL; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_password; ?>:</td>
-            <td>
-                <input name="svea_partpayment_password_NL" type="password" value="<?php echo $svea_partpayment_password_NL; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_clientno; ?>:</td>
-            <td>
-                <input name="svea_partpayment_clientno_NL" type="text" value="<?php echo $svea_partpayment_clientno_NL; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_min_amount; ?>:</td>
-            <td>
-                <input name="svea_partpayment_min_amount_NL" type="text" value="<?php echo $svea_partpayment_min_amount_NL; ?>" />
-            </td>
-        </tr>
-
-
-
-        <tr>
-            <td><?php echo $entry_germany; ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_username; ?>:</td>
-            <td>
-                <input name="svea_partpayment_username_DE" type="text" value="<?php echo $svea_partpayment_username_DE; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_password; ?>:</td>
-            <td>
-                <input name="svea_partpayment_password_DE" type="password" value="<?php echo $svea_partpayment_password_DE; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_clientno; ?>:</td>
-            <td>
-                <input name="svea_partpayment_clientno_DE" type="text" value="<?php echo $svea_partpayment_clientno_DE; ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $entry_min_amount; ?>:</td>
-            <td>
-                <input name="svea_partpayment_min_amount_DE" type="text" value="<?php echo $svea_partpayment_min_amount_DE; ?>" />
-            </td>
-        </tr>
-
-      </table>
-    </form>
-  </div>
-  <div style="height:100px"></div>
-</div>
-<?php echo $footer; ?>
--->
