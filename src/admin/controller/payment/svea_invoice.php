@@ -45,6 +45,8 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['entry_netherlands']   = $this->language->get('entry_netherlands');
 
         $this->data['entry_testmode']      = $this->language->get('entry_testmode');
+        $this->data['entry_auto_deliver']  = $this->language->get('entry_auto_deliver');
+        $this->data['entry_auto_deliver_text'] = $this->language->get('entry_auto_deliver_text');
         $this->data['entry_yes']           = $this->language->get('entry_yes');
         $this->data['entry_no']            = $this->language->get('entry_no');
 
@@ -60,41 +62,10 @@ class ControllerPaymentsveainvoice extends Controller {
 
         $this->data['credentials'] = $cred;
 
-/**
-        //Definitions settings SE
-        $this->data['svea_invoice_username_SE']   = $this->config->get('svea_invoice_username_SE');
-        $this->data['svea_invoice_password_SE']   = $this->config->get('svea_invoice_password_SE');
-        $this->data['svea_invoice_clientno_SE']   = $this->config->get('svea_invoice_clientno_SE');
-
-        //Definitions settings FI
-        $this->data['svea_invoice_username_FI']   = $this->config->get('svea_invoice_username_FI');
-        $this->data['svea_invoice_password_FI']   = $this->config->get('svea_invoice_password_FI');
-        $this->data['svea_invoice_clientno_FI']   = $this->config->get('svea_invoice_clientno_FI');
-
-        //Definitions settings DK
-        $this->data['svea_invoice_username_DK']   = $this->config->get('svea_invoice_username_DK');
-        $this->data['svea_invoice_password_DK']   = $this->config->get('svea_invoice_password_DK');
-        $this->data['svea_invoice_clientno_DK']   = $this->config->get('svea_invoice_clientno_DK');
-
-        //Definitions settings NO
-        $this->data['svea_invoice_username_NO']   = $this->config->get('svea_invoice_username_NO');
-        $this->data['svea_invoice_password_NO']   = $this->config->get('svea_invoice_password_NO');
-        $this->data['svea_invoice_clientno_NO']   = $this->config->get('svea_invoice_clientno_NO');
-
-        //Definitions settings NL
-        $this->data['svea_invoice_username_NL']   = $this->config->get('svea_invoice_username_NL');
-        $this->data['svea_invoice_password_NL']   = $this->config->get('svea_invoice_password_NL');
-        $this->data['svea_invoice_clientno_NL']   = $this->config->get('svea_invoice_clientno_NL');
-
-        //Definitions settings DE
-        $this->data['svea_invoice_username_DE']   = $this->config->get('svea_invoice_username_DE');
-        $this->data['svea_invoice_password_DE']   = $this->config->get('svea_invoice_password_DE');
-        $this->data['svea_invoice_clientno_DE']   = $this->config->get('svea_invoice_clientno_DE');
- *
- */
 
         $this->data['svea_invoice_sort_order']    = $this->config->get('svea_invoice_sort_order');
         $this->data['svea_invoice_testmode']      = $this->config->get('svea_invoice_testmode');
+        $this->data['svea_invoice_auto_deliver']          = $this->config->get('svea_invoice_auto_deliver');
 
 
  		if (isset($this->error['warning'])) {
@@ -162,10 +133,15 @@ class ControllerPaymentsveainvoice extends Controller {
 			$this->data['svea_invoice_sort_order'] = $this->config->get('svea_invoice_sort_order');
 		}
 
-        if (isset($this->request->post['svea_invoice_testmode'])) {
+                if (isset($this->request->post['svea_invoice_testmode'])) {
 			$this->data['svea_invoice_testmode'] = $this->request->post['svea_invoice_testmode'];
 		} else {
 			$this->data['svea_invoice_testmode'] = $this->config->get('svea_invoice_testmode');
+		}
+                if (isset($this->request->post['svea_invoice_auto_deliver'])) {
+			$this->data['svea_invoice_auto_deliver'] = $this->request->post['svea_invoice_auto_deliver'];
+		} else {
+			$this->data['svea_invoice_auto_deliver'] = $this->config->get('svea_invoice_auto_deliver');
 		}
 
 		$this->template = 'payment/svea_invoice.tpl';

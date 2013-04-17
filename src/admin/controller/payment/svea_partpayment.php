@@ -46,6 +46,8 @@ class ControllerPaymentsveapartpayment extends Controller {
         $this->data['entry_netherlands']   = $this->language->get('entry_netherlands');
 
         $this->data['entry_testmode']      = $this->language->get('entry_testmode');
+        $this->data['entry_auto_deliver']  = $this->language->get('entry_auto_deliver');
+        $this->data['entry_auto_deliver_text'] = $this->language->get('entry_auto_deliver_text');
         $this->data['entry_yes']           = $this->language->get('entry_yes');
         $this->data['entry_no']            = $this->language->get('entry_no');
         $this->data['entry_min_amount']    = $this->language->get('entry_min_amount');
@@ -105,7 +107,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $this->data['svea_partpayment_sort_order']    = $this->config->get('svea_partpayment_sort_order');
         $this->data['svea_partpayment_testmode']      = $this->config->get('svea_partpayment_testmode');
-
+        $this->data['svea_partpayment_auto_deliver']      = $this->config->get('svea_partpayment_auto_deliver');
 
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -169,10 +171,15 @@ class ControllerPaymentsveapartpayment extends Controller {
 			$this->data['svea_partpayment_sort_order'] = $this->config->get('svea_partpayment_sort_order');
 		}
 
-        if (isset($this->request->post['svea_testmode'])) {
+                if (isset($this->request->post['svea_testmode'])) {
 			$this->data['svea_partpayment_testmode'] = $this->request->post['svea_partpayment_testmode'];
 		} else {
 			$this->data['svea_partpayment_testmode'] = $this->config->get('svea_partpayment_testmode');
+		}
+                if (isset($this->request->post['svea_partpayment_auto_deliver'])) {
+			$this->data['svea_partpayment_auto_deliver'] = $this->request->post['svea_partpayment_auto_deliver'];
+		} else {
+			$this->data['svea_partpayment_auto_deliver'] = $this->config->get('svea_partpayment_auto_deliver');
 		}
 
 		$this->template = 'payment/svea_partpayment.tpl';

@@ -45,14 +45,15 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     public function confirm() {
-         $this->load->language('payment/svea_invoice');
-         $this->load->language('total/svea_invoice');
+        $this->load->language('payment/svea_invoice');
+        $this->load->language('total/svea_fee');
         //Load models
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/coupon');
-        $this->load->model('checkout/voucher');
-
+        if (floatval(VERSION) >= 1.5) {
+            $this->load->model('checkout/voucher');
+        }
         //Load SVEA includes
         include('svea/Includes.php');
 
@@ -68,145 +69,27 @@ class ControllerPaymentsveainvoice extends Controller {
         //Check if company or private
         $company = ($_GET['company'] == 'true') ? true : false;
 
-
         // Get the products in the cart
         $products = $this->cart->getProducts();
-
-        //Product rows
-        foreach ($products as $product) {
-            $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
-            //Get the tax, difference in version 1.4.x
-            if(floatval(VERSION) >= 1.5){
-                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
-                 $productPriceIncVat = $productPriceExVat + $productTax;
-            }  else {
-
-                $taxRate = $this->currency->format($this->tax->getRate($product['tax_class_id']));
-                $productPriceIncVat = (($taxRate * 0.01) +1) * $productPriceExVat;
-
-            }
-            $svea = $svea
-                    ->addOrderRow(Item::orderRow()
-                        ->setQuantity($product['quantity'])
-                        ->setAmountExVat($productPriceExVat)
-                        ->setAmountIncVat($productPriceIncVat)
-                        ->setName($product['name'])
-                        ->setUnit($this->language->get('unit'))//($this->language->get('unit'))
-                        ->setArticleNumber($product['product_id'])
-                        ->setDescription($product['model'])
-                    );
-
-        }
-
-
-        //Invoice Fee
+        //Products
+        $svea = $this->formatOrderRows($svea,$products);
         if ($this->config->get('svea_fee_status') == 1) {
-
-            $invoiceFeeExTax = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
-            $invoiceFeeTaxId = $this->config->get('svea_fee_tax_class_id');
-
-            $invoiceTax = 0;
-
-            if($invoiceFeeTaxId > 0){
-                    if(floatval(VERSION) >= 1.5){
-                   $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
-                    $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
-               }  else {
-
-                   $taxRate = $this->currency->format($this->tax->getRate($invoiceFeeTaxId));
-                   $invoiceFeeIncVat = (($taxRate * 0.01) +1) * $invoiceFeeExTax;
-
-               }
-            }
-         
-            $svea = $svea
-                    ->addFee(
-                        Item::invoiceFee()
-                            ->setAmountExVat($invoiceFeeExTax)
-                            ->setAmountIncVat($invoiceFeeIncVat)
-                            ->setName($this->language->get('text_svea_fee'))
-                            ->setUnit($this->language->get('unit'))
-                        );
+            $svea = $this->formatInvoiceFeeRows($svea);
         }
-
-
-        //Shipping Fee
+        //Shipping
         if ($this->cart->hasShipping() == 1) {
-           $shipping_info = $this->session->data['shipping_method'];
-            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
-
-            if (floatval(VERSION) >= 1.5){
-                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
-                $shippingIncVat = $shippingExVat + $shippingTax;
-            }else{
-                $taxRate = $this->currency->format($this->tax->getRate($shipping_info['tax_class_id']));
-                $shippingIncVat = (($taxRate * 0.01) +1) * $shippingExVat;
-            }
-
-            $svea = $svea
-                    ->addFee(
-                        Item::shippingFee()
-                            ->setAmountExVat($shippingExVat)
-                            ->setAmountIncVat($shippingIncVat)
-                            ->setName($shipping_info["title"])
-                            ->setDescription($shipping_info["text"])
-                            ->setUnit($this->language->get('unit'))
-                       );
-
+            $svea = $this->formatShippingFeeRows($svea);
         }
-
-
         //Get coupons
         if (isset($this->session->data['coupon'])) {
             $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-
-            $totalPrice = $this->cart->getTotal();
-
-            if ($coupon['type'] == 'F') {
-                $discount = $this->currency->format($coupon['discount'],'',false,false);
-
-                $svea = $svea
-                        ->addDiscount(
-                            Item::fixedDiscount()
-                                ->setAmountIncVat($discount)
-                                ->setName($coupon['name'])
-                                ->setUnit($this->language->get('unit'))
-                            );
-
-
-            } elseif ($coupon['type'] == 'P') {
-
-                $svea = $svea
-                        ->addDiscount(
-                            Item::relativeDiscount()
-                                ->setDiscountPercent($coupon['discount'])
-                                ->setName($coupon['name'])
-                                ->setUnit($this->language->get('unit'))
-                            );
-
-                }
-
+            $svea = $this->formatCouponRows($svea,$coupon);
         }
-
-
         //Get vouchers
-        if (isset($this->session->data['voucher'])) {
+        if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
             $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-
-            $totalPrice = $this->cart->getTotal();
-
-            $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
-
-            $svea = $svea
-                    ->addDiscount(
-                        Item::fixedDiscount()
-                            ->setAmountIncVat($voucherAmount)
-                            ->setName($voucher['code'])
-                            ->setDescription($voucher["message"])
-                            ->setUnit($this->language->get('unit'))
-                        );
-
-        }
+            $svea = $this->formatVoucher($svea,$voucher);
+       }
 
 
 
@@ -282,28 +165,64 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->useInvoicePayment()
                         ->doRequest();
 
-
-            $response = array();
-
-            //If response accepted redirect to thankyou page
+            //If CreateOrder accepted redirect to thankyou page
             if ($svea->accepted == 1) {
+                $response = array();
+                //If Auto deliver order is set, DeliverOrder
+                if($this->config->get('svea_invoice_auto_deliver') == 1){
+                    $deliverObj = WebPay::deliverOrder($conf);
+                    //Product rows
+                    $deliverObj = $this->formatOrderRows($deliverObj, $products);
+                    //InvoiceFee
+                    if ($this->config->get('svea_fee_status') == 1) {
+                    $deliverObj = $this->formatInvoiceFeeRows($deliverObj);
+                    }
+                     //Shipping
+                    if ($this->cart->hasShipping() == 1) {
+                    $deliverObj = $this->formatShippingFeeRows($deliverObj);
+                    }
+                     //Get coupons
+                    if (isset($this->session->data['coupon'])) {
+                        $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
+                        $deliverObj = $this->formatCouponRows($deliverObj,$coupon);
+                    }
+                     //Get vouchers
+                    if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
+                        $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
+                        $deliverObj = $this->formatVoucher($deliverObj,$voucher);
+                        //$totalPrice = $this->cart->getTotal();
+                   }
+                   $deliverObj = $deliverObj->setCountryCode($countryCode)
+                                ->setOrderId($svea->sveaOrderId)
+                                ->setInvoiceDistributionType('Post') //set in admin interface
+                                    ->deliverInvoiceOrder()
+                                    ->doRequest();
+                  //If DeliverOrder returns true, send true to veiw
+                    if($deliverObj->accepted == 1){
+                       $response = array("success" => true);
+                    //I not, send error codes
+                    }  else {
+                        $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
+                    }
+                //if auto deliver not set, send true to view
+                }  else {
+                     $response = array("success" => true);
+                }
 
-
-
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
-
-                $response = array("success" => true);
-            } else {
-
+            //else send errors to view
+            }  else {
                 $response = array("error" => $this->responseCodes($this->resultcode,$svea->errormessage));
-
             }
+
+            $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
 
             echo json_encode($response);
 
         }
 
-            public function getAddress() {
+
+
+        public function getAddress() {
                 include('svea/Includes.php');
 
                 $this->load->model('payment/svea_invoice');
@@ -350,5 +269,136 @@ class ControllerPaymentsveainvoice extends Controller {
 
             }
 
+    private function formatOrderRows($svea,$products){
+        $this->load->language('payment/svea_invoice');
+                //Product rows
+        foreach ($products as $product) {
+            $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+            //Get the tax, difference in version 1.4.x
+            if(floatval(VERSION) >= 1.5){
+                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
+                 $productPriceIncVat = $productPriceExVat + $productTax;
+            }  else {
+
+                $taxRate = $this->currency->format($this->tax->getRate($product['tax_class_id']));
+                $productPriceIncVat = (($taxRate * 0.01) +1) * $productPriceExVat;
+
+            }
+            $svea = $svea
+                    ->addOrderRow(Item::orderRow()
+                        ->setQuantity($product['quantity'])
+                        ->setAmountExVat($productPriceExVat)
+                        ->setAmountIncVat($productPriceIncVat)
+                        ->setName($product['name'])
+                        ->setUnit($this->language->get('unit'))
+                        ->setArticleNumber($product['product_id'])
+                        ->setDescription($product['model'])
+                    );
+
         }
+        return $svea;
+    }
+
+    private function formatInvoiceFeeRows($svea) {
+         $this->load->language('payment/svea_invoice');
+         $this->load->language('total/svea_fee');
+            //Invoice Fee
+            $invoiceFeeExTax = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
+            $invoiceFeeTaxId = $this->config->get('svea_fee_tax_class_id');
+
+            $invoiceTax = 0;
+
+            if($invoiceFeeTaxId > 0){
+                    if(floatval(VERSION) >= 1.5){
+                   $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
+                    $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
+               }  else {
+
+                   $taxRate = $this->currency->format($this->tax->getRate($invoiceFeeTaxId));
+                   $invoiceFeeIncVat = (($taxRate * 0.01) +1) * $invoiceFeeExTax;
+
+               }
+            }
+
+            $svea = $svea
+                    ->addFee(
+                        Item::invoiceFee()
+                            ->setAmountExVat($invoiceFeeExTax)
+                            ->setAmountIncVat($invoiceFeeIncVat)
+                            ->setName($this->language->get('text_svea_fee'))
+                            ->setUnit($this->language->get('unit'))
+                        );
+
+        return $svea;
+    }
+
+    public function formatShippingFeeRows($svea) {
+         $this->load->language('payment/svea_invoice');
+        //Shipping Fee
+           $shipping_info = $this->session->data['shipping_method'];
+            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
+
+            if (floatval(VERSION) >= 1.5){
+                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
+                $shippingIncVat = $shippingExVat + $shippingTax;
+            }else{
+                $taxRate = $this->currency->format($this->tax->getRate($shipping_info['tax_class_id']));
+                $shippingIncVat = (($taxRate * 0.01) +1) * $shippingExVat;
+            }
+
+            $svea = $svea
+                    ->addFee(
+                        Item::shippingFee()
+                            ->setAmountExVat($shippingExVat)
+                            ->setAmountIncVat($shippingIncVat)
+                            ->setName($shipping_info["title"])
+                            ->setDescription($shipping_info["text"])
+                            ->setUnit($this->language->get('unit'))
+                       );
+
+
+        return $svea;
+    }
+
+    private function formatCouponRows($svea, $coupon) {
+        if ($coupon['type'] == 'F') {
+            $discount = $this->currency->format($coupon['discount'],'',false,false);
+
+            $svea = $svea
+                    ->addDiscount(
+                        Item::fixedDiscount()
+                            ->setAmountIncVat($discount)
+                            ->setName($coupon['name'])
+                            ->setUnit($this->language->get('unit'))
+                        );
+
+
+        } elseif ($coupon['type'] == 'P') {
+
+            $svea = $svea
+                    ->addDiscount(
+                        Item::relativeDiscount()
+                            ->setDiscountPercent($coupon['discount'])
+                            ->setName($coupon['name'])
+                            ->setUnit($this->language->get('unit'))
+                        );
+
+            }
+            return $svea;
+    }
+
+    private function formatVoucher($svea, $voucher) {
+        $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
+        $svea = $svea
+                ->addDiscount(
+                    Item::fixedDiscount()
+                        ->setAmountIncVat($voucherAmount)
+                        ->setName($voucher['code'])
+                        ->setDescription($voucher["message"])
+                        ->setUnit($this->language->get('unit'))
+                    );
+        return $svea;
+    }
+
+}
 ?>

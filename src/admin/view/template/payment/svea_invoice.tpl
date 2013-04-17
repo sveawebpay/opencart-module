@@ -69,6 +69,15 @@
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td><?php echo $entry_auto_deliver; ?>:<span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
+                <td>
+                    <select name="svea_invoice_auto_deliver">
+                        <option value="0" <?php if($svea_invoice_auto_deliver == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
+                        <option value="1" <?php if($svea_invoice_auto_deliver == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
+                    </select>
+                </td>
+            </tr>
           </tbody>
       </table>
         <!-- Countrycode specific -->

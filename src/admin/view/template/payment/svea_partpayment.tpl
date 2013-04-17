@@ -62,9 +62,18 @@
               <td><?php echo $entry_testmode; ?>:</td>
               <td>
                 <select name="svea_partpayment_testmode">
-                    <option value="1" <?php if($svea_partpayment_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
-                    <option value="0" <?php if($svea_partpayment_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
+                    <option value="1" <?php if($svea_partpayment_testmode == '1'){ echo 'selected="selected"';} ?> ><?php echo $text_enabled; ?></option>
+                    <option value="0" <?php if($svea_partpayment_testmode == '0'){ echo 'selected="selected"';} ?> ><?php echo $text_disabled; ?></option>
                 </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $entry_auto_deliver; ?>:<span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
+                <td>
+                    <select name="svea_partpayment_auto_deliver">
+                        <option value="0" <?php if($svea_partpayment_auto_deliver == '0'){ echo 'selected="selected"';} ?> ><?php echo $text_disabled; ?></option>
+                        <option value="1" <?php if($svea_partpayment_auto_deliver == '1'){ echo 'selected="selected"';} ?> ><?php echo $text_enabled; ?></option>
+                    </select>
                 </td>
             </tr>
           </tbody>
