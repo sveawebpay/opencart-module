@@ -4,7 +4,7 @@ $_['heading_title']      = 'Svea Direktbetalning';
 
 // Text
 $_['text_payment']       = 'Betalning';
-$_['text_success']       = 'Lyckat: Du har modifierat Sveas Direktbetalningsmodul';
+$_['text_success']       = 'Modifiering av Sveas Kortbetalningsmodul lyckades!';
 $_['text_svea_directbank']  = '<img src="view/image/payment/svea_directbank.png" alt="Svea Direktbetalning" title="SVEA Direktbetalning" />';
 
 // Entry
