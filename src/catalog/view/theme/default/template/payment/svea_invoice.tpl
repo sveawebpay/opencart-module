@@ -157,6 +157,7 @@ $('#getSSN').click(function() {
 
     var company = $("#svea_invoice_company").val();
     var ssnNo = $('#ssn').val();
+    
     $("#svea_invoice_err").empty();
     $("#svea_invoice_address").empty();
     $("#svea_invoice_div").hide();

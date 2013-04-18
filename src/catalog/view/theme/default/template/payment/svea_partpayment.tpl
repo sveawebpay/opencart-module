@@ -53,8 +53,7 @@
 
     <div class="right" id="svea_partpayment_tr" style="clear:both; margin-top:15px;">
         <?php echo $this->language->get('text_invoice_address')?>:<br />
-        <select name="svea_partpayment_address" id="svea_partpayment_address">
-        </select>
+        <div id="svea_partpayment_address"></div>
     </div>
 
     <br />
@@ -142,10 +141,7 @@ $('#getPlan').click(function() {
                 }else{
 
                     if (json.addresses.length > 0){
-                        $.each(json.addresses,function(key,value){
-                            $("#svea_partpayment_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
-                        });
-
+                        $("#svea_partpayment_address").empty().append('<strong>'+json.addresses[0].fullName+'</strong><br>'+json.addresses[0].street+'<br>'+json.addresses[0].zipCode+' '+json.addresses[0].locality);
                         $("#svea_partpayment_tr").show();
                     }
 

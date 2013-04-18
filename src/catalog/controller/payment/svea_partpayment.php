@@ -83,12 +83,9 @@ class ControllerPaymentsveapartpayment extends Controller {
             $svea = $this->formatVoucher($svea,$voucher);
        }
 
-        preg_match_all('!\d+!',$order['payment_address_1'],$houseNoArr);
-        $houseNo = $houseNoArr[0][0];
-
-        preg_match_all('!\w+!',$order['payment_address_1'],$streetArr);
-        $street = $streetArr[0][0];
-
+        preg_match('!([^0-9]*)(.*)!',$order['payment_address_1'],$addressArr);
+        $street  = $addressArr[1];
+        $houseNo = $addressArr[2];
 
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
@@ -207,7 +204,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
                 $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
 
-                $result[] = array("fullName" => $name,
+                $result[] = array("fullName"  => $name,
                                   "street"    => $ci->street,
                                   "zipCode"   => $ci->zipCode,
                                   "locality"  => $ci->locality,
@@ -242,7 +239,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             foreach ($svea->campaignCodes as $cc){
                 $result[] = array("campaignCode" => $cc->campaignCode,
                                   "description"    => $cc->description,
-                                    "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$currency);
+                                  "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$currency);
 
             }
         }
@@ -301,7 +298,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                         ->setAmountExVat($productPriceExVat)
                         ->setAmountIncVat($productPriceIncVat)
                         ->setName($product['name'])
-                        ->setUnit('st')//($this->language->get('unit'))
+                        ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
                         ->setDescription($product['model'])
                     );
