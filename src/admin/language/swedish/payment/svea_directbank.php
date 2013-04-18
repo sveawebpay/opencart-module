@@ -15,6 +15,8 @@ $_['entry_sort_order']   = 'Sorteringsordning:';
 $_['entry_merchant_id']  = 'Merchant id:';
 $_['entry_testmode']     = 'Testläge:';
 $_['entry_sw']           = 'Secret word:';
+$_['entry_test']    = "PRODUKTION";
+$_['entry_prod']    = "TEST";
 
 // Error
 $_['error_permission']   = 'Varning: Du har inte tillåtelse att ändra Svea Direktbetalningsmodul';

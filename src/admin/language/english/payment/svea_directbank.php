@@ -15,6 +15,8 @@ $_['entry_sort_order']   = 'Sort Order:';
 $_['entry_merchant_id']  = 'Merchant id';
 $_['entry_testmode']     = 'Testmode';
 $_['entry_sw']           = 'Secret word';
+$_['entry_test']    = "PRODUCTION";
+$_['entry_prod']    = "TEST";
 
 // Error
 $_['error_permission']   = 'Warning: You do not have permission to modify payment Svea Direct payment!';
