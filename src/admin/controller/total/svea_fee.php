@@ -9,12 +9,13 @@ class ControllerTotalSveaFee extends Controller {
 		
 		$this->load->model('setting/setting');
 		
+        //When Save btn is clicked
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
 			$this->model_setting_setting->editSetting('svea_fee', $this->request->post);
 		
 			$this->session->data['success'] = $this->language->get('text_success');
 			
-			$this->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
+			$this->redirect($this->getLink('extension/total'));
 		}
 		
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -42,25 +43,24 @@ class ControllerTotalSveaFee extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->getLink('common/home'),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_total'),
-			'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->getLink('extension/total'),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('total/svea_fee', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->getLink('total/svea_fee'),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = $this->url->link('total/svea_fee', 'token=' . $this->session->data['token'], 'SSL');
-		
-		$this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] =  $this->getLink('total/svea_fee');
+		$this->data['cancel'] =  $this->getLink('extension/total');
 
 		if (isset($this->request->post['svea_fee_total'])) {
 			$this->data['svea_fee_total'] = $this->request->post['svea_fee_total'];
@@ -102,7 +102,7 @@ class ControllerTotalSveaFee extends Controller {
 			'common/footer'
 		);
 				
-		$this->response->setOutput($this->render());
+		$this->response->setOutput($this->render(TRUE));
 	}
 
 	private function validate() {
@@ -116,5 +116,11 @@ class ControllerTotalSveaFee extends Controller {
 			return false;
 		}	
 	}
+    
+    //The link function not avaliable in 1.4.x, therefore we need to implement the older way of setting links
+    private function getLink($link){
+        return (floatval(VERSION) >= 1.5) ? $this->url->link($link, 'token=' . $this->session->data['token'], 'SSL') : HTTPS_SERVER . 'index.php?route='.$link.'&token=' . $this->session->data['token'];
+            
+    }
 }
 ?>

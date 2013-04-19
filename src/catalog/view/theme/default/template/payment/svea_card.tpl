@@ -1,13 +1,3 @@
-<?php
-    /*
-    if (isset($_SESSION['error_warning'])){ 
-    ?>
-        <div class="right" style="color:red"><?php echo $_SESSION['error_warning'] ?></div><br />
-       
-    <?php unset($_SESSION['error_warning']);    
-   }
-   */
-  ?>
 <div class="buttons">
  
 <div class="right">
@@ -17,11 +7,15 @@
             $merchant_id,
             $input_mac;
     ?>
+    
+    <?php if(floatval(VERSION) >= 1.5){?>
     <input id="checkout" class="button" type='submit' name='submit' value='<?php echo $submitMessage ?>' />
-    <?php
+    <?php }else{ ?>
+  
+    <a id="checkout" class="button" onclick="document.paymentForm.submit()"><span><?php echo $button_confirm; ?></span></a>
+    <?php }?>
+   <?php
         echo $form_end_tag;
     ?>
-  
-   <!-- <a id="checkout" class="button" href="<?php echo $continue; ?>"><span><?php echo $button_confirm; ?></span></a>-->
 </div>
 </div>

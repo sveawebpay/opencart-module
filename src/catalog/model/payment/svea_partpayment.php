@@ -1,14 +1,17 @@
 <?php 
 class ModelPaymentsveapartpayment extends Model {
-  	public function getMethod($address,$total) {
+  	public function getMethod($address,$total = null) {
 		$this->load->language('payment/svea_partpayment');
 		$this->load->model('payment/svea_partpayment');
         
         //Get country
-        $countryId = $this->session->data['payment_country_id'];
+        $countryId = (floatval(VERSION) >= 1.5) ? $this->session->data['payment_country_id'] : $this->session->data['country_id'];
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE country_id=$countryId");
         $countryCode = $query->row["iso_code_2"];
         
+        if($total == null)
+            $total = $this->cart->getTotal();
+
         $total = $this->currency->format($total,'',false,false);
 
         

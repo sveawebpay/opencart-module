@@ -13,7 +13,7 @@ class ModelTotalSveafee extends Model {
 			);
 
 			if ($this->config->get('svea_fee_tax_class_id')) {
-				$tax_rates = $this->tax->getRates($this->config->get('svea_fee_fee'), $this->config->get('svea_fee_tax_class_id'));
+				$tax_rates =  (floatval(VERSION) >= 1.5) ? $this->tax->getRates($this->config->get('svea_fee_fee'), $this->config->get('svea_fee_tax_class_id')) : $this->tax->getRate($this->config->get('svea_fee_tax_class_id')) ;
 				
 				foreach ($tax_rates as $tax_rate) {
 					if (!isset($taxes[$tax_rate['tax_rate_id']])) {
