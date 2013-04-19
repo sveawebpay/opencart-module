@@ -217,9 +217,8 @@ class ControllerPaymentsveapartpayment extends Controller {
 
 
     private function getPaymentOptions(){
-
         include('svea/Includes.php');
-
+        $this->load->language('payment/svea_partpayment');
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -239,7 +238,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             foreach ($svea->campaignCodes as $cc){
                 $result[] = array("campaignCode" => $cc->campaignCode,
                                   "description"    => $cc->description,
-                                  "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$currency);
+                                  "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$currency."/".$this->language->get('month'));
 
             }
         }

@@ -1,10 +1,10 @@
 <?php
 // Heading
-$_['heading_title']      = 'Svea Fakturering';
+$_['heading_title']      = 'Svea Faktura';
 
 // Text
 $_['text_payment']       = 'Betalning';
-$_['text_success']       = 'Lyckat: Du har nu modifierat Svea faktura betalmodul!';
+$_['text_success']       = 'Modifiering av Sveas Kortbetalningsmodul lyckades!';
 $_['text_svea_fakt']     = '<img src="view/image/payment/svea_invoice.png" alt="Svea Faktura" title="Svea Faktura" />';
 
 // Entry
@@ -20,7 +20,7 @@ $_['entry_clientno']     = 'Klientnr:';
 $_['entry_invoicefee']   = 'Faktureringsavgift:';
 $_['entry_auto_deliver'] = 'Leverera automatiskt:';
 $_['entry_auto_deliver_text'] = 'Om aktiverad levereras fakturan automatiskt vid skapandet av ordern. Annars görs detta via Sveas admin.';
-$_['entry_distribution_type'] = 'Utskickstyp för faktura (Enligt överenskommelse med Svea):';
+$_['entry_distribution_type'] = 'Distributionsform för faktura (Enligt överenskommelse med Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
 // Error
