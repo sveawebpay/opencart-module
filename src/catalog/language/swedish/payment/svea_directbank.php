@@ -1,9 +1,10 @@
 <?php
 // Text
-$_['text_title'] = 'Svea Direktbetalning <img src="admin/view/image/payment/svea_directbank.png" alt="Svea Kortbetalning" title="SVEA Direktbetalning" />';
+$_['text_title']     = '<img src="admin/view/image/payment/swedish/svea_directbank.png" alt="Svea Direktbetalning" title="SVEA Direktbetalning" />';
 $_['unit']           = 'st';
+
 //Error responses
-$_['error_heading']   = 'Misslyckad betalning ';
+$_['error_heading']  = 'Misslyckad betalning ';
 $_['response_100']   = 'Betalning misslyckades. Kontakta er integratör.';
 $_['response_105']   = 'Ogiltig transactionsstatus';
 $_['response_106']   = 'Något bick fel på banken';

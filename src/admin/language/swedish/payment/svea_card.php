@@ -5,7 +5,7 @@ $_['heading_title']      = 'Svea Kortbetalning';
 // Text
 $_['text_payment']       = 'Betalning';
 $_['text_success']       = 'Modifiering av Sveas Kortbetalningsmodul lyckades!';
-$_['text_svea_card']     = '<img src="view/image/payment/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
+$_['text_svea_card']     = '<img src="view/image/payment/swedish/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
@@ -15,6 +15,8 @@ $_['entry_sort_order']   = 'Sorteringsordning:';
 $_['entry_merchant_id']  = 'Butiks id:';
 $_['entry_testmode']     = 'Testläge:';
 $_['entry_sw']           = 'Hemligt ord:';
+$_['entry_test']         = "PRODUKTION";
+$_['entry_prod']         = "TEST";
 
 // Error
 $_['error_permission']   = 'Varning: Du har inte tillåtelse att ändra Svea Kortbetalningsmodul';
