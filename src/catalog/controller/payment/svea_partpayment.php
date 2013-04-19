@@ -238,7 +238,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             foreach ($svea->campaignCodes as $cc){
                 $result[] = array("campaignCode" => $cc->campaignCode,
                                   "description"    => $cc->description,
-                                  "price_per_month" => (string)round(($cc->monthlyAnnuityFactor * $order['total']),2)." ".$currency."/".$this->language->get('month'));
+                                  "price_per_month" => (string)round($this->currency->format(($cc->monthlyAnnuityFactor * $order['total']),'',false,false),2)." ".$currency."/".$this->language->get('month'));
 
             }
         }

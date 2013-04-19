@@ -96,12 +96,12 @@ class ControllerPaymentsveainvoice extends Controller {
             $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
             $svea = $this->formatVoucher($svea,$voucher);
        }
-       
-        
+
+
         preg_match('!([^0-9]*)(.*)!',$order['payment_address_1'],$addressArr);
         $street  = $addressArr[1];
         $houseNo = $addressArr[2];
-        
+
         //Set order detials if company or private
         if ($company == TRUE){
             $item = Item::companyCustomer();
@@ -121,9 +121,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 $item = $item->setNationalIdNumber($_GET['ssn']);
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
-            $svea = $svea->addCustomerDetails($item); 
-            
-            
+            $svea = $svea->addCustomerDetails($item);
+
+
         }else{
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
@@ -146,11 +146,11 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             $svea = $svea->addCustomerDetails($item);
         }
-            
+
             $svea = $svea
                       ->setCountryCode($countryCode)
                       ->setCurrency($this->session->data['currency'])
-                      ->setClientOrderNumber($this->session->data['order_id']) 
+                      ->setClientOrderNumber($this->session->data['order_id'])
                       ->setOrderDate(date('c'))
                       ->useInvoicePayment()
                         ->doRequest();
