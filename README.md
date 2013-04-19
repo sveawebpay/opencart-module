@@ -61,3 +61,4 @@ Please verify that:
 * Your _username, password, client no_ for Invoice and Part Payment are correct
 * Your _secret word_ and _merchant id_ for Card and Direct bank payments are correct and that the test-secret word and production-secret word are in their right places
 * Your tax, currency and geo settings are correct
+* You are using correct test case credentials when conducting test purchases
