@@ -151,7 +151,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		if (isset($this->request->post['svea_partpayment_distribution_type'])) {
 			$this->data['svea_partpayment_distribution_type'] = $this->request->post['svea_partpayment_distribution_type'];
 		} else {
-			$this->data['svea_partpayment_distribution_type'] = $this->config->get('svea_partpayment_auto_deliver_status_id');
+			$this->data['svea_partpayment_distribution_type'] = $this->config->get('svea_partpayment_distribution_type');
 		}
 
 		$this->template = 'payment/svea_partpayment.tpl';

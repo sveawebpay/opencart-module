@@ -136,29 +136,39 @@ class ControllerPaymentsveainvoice extends Controller {
 
 		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
-                //invoice status
+        //invoice status
 		if (isset($this->request->post['svea_invoice_status'])) {
 			$this->data['svea_invoice_status'] = $this->request->post['svea_invoice_status'];
 		} else {
 			$this->data['svea_invoice_status'] = $this->config->get('svea_invoice_status');
 		}
-                //sort order
+        
+        //sort order
 		if (isset($this->request->post['svea_invoice_sort_order'])) {
 			$this->data['svea_invoice_sort_order'] = $this->request->post['svea_invoice_sort_order'];
 		} else {
 			$this->data['svea_invoice_sort_order'] = $this->config->get('svea_invoice_sort_order');
 		}
-                //testmode
-                if (isset($this->request->post['svea_invoice_testmode'])) {
+        
+        //testmode
+        if (isset($this->request->post['svea_invoice_testmode'])) {
 			$this->data['svea_invoice_testmode'] = $this->request->post['svea_invoice_testmode'];
 		} else {
 			$this->data['svea_invoice_testmode'] = $this->config->get('svea_invoice_testmode');
 		}
-                //auto deliver
-                if (isset($this->request->post['svea_invoice_auto_deliver'])) {
-			$this->data['svea_invoice_auto_deliver'] = $this->request->post['svea_invoice_auto_deliver'];
+        
+        //auto deliver
+        if (isset($this->request->post['svea_invoice_auto_deliver'])) {
+	       $this->data['svea_invoice_auto_deliver'] = $this->request->post['svea_invoice_auto_deliver'];
 		} else {
 			$this->data['svea_invoice_auto_deliver'] = $this->config->get('svea_invoice_auto_deliver');
+		}
+        
+        //Distribution type
+        if (isset($this->request->post['svea_invoice_distribution_type'])) {
+	       $this->data['svea_invoice_distribution_type'] = $this->request->post['svea_invoice_distribution_type'];
+		} else {
+			$this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_distribution_type');
 		}
 
 		$this->template = 'payment/svea_invoice.tpl';
