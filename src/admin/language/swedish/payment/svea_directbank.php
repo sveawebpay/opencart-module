@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']      = 'Svea Direktbetalning';
+$_['heading_title']      = 'Svea Direktbanksbetalning';
 
 // Text
 $_['text_payment']       = 'Betalning';
@@ -12,9 +12,9 @@ $_['entry_order_status'] = 'Orderstatus:';
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';
-$_['entry_merchant_id']  = 'Merchant id:';
+$_['entry_merchant_id']  = 'Butiks id:';
 $_['entry_testmode']     = 'Testläge:';
-$_['entry_sw']           = 'Secret word:';
+$_['entry_sw']           = 'Hemligt ord:';
 $_['entry_test']         = "PRODUKTION";
 $_['entry_prod']         = "TEST";
 

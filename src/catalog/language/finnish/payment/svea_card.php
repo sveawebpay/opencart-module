@@ -5,7 +5,7 @@ $_['unit']           = 'kpl';
 
 //Error responses
 $_['error_heading']   = 'Maksu epäonnistui';
-$_['response_100']   = 'Virheellinen. Yhteyttä integraattori';
+$_['response_100']   = 'Maksu epäonnistui. Ottakaa yhteyttä integroinnin suorittaneeseen henkilöön.';
 $_['response_105']   = 'Virheellinen tapahtumatila';
 $_['response_106']   = 'Kolmannen osapuolen virhe';
 $_['response_107']   = 'Pankki hylännyt tapahtuman';
