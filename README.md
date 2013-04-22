@@ -1,13 +1,19 @@
 # Opencart - Svea WebPay payment module 
-##Work in Progress! Development branch.
-###Do not copy this branch. The latest version is on the master branch.
+##Version 2.x.x
+This module is updated for the latest payment systems at SveaWebPay. 
+The module is tested in Opencart 1.4.9.x - 1.5.5.x. 
+Supported countries are
+**Sweden**, **Norway**, **Finland**, **Denmark**, **The Netherlands**, **Germany**.
+
+###Before installing this module, please contact Svea the check your account settings 
 
 
 #Installation instructions
 
 ##Basic installation example using SVEA Invoice payment
 
-* Copy the contents of the src folder to your opencart root folder
+* Copy the contents of the src folder to your opencart root folder. 
+Make sure to merge the files and folders from the module with the ones in your Opencart installation.
 * Log in to your admin panel
 * Browse to _extensions -> payments_ where SVEAs payment methods should appear in the list
 * Click the _install_ link of the payment method you want to install, for this example we will install SVEA Invoice
@@ -15,9 +21,14 @@
 * Fill out the required fields for the desired countries
  * _Username, Password_ and _client no_ for _Invoice_ and _Part Payment_
  * _Secret word_ and _merchant id_ for _Card_ and _Direct bank payment_
+
+![See credentials settings] (https://github.com/sveawebpay/opencart-module/tree/master/docs/image/img_2.png "Settings for invoice")
+
 * Set _testmode -> enabled_ and _status -> enabled_
 * Set  _order status_ to the desired status e.g _Complete_
 * Click _Save_
+
+![See Invoce settings] (https://github.com/sveawebpay/opencart-module/tree/master/docs/image/img_1.png "Settings for invoice")
 
 Finished!
 
@@ -33,11 +44,11 @@ Finished!
 
 ##Extended functionality
 
-###Set up auto deliver
+###Set up to auto deliver the order. If not set this can be done from Sveas admin panel.
 * Browse to _extensions -> payments -> Svea payment method (only Invoice or Part Payment)_
 * Set the _auto deliver_ to _enabled_
 * Set the _order status_
-* If you have an agreement with Svea emailing of invoices/part payment agreements, you can also set the _distribution type -> Email_
+* If you have an agreement with Svea to deliver the invoice as email, you can also set the _distribution type -> Email_
 
 ###Set up Svea handling fee (for SVEA Invoice)
 
@@ -62,3 +73,4 @@ Please verify that:
 * Your _secret word_ and _merchant id_ for Card and Direct bank payments are correct and that the test-secret word and production-secret word are in their right places
 * Your tax, currency and geo settings are correct
 * You are using correct test case credentials when conducting test purchases
+
