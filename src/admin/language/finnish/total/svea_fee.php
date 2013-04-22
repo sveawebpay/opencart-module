@@ -1,18 +1,18 @@
 <?php
 // Heading
-$_['heading_title']    = 'Svea Invoice Fee';
+$_['heading_title']    = 'Svea laskutus maksu';
 
 // Text
 $_['text_total']       = 'Order Totals';
-$_['text_success']     = 'Success: You have modified Svea fee total!';
+$_['text_success']     = 'Muutokset Svean Korttimaksumoduliin onnistuivat!';
 
 // Entry
 $_['entry_total']      = 'Order Total:';
-$_['entry_fee']        = 'Fee:';
+$_['entry_fee']        = 'Maksua:';
 $_['entry_tax_class']  = 'Tax Class:';
-$_['entry_status']     = 'Status:';
-$_['entry_sort_order'] = 'Sort Order:';
+$_['entry_status']     = 'Tila:';
+$_['entry_sort_order'] = 'Lajittelujärjestys:';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify Svea fee total!';
+$_['error_permission'] = 'Varoitus: Sinulla ei ole oikeuksia muuttaa Svea Lasku maksumodulia!';
 ?>

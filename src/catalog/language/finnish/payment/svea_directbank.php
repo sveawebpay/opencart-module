@@ -1,17 +1,17 @@
 <?php
 // Text
-$_['text_title']     = '<img src="admin/view/image/payment/english/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
-$_['unit']           = 'pcs';
+$_['text_title']     = '<img src="admin/view/image/payment/finnish/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
+$_['unit']           = 'kpl';
 
 //Error responses
-$_['error_heading']  = 'Payment error ';
-$_['response_100']   = 'Invalid. Contact integrator';
-$_['response_105']   = 'Invalid transaction status';
-$_['response_106']   = 'Failure at the bank';
-$_['response_107']   = 'Transaction rejected by bank';
-$_['response_108']   = 'Transaction cancelled';
-$_['response_114']   = 'Timeout at the bank';
-$_['response_127']   = 'Customer reference number already used in an other transaction';
-$_['response_129']   = 'More than one transaction found for the given customer reference number';
+$_['error_heading']  = 'Maksu epäonnistui ';
+$_['response_100']   = 'Maksu epäonnistui. Ottakaa yhteyttä integroinnin suorittaneeseen henkilöön.';
+$_['response_105']   = 'Virheellinen tapahtumatila';
+$_['response_106']   = 'Pankin virhe';
+$_['response_107']   = 'Tapahtuma keskeytetty pankin toimesta';
+$_['response_108']   = 'Tapahtuma keskeytetty';
+$_['response_114']   = 'Pankin aikakatkaisu';
+$_['response_127']   = 'Tilausnumero käytetty jo toisessa tapahtumassa';
+$_['response_129']   = 'MEnemmän kuin yksi tapahtuma löydetty samalla tilausnumerolla';
 
 ?>

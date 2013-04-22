@@ -6,7 +6,7 @@ $_['unit']           = 'st';
 //Error responses
 $_['error_heading']  = 'Misslyckad betalning ';
 $_['response_100']   = 'Betalning misslyckades. Kontakta er integratör.';
-$_['response_105']   = 'Ogiltig transactionsstatus';
+$_['response_105']   = 'Ogiltig transaktionsstatus';
 $_['response_106']   = 'Något bick fel på banken';
 $_['response_107']   = 'Transaktionen avbröts av banken';
 $_['response_108']   = 'Transaktionen avbruten';

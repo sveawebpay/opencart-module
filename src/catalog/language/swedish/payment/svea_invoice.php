@@ -1,43 +1,42 @@
 <?php
 // Text
 $_['text_title']              = '<img src="admin/view/image/payment/swedish/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
-$_['text_ssn']                = 'Social Security No';
-$_['text_private_or_company'] = 'Type';
-$_['text_company']            = 'Business';
-$_['text_private']            = 'Private';
-$_['text_get_address']        = 'Get address';
-$_['text_invoice_address']    = 'Invoice address';
-$_['text_birthdate']          = 'Birth date';
-$_['text_vat_no']             = 'VAT no';
-$_['text_initials']           = 'Initials';
+$_['text_ssn']                = 'Personnummer';
+$_['text_private_or_company'] = 'Typ';
+$_['text_company']            = 'Företag';
+$_['text_private']            = 'Privatperson';
+$_['text_get_address']        = 'Hämta address';
+$_['text_invoice_address']    = 'Fakturaaddress';
+$_['text_birthdate']          = 'Födelsedatum';
+$_['text_vat_no']             = 'Org. nr.';
+$_['text_initials']           = 'Initialer';
 
 
 //Error responses
-$_['response_20000'] = "Order closed";
-$_['response_20001'] = "Order denied";
-$_['response_20002'] = "Something wrong with order";
-$_['response_20003'] = "Order expired";
-$_['response_20004'] = "Order does not exist";
-$_['response_20005'] = "OrderType mismatch";
-$_['response_20006'] = "The sum of all order rows cannot be zero or negative";
-$_['response_20013'] = "Order is pending";
-
+$_['response_20000'] = "Ordern är stängd";
+$_['response_20001'] = "Ordern är nekad";
+$_['response_20002'] = "Något gick fel med ordern";
+$_['response_20003'] = "Ordern har gått ut";
+$_['response_20004'] = "Ordern existerar ej";
+$_['response_20005'] = "Ordertyperna matchar ej";
+$_['response_20006'] = "Summan av orderraderna kan ej vara noll eller negativ";
+$_['response_20013'] = "Ordern väntar";
 $_['response_24000'] = "Invoice amount exceeds the authorized amount";
 
-$_['response_30000'] = "The credit report was rejected";
-$_['response_30001'] = "The customer is blocked or has shown strange or unusual behavior";
-$_['response_30002'] = "Based upon the performed credit check the request was rejected";
-$_['response_30003'] = "Customer cannot be found by credit check";
+$_['response_30000'] = "Krediteringen nekades";
+$_['response_30001'] = "Kunden är blockerad eller har uppvisat udda köpbeteende.";
+$_['response_30002'] = "Baserat på kreditupplysningen nekades ordern.";
+$_['response_30003'] = "Det går ej att hitta kunden i kreditupplysningen.";
 
-$_['response_40000'] = "No customer found";
-$_['response_40001'] = "The provided CountryCode is not supported";
-$_['response_40002'] = "Invalid Customer information";
-$_['response_40004'] = "Could not find any addresses for this customer";
+$_['response_40000'] = "Ingen kund kunde hittas";
+$_['response_40001'] = "Landskoden stöds ej";
+$_['response_40002'] = "Ogiltiga kunduppgifter";
+$_['response_40004'] = "Det gick ej att hitta några addresser för den här kunden";
 
-$_['response_50000'] = "Client is not authorized for this method";
-$_['response_error'] = "Error: ";
+$_['response_50000'] = "Kunden är ej godkännd för denna metod";
+$_['response_error'] = "Fel: ";
 
 //Order definitions
-$_['text_svea_fee']   = 'SVEA Invoice fee';
-$_['unit']            = 'pcs';
+$_['text_svea_fee']   = 'SVEA Fakturaavgift';
+$_['unit']            = 'st';
 ?>

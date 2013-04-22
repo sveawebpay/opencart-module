@@ -18,8 +18,8 @@ $_['entry_username']     = 'Användarnamn:';
 $_['entry_password']     = 'Lösenord:';
 $_['entry_clientno']     = 'Klientnr:';
 
-$_['entry_yes']          = 'yes';
-$_['entry_no']           = 'no';
+$_['entry_yes']          = 'ja';
+$_['entry_no']           = 'nej';
 $_['entry_testmode']     = 'Testläge:';
 
 $_['entry_auto_deliver'] = 'Leverera automatiskt:';
