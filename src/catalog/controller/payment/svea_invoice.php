@@ -304,10 +304,8 @@ class ControllerPaymentsveainvoice extends Controller {
                    $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
                    $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
                }  else {
-
                    $taxRate = $this->tax->getRate($invoiceFeeTaxId);
                    $invoiceFeeIncVat = (($taxRate / 100) +1) * $invoiceFeeExTax;
-
                }
             }
 

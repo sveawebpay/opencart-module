@@ -52,12 +52,10 @@ class ControllerPaymentsveadirectbank extends Controller {
             //Get the tax, difference in version 1.4.x
             if(floatval(VERSION) >= 1.5){
                 $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
-                 $productPriceIncVat = $productPriceExVat + $productTax;
+                $productPriceIncVat = $productPriceExVat + $productTax;
             }  else {
-
-                $taxRate = $this->currency->format($this->tax->getRate($product['tax_class_id']));
-                $productPriceIncVat = (($taxRate * 0.01) +1) * $productPriceExVat;
-
+                $taxRate = $this->tax->getRate($product['tax_class_id']);
+                $productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
             }
 
             $svea = $svea
@@ -82,8 +80,8 @@ class ControllerPaymentsveadirectbank extends Controller {
                 $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
                 $shippingIncVat = $shippingExVat + $shippingTax;
             }else{
-                $taxRate = $this->currency->format($this->tax->getRate($shipping_info['tax_class_id']));
-                $shippingIncVat = (($taxRate * 0.01) +1) * $shippingExVat;
+                $taxRate = $this->tax->getRate($shipping_info['tax_class_id']);
+                $shippingIncVat = (($taxRate / 100) +1) * $shippingExVat;
             }
             if ($shipping_info['cost'] > 0){
                 $svea
