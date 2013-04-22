@@ -1,20 +1,20 @@
 <?php
 // Text
-$_['text_title']     = '<img src="admin/view/image/payment/english/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
-$_['unit']           = 'pcs';
+$_['text_title']     = '<img src="admin/view/image/payment/finnish/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
+$_['unit']           = 'kpl';
 
 //Error responses
-$_['error_heading']   = 'Payment error ';
-$_['response_100']   = 'Invalid. Contact integrator';
-$_['response_105']   = 'Invalid transaction status';
-$_['response_106']   = 'Failure at third party';
-$_['response_107']   = 'Transaction rejected by bank';
-$_['response_108']   = 'Transaction cancelled';
-$_['response_109']   = 'Transaction not found at the bank';
-$_['response_114']   = 'Timeout at the bank';
-$_['response_121']   = 'The card has expired';
-$_['response_122']   = 'Stolen card';
-$_['response_123']   = 'Lost card';
-$_['response_127']   = 'Customer reference number already used in another transaction';
-$_['response_129']   = 'More than one transaction found for the given customer reference number';
+$_['error_heading']   = 'Maksu epäonnistui';
+$_['response_100']   = 'Virheellinen. Yhteyttä integraattori';
+$_['response_105']   = 'Virheellinen tapahtumatila';
+$_['response_106']   = 'Kolmannen osapuolen virhe';
+$_['response_107']   = 'Pankki hylännyt tapahtuman';
+$_['response_108']   = 'Tapahtuma keskeytetty';
+$_['response_109']   = 'Pankki ei löydä tapahtumaa';
+$_['response_114']   = 'Pankin aikakatkaisu';
+$_['response_121']   = 'Kortti vanhentunut';
+$_['response_122']   = 'Kortti varastettu';
+$_['response_123']   = 'Kortti hukattu';
+$_['response_127']   = 'Asiakkaan viitenumero jo käytetty toisessa tapahtumassa';
+$_['response_129']   = 'Enemmän kuin yksi tapahtuma löydetty annetulle asiakasviitenumerolle';
 ?>
