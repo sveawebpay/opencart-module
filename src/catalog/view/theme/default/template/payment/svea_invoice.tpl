@@ -19,13 +19,14 @@
 
 
     </div>
-    <br />
+</div>
 
-    <div id="svea_invoice_err" class="right" style="color:red; clear:both; margin-bottom:20px"></div><br />
+<div class="buttons">
+    <div id="svea_invoice_err" class="right" style="color:red; margin-bottom:10px"></div><br />
 
 
     <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-    <div id="svea_invoice_div" class="right" style="clear:both;">
+    <div id="svea_invoice_div" class="right" style="">
         <br />
         <?php echo $this->language->get("text_invoice_address")?>:<br />
         <select name="svea_invoice_address" id="svea_invoice_address">
@@ -66,7 +67,7 @@
         $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
         ?>
 
-        <div class="right" style="clear:both;">
+        <div class="right" style="">
          <span id="sveaBirthDateCont"><?php echo $this->language->get("text_birthdate")?>: <?php  echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
         <?php if($countryCode == "NL"){ ?>
            <?php echo $this->language->get("text_initials")?>: <input type="text" id="initials" name="initials" />
@@ -75,14 +76,13 @@
          <span id="sveaVatNoCont"><?php echo $this->language->get("text_vat_no")?>: <input type="text" id="vatno" name="vatno" /><br /><br /></span>
 
          <?php } ?>
-     </div>
-
-    <div class="right" style="clear:both;"><br /><br /><a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a></div><br />
-
-
-    <br />
-
+        </div>
 </div>
+
+<div class="buttons">
+    <div class="right" style=""><br /><br /><a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a></div>
+</div>
+
 <style>
 #SveaAddressDiv{margin:10px 0;}
 </style>

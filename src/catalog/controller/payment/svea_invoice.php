@@ -272,10 +272,8 @@ class ControllerPaymentsveainvoice extends Controller {
                 $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
                  $productPriceIncVat = $productPriceExVat + $productTax;
             }  else {
-
-                $taxRate = $this->currency->format($this->tax->getRate($product['tax_class_id']));
-                $productPriceIncVat = (($taxRate * 0.01) +1) * $productPriceExVat;
-
+                $taxRate = $this->tax->getRate($product['tax_class_id']);
+                $productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
@@ -287,7 +285,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setArticleNumber($product['product_id'])
                         ->setDescription($product['model'])
                     );
-
+            
         }
         return $svea;
     }
@@ -304,11 +302,11 @@ class ControllerPaymentsveainvoice extends Controller {
             if($invoiceFeeTaxId > 0){
                     if(floatval(VERSION) >= 1.5){
                    $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
-                    $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
+                   $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
                }  else {
 
-                   $taxRate = $this->currency->format($this->tax->getRate($invoiceFeeTaxId));
-                   $invoiceFeeIncVat = (($taxRate * 0.01) +1) * $invoiceFeeExTax;
+                   $taxRate = $this->tax->getRate($invoiceFeeTaxId);
+                   $invoiceFeeIncVat = (($taxRate / 100) +1) * $invoiceFeeExTax;
 
                }
             }
@@ -335,8 +333,8 @@ class ControllerPaymentsveainvoice extends Controller {
                 $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
                 $shippingIncVat = $shippingExVat + $shippingTax;
             }else{
-                $taxRate = $this->currency->format($this->tax->getRate($shipping_info['tax_class_id']));
-                $shippingIncVat = (($taxRate * 0.01) +1) * $shippingExVat;
+                $taxRate = $this->tax->getRate($shipping_info['tax_class_id']);
+                $shippingIncVat = (($taxRate / 100) +1) * $shippingExVat;
             }
 
             $svea = $svea
