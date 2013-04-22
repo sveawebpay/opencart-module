@@ -51,20 +51,20 @@
     <div id="svea_partpayment_err" class="right" style="color:red; clear:both; margin-top:15px;">
     </div>
 
-    <div class="right" id="svea_partpayment_tr" style="clear:both; margin-top:15px;">
+    <div class="right" id="svea_partpayment_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_invoice_address')?>:<br />
         <div id="svea_partpayment_address"></div>
     </div>
 
     <br />
-    <div class="right" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;">
+    <div class="right" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_payment_options')?>:<br />
         <select name="svea_partpayment_alt" id="svea_partpayment_alt">
         </select>
     </div>
     <br />
 
-    <div class="right" style="clear:both; margin-top:15px;">
+    <div class="right" style="clear:both; margin-top:15px;display:inline-block;">
         <a id="checkout"  class="button"><span><?php echo $button_confirm; ?></span></a>
     </div>
 

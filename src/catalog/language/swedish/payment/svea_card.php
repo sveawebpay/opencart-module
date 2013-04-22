@@ -1,9 +1,10 @@
 <?php
 // Text
-$_['text_title']      = 'Svea Kort Betalning <img src="admin/view/image/payment/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
-$_['unit']              = 'st';
+$_['text_title']      = '<img src="admin/view/image/payment/swedish/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
+$_['unit']            = 'st';
+
 //Error responses
-$_['error_heading']   = 'Misslyckad betalning';
+$_['error_heading']  = 'Misslyckad betalning';
 $_['response_100']   = 'Internfel';
 $_['response_105']   = 'Felaktig transaktionsstatus';
 $_['response_106']   = 'Fel hos tredjepart';
@@ -16,5 +17,4 @@ $_['response_122']   = 'Kort stulet';
 $_['response_123']   = 'Borttappat kort';
 $_['response_127']   = 'Kundrefernsnummer redan använt i en annan transaktion';
 $_['response_129']   = 'Mer än en transaktion hittad för angivet kundreferensnummer';
-
 ?>
