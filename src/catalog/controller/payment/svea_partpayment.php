@@ -90,7 +90,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
-
         $item = $item->setNationalIdNumber($ssn)
                      ->setEmail($order['email'])
                      ->setName($order['payment_firstname'],$order['payment_lastname'])
@@ -110,7 +109,6 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $svea = $svea->addCustomerDetails($item);
 
-
         $svea = $svea
                   ->setCountryCode($countryCode)
                   ->setCurrency($this->session->data['currency'])
@@ -129,27 +127,12 @@ class ControllerPaymentsveapartpayment extends Controller {
                 if($this->config->get('svea_partpayment_auto_deliver') == 1){
                     $deliverObj = WebPay::deliverOrder($conf);
                     //Product rows
-                    $deliverObj = $this->formatOrderRows($deliverObj, $products);
-                     //Shipping
-                    if ($this->cart->hasShipping() == 1) {
-                    $deliverObj = $this->formatShippingFeeRows($deliverObj);
-                    }
-                     //Get coupons
-                    if (isset($this->session->data['coupon'])) {
-                        $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-                        $deliverObj = $this->formatCouponRows($deliverObj,$coupon);
-                    }
-                     //Get vouchers
-                    if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
-                        $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-                        $deliverObj = $this->formatVoucher($deliverObj,$voucher);
-                        //$totalPrice = $this->cart->getTotal();
-                   }
-                        $deliverObj = $deliverObj->setCountryCode($countryCode)
+                        $deliverObj = $deliverObj
+                                ->setCountryCode($svea->customerIdentity->countryCode)
                                 ->setOrderId($svea->sveaOrderId)
-                                ->setInvoiceDistributionType('Post') //set in admin interface
                                     ->deliverPaymentPlanOrder()
                                     ->doRequest();
+
                   //If DeliverOrder returns true, send true to veiw
                     if($deliverObj->accepted == 1){
                        $response = array("success" => true);
@@ -252,7 +235,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
-
         $paymentOptions = $this->getPaymentOptions();
 
         if ($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO")

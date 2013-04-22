@@ -25,7 +25,6 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$this->data['entry_status'] = $this->language->get('entry_status');
-                $this->data['entry_distribution_type'] = $this->language->get('entry_distribution_type');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -147,12 +146,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		} else {
 			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->config->get('svea_partpayment_auto_deliver_status_id');
 		}
-                //partpayment distribution type
-		if (isset($this->request->post['svea_partpayment_distribution_type'])) {
-			$this->data['svea_partpayment_distribution_type'] = $this->request->post['svea_partpayment_distribution_type'];
-		} else {
-			$this->data['svea_partpayment_distribution_type'] = $this->config->get('svea_partpayment_distribution_type');
-		}
+             
 
 		$this->template = 'payment/svea_partpayment.tpl';
 		$this->children = array(

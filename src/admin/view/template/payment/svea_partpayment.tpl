@@ -84,11 +84,6 @@
                         <?php } ?>
                     <?php } ?>
                     </select>
-                    <span class="help"><?php echo $entry_distribution_type; ?></span>
-                    <select name="svea_partpayment_distribution_type">
-                        <option value="Post" <?php if($svea_partpayment_distribution_type == 'Post'){ echo 'selected="selected"';}?> ><?php echo $entry_post; ?></option>
-                        <option value="Email" <?php if($svea_partpayment_distribution_type == 'Email'){ echo 'selected="selected"';}?> ><?php echo $entry_email; ?></option>
-                    </select>
                 </td>
             </tr>
           </tbody>
