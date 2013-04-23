@@ -1,23 +1,23 @@
 <?php
 // Heading
-$_['heading_title']      = 'Svea Card payment';
+$_['heading_title']      = 'Svea Kortbetaling';
 
 // Text
-$_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified Svea Card payment module!';
-$_['text_svea_card']     = '<img src="view/image/payment/english/svea_card.png" alt="Svea Card payment" title="SVEA Card payment" />';
+$_['text_payment']       = 'Betaling';
+$_['text_success']       = 'Modificering af Sveas kortbetalingsmodul lykkedes!';
+$_['text_svea_card']     = '<img src="view/image/payment/danish/svea_card.png" alt="Svea Card payment" title="SVEA Card payment" />';
 
 // Entry
-$_['entry_order_status'] = 'Order Status:';
+$_['entry_order_status'] = 'Ordrestatus:';
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sort Order:';
-$_['entry_merchant_id']  = 'Merchant id';
+$_['entry_sort_order']   = 'Sorteringsorden:';
+$_['entry_merchant_id']  = 'ButiksID';
 $_['entry_testmode']     = 'Testmode';
-$_['entry_sw']           = 'Secret word';
-$_['entry_test']         = "PRODUCTION";
+$_['entry_sw']           = 'Hemmeligt ord';
+$_['entry_test']         = "PRODUKTION";
 $_['entry_prod']         = "TEST";
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment Svea Card payment!';
+$_['error_permission']   = 'Advarsel: Du har ikke tilladelse til at ændre Sveas kortbetalingsmodul!';
 ?>
