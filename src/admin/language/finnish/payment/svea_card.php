@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Heading
 $_['heading_title']      = 'Svea korttimaksu';
 
@@ -11,7 +11,7 @@ $_['text_svea_card']     = '<img src="view/image/payment/finnish/svea_card.png" 
 $_['entry_order_status'] = 'Tilauksen tila:';
 $_['entry_geo_zone']     = 'Maa:';
 $_['entry_status']       = 'Tila:';
-$_['entry_sort_order']   = 'Lajitteluj�rjestys:';
+$_['entry_sort_order']   = 'Lajittelujärjestys:';
 $_['entry_merchant_id']  = 'Kaupan id';
 $_['entry_testmode']     = 'Testitila';
 $_['entry_sw']           = 'Salasana';

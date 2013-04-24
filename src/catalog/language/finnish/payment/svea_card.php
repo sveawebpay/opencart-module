@@ -1,20 +1,20 @@
-<?php
+ï»¿<?php
 // Text
 $_['text_title']     = '<img src="admin/view/image/payment/finnish/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
 $_['unit']           = 'kpl';
 
 //Error responses
-$_['error_heading']   = 'Maksu epäonnistui';
-$_['response_100']   = 'Maksu epäonnistui. Ottakaa yhteyttä integroinnin suorittaneeseen henkilöön.';
+$_['error_heading']   = 'Maksu epÃ¤onnistui';
+$_['response_100']   = 'Maksu epÃ¤onnistui. Ottakaa yhteyttÃ¤ integroinnin suorittaneeseen henkilÃ¶Ã¶n.';
 $_['response_105']   = 'Virheellinen tapahtumatila';
 $_['response_106']   = 'Kolmannen osapuolen virhe';
-$_['response_107']   = 'Pankki hylännyt tapahtuman';
+$_['response_107']   = 'Pankki hylÃ¤nnyt tapahtuman';
 $_['response_108']   = 'Tapahtuma keskeytetty';
-$_['response_109']   = 'Pankki ei löydä tapahtumaa';
+$_['response_109']   = 'Pankki ei lÃ¶ydÃ¤ tapahtumaa';
 $_['response_114']   = 'Pankin aikakatkaisu';
 $_['response_121']   = 'Kortti vanhentunut';
 $_['response_122']   = 'Kortti varastettu';
 $_['response_123']   = 'Kortti hukattu';
-$_['response_127']   = 'Asiakkaan viitenumero jo käytetty toisessa tapahtumassa';
-$_['response_129']   = 'Enemmän kuin yksi tapahtuma löydetty annetulle asiakasviitenumerolle';
+$_['response_127']   = 'Asiakkaan viitenumero jo kÃ¤ytetty toisessa tapahtumassa';
+$_['response_129']   = 'EnemmÃ¤n kuin yksi tapahtuma lÃ¶ydetty annetulle asiakasviitenumerolle';
 ?>

@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 // Heading
 $_['heading_title']      = 'Svea Direktzahlung';
 
@@ -12,13 +12,13 @@ $_['entry_order_status'] = 'Orderstatus:';
 $_['entry_geo_zone']     = 'Geographische Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sortierungsordnung:';
-$_['entry_merchant_id']  = 'Händlers ID';
+$_['entry_merchant_id']  = 'HÃ¤ndlers ID';
 $_['entry_testmode']     = 'Testmode';
 $_['entry_sw']           = 'eheimnis Wort';
 $_['entry_test']         = "PRODUKTION";
 $_['entry_prod']         = "TEST";
 
 // Error
-$_['error_permission']   = 'Achtung: Sie sind nicht genehmigt in Svea Direktzahlung zu ändern!';
+$_['error_permission']   = 'Achtung: Sie sind nicht genehmigt in Svea Direktzahlung zu Ã¤ndern!';
 
 ?>

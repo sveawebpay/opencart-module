@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Heading
 $_['heading_title']      = 'Svea Direktebetaling';
 
@@ -19,5 +19,5 @@ $_['entry_test']    	= "PRODUKTION";
 $_['entry_prod']    	= "TEST";
 
 // Error
-$_['error_permission']   = 'Advarsel: Du har ikke tillatelse til � endre Svea Direktebetalingsmodul';
+$_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å endre Svea Direktebetalingsmodul';
 ?>
