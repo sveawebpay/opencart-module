@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 // Text
 $_['text_title']     = '<img src="admin/view/image/payment/danish/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
 $_['unit']           = 'st';
@@ -12,10 +12,10 @@ $_['response_107']   = 'Transaktion afvist af bank';
 $_['response_108']   = 'Transaktionen afbrudt';
 $_['response_109']   = 'Transaktionen ikke fundet hos bank';
 $_['response_114']   = 'Timeout hos bank';
-$_['response_121']   = 'Kortet er udgået';
-$_['response_122']   = 'Kortet er stjålet';
-$_['response_123']   = 'ätabt kort';
+$_['response_121']   = 'Kortet er udgÃ¥et';
+$_['response_122']   = 'Kortet er stjÃ¥let';
+$_['response_123']   = 'Tabt kort';
 $_['response_127']   = 'Kundenummer allerede anvendt i en anden transaktion';
-$_['response_129']   = 'Mere end én transaktion fundet for angivet kundenummer.';
+$_['response_129']   = 'Mere end Ã©n transaktion fundet for angivet kundenummer.';
 
 ?>

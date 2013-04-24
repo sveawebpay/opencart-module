@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 // Heading
 $_['heading_title']           = 'Svea Faktura';
 
@@ -23,7 +23,7 @@ $_['entry_no']                = 'nej';
 $_['entry_testmode']          = 'Testmode:';
 
 $_['entry_auto_deliver']      = 'Levere automatisk:';
-$_['entry_auto_deliver_text'] = 'Ved aktivering leveres fakturaen automatisk når ordren afgives. I modsat fald gøres dette via Sveas admin.';
+$_['entry_auto_deliver_text'] = 'Ved aktivering leveres fakturaen automatisk nÃ¥r ordren afgives. I modsat fald gÃ¸res dette via Sveas admin.';
 $_['entry_distribution_type'] = 'Distributionsform for faktura (efter aftale med Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
