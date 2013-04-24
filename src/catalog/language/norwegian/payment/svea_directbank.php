@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Text
 $_['text_title']     = '<img src="admin/view/image/payment/norwegian/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
 $_['unit']           = 'st';
@@ -12,5 +12,5 @@ $_['unit']           = 'st';
 	$_['response_108']   = 'Transaktionen avbrutt';
 	$_['response_114']   = 'Timeout hos banken';
 	$_['response_127']   = 'Ordrenummeret er allerede benyttet i en annen transaktion';
-	$_['response_129']   = 'Mer er en transaktion er oppdaget p� samme ordrenummer';
+	$_['response_129']   = 'Mer er en transaktion er oppdaget på samme ordrenummer';
 ?>

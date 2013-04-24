@@ -1,3 +1,3 @@
-<?php
-$_['text_svea_fee'] = 'Svea Bearbeitungsgeb�hr';
+﻿<?php
+$_['text_svea_fee'] = 'Svea Bearbeitungsgebühr';
 ?>

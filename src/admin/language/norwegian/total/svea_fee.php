@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Heading
 $_['heading_title']    = 'Svea Faktureringsavgift';
 
@@ -14,5 +14,5 @@ $_['entry_status']     = 'Status:';
 $_['entry_sort_order'] = 'Sorteringsordning:';
 
 // Error
-$_['error_permission'] = 'Advarsel: Du har ikke tillatelse til � modifisere Svea Faktureringsavgift!';
+$_['error_permission'] = 'Advarsel: Du har ikke tillatelse til å modifisere Svea Faktureringsavgift!';
 ?>

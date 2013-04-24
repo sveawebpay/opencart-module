@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 // Text
 $_['text_title']     = '<img src="admin/view/image/payment/norwegian/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
 $_['unit']           = 'st';
@@ -12,8 +12,8 @@ $_['unit']           = 'st';
 	$_['response_108']   = 'Transaktion avbrutt';
 	$_['response_109']   = 'Transaktion ikke funnet hos bank';
 	$_['response_114']   = 'Timeout hos bank';
-	$_['response_121']   = 'Kortet er utgått';
-	$_['response_122']   = 'Kort stjålet';
+	$_['response_121']   = 'Kortet er utgÃ¥tt';
+	$_['response_122']   = 'Kort stjÃ¥let';
 	$_['response_123']   = 'Mistet kort';
 	$_['response_127']   = 'Kundefeferansenummer er allerede benyttet i en annan transaktion';
 	$_['response_129']   = 'Mer enn en transaktion er funnet for angitt kundereferansenummer';

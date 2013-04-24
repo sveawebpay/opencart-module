@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 // Text
 $_['text_title']              = '<img src="admin/view/image/payment/finnish/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
-$_['text_ssn']                = 'Henkil�nro';
+$_['text_ssn']                = 'Henkilönro';
 $_['text_private_or_company'] = 'Tyyppi';
 $_['text_company']            = 'Business';
 $_['text_private']            = 'Private';
