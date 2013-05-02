@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']              = '<img src="admin/view/image/payment/english/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
+$_['text_title']              = 'SVEA Invoice';
 $_['text_ssn']                = 'Social Security No';
 $_['text_private_or_company'] = 'Type';
 $_['text_company']            = 'Business';
