@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class ControllerPaymentsveapartpayment extends Controller {
 
     protected function index() {
@@ -69,8 +69,9 @@ class ControllerPaymentsveapartpayment extends Controller {
         $svea = $this->formatOrderRows($svea,$products);
         //Shipping
         if ($this->cart->hasShipping() == 1) {
-            $svea = $this->formatShippingFeeRows($svea);
-
+               if($this->session->data['shipping_method']['cost'] > 0){
+                    $svea = $this->formatShippingFeeRows($svea);
+               }
         }
         //Get coupons
         if (isset($this->session->data['coupon'])) {

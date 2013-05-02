@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class ControllerPaymentsveacard extends Controller {
     protected function index() {
 

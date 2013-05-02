@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class ControllerPaymentsveainvoice extends Controller {
 
@@ -80,12 +80,15 @@ class ControllerPaymentsveainvoice extends Controller {
             $svea = $this->formatInvoiceFeeRows($svea);
 
         }
+
         //Shipping
-        if ($this->cart->hasShipping() == 1) {
-
-            $svea = $this->formatShippingFeeRows($svea);
-
+        if ($this->cart->hasShipping() == 1){
+            if($this->session->data['shipping_method']['cost'] > 0){
+                 $svea = $this->formatShippingFeeRows($svea);
+            }
         }
+
+
         //Get coupons
         if (isset($this->session->data['coupon'])) {
             $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
@@ -154,7 +157,6 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->setOrderDate(date('c'))
                       ->useInvoicePayment()
                         ->doRequest();
-
             //If CreateOrder accepted redirect to thankyou page
 
             if ($svea->accepted == 1) {
@@ -170,7 +172,9 @@ class ControllerPaymentsveainvoice extends Controller {
                     }
                      //Shipping
                     if ($this->cart->hasShipping() == 1) {
-                    $deliverObj = $this->formatShippingFeeRows($deliverObj);
+                        if($this->session->data['shipping_method']['cost'] > 0){
+                          $deliverObj = $this->formatShippingFeeRows($deliverObj);
+                        }
                     }
                      //Get coupons
                     if (isset($this->session->data['coupon'])) {
@@ -285,7 +289,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setArticleNumber($product['product_id'])
                         ->setDescription($product['model'])
                     );
-            
+
         }
         return $svea;
     }
