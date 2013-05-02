@@ -1,44 +1,46 @@
-<?php
+﻿<?php
 // Text
-$_['text_title']               = '<img src="admin/view/image/payment/english/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
-$_['text_ssn']                 = 'Social Security No';
-$_['text_get_payment_options'] = 'Get payment options';
-$_['text_invoice_address']     = 'Invoice address';
-$_['text_birthdate']           = 'Birth date';
-$_['text_vat_no']              = 'VAT no';
-$_['text_initials']            = 'Initials';
-$_['text_payment_options']     = 'Payment options';
+$_['text_title']               = '<img src="admin/view/image/payment/danish/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
+$_['text_ssn']                = 'Cpr.nr.';
+$_['text_get_address']        = 'Adresse';
+$_['text_invoice_address']    = 'Betalingsadresse';
+$_['text_birthdate']          = 'Fødselsdato';
+$_['text_vat_no']             = 'CVR-nummer';
+$_['text_initials']           = 'Initialer';
+
+$_['text_get_payment_options'] = 'Hente betalingsmuligheder';
+$_['text_payment_options']     = 'Betalingsmuligheder';
 
 //Error responses
-$_['response_20000'] = "Order closed";
-$_['response_20001'] = "Order denied";
-$_['response_20002'] = "Something wrong with order";
-$_['response_20003'] = "Order expired";
-$_['response_20004'] = "Order does not exist";
-$_['response_20005'] = "OrderType mismatch";
-$_['response_20006'] = "The sum of all order rows cannot be zero or negative";
-$_['response_20013'] = "Order is pending";
+$_['response_20000'] = 'Ordre lukket';
+$_['response_20001'] = 'Ordre nægtet';
+$_['response_20002'] = 'Fejl ved ordre';
+$_['response_20003'] = 'Ordre udløbet';
+$_['response_20004'] = 'Ordre eksisterer ikke';
+$_['response_20005'] = 'Ordretype mismatch';
+$_['response_20006'] = 'Summen af alle ordrerækker kan ikke være nul eller negativ';
+$_['response_20013'] = 'Ordre afventer';
 
-$_['response_27000'] = "The provided campaigncode-amount combination does not match any campaign code attached to this client";
-$_['response_27001'] = "Can not deliver order since the specified pdf template is missing. Contact SveaWebPay�s support";
-$_['response_27002'] = "Can not partial deliver a PaymentPlan";
-$_['response_27003'] = "Can not mix CampaignCode with a fixed Monthly Amount.";
-$_['response_27004'] = "Can not find a suitable CampaignCode for the Monthly Amount";
+$_['response_27000'] = 'Kombinationen af det angivne kampagnekode-beløb matcher ikke nogen kampagnekode knyttet til denne kunde';
+$_['response_27001'] = 'Kan ikke levere ordre, da den udspecificerede pdf-skabelon mangler. Kontakt SveaWebPays supportafdeling';
+$_['response_27002'] = 'Kan ikke levere Betalingsplan delvist';
+$_['response_27003'] = 'Kampagnekode kan ikke benyttes sammen med fast Månedlig Betaling.';
+$_['response_27004'] = 'Kan ikke finde en egnet Kampagnekode for den Månedlige Betaling';
+	
+$_['response_30000'] = 'Kreditrapporten blev afvist';
+$_['response_30001'] = 'Kunden er spærret eller har udvist mærkelig eller usædvanlig adfærd';
+$_['response_30002'] = 'På basis af det gennemførte kredittjek blev forespørgslen afvist';
+$_['response_30003'] = 'Kunden kan ikke findes af kredittjek';
 
-$_['response_30000'] = "The credit report was rejected";
-$_['response_30001'] = "The customer is blocked or has shown strange or unusual behavior";
-$_['response_30002'] = "Based upon the performed credit check the request was rejected";
-$_['response_30003'] = "Customer cannot be found by credit check";
+$_['response_40000'] = 'Ingen kunde fundet';
+$_['response_40001'] = 'Den angivne Landekode understøttes ikke';
+$_['response_40002'] = 'Ugyldig kundeinformation';
+$_['response_40004'] = 'Kunne ikke finde adresse på pågældende kunde';
 
-$_['response_40000'] = "No customer found";
-$_['response_40001'] = "The provided CountryCode is not supported";
-$_['response_40002'] = "Invalid Customer information";
-$_['response_40004'] = "Could not find any addresses for this customer";
+$_['response_50000'] = 'Kunden er ikke godkendt til denne handling';
+$_['response_error'] = 'Fejl: ';
 
-$_['response_50000'] = "Client is not authorized for this method";
-$_['response_error'] = "Error: ";
-
-$_['unit']           = 'pcs';
-$_['month']          = 'month';
-$_['initial_fee']    = 'initial fee will be added';
+$_['unit']           = 'st';
+$_['month']          = 'måned';
+$_['initial_fee']    = 'Indledende gebyr vil blive tilføjet.';
 ?>

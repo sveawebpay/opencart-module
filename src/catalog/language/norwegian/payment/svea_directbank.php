@@ -1,17 +1,16 @@
-<?php
+﻿<?php
 // Text
-$_['text_title']     = '<img src="admin/view/image/payment/english/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
-$_['unit']           = 'pcs';
+$_['text_title']     = '<img src="admin/view/image/payment/norwegian/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
+$_['unit']           = 'st';
 
 //Error responses
-$_['error_heading']  = 'Payment error ';
-$_['response_100']   = 'Invalid. Contact integrator';
-$_['response_105']   = 'Invalid transaction status';
-$_['response_106']   = 'Failure at the bank';
-$_['response_107']   = 'Transaction rejected by bank';
-$_['response_108']   = 'Transaction cancelled';
-$_['response_114']   = 'Timeout at the bank';
-$_['response_127']   = 'Customer reference number already used in an other transaction';
-$_['response_129']   = 'More than one transaction found for the given customer reference number';
-
+	$_['error_heading']  = 'Betaling mislykkes';
+	$_['response_100']   = 'Betaling mislykkes. Kontakt integrasjonsansvarlig.';
+	$_['response_105']   = 'Ugyldig transaktionsstatus';
+	$_['response_106']   = 'Noe gikk feil i banken';
+	$_['response_107']   = 'Transaktionen ble avbrutt av banken';
+	$_['response_108']   = 'Transaktionen avbrutt';
+	$_['response_114']   = 'Timeout hos banken';
+	$_['response_127']   = 'Ordrenummeret er allerede benyttet i en annen transaktion';
+	$_['response_129']   = 'Mer er en transaktion er oppdaget på samme ordrenummer';
 ?>

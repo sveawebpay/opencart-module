@@ -1,5 +1,7 @@
 <?php
-require_once '/../Includes.php';
+$root = realpath(dirname(__FILE__));
+require_once "$root/../Includes.php";
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.

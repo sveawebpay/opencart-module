@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Text
 $_['text_title']     = '<img src="admin/view/image/payment/swedish/svea_directbank.png" alt="Svea Direktbetalning" title="SVEA Direktbetalning" />';
 $_['unit']           = 'st';

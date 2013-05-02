@@ -1,23 +1,23 @@
-<?php
+﻿<?php
 // Heading
-$_['heading_title']      = 'Svea Direct payment';
+$_['heading_title']      = 'Svea Direktebetaling';
 
 // Text
-$_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified Svea Direct Payment module!';
-$_['text_svea_directbank']  = '<img src="view/image/payment/english/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
+$_['text_payment']       = 'Betaling';
+$_['text_success']       = 'Modifisering av Sveas Kortbetalingsmodul var vellykket!';
+$_['text_svea_directbank']  = '<img src="view/image/payment/norwegian/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
 
 // Entry
-$_['entry_order_status'] = 'Order Status:';
-$_['entry_geo_zone']     = 'Geo Zone:';
+$_['entry_order_status'] = 'Ordrestatus:';
+$_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sort Order:';
-$_['entry_merchant_id']  = 'Merchant id';
-$_['entry_testmode']     = 'Testmode';
-$_['entry_sw']           = 'Secret word';
-$_['entry_test']         = "PRODUCTION";
-$_['entry_prod']         = "TEST";
+$_['entry_sort_order']   = 'Sorteringsordning:';
+$_['entry_merchant_id']  = 'Merchant id:';
+$_['entry_testmode']     = 'Testmodus:';
+$_['entry_sw']           = 'Secret word:';
+$_['entry_test']    	= "PRODUKTION";
+$_['entry_prod']    	= "TEST";
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment Svea Direct payment!';
+$_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å endre Svea Direktebetalingsmodul';
 ?>

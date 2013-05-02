@@ -1,34 +1,32 @@
-<?php
+﻿<?php
 // Heading
-$_['heading_title']      = 'Svea Part payment';
+	$_['heading_title']      = 'Svea Delbetaling';
 
-// Text
-$_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified Svea Part payment payment module!';
-$_['text_svea_partpayment']   = '<img src="view/image/payment/english/svea_partpayment.png" alt="Svea Part payment" title="SVEA Part payment" />';
+	// Text
+	$_['text_payment']       = 'Betaling';
+	$_['text_success']       = 'Modifisering av Sveas Kortbetalingsmodul var velykket!';
+
+$_['text_svea_partpayment']   = '<img src="view/image/payment/norwegian/svea_partpayment.png" alt="Svea Part payment" title="SVEA Part payment" />';
 
 // Entry
-$_['entry_order_status'] = 'Order Status:';
-$_['entry_order_status_text'] = 'Orderstatus for created order but not delivered. Deliver the invoice from Svea admin.';
-$_['entry_geo_zone']     = 'Geo Zone:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sort Order:';
+	$_['entry_order_status'] = 'Ordrestatus:';
+	$_['entry_order_status_text'] = 'Ordrestatus opprettet men ikke levert. Leveranse av fakturaen gjøres fra Sveas admin.';
+	$_['entry_geo_zone']     = 'Geozon:';
+	$_['entry_status']       = 'Status:';
+	$_['entry_sort_order']   = 'Sorteringsordning:';
+	$_['entry_username']     = 'Brukernavn:';
+	$_['entry_testmode']     = 'Testmodus:';
+	$_['entry_password']     = 'Passord:';
+	$_['entry_clientno']     = 'Klientnr:';
+	$_['entry_auto_deliver'] = 'Leverere automatisk:';
+	$_['entry_auto_deliver_text'] = 'Om aktivert levereres fakturaen automatiskt ved opprettelse av ordren. Ellers gjøres dette via Sveas admin.';
+	$_['entry_distribution_type'] = 'Distribusjonsform for faktura (Etter avtale med Svea):';
+	$_['entry_post'] = 'Post';
+	$_['entry_email'] = 'Email';
+	// Error
+	$_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å modifisere Svea Delbetaling betalmodul!';
+	
 
-$_['entry_username']     = 'Username:';
-$_['entry_password']     = 'Password:';
-$_['entry_clientno']     = 'Client No:';
-$_['entry_min_amount']   = 'Min. amount:';
-
-$_['entry_yes']          = 'yes';
-$_['entry_no']           = 'no';
-$_['entry_testmode']     = 'Testmode';
-
-$_['entry_auto_deliver'] = 'Auto deliver order:';
-$_['entry_auto_deliver_text'] = 'If enabled the invoice will automatically be delivered when creating an order.If disabled, deliver the invoice from Svea admin.';
-$_['entry_distribution_type'] = 'Invoice distribution type (As agreed with Svea):';
-$_['entry_post'] = 'Post';
-$_['entry_email'] = 'Email';
-
-// Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment Svea Part payment!';
+$_['entry_yes']          = 'ja';
+$_['entry_no']           = 'nei';
 ?>

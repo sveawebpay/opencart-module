@@ -1,18 +1,18 @@
-<?php
+﻿<?php
 // Heading
-$_['heading_title']    = 'Svea Invoice Fee';
+$_['heading_title']    = 'Svea Faktureringsavgift';
 
 // Text
-$_['text_total']       = 'Order Totals';
-$_['text_success']     = 'Success: You have modified Svea fee total!';
+$_['text_total']       = 'Total';
+$_['text_success']     = 'Modifisering av Sveas Faktureringsavgift var velykket!';
 
 // Entry
-$_['entry_total']      = 'Order Total:';
-$_['entry_fee']        = 'Fee:';
-$_['entry_tax_class']  = 'Tax Class:';
+$_['entry_total']      = 'Total:';
+$_['entry_fee']        = 'Avgift:';
+$_['entry_tax_class']  = 'Skatteklasse:';
 $_['entry_status']     = 'Status:';
-$_['entry_sort_order'] = 'Sort Order:';
+$_['entry_sort_order'] = 'Sorteringsordning:';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify Svea fee total!';
+$_['error_permission'] = 'Advarsel: Du har ikke tillatelse til å modifisere Svea Faktureringsavgift!';
 ?>

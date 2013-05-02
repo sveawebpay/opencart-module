@@ -5,7 +5,7 @@ The module is tested in Opencart 1.4.9.x - 1.5.5.x.
 Supported countries are
 **Sweden**, **Norway**, **Finland**, **Denmark**, **The Netherlands**, **Germany**.
 
-###Before installing this module, please contact Svea the check your account settings 
+##If you are upgrading from a previous version of this module, please contact Svea before installing to set your account settings correct
 
 
 #Installation instructions

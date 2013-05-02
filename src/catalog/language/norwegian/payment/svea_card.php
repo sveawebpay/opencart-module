@@ -1,20 +1,20 @@
-<?php
+﻿<?php
 // Text
-$_['text_title']     = '<img src="admin/view/image/payment/english/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
-$_['unit']           = 'pcs';
+$_['text_title']     = '<img src="admin/view/image/payment/norwegian/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
+$_['unit']           = 'st';
 
-//Error responses
-$_['error_heading']   = 'Payment error ';
-$_['response_100']   = 'Invalid. Contact integrator';
-$_['response_105']   = 'Invalid transaction status';
-$_['response_106']   = 'Failure at third party';
-$_['response_107']   = 'Transaction rejected by bank';
-$_['response_108']   = 'Transaction cancelled';
-$_['response_109']   = 'Transaction not found at the bank';
-$_['response_114']   = 'Timeout at the bank';
-$_['response_121']   = 'The card has expired';
-$_['response_122']   = 'Stolen card';
-$_['response_123']   = 'Lost card';
-$_['response_127']   = 'Customer reference number already used in another transaction';
-$_['response_129']   = 'More than one transaction found for the given customer reference number';
+//Error responsest
+	$_['error_heading']  = 'Betaling mislykkes';
+	$_['response_100']   = 'Internfeil';
+	$_['response_105']   = 'Feilaktig transaktionsstatus';
+	$_['response_106']   = 'Feil hos tredjepart';
+	$_['response_107']   = 'Transaktion nektet hos bank';
+	$_['response_108']   = 'Transaktion avbrutt';
+	$_['response_109']   = 'Transaktion ikke funnet hos bank';
+	$_['response_114']   = 'Timeout hos bank';
+	$_['response_121']   = 'Kortet er utgått';
+	$_['response_122']   = 'Kort stjålet';
+	$_['response_123']   = 'Mistet kort';
+	$_['response_127']   = 'Kundefeferansenummer er allerede benyttet i en annan transaktion';
+	$_['response_129']   = 'Mer enn en transaktion er funnet for angitt kundereferansenummer';
 ?>
