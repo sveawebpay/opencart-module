@@ -156,8 +156,7 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->setClientOrderNumber($this->session->data['order_id'])
                       ->setOrderDate(date('c'))
                       ->useInvoicePayment()
-                        ->prepareRequest();
-                print_r($svea); die();
+                        ->doRequest();
             //If CreateOrder accepted redirect to thankyou page
 
             if ($svea->accepted == 1) {
