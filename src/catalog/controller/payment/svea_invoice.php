@@ -172,7 +172,9 @@ class ControllerPaymentsveainvoice extends Controller {
                     }
                      //Shipping
                     if ($this->cart->hasShipping() == 1) {
-                    $deliverObj = $this->formatShippingFeeRows($deliverObj);
+                        if($this->session->data['shipping_method']['cost'] > 0){
+                          $deliverObj = $this->formatShippingFeeRows($deliverObj);
+                        }
                     }
                      //Get coupons
                     if (isset($this->session->data['coupon'])) {
