@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class ControllerPaymentsveadirectbank extends Controller {
 	private $error = array();
 
