@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array();
 

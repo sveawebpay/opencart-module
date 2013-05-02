@@ -15,7 +15,7 @@
         <tbody>
             <tr>
                 <td>Version</td>
-                <td>2.0.0</td>
+                <td>2.0</td>
             </tr>
             <tr>
                 <td><?php echo $entry_order_status; ?></td>
@@ -145,7 +145,7 @@
                         <tr>
                             <td><?php echo $entry_sw; ?>:</td>
                             <td>
-                                <input name="<?php echo $code['name_sw']; ?>" type="password"
+                                <input name="<?php echo $code['name_sw']; ?>" type="text"
                                        value="<?php echo $code['value_sw']; ?>" />
                             </td>
                         </tr>

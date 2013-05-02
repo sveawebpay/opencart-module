@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']               = '<img src="admin/view/image/payment/english/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
+$_['text_title']               = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/english/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
 $_['text_ssn']                 = 'Social Security No';
 $_['text_get_payment_options'] = 'Get payment options';
 $_['text_invoice_address']     = 'Invoice address';
@@ -20,7 +20,7 @@ $_['response_20006'] = "The sum of all order rows cannot be zero or negative";
 $_['response_20013'] = "Order is pending";
 
 $_['response_27000'] = "The provided campaigncode-amount combination does not match any campaign code attached to this client";
-$_['response_27001'] = "Can not deliver order since the specified pdf template is missing. Contact SveaWebPay’s support";
+$_['response_27001'] = "Can not deliver order since the specified pdf template is missing. Contact SveaWebPayÂ´s support";
 $_['response_27002'] = "Can not partial deliver a PaymentPlan";
 $_['response_27003'] = "Can not mix CampaignCode with a fixed Monthly Amount.";
 $_['response_27004'] = "Can not find a suitable CampaignCode for the Monthly Amount";

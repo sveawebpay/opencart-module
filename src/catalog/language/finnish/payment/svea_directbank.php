@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 // Text
-$_['text_title']     = '<img src="admin/view/image/payment/finnish/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
+$_['text_title']     = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/finnish/svea_directbank.png" alt="Svea Direct payment" title="SVEA Direct payment" />';
 $_['unit']           = 'kpl';
 
 //Error responses
