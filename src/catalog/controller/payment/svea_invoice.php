@@ -21,7 +21,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
 
-
+        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_invoice.png'>";
 
         $this->id = 'payment';
 
@@ -391,6 +391,21 @@ class ControllerPaymentsveainvoice extends Controller {
                         ->setUnit($this->language->get('unit'))
                     );
         return $svea;
+    }
+    
+    private function getLogo($countryCode){
+
+        switch ($countryCode){
+            case "SE": $country = "swedish";    break;
+            case "NO": $country = "norwegian";  break;
+            case "DK": $country = "danish";     break;
+            case "FI": $country = "finnish";    break;
+            case "NL": $country = "dutch";      break;
+            case "DE": $country = "german";     break;
+            default:   $country = "english";    break;  
+        }
+        
+        return $country;
     }
 
 }

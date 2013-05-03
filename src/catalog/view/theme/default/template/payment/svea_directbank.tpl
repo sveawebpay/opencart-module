@@ -1,6 +1,9 @@
 <div class="buttons">
  
 <div class="right">
+
+    <div><p><?php echo $logo; ?></p></div>
+
     <?php 
         echo $form_start_tag,
             $input_message,
