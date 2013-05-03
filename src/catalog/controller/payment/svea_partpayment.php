@@ -20,7 +20,8 @@ class ControllerPaymentsveapartpayment extends Controller {
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
 
-
+        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_partpayment.png'>";
+        
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl')) {
             $this->template = $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl';
         } else {
@@ -353,6 +354,21 @@ class ControllerPaymentsveapartpayment extends Controller {
                         ->setUnit($this->language->get('pcs'))
                     );
         return $svea;
+    }
+    
+    private function getLogo($countryCode){
+
+        switch ($countryCode){
+            case "SE": $country = "swedish";    break;
+            case "NO": $country = "norwegian";  break;
+            case "DK": $country = "danish";     break;
+            case "FI": $country = "finnish";    break;
+            case "NL": $country = "dutch";      break;
+            case "DE": $country = "german";     break;
+            default:   $country = "english";    break;  
+        }
+        
+        return $country;
     }
 }
 ?>

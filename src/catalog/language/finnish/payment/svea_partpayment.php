@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']               = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/finnish/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
+$_['text_title']               = 'SVEA Osamaksu';
 $_['text_ssn']                = 'Henkilötunnus';
 $_['text_get_payment_options'] = 'Hae maksuvaihtoehdot';
 $_['text_payment_options']     = 'Maksuvaihtoehdot';

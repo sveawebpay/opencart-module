@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']              = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/swedish/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
+$_['text_title']              = 'SVEA Faktura';
 $_['text_ssn']                = 'Personnummer';
 $_['text_private_or_company'] = 'Typ';
 $_['text_company']            = 'Företag';

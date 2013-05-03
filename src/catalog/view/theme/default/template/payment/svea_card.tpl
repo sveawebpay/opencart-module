@@ -1,12 +1,16 @@
 <div class="buttons">
  
 <div class="right">
+    <div><p><?php echo $logo; ?></p></div>
+    
     <?php 
         echo $form_start_tag,
             $input_message,
             $merchant_id,
             $input_mac;
     ?>
+    
+    
     
     <?php if(floatval(VERSION) >= 1.5){?>
     <input id="checkout" class="button" type='submit' name='submit' value='<?php echo $submitMessage ?>' />

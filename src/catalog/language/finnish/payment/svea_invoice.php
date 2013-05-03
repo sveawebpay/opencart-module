@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']              = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/finnish/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
+$_['text_title']              = 'SVEA Lasku';
 $_['text_ssn']                = 'Henkilötunnus';
 $_['text_private_or_company'] = 'Tyyppi';
 $_['text_company']            = 'Yritys';

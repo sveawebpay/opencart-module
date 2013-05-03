@@ -1,9 +1,9 @@
 <?php
 
 // Text
-$_['text_title']               = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/swedish/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
+$_['text_title']               = 'SVEA Delbetalning';
 $_['text_ssn']                 = 'Personnummer';
-$_['text_get_payment_options'] = 'Hämta betlaningsalternativ';
+$_['text_get_payment_options'] = 'Hämta betalningsalternativ';
 $_['text_invoice_address']     = 'fakturaaddress';
 $_['text_birthdate']           = 'Födelsedatum';
 $_['text_vat_no']              = 'Org. nr.';
