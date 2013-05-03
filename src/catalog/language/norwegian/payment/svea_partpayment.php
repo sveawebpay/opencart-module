@@ -1,7 +1,7 @@
 <?php
 // Text
 // Text
-$_['text_title']              = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/norwegian/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
+$_['text_title']              = 'SVEA Delbetaling';
 $_['text_ssn']                = 'Fødselsnummer';
 $_['text_get_payment_options'] = 'Hente betalingsalternativer';
 $_['text_invoice_address']    = 'Faktura adresse';

@@ -22,8 +22,8 @@ class ControllerPaymentsveadirectbank extends Controller {
                 $this->template = 'default/template/payment/svea_directbank.tpl';
         }
 
-
-       $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
+        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_directbank.png'>";
+        $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
 
 		//$this->render();
@@ -262,6 +262,21 @@ class ControllerPaymentsveadirectbank extends Controller {
              $definition = $this->language->get("response_error"). " $msg";
 
         return $definition;
+    }
+    
+    private function getLogo($countryCode){
+
+        switch ($countryCode){
+            case "SE": $country = "swedish";    break;
+            case "NO": $country = "norwegian";  break;
+            case "DK": $country = "danish";     break;
+            case "FI": $country = "finnish";    break;
+            case "NL": $country = "dutch";      break;
+            case "DE": $country = "german";     break;
+            default:   $country = "english";    break;  
+        }
+        
+        return $country;
     }
 
 }

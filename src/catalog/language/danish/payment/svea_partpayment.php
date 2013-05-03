@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']               = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/danish/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
+$_['text_title']               = 'SVEA Delbetal';
 $_['text_ssn']                = 'Cpr.nr.';
 $_['text_get_address']        = 'Adresse';
 $_['text_invoice_address']    = 'Betalingsadresse';

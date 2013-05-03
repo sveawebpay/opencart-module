@@ -1,7 +1,9 @@
 <div class="buttons">
 
     <div class="right">
-
+        
+        <div><p><?php echo $logo; ?></p></div>
+        
         <?php echo $this->language->get("text_private_or_company")?>: <select id="svea_invoice_company" name="svea_invoice_company">
             <option value="true"><?php echo $this->language->get("text_company")?></option>
             <option value="false" selected="selected"><?php echo $this->language->get("text_private")?></option>

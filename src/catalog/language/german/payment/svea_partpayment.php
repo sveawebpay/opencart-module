@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']               = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/german/svea_partpayment.png" alt="Svea Partpayment" title="SVEA Partpayment" />';
+$_['text_title']               = 'SVEA Ratenkauf';
 $_['text_ssn']                 = 'Social Security No';
 $_['text_get_payment_options'] = 'Get payment options';
 $_['text_invoice_address']     = 'Invoice address';

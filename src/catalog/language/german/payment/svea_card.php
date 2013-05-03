@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']     = '<img src="'.HTTPS_SERVER.'admin/view/image/payment/german/svea_card.png" alt="Svea Card Payment" title="SVEA Card Payment" />';
+$_['text_title']     = 'SVEA Card payment';
 $_['unit']           = 'pcs';
 
 //Error responses
