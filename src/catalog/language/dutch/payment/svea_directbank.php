@@ -13,5 +13,5 @@ $_['response_108']   = 'Transaction cancelled';
 $_['response_114']   = 'Timeout at the bank';
 $_['response_127']   = 'Customer reference number already used in an other transaction';
 $_['response_129']   = 'More than one transaction found for the given customer reference number';
-
+$_['response_error'] = "Error: ";
 ?>

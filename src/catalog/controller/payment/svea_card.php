@@ -22,7 +22,7 @@ class ControllerPaymentsveacard extends Controller {
         } else {
             $this->template = 'default/template/payment/svea_card.tpl';
         }
-        
+
         $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_card.png'>";
         $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
@@ -251,8 +251,9 @@ class ControllerPaymentsveacard extends Controller {
     }
 
      private function responseCodes($err,$msg = "") {
-        $err = strstr($err, "(", TRUE);
-        $this->load->language('payment/svea_invoice');
+        $err = (phpversion()>= 5.3) ? $err = strstr($err, "(", TRUE) : $err = mb_strstr($err, "(", TRUE);
+
+        $this->load->language('payment/svea_card');
 
         $definition = $this->language->get("response_$err");
 
@@ -261,7 +262,7 @@ class ControllerPaymentsveacard extends Controller {
 
         return $definition;
     }
-    
+
     private function getLogo($countryCode){
 
         switch ($countryCode){
@@ -271,9 +272,9 @@ class ControllerPaymentsveacard extends Controller {
             case "FI": $country = "finnish";    break;
             case "NL": $country = "dutch";      break;
             case "DE": $country = "german";     break;
-            default:   $country = "english";    break;  
+            default:   $country = "english";    break;
         }
-        
+
         return $country;
     }
 

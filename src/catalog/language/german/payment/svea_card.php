@@ -17,5 +17,5 @@ $_['response_129']   = 'Mehr als einer Transaktion für angegebene Kundenreferen
 $_['response_121']   = 'Karte gelüscht';
 $_['response_122']   = 'Karte gestolen';
 $_['response_123']   = 'Karte verloren';
-
+$_['response_error'] = "Error: ";
 ?>

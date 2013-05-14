@@ -253,8 +253,9 @@ class ControllerPaymentsveadirectbank extends Controller {
     }
 
       private function responseCodes($err,$msg = "") {
-        $err = strstr($err, "(", TRUE);
-        $this->load->language('payment/svea_invoice');
+        $err = (phpversion()>= 5.3) ? $err = strstr($err, "(", TRUE) : $err = mb_strstr($err, "(", TRUE);
+
+        $this->load->language('payment/svea_directbank');
 
         $definition = $this->language->get("response_$err");
 
@@ -263,7 +264,7 @@ class ControllerPaymentsveadirectbank extends Controller {
 
         return $definition;
     }
-    
+
     private function getLogo($countryCode){
 
         switch ($countryCode){
@@ -273,9 +274,9 @@ class ControllerPaymentsveadirectbank extends Controller {
             case "FI": $country = "finnish";    break;
             case "NL": $country = "dutch";      break;
             case "DE": $country = "german";     break;
-            default:   $country = "english";    break;  
+            default:   $country = "english";    break;
         }
-        
+
         return $country;
     }
 
