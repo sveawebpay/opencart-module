@@ -19,5 +19,5 @@ $_['entry_test']         = "PRODUCTION";
 $_['entry_prod']         = "TEST";
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment Svea Card payment!';
+$_['error_permission']   = 'Warning: You do not have permission to modify Svea Card payment module!';
 ?>
