@@ -1,5 +1,5 @@
 # Opencart - Svea WebPay payment module 
-##Version 2.x.x
+##Version 2.0.8
 This module is updated for the latest payment systems at SveaWebPay. 
 The module is tested in Opencart 1.4.9.x - 1.5.5.x. 
 Supported countries are
