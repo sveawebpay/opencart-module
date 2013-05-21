@@ -1,18 +1,19 @@
 <?php
+
 // Heading
-$_['heading_title']    = 'Svea Invoice Fee';
+$_['heading_title']    = 'Svea Factuurkosten';
 
 // Text
-$_['text_total']       = 'Order Totals';
-$_['text_success']     = 'Success: You have modified Svea fee total!';
+$_['text_total']       = 'Order totalen';
+$_['text_success']     = 'Success: U heeft de module Svea Factuurkosten gewijzigd!';
 
 // Entry
-$_['entry_total']      = 'Order Total:';
-$_['entry_fee']        = 'Fee:';
-$_['entry_tax_class']  = 'Tax Class:';
+$_['entry_total']      = 'Order totaal:';
+$_['entry_fee']        = 'Kosten:';
+$_['entry_tax_class']  = 'BTW tarief:';
 $_['entry_status']     = 'Status:';
-$_['entry_sort_order'] = 'Sort Order:';
+$_['entry_sort_order'] = 'Soort order:';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify Svea fee total!';
+$_['error_permission'] = 'Waarschuwing: U heeft geen toestemming om de module Svea Factuurkosten te wijzigen!';
 ?>

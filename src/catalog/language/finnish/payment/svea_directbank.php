@@ -13,5 +13,5 @@ $_['response_108']   = 'Tapahtuma keskeytetty';
 $_['response_114']   = 'Pankin aikakatkaisu';
 $_['response_127']   = 'Tilausnumero käytetty jo toisessa tapahtumassa';
 $_['response_129']   = 'MEnemmän kuin yksi tapahtuma löydetty samalla tilausnumerolla';
-
+$_['response_error'] = "Error: ";
 ?>

@@ -22,13 +22,11 @@ class ControllerPaymentsveacard extends Controller {
         } else {
             $this->template = 'default/template/payment/svea_card.tpl';
         }
-        
+
         $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_card.png'>";
         $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
-       //create order
 
-   // public function redirectSvea(){
         $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
@@ -167,16 +165,18 @@ class ControllerPaymentsveacard extends Controller {
              break;
      }
 
-         $form = $svea
-                ->setCountryCode($order['payment_iso_code_2'])
-                ->setCurrency($this->session->data['currency'])
-                ->setClientOrderNumber($this->session->data['order_id'])
-                ->setOrderDate(date('c'))
-                ->usePayPageCardOnly()
-                    ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
-                    ->setReturnUrl(HTTP_SERVER.'index.php?route=payment/svea_card/responseSvea')
-                    ->setPayPageLanguage($payPageLanguage)
-                    ->getPaymentForm();
+        $server_url = $this->config->get('config_url');
+
+        $form = $svea
+            ->setCountryCode($order['payment_iso_code_2'])
+            ->setCurrency($this->session->data['currency'])
+            ->setClientOrderNumber($this->session->data['order_id'])
+            ->setOrderDate(date('c'))
+            ->usePayPageCardOnly()
+                ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+                ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+                ->setPayPageLanguage($payPageLanguage)
+                ->getPaymentForm();
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
@@ -187,7 +187,7 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['input_submit'] = $fields['input_submit'];
         $this->data['form_end_tag'] = $fields['form_end_tag'];
         $this->data['submitMessage'] = $this->language->get('button_confirm');
-
+    
         $this->render();
     }
 
@@ -196,9 +196,11 @@ class ControllerPaymentsveacard extends Controller {
         $this->load->model('payment/svea_card');
         $this->load->language('payment/svea_card');
         include('svea/Includes.php');
+        
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
+        
          //Testmode
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
@@ -251,8 +253,9 @@ class ControllerPaymentsveacard extends Controller {
     }
 
      private function responseCodes($err,$msg = "") {
-        $err = strstr($err, "(", TRUE);
-        $this->load->language('payment/svea_invoice');
+        $err = (phpversion()>= 5.3) ? $err = strstr($err, "(", TRUE) : $err = mb_strstr($err, "(", TRUE);
+
+        $this->load->language('payment/svea_card');
 
         $definition = $this->language->get("response_$err");
 
@@ -261,7 +264,7 @@ class ControllerPaymentsveacard extends Controller {
 
         return $definition;
     }
-    
+
     private function getLogo($countryCode){
 
         switch ($countryCode){
@@ -271,9 +274,9 @@ class ControllerPaymentsveacard extends Controller {
             case "FI": $country = "finnish";    break;
             case "NL": $country = "dutch";      break;
             case "DE": $country = "german";     break;
-            default:   $country = "english";    break;  
+            default:   $country = "english";    break;
         }
-        
+
         return $country;
     }
 

@@ -4,7 +4,7 @@ $_['heading_title']      = 'Svea Part payment';
 
 // Text
 $_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified Svea Part payment payment module!';
+$_['text_success']       = 'Success: You have modified Svea Part payment module!';
 $_['text_svea_partpayment']   = '<img src="view/image/payment/english/svea_partpayment.png" alt="Svea Part payment" title="SVEA Part payment" />';
 
 // Entry
@@ -30,5 +30,5 @@ $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment Svea Part payment!';
+$_['error_permission']   = 'Warning: You do not have permission to modify Svea Part payment module!';
 ?>

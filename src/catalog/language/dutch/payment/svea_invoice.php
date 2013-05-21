@@ -1,43 +1,43 @@
 <?php
 // Text
-$_['text_title']              = 'SVEA Factuur';
-$_['text_ssn']                = 'Social Security No';
+$_['text_title']              = 'Svea Factuur';
+$_['text_ssn']                = 'Sofi-nummer';
 $_['text_private_or_company'] = 'Type';
-$_['text_company']            = 'Business';
-$_['text_private']            = 'Private';
-$_['text_get_address']        = 'Get address';
-$_['text_invoice_address']    = 'Invoice address';
-$_['text_birthdate']          = 'Birth date';
-$_['text_vat_no']             = 'VAT no';
-$_['text_initials']           = 'Initials';
+$_['text_company']            = 'Bedrijf';
+$_['text_private']            = 'Privé';
+$_['text_get_address']        = 'Adresgegevens ophalen';
+$_['text_invoice_address']    = 'Factuuradres';
+$_['text_birthdate']          = 'Geboortedatum';
+$_['text_vat_no']             = 'BTW nr';
+$_['text_initials']           = 'Initialen';
 
 
 //Error responses
-$_['response_20000'] = "Order closed";
-$_['response_20001'] = "Order denied";
-$_['response_20002'] = "Something wrong with order";
-$_['response_20003'] = "Order expired";
-$_['response_20004'] = "Order does not exist";
-$_['response_20005'] = "OrderType mismatch";
-$_['response_20006'] = "The sum of all order rows cannot be zero or negative";
-$_['response_20013'] = "Order is pending";
+$_['response_20000'] = "De order is gesloten";
+$_['response_20001'] = "De order is afgewezen";
+$_['response_20002'] = "De order heeft een fout veroorzaakt";
+$_['response_20003'] = "De order is verlopen";
+$_['response_20004'] = "De order bestaat niet";
+$_['response_20005'] = "Het ordertype komt niet overeen";
+$_['response_20006'] = "De som van alle orderrijen kan geen nul of negatief zijn";
+$_['response_20013'] = "De order is in afwachting";
 
-$_['response_24000'] = "Invoice amount exceeds the authorized amount";
+$_['response_24000'] = "Het factuurbedrag is hoger dan de toegestane limiet";
 
-$_['response_30000'] = "The credit report was rejected";
-$_['response_30001'] = "The customer is blocked or has shown strange or unusual behavior";
-$_['response_30002'] = "Based upon the performed credit check the request was rejected";
-$_['response_30003'] = "Customer cannot be found by credit check";
+$_['response_30000'] = "Het kredietrapport is afgewezen";
+$_['response_30001'] = "De klant is geblokkeerd of heeft vreemd/ ongewoon gedrag vertoond";
+$_['response_30002'] = "Op basis van de uitgevoerde kredietcontrole, is het verzoek afgewezen";
+$_['response_30003'] = "De klant kan niet gevonden worden door de kredietcontrole";
 
-$_['response_40000'] = "No customer found";
-$_['response_40001'] = "The provided CountryCode is not supported";
-$_['response_40002'] = "Invalid Customer information";
-$_['response_40004'] = "Could not find any addresses for this customer";
+$_['response_40000'] = "Geen klant gevonden";
+$_['response_40001'] = "De verstrekte landencode wordt niet ondersteund";
+$_['response_40002'] = "Ongeldige klantinformatie";
+$_['response_40004'] = "Er kan geen adres gevonden worden voor deze klant";
 
-$_['response_50000'] = "Client is not authorized for this method";
-$_['response_error'] = "Error: ";
+$_['response_50000'] = "De klant is niet bevoegd voor deze methode";
+$_['response_error'] = "Foutmelding: ";
 
 //Order definitions
-$_['text_svea_fee']   = 'SVEA Invoice fee';
-$_['unit']            = 'pcs';
+$_['text_svea_fee']   = 'Svea Factuurkosten';
+$_['unit']            = 'st';
 ?>

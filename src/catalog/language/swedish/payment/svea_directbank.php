@@ -13,5 +13,6 @@ $_['response_108']   = 'Transaktionen avbruten';
 $_['response_114']   = 'Timeout på banken';
 $_['response_127']   = 'Ordernumret har redan använts i en annan transaktion';
 $_['response_129']   = 'Mer än en transaktion har upptäckts på samma ordernummer';
+$_['response_error'] = "Fel: ";
 
 ?>

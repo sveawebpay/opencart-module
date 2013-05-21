@@ -29,5 +29,5 @@ $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
 
 // Error
-$_['error_permission']        = 'Warning: You do not have permission to modify payment Svea Invoice!';
+$_['error_permission']        = 'Warning: You do not have permission to modify Svea Invoice payment module!';
 ?>

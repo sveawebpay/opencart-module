@@ -17,4 +17,5 @@ $_['response_122']   = 'Kortti varastettu';
 $_['response_123']   = 'Kortti hukattu';
 $_['response_127']   = 'Asiakkaan viitenumero jo käytetty toisessa tapahtumassa';
 $_['response_129']   = 'Enemmän kuin yksi tapahtuma löydetty annetulle asiakasviitenumerolle';
+$_['response_error'] = "Error: ";
 ?>

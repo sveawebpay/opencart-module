@@ -1,34 +1,34 @@
 <?php
 // Heading
-$_['heading_title']      = 'Svea Part payment';
+$_['heading_title']      = 'Svea Deelbetalen';
 
 // Text
-$_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified Svea Part payment payment module!';
-$_['text_svea_partpayment']   = '<img src="view/image/payment/english/svea_partpayment.png" alt="Svea Part payment" title="SVEA Part payment" />';
+$_['text_payment']       = 'Betalen';
+$_['text_success']       = 'Success: U heeft de module Svea Deelbetalen gewijzigd!';
+$_['text_svea_partpayment']   = '<img src="view/image/payment/dutch/svea_partpayment.png" alt="Svea Part payment" title="SVEA Part payment" />';
 
 // Entry
-$_['entry_order_status'] = 'Order Status:';
-$_['entry_order_status_text'] = 'Orderstatus for created order but not delivered. Deliver the invoice from Svea admin.';
-$_['entry_geo_zone']     = 'Geo Zone:';
+$_['entry_order_status'] = 'Orderstatus:';
+$_['entry_order_status_text'] = 'Orderstatus voor de gecreëerde order, maar er is geen factuur gecreëerd. Creëer de factuur van Svea admin.';
+$_['entry_geo_zone']     = 'Geo zone:';
 $_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sort Order:';
+$_['entry_sort_order']   = 'Soort order:';
 
-$_['entry_username']     = 'Username:';
-$_['entry_password']     = 'Password:';
-$_['entry_clientno']     = 'Client No:';
-$_['entry_min_amount']   = 'Min. amount:';
+$_['entry_username']     = 'Gebruikersnaam:';
+$_['entry_password']     = 'Wachtwoord:';
+$_['entry_clientno']     = 'Klantnr:';
+$_['entry_min_amount']   = 'Min. bedrag:';
 
-$_['entry_yes']          = 'yes';
-$_['entry_no']           = 'no';
-$_['entry_testmode']     = 'Testmode';
+$_['entry_yes']          = 'ja';
+$_['entry_no']           = 'nee';
+$_['entry_testmode']     = 'Testmodus';
 
-$_['entry_auto_deliver'] = 'Auto deliver order:';
-$_['entry_auto_deliver_text'] = 'If enabled the invoice will automatically be delivered when creating an order.If disabled, deliver the invoice from Svea admin.';
-$_['entry_distribution_type'] = 'Invoice distribution type (As agreed with Svea):';
+$_['entry_auto_deliver'] = 'Creëer de factuur voor de order automatisch:';
+$_['entry_auto_deliver_text'] = 'Indien ingeschakeld, wordt de factuur automatisch verstuurd bij het maken van een order. Indien uitgeschakeld, stuur de factuur van Svea admin.';
+$_['entry_distribution_type'] = 'Factuur distributie type (Zoals overeengekomen met Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment Svea Part payment!';
+$_['error_permission']   = 'Waarschuwing: U heeft geen toestemming om de module Svea Deelbetalen te wijzigen!';
 ?>

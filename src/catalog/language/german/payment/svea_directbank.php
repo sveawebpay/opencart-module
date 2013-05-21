@@ -13,5 +13,5 @@ $_['response_108']   = 'Transaktion abgebrochen';
 $_['response_114']   = 'Timeout bei der Bank';
 $_['response_127']   = 'Auftrags-Nr schon bei einem anderen Transaktion benutzt';
 $_['response_129']   = 'Mehr als einer Transaktion für angegebene Kundenreferenz entdeckt';
-
+$_['response_error'] = "Error: ";
 ?>

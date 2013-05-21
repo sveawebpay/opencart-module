@@ -1,44 +1,44 @@
 <?php
 // Text
-$_['text_title']               = 'SVEA Deelbetaling';
-$_['text_ssn']                 = 'Social Security No';
-$_['text_get_payment_options'] = 'Get payment options';
-$_['text_invoice_address']     = 'Invoice address';
-$_['text_birthdate']           = 'Birth date';
-$_['text_vat_no']              = 'VAT no';
-$_['text_initials']            = 'Initials';
-$_['text_payment_options']     = 'Payment options';
+$_['text_title']               = 'Svea Deelbetalen';
+$_['text_ssn']                 = 'Sofi-nr';
+$_['text_get_payment_options'] = 'Betaalopties ophalen';
+$_['text_invoice_address']     = 'Factuuradres';
+$_['text_birthdate']           = 'Geboortedatum';
+$_['text_vat_no']              = 'BTW nr';
+$_['text_initials']            = 'Initialen';
+$_['text_payment_options']     = 'Betaalopties';
 
 //Error responses
-$_['response_20000'] = "Order closed";
-$_['response_20001'] = "Order denied";
-$_['response_20002'] = "Something wrong with order";
-$_['response_20003'] = "Order expired";
-$_['response_20004'] = "Order does not exist";
-$_['response_20005'] = "OrderType mismatch";
-$_['response_20006'] = "The sum of all order rows cannot be zero or negative";
-$_['response_20013'] = "Order is pending";
+$_['response_20000'] = "De order is gesloten";
+$_['response_20001'] = "De order is afgewezen";
+$_['response_20002'] = "De order heeft een fout veroorzaakt";
+$_['response_20003'] = "De order is verlopen";
+$_['response_20004'] = "De order bestaat niet";
+$_['response_20005'] = "Het ordertype komt niet overeen";
+$_['response_20006'] = "De som van alle orderrijen kan geen nul of negatief zijn";
+$_['response_20013'] = "De order is in afwachting";
 
-$_['response_27000'] = "The provided campaigncode-amount combination does not match any campaign code attached to this client";
-$_['response_27001'] = "Can not deliver order since the specified pdf template is missing. Contact SveaWebPay�s support";
-$_['response_27002'] = "Can not partial deliver a PaymentPlan";
-$_['response_27003'] = "Can not mix CampaignCode with a fixed Monthly Amount.";
-$_['response_27004'] = "Can not find a suitable CampaignCode for the Monthly Amount";
+$_['response_27000'] = "De verstrekte actiecode-bedrag combinatie komt niet overeen met de actiecodes die aan deze klant verbonden zijn";
+$_['response_27001'] = "Er kan geen factuur gecreëerd worden, aangezien de gespecificeerde pdf-sjabloon ontbreekt. Neem contact op met SveaWebPay´s support";
+$_['response_27002'] = "De factuur kan niet opgesplitst worden voor deelbetaling";
+$_['response_27003'] = "Er kan geen campagnecode samengevoegd worden met een vast maandelijks bedrag.";
+$_['response_27004'] = "Kan geen geschikte campagnecode vinden voor het maandelijkse bedrag";
 
-$_['response_30000'] = "The credit report was rejected";
-$_['response_30001'] = "The customer is blocked or has shown strange or unusual behavior";
-$_['response_30002'] = "Based upon the performed credit check the request was rejected";
-$_['response_30003'] = "Customer cannot be found by credit check";
+$_['response_30000'] = "Het kredietrapport is afgewezen";
+$_['response_30001'] = "De klant is geblokkeerd of heeft vreemd/ ongewoon gedrag vertoond";
+$_['response_30002'] = "Op basis van de uitgevoerde kredietcontrole, is het verzoek afgewezen";
+$_['response_30003'] = "De klant kan niet gevonden worden door de kredietcontrole";
 
-$_['response_40000'] = "No customer found";
-$_['response_40001'] = "The provided CountryCode is not supported";
-$_['response_40002'] = "Invalid Customer information";
-$_['response_40004'] = "Could not find any addresses for this customer";
+$_['response_40000'] = "Geen klant gevonden";
+$_['response_40001'] = "De verstrekte landencode wordt niet ondersteund";
+$_['response_40002'] = "Ongeldige klantinformatie";
+$_['response_40004'] = "Er kan geen adres gevonden worden voor deze klant";
 
-$_['response_50000'] = "Client is not authorized for this method";
-$_['response_error'] = "Error: ";
+$_['response_50000'] = "De klant is niet bevoegd voor deze methode";
+$_['response_error'] = "Foutmelding: ";
 
-$_['unit']           = 'pcs';
-$_['month']          = 'month';
-$_['initial_fee']    = 'initial fee will be added';
+$_['unit']           = 'st';
+$_['month']          = 'maand';
+$_['initial_fee']    = 'De initiële kosten zullen worden toegevoegd';
 ?>

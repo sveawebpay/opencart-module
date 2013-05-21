@@ -13,4 +13,5 @@ $_['unit']           = 'st';
 	$_['response_114']   = 'Timeout hos banken';
 	$_['response_127']   = 'Ordrenummeret er allerede benyttet i en annen transaktion';
 	$_['response_129']   = 'Mer er en transaktion er oppdaget på samme ordrenummer';
+	$_['response_error'] = "Feil: ";
 ?>
