@@ -26,17 +26,14 @@ class ControllerPaymentsveadirectbank extends Controller {
         $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
 
-		//$this->render();
-	//}
 
-
-    //public function redirectSvea(){
         $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
         $this->load->model('localisation/currency');
         $this->load->language('payment/svea_directbank');
         include('svea/Includes.php');
+        
        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $svea = WebPay::createOrder($conf);
@@ -170,17 +167,19 @@ class ControllerPaymentsveadirectbank extends Controller {
              break;
      }
 
-
+         $server_url = $this->config->get('config_url');
+        
          $form = $svea
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
                 ->setClientOrderNumber($this->session->data['order_id'])//remove rand after developing
                 ->setOrderDate(date('c'))
                 ->usePayPageDirectBankOnly()
-                    ->setCancelUrl(HTTP_SERVER.'index.php?route=payment/svea_directbank/responseSvea')
-                    ->setReturnUrl(HTTP_SERVER.'index.php?route=payment/svea_directbank/responseSvea')
+                    ->setCancelUrl($server_url.'index.php?route=payment/svea_directbank/responseSvea')
+                    ->setReturnUrl($server_url.'index.php?route=payment/svea_directbank/responseSvea')
                     ->setPayPageLanguage($payPageLanguage)
                     ->getPaymentForm();
+                    
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
         $this->data['form_start_tag'] = $fields['form_start_tag'];
@@ -194,7 +193,7 @@ class ControllerPaymentsveadirectbank extends Controller {
     }
 
     public function responseSvea(){
-          $this->load->model('checkout/order');
+        $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
         $this->load->language('payment/svea_directbank');
         include('svea/Includes.php');
@@ -202,7 +201,8 @@ class ControllerPaymentsveadirectbank extends Controller {
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
-         //Testmode
+        
+        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf);
