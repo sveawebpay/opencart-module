@@ -1,21 +1,21 @@
 <?php
 // Text
-$_['text_title']     = 'SVEA Card Payment';
-$_['unit']           = 'pcs';
+$_['text_title']     = 'Svea Betalen met betaalpas/creditcard';
+$_['unit']           = 'st';
 
 //Error responses
-$_['error_heading']   = 'Payment error ';
-$_['response_100']   = 'Invalid. Contact integrator';
-$_['response_105']   = 'Invalid transaction status';
-$_['response_106']   = 'Failure at third party';
-$_['response_107']   = 'Transaction rejected by bank';
-$_['response_108']   = 'Transaction cancelled';
-$_['response_109']   = 'Transaction not found at the bank';
-$_['response_114']   = 'Timeout at the bank';
-$_['response_121']   = 'The card has expired';
-$_['response_122']   = 'Stolen card';
-$_['response_123']   = 'Lost card';
-$_['response_127']   = 'Customer reference number already used in another transaction';
-$_['response_129']   = 'More than one transaction found for the given customer reference number';
+$_['error_heading']   = 'Betalingsfout ';
+$_['response_100']   = 'Ongeldig. Neem contact op met de integrator';
+$_['response_105']   = 'Ongeldige transactiestatus';
+$_['response_106']   = 'Fout bij derde partij';
+$_['response_107']   = 'Transactie afgewezen door de bank';
+$_['response_108']   = 'Transactie geannulleerd';
+$_['response_109']   = 'Transactie niet gevonden bij de bank';
+$_['response_114']   = 'Timeout bij de bank';
+$_['response_121']   = 'De geldigheidsdatum van de pas is verlopen';
+$_['response_122']   = 'Gestolen pas';
+$_['response_123']   = 'Verloren pas';
+$_['response_127']   = 'Klant referentienummer al gebruikt in een andere transactie';
+$_['response_129']   = 'Meer dan één transactie gevonden voor het opgegeven klant referentienummer';
 $_['response_error'] = "Error: ";
 ?>

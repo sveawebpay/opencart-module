@@ -1,10 +1,10 @@
 <?php
 // Heading
-$_['heading_title']    = 'Svea Faktureraavgift';
+$_['heading_title']    = 'Svea Fakturaavgift';
 
 // Text
 $_['text_total']       = 'Totalt';
-$_['text_success']     = 'Bekräftelse: Du har ändrat Svea totalt order!';
+$_['text_success']     = 'Bekräftelse: Du har ändrat Svea Fakturaavgift!';
 
 // Entry
 $_['entry_total']      = 'Totalt:';
