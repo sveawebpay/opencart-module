@@ -57,7 +57,7 @@ class ControllerPaymentsveainvoice extends Controller {
             $this->load->model('checkout/voucher');
         }
         //Load SVEA includes
-        include('svea/Includes.php');
+        include(DIR_APPLICATION.'../svea/Includes.php');
 
         //Testmode
         $conf = ($this->config->get('svea_invoice_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
@@ -220,7 +220,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
 
         public function getAddress() {
-                include('svea/Includes.php');
+                include(DIR_APPLICATION.'../svea/Includes.php');
 
                 $this->load->model('payment/svea_invoice');
                 $this->load->model('checkout/order');

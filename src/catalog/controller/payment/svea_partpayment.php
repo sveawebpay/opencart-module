@@ -53,7 +53,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         floatval(VERSION) >= 1.5 ? $this->load->model('checkout/voucher') : $this->load->model('checkout/extension');
 
         //Load SVEA includes
-        include('svea/Includes.php');
+        include(DIR_APPLICATION.'../svea/Includes.php');
                //Testmode
         $conf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
@@ -162,7 +162,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     private function getAddress($ssn){
 
-        include('svea/Includes.php');
+        include(DIR_APPLICATION.'../svea/Includes.php');
 
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/order');
@@ -202,7 +202,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
 
     private function getPaymentOptions(){
-        include('svea/Includes.php');
+        include(DIR_APPLICATION.'../svea/Includes.php');
         $this->load->language('payment/svea_partpayment');
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/order');
