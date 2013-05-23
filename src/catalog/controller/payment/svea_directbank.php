@@ -32,7 +32,7 @@ class ControllerPaymentsveadirectbank extends Controller {
         $this->load->model('payment/svea_directbank');
         $this->load->model('localisation/currency');
         $this->load->language('payment/svea_directbank');
-        include('svea/Includes.php');
+        include(DIR_APPLICATION.'../svea/Includes.php');
         
        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
@@ -196,7 +196,7 @@ class ControllerPaymentsveadirectbank extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
         $this->load->language('payment/svea_directbank');
-        include('svea/Includes.php');
+        include(DIR_APPLICATION.'../svea/Includes.php');
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
