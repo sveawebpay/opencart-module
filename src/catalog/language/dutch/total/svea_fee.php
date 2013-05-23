@@ -1,3 +1,3 @@
 <?php
-$_['text_svea_fee'] = 'Svea Invoice fee';
+$_['text_svea_fee'] = 'Svea Factuurkosten';
 ?>

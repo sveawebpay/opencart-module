@@ -4,7 +4,7 @@ $_['heading_title']    = 'Svea Invoice Fee';
 
 // Text
 $_['text_total']       = 'Order Totals';
-$_['text_success']     = 'Success: You have modified Svea fee total!';
+$_['text_success']     = 'Success: You have modified Svea Invoice Fee!';
 
 // Entry
 $_['entry_total']      = 'Order Total:';
