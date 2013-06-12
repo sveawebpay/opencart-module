@@ -171,12 +171,21 @@ class ControllerPaymentsveacard extends Controller {
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
             ->setClientOrderNumber($this->session->data['order_id'])
-            ->setOrderDate(date('c'))
-            ->usePayPageCardOnly()
+            ->setOrderDate(date('c'));
+        //TODO: Svea paymenet will in future have this check. Change back.
+        if($order['payment_iso_code_2'] == "DK"){
+            $form =  $form->usePayPageCardOnly()
                 ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
                 ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
                 ->setPayPageLanguage($payPageLanguage)
                 ->getPaymentForm();
+        }  else {
+             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
+                ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+                ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+                ->getPaymentForm();
+        }
+
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
@@ -187,7 +196,7 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['input_submit'] = $fields['input_submit'];
         $this->data['form_end_tag'] = $fields['form_end_tag'];
         $this->data['submitMessage'] = $this->language->get('button_confirm');
-    
+
         $this->render();
     }
 
@@ -196,11 +205,11 @@ class ControllerPaymentsveacard extends Controller {
         $this->load->model('payment/svea_card');
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
-        
+
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
-        
+
          //Testmode
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
