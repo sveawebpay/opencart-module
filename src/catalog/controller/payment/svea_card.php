@@ -77,14 +77,14 @@ class ControllerPaymentsveacard extends Controller {
                 $shippingIncVat = (($taxRate / 100) +1) * $shippingExVat;
             }
             if ($shipping_info['cost'] > 0){
-                $svea
-                ->addFee(Item::shippingFee()
-                    ->setAmountExVat($shippingExVat)
-                    ->setAmountIncVat( $shippingExVat + $shippingTax)
-                    ->setName($shipping_info['title'])
-                    ->setDescription($shipping_info['text'])
-                    ->setUnit($this->language->get('unit'))
-                    );
+                $svea = $svea
+                        ->addFee(Item::shippingFee()
+                            ->setAmountExVat($shippingExVat)
+                            ->setAmountIncVat( $shippingExVat + $shippingTax)
+                            ->setName($shipping_info['title'])
+                            ->setDescription($shipping_info['text'])
+                            ->setUnit($this->language->get('unit'))
+                            );
             }
 
         }
