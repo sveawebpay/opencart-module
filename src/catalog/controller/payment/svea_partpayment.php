@@ -21,7 +21,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
 
         $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_partpayment.png'>";
-        
+
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl')) {
             $this->template = $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl';
         } else {
@@ -220,13 +220,23 @@ class ControllerPaymentsveapartpayment extends Controller {
             $result = array("error" => $svea->errormessage);
         }else{
             $currency = floatval(VERSION) >= 1.5 ? $order['currency_code'] : $order['currency'];
-            foreach ($svea->campaignCodes as $cc){
-                $result[] = array("campaignCode" => $cc->campaignCode,
-                                  "description"    => $cc->description,
-                                  "price_per_month" => (string)round($this->currency->format(($cc->monthlyAnnuityFactor * $order['total']),'',false,false),2)." ".$currency."/".$this->language->get('month'));
+            $this->load->model('localisation/currency');
+            $currencies = $this->model_localisation_currency->getCurrencies();
+            $decimals = "";
+            foreach ($currencies as $key => $val) {
+                if($key == $currency){
+                    $decimals = $val['decimal_place'];
+                }
+            }
+            $formattedPrice = round($this->currency->format(($order['total']),'',false,false),2);
+            $campaigns = WebPay::paymentPlanPricePerMonth($formattedPrice, $svea);
+                foreach ($campaigns->values as $cc)
+                $result[] = array("campaignCode" => $cc['campaignCode'],
+                                  "description"    => $cc['description'],
+                                  "price_per_month" => (string)round($cc['pricePerMonth'],$decimals)." ".$currency."/".$this->language->get('month'));
 
             }
-        }
+
 
         return $result;
     }
@@ -355,7 +365,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     );
         return $svea;
     }
-    
+
     private function getLogo($countryCode){
 
         switch ($countryCode){
@@ -365,9 +375,9 @@ class ControllerPaymentsveapartpayment extends Controller {
             case "FI": $country = "finnish";    break;
             case "NL": $country = "dutch";      break;
             case "DE": $country = "german";     break;
-            default:   $country = "english";    break;  
+            default:   $country = "english";    break;
         }
-        
+
         return $country;
     }
 }
