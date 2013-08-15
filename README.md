@@ -25,8 +25,10 @@ ensure that the module works properly.
 * Copy the contents of the src folder to your OpenCart root folder. 
 * Make sure to merge the files and folders from the module with the ones in your OpenCart installation (no files should be overwritten).
 
-### Configure the payment module in the OpenCart admin panel
+### Configure the payment module(s) in the OpenCart admin panel
 In this example we'll first configure the Svea invoice payment method, instructions for other payment methods follow below.
+
+![Svea payment modules] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/Modules.PNG "Svea payment modules")
 
 #### Svea invoice configuration
 
@@ -36,14 +38,11 @@ In this example we'll first configure the Svea invoice payment method, instructi
 * Then select _edit_ next to the now installed payment method. You will now see a view with various payment method settings.
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set the fields _status_ and _testmode_ to enabled_.
-* Also set_order status_ and _auto deliver order_ according to your preferences.
+* Also set _order status_ and _auto deliver order_ according to your preferences.
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing purposes, make sure to use the supplied test account credentials.
 * Finally, remember to _save_ your settings.
 
-TODO update pictures!
-![Invoice credentials settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/img_2.png "Invoice credentials settings")
-
-![Invoice additional settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/img_1.png "Invoice additional settings")
+![Invoice payment settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/Invoice.png "Invoice settings")
 
 #### Next we set up the Svea handling fee (used by Svea Invoice payment method )
 
@@ -54,6 +53,8 @@ TODO update pictures!
 * Set the corresponding _tax class_.
 * Also, set the _status_ field to _enabled_.
 * Finally, the _sort order_ field must be set to apply before taxes.
+
+![Invoice fee additional settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/InvoiceFee.png "Invoice fee additional settings")
 
 See also "Localisation and additional OpenCart configuration requirements" below.
 
@@ -66,21 +67,27 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * Locate _Svea part payment_ in the list, choose _install_ and then _edit_:
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set _testmode_ and _status_ to enabled.
-* Also set_order status_ and _auto deliver order_ according to your preferences.
+* Also set _order status_ and _auto deliver order_ according to your preferences.
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing, make sure to use the supplied test account credentials.
 * The field _min. amount_ must match the corresponding setting in Svea admin.
 
 #### Svea Card Payment
 * In OpenCart admin panel, browse to _extensions -> payments_.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
-* Set _order status_ to complete TODO -- would anyone have reason to change this? See also above payment methods?
+* Set _order status_ according to your preferences.
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set _testmode_ and _status_ to enabled.
 * Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
 
+![Card payment settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/CardPayment.png "Invoice fee additional settings")
 
 #### Svea Direct Payment
-TODO
+* In OpenCart admin panel, browse to _extensions -> payments_.
+* Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
+* Set _order status_ according to your preferences.
+* Set _geo zone_ and _sort order_ according to your preferences.
+* Set _testmode_ and _status_ to enabled.
+* Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
 
 ##Localisation and additional OpenCart configuration requirements
 
@@ -125,7 +132,7 @@ Always check that you have set up your settings correctly before posting issues 
 
 ### Specific payment method problems FAQ
 
-#### My card payments don't go through after reinstalling my shop?
+#### My card or direct payments don't go through after reinstalling my shop?
 Check that you don't attempt to reuse order numbers, they need to be unique. I.e. in the call to
 
 ```$form = WebPay::createOrder()-> ... ->setClientOrderNumber("33")-> ... ``` 
@@ -133,8 +140,8 @@ Check that you don't attempt to reuse order numbers, they need to be unique. I.e
 the order number "33" can't have been used in a previous order.
 
 ##Important info
-The request made from this module to Sveas systems is made through a redirected form. TODO -- applies to all payment methods?
-The response of the payment is then sent back to the module via POST or GET (selectable in the Svea admin interface).
+The request made from the card and direct payment modules to Sveas systems is made through a redirected form.
+The response of the payment is then returned to the module via POST or GET (selectable in the corresponding Svea admin interface).
 
 ###When using GET response
 Have in mind that a long response string sent via GET could get cut off in some browsers and especially in some servers due to server limitations. 
@@ -147,4 +154,3 @@ Would the customer then click cancel, the process does not continue.  This does 
 We can recommend the following certificate providers:
 * InfraSec:  infrasec.se
 * VeriSign : verisign.com
-
