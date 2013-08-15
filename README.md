@@ -68,9 +68,16 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * Set _testmode_ and _status_ to enabled.
 * Also set_order status_ and _auto deliver order_ according to your preferences.
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing, make sure to use the supplied test account credentials.
+* The field _min. amount_ must match the corresponding setting in Svea admin.
 
 #### Svea Card Payment
-TODO
+* In OpenCart admin panel, browse to _extensions -> payments_.
+* Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
+* Set _order status_ to complete TODO -- would anyone have reason to change this? See also above payment methods?
+* Set _geo zone_ and _sort order_ according to your preferences.
+* Set _testmode_ and _status_ to enabled.
+* Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
+
 
 #### Svea Direct Payment
 TODO
@@ -107,14 +114,23 @@ Always check that you have set up your settings correctly before posting issues 
 
 ### Check your Svea customer credentials
 
-* Your _username, password, client no_ for Invoice and Part Payment are correct
-* Your _secret word_ and _merchant id_ for Card and Direct bank payments are correct and that the test-secret word and production-secret word are in their right places
+* Your _username, password, client no_ for Invoice and Part Payment are correct.
+* Your _secret word_ and _merchant id_ for Card and Direct bank payments are correct and that the test-secret word and production-secret word are in their right places.
 
 ### Check correlated OpenCart settings and localisations
 
-* Under _system -> localisation_, the correlating _tax class, tax rate_ (including customer groups), _currency_ and _geo zone_ settings are correct 
-* Under _extensions -> order totals_, the sort order et al are correct
-* You are using correct test case credentials when conducting test purchases
+* Under _system -> localisation_, the correlating _tax class, tax rate_ (including customer groups), _currency_ and _geo zone_ settings are correct.
+* Under _extensions -> order totals_, the sort order et al are correct.
+* You are using correct test case credentials when conducting test purchases.
+
+### Specific payment method problems FAQ
+
+#### My card payments don't go through after reinstalling my shop?
+Check that you don't attempt to reuse order numbers, they need to be unique. I.e. in the call to
+
+```$form = WebPay::createOrder()-> ... ->setClientOrderNumber("33")-> ... ``` 
+
+the order number "33" can't have been used in a previous order.
 
 ##Important info
 The request made from this module to Sveas systems is made through a redirected form. TODO -- applies to all payment methods?
@@ -131,3 +147,4 @@ Would the customer then click cancel, the process does not continue.  This does 
 We can recommend the following certificate providers:
 * InfraSec:  infrasec.se
 * VeriSign : verisign.com
+
