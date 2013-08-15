@@ -28,7 +28,7 @@ ensure that the module works properly.
 ### Configure the payment module(s) in the OpenCart admin panel
 In this example we'll first configure the Svea invoice payment method, instructions for other payment methods follow below.
 
-![Svea payment modules] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/Modules.PNG "Svea payment modules")
+![Svea payment modules] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Modules.PNG "Svea payment modules")
 
 #### Svea invoice configuration
 
@@ -42,7 +42,7 @@ In this example we'll first configure the Svea invoice payment method, instructi
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing purposes, make sure to use the supplied test account credentials.
 * Finally, remember to _save_ your settings.
 
-![Invoice payment settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/Invoice.png "Invoice settings")
+![Invoice payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Invoice.PNG "Invoice settings")
 
 #### Next we set up the Svea handling fee (used by Svea Invoice payment method )
 
@@ -54,7 +54,7 @@ In this example we'll first configure the Svea invoice payment method, instructi
 * Also, set the _status_ field to _enabled_.
 * Finally, the _sort order_ field must be set to apply before taxes.
 
-![Invoice fee additional settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/InvoiceFee.png "Invoice fee additional settings")
+![Invoice fee additional settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/InvoiceFee.PNG "Invoice fee additional settings")
 
 See also "Localisation and additional OpenCart configuration requirements" below.
 
@@ -79,7 +79,7 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * Set _testmode_ and _status_ to enabled.
 * Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
 
-![Card payment settings] (https://github.com/sveawebpay/opencart-module/raw/master/docs/image/CardPayment.png "Invoice fee additional settings")
+![Card payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/CardPayment.PNG "Invoice fee additional settings")
 
 #### Svea Direct Payment
 * In OpenCart admin panel, browse to _extensions -> payments_.
