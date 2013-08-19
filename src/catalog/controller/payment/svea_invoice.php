@@ -37,7 +37,6 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->load->language('payment/svea_invoice');
 
         $definition = $this->language->get("response_$err");
-
         if (preg_match("/^response/", $definition))
              $definition = $this->language->get("response_error"). " $msg";
 
@@ -158,7 +157,6 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->useInvoicePayment()
                         ->doRequest();
             //If CreateOrder accepted redirect to thankyou page
-
             if ($svea->accepted == 1) {
                 $response = array();
                 //If Auto deliver order is set, DeliverOrder
@@ -210,7 +208,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
             //else send errors to view
             }  else {
-                $response = array("error" => $this->responseCodes($this->resultcode,$svea->errormessage));
+                $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
             }
 
             echo json_encode($response);
@@ -392,7 +390,7 @@ class ControllerPaymentsveainvoice extends Controller {
                     );
         return $svea;
     }
-    
+
     private function getLogo($countryCode){
 
         switch ($countryCode){
@@ -402,9 +400,9 @@ class ControllerPaymentsveainvoice extends Controller {
             case "FI": $country = "finnish";    break;
             case "NL": $country = "dutch";      break;
             case "DE": $country = "german";     break;
-            default:   $country = "english";    break;  
+            default:   $country = "english";    break;
         }
-        
+
         return $country;
     }
 
