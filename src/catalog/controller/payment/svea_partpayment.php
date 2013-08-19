@@ -153,7 +153,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
             //else send errors to view
             }  else {
-                $response = array("error" => $this->responseCodes($this->resultcode,$svea->errormessage));
+                $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
             }
         echo json_encode($response);
     }
