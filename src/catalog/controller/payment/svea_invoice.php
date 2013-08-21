@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 class ControllerPaymentsveainvoice extends Controller {
 
