@@ -1,8 +1,8 @@
-# OpenCart - SveaWebPay payment module 
-##Version 2.0.12
-This module is updated for the latest payment systems at SveaWebPay. 
+# OpenCart - SveaWebPay payment module
+##Version 2.0.14
+This module is updated for the latest payment systems at SveaWebPay.
 This module has been tested with OpenCart 1.4.9.x-1.5.6.
- 
+
 Supported countries are
 _Sweden_, _Norway_, _Finland_, _Denmark_, _The Netherlands_, _Germany_.
 
@@ -13,16 +13,16 @@ _Sweden_, _Norway_, _Finland_, _Denmark_, _The Netherlands_, _Germany_.
 
 ##Basic installation example using the Svea Invoice payment method
 
-The following example assumes that you have already downloaded and installed 
+The following example assumes that you have already downloaded and installed
 OpenCart as described in the [OpenCart documentation](http://docs.opencart.com/display/opencart/Installation#Installation-InstallingOpenCart).
 
-This guide covers how to install the SveaWebPay OpenCart module and various payment methods in your OpenCart shop, as well as the various localisation settings you need to make to 
+This guide covers how to install the SveaWebPay OpenCart module and various payment methods in your OpenCart shop, as well as the various localisation settings you need to make to
 ensure that the module works properly.
 
 ### Install the OpenCart SveaWebPay module files
 
 * Download or clone the contents of [this repository from github](https://github.com/sveawebpay/opencart-module).
-* Copy the contents of the src folder to your OpenCart root folder. 
+* Copy the contents of the src folder to your OpenCart root folder.
 * Make sure to merge the files and folders from the module with the ones in your OpenCart installation (no files should be overwritten).
 
 ### Configure the payment module(s) in the OpenCart admin panel
@@ -33,7 +33,7 @@ In this example we'll first configure the Svea invoice payment method, instructi
 #### Svea invoice configuration
 
 * Log in to your OpenCart admin panel.
-* Browse to _extensions -> payments_ where the various Svea payment methods should appear in the list. 
+* Browse to _extensions -> payments_ where the various Svea payment methods should appear in the list.
 * Click the _install_ link of the payment method you want to install. For now, select install the Svea Invoice payment method.
 * Then select _edit_ next to the now installed payment method. You will now see a view with various payment method settings.
 * Set _geo zone_ and _sort order_ according to your preferences.
@@ -98,7 +98,7 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * For use in Dutch and German stores the postal code needs to be set to required for customer registrations
 
 * For use with voucher, the voucher module sort order must be after taxes
-* For use with coupons, the coupon module sort order must be: 
+* For use with coupons, the coupon module sort order must be:
  * After taxes, if coupon is for a fixed amount
  * Before taxes, if coupon gives a percentage discount
 
@@ -135,7 +135,7 @@ Always check that you have set up your settings correctly before posting issues 
 #### My card or direct payments don't go through after reinstalling my shop?
 Check that you don't attempt to reuse order numbers, they need to be unique. I.e. in the call to
 
-```$form = WebPay::createOrder()-> ... ->setClientOrderNumber("33")-> ... ``` 
+```$form = WebPay::createOrder()-> ... ->setClientOrderNumber("33")-> ... ```
 
 the order number "33" can't have been used in a previous order.
 
@@ -144,7 +144,7 @@ The request made from the card and direct payment modules to Sveas systems is ma
 The response of the payment is then returned to the module via POST or GET (selectable in the corresponding Svea admin interface).
 
 ###When using GET response
-Have in mind that a long response string sent via GET could get cut off in some browsers and especially in some servers due to server limitations. 
+Have in mind that a long response string sent via GET could get cut off in some browsers and especially in some servers due to server limitations.
 Our recommendation to solve this is to check the PHP configuration of the server and set it to accept at LEAST 512 characters.
 
 ###When using POST response
