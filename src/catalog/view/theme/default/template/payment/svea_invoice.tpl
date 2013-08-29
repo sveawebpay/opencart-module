@@ -1,9 +1,9 @@
 <div class="buttons">
 
     <div class="right">
-        
+
         <div><p><?php echo $logo; ?></p></div>
-        
+
         <?php echo $this->language->get("text_private_or_company")?>: <select id="svea_invoice_company" name="svea_invoice_company">
             <option value="true"><?php echo $this->language->get("text_company")?></option>
             <option value="false" selected="selected"><?php echo $this->language->get("text_private")?></option>
@@ -159,7 +159,7 @@ $('#getSSN').click(function() {
 
     var company = $("#svea_invoice_company").val();
     var ssnNo = $('#ssn').val();
-    
+
     $("#svea_invoice_err").empty();
     $("#svea_invoice_address").empty();
     $("#svea_invoice_div").hide();
@@ -182,7 +182,7 @@ $('#getSSN').click(function() {
 
                 }else{
 
-                    if (json.length > 1){
+                    if (company){
                         $("#SveaAddressDiv").empty();
                         $.each(json,function(key,value){
                             $("#svea_invoice_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
