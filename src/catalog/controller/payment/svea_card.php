@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class ControllerPaymentsveacard extends Controller {
     protected function index() {
 
@@ -172,19 +172,11 @@ class ControllerPaymentsveacard extends Controller {
             ->setCurrency($this->session->data['currency'])
             ->setClientOrderNumber($this->session->data['order_id'])
             ->setOrderDate(date('c'));
-        //TODO: Svea paymenet will in future have this check. Change back.
-        if($order['payment_iso_code_2'] == "DK"){
-            $form =  $form->usePayPageCardOnly()
-                ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-                ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-                ->setPayPageLanguage($payPageLanguage)
-                ->getPaymentForm();
-        }  else {
-             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
-                ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-                ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-                ->getPaymentForm();
-        }
+
+        $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
+           ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+           ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+           ->getPaymentForm();
 
 
         //print form with hidden buttons
