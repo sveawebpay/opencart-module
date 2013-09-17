@@ -23,9 +23,9 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
         public function getEndPoint($type) {
         $type = strtoupper($type);
         if($type == "HOSTED"){
-            return   SveaConfig::SWP_TEST_URL;;
+            return   Svea\SveaConfig::SWP_TEST_URL;;
         }elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
-             return SveaConfig::SWP_TEST_WS_URL;
+             return Svea\SveaConfig::SWP_TEST_WS_URL;
         }  else {
            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
         }

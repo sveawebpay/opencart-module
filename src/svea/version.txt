@@ -1,0 +1,6 @@
+Uptated integrationLib 2013-09-13 to:
+
+sveawebpay/php-integration
+
+release/1.3.0
+
