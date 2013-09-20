@@ -15,8 +15,8 @@ $_['text_initials']           = 'Initials';
 //Error responses
 $_['response_20000'] = "Order closed";
 $_['response_20001'] = "Order denied";
-$_['response_20002'] = "Something wrong with order";
-$_['response_20003'] = "Order expired";
+$_['response_20002'] = "Something is wrong with order";
+$_['response_20003'] = "Order has expired";
 $_['response_20004'] = "Order does not exist";
 $_['response_20005'] = "OrderType mismatch";
 $_['response_20006'] = "The sum of all order rows cannot be zero or negative";
