@@ -211,8 +211,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
             }
 
+//            $tmp =  sprintf("%c",31) . json_encode($response);  // reproduce JSON.parse error (junk chars) that shows up w/i.e. quickcheckout plugin
+//            echo $tmp;
             echo json_encode($response);
-
         }
 
 
