@@ -211,8 +211,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
             }
 
+//            $tmp =  sprintf("%c",31) . json_encode($response);  // reproduce JSON.parse error (junk chars) that shows up w/i.e. quickcheckout plugin
+//            echo $tmp;
             echo json_encode($response);
-
         }
 
 
@@ -266,28 +267,36 @@ class ControllerPaymentsveainvoice extends Controller {
 
     private function formatOrderRows($svea,$products){
         $this->load->language('payment/svea_invoice');
-                //Product rows
+        
+        //Product rows
         foreach ($products as $product) {
-            $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+            $productPriceExVat = $product['price'];
+            
             //Get the tax, difference in version 1.4.x
-            if(floatval(VERSION) >= 1.5){
-                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
-                 $productPriceIncVat = $productPriceExVat + $productTax;
-            }  else {
+            if (floatval(VERSION) >= 1.5) {
+                $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
+                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                $taxPercent = "";
+                foreach ($tax as $key => $value) {
+                    $taxPercent = $value['rate'];
+                }
+                $productPriceIncVat = $productPriceExVat + $productTax;
+            } else {
                 $taxRate = $this->tax->getRate($product['tax_class_id']);
-                $productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
+
+                $productPriceIncVat = (($taxRate / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
-                        ->setQuantity($product['quantity'])
-                        ->setAmountExVat($productPriceExVat)
-                        ->setAmountIncVat($productPriceIncVat)
-                        ->setName($product['name'])
-                        ->setUnit($this->language->get('unit'))
-                        ->setArticleNumber($product['product_id'])
-                        ->setDescription($product['model'])
-                    );
-
+                    ->setQuantity($product['quantity'])
+                    ->setAmountExVat($productPriceExVat)
+                    //->setAmountIncVat($productPriceIncVat)
+                    ->setVatPercent($taxPercent)
+                    ->setName($product['name'])
+                    ->setUnit($this->language->get('unit'))
+                    ->setArticleNumber($product['product_id'])
+                    ->setDescription($product['model'])
+            );
         }
         return $svea;
     }

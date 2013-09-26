@@ -197,7 +197,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             }
         }
 
-        return $result;
+        echo json_encode($result);
     }
 
 

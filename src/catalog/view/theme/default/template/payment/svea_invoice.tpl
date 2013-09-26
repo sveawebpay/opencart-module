@@ -134,20 +134,35 @@ $('a#checkout').click(function() {
     var vatNo = $('#vatno').val();
 
 	$.ajax({
-		type: 'GET',
-        data: {ssn: ssnNo, company: company, addSel: adressSelector, initials: Initials, birthDay: birthDay, birthMonth: birthMonth, birthYear: birthYear, vatno: vatNo },
-		url: 'index.php?route=payment/svea_invoice/confirm',
-		success: function(data) {
+            type: 'GET',
+            data: {
+                ssn: ssnNo, 
+                company: company, 
+                addSel: adressSelector, 
+                initials: Initials, 
+                birthDay: birthDay, 
+                birthMonth: birthMonth, 
+                birthYear: birthYear, 
+                vatno: vatNo 
+            },
+            url: 'index.php?route=payment/svea_invoice/confirm',
+            success: function(data) {
 
-            var json = JSON.parse(data);
-            if(json.success){
-                location = '<?php echo $continue; ?>';
-            }else{
-                $("#svea_invoice_err").show().append('<br>'+json.error);
+                    // clean response from junk chars
+                    data = data.replace(/[\x00-\x1F]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
+
+                    // parse response
+                    var json = JSON.parse(data);
+
+                    if(json.success){
+                        location = '<?php echo $continue; ?>';
+                    }
+                    else{
+                        $("#svea_invoice_err").show().append('<br>'+json.error);
+                    }
+
+                    $('#sveaLoading').remove();
             }
-
-            $('#sveaLoading').remove();
-		}
 	});
 });
 
@@ -169,18 +184,27 @@ $('#getSSN').click(function() {
     }else{
 
     	$.ajax({
-    		type: 'GET',
-    		url: 'index.php?route=payment/svea_invoice/getAddress',
-            data: {ssn: ssnNo, company: company},
-    		success: function(msg) {
-                var json = JSON.parse(msg);
+            type: 'GET',
+            url: 'index.php?route=payment/svea_invoice/getAddress',
+            data: {
+                ssn: ssnNo, 
+                company: company
+            },
+            success: function(data) {
+
+                // clean response from junk chars
+                data = data.replace(/[\x00-\x1F]/g,'');    //fix for nonprintable chars showing up in front of our response in quickcheckout
+
+                // parse response
+                var json = JSON.parse(data);
 
                 //on error
                 if (json.error){
 
                     $("#svea_invoice_err").show().append('<br>'+json.error);
 
-                }else{
+                }
+                else{
 
                     if (company){
                         $("#SveaAddressDiv").empty();

@@ -133,38 +133,7 @@ class ControllerPaymentsveacard extends Controller {
                         );
 
         }
-     $payPageLanguage = "";
-     switch ($order['payment_iso_code_2']) {
-         case "DE":
-             $payPageLanguage = "de";
-
-             break;
-         case "NL":
-             $payPageLanguage = "nl";
-
-             break;
-         case "SE":
-             $payPageLanguage = "sv";
-
-             break;
-         case "NO":
-             $payPageLanguage = "no";
-
-             break;
-         case "DK":
-             $payPageLanguage = "da";
-
-             break;
-         case "FI":
-             $payPageLanguage = "fi";
-
-             break;
-
-         default:
-             $payPageLanguage = "en";
-             break;
-     }
-
+        
         $server_url = $this->config->get('config_url');
 
         $form = $svea
@@ -205,8 +174,7 @@ class ControllerPaymentsveacard extends Controller {
          //Testmode
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
-        $resp = new SveaResponse($_REQUEST, $countryCode, $conf);
-
+        $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
 
         $this->session->data['order_id'] = $resp->response->clientOrderNumber;
 
