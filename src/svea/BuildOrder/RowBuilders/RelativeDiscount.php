@@ -1,13 +1,14 @@
 <?php
+namespace Svea;
+
 /**
- * Description of RelativeDiscount
- *
  * @author anne-hal
  */
 class RelativeDiscount {
+    
     /**
      * Optional
-     * @param type $idAsString
+     * @param string $idAsString
      * @return \RelativeDiscount
      */
     public function setDiscountId($idAsString) {
@@ -18,17 +19,17 @@ class RelativeDiscount {
     /**
      * Required
      * The percentage of the discount
-     * @param type $discountPercentOnTotalAmountInInt
+     * @param int $discountPercentOnTotalAmountAsInt
      * @return \RelativeDiscount
      */
-    public function setDiscountPercent($discountPercentOnTotalAmountInInt) {
-        $this->discountPercent = $discountPercentOnTotalAmountInInt;
+    public function setDiscountPercent($discountPercentOnTotalAmountAsInt) {
+        $this->discountPercent = $discountPercentOnTotalAmountAsInt;
         return $this;
     }
 
     /**
      * Optional
-     * @param type $unitDescriptionAsString
+     * @param string $unitDescriptionAsString
      * @return \RelativeDiscount
      */
     public function setUnit($unitDescriptionAsString) {
@@ -38,7 +39,7 @@ class RelativeDiscount {
 
     /**
      * Optional
-     * @param type $nameAsString
+     * @param string $nameAsString
      * @return \RelativeDiscount
      */
     public function setName($nameAsString) {
@@ -48,12 +49,11 @@ class RelativeDiscount {
 
     /**
      * Optional
-     * @param type $descriptionAsString
+     * @param string $descriptionAsString
      * @return \RelativeDiscount
      */
     public function setDescription($descriptionAsString) {
         $this->description = $descriptionAsString;
         return $this;
     }
-
 }

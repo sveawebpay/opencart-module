@@ -1,7 +1,8 @@
 <?php
+// PaymentMethod is excluded from the Svea namespace
 
 /**
- * PaymentMethodType
+ * PaymentMethod
  */
 abstract class PaymentMethod {
 
@@ -33,5 +34,4 @@ abstract class PaymentMethod {
     //PSP
     const PAYGROUND = 'PAYGROUND';
     const PAYPAL = 'PAYPAL';
-
 }
