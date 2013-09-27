@@ -58,14 +58,16 @@ class ControllerPaymentsveainvoice extends Controller {
         //Load SVEA includes
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        //Testmode
-        $conf = ($this->config->get('svea_invoice_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-
-        $svea = WebPay::createOrder($conf);
-
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
+
+        //Testmode
+        $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+
+        $svea = WebPay::createOrder($conf);
+
+
 
         //Check if company or private
         $company = ($_GET['company'] == 'true') ? true : false;
@@ -225,9 +227,8 @@ class ControllerPaymentsveainvoice extends Controller {
 
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
                 $countryCode = $order['payment_iso_code_2'];
-
                  //Testmode
-                $conf = ($this->config->get('svea_invoice_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+                $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
                 $svea = WebPay::getAddresses($conf)
                     ->setOrderTypeInvoice()
                     ->setCountryCode($countryCode);

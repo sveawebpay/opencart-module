@@ -54,14 +54,14 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         //Load SVEA includes
         include(DIR_APPLICATION.'../svea/Includes.php');
-               //Testmode
-        $conf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-
-        $svea = WebPay::createOrder($conf);
 
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
+        //Testmode
+        $conf = $this->config->get('svea_partpayment_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+
+        $svea = WebPay::createOrder($conf);
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
@@ -169,9 +169,8 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
-
         //Testmode
-        $conf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = $this->config->get('svea_partpayment_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
 
         $svea = WebPay::getAddresses($conf)
             ->setOrderTypePaymentPlan()
@@ -210,11 +209,10 @@ class ControllerPaymentsveapartpayment extends Controller {
         $countryCode = $order['payment_iso_code_2'];
 
         //Testmode
-        $sveaConf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $sveaConf = ($this->config->get('svea_partpayment_testmode_'.$countryCode) == "1") ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $svea = WebPay::getPaymentPlanParams($sveaConf);
         $svea = $svea->setCountryCode($countryCode)
                     ->doRequest();
-
         $result = array();
         if (isset($svea->errormessage)) {
             $result = array("error" => $svea->errormessage);

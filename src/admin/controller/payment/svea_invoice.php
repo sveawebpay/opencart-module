@@ -54,18 +54,19 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['version']  = floatval(VERSION);
 
         $cred = array();
-        $cred[] = array("lang" => "SE","value_username" => $this->config->get('svea_invoice_username_SE'),"name_username" => 'svea_invoice_username_SE',"value_password" => $this->config->get('svea_invoice_password_SE'),"name_password" => 'svea_invoice_password_SE',"value_clientno" => $this->config->get('svea_invoice_clientno_SE'),"name_clientno" => 'svea_invoice_clientno_SE');
-        $cred[] = array("lang" => "NO","value_username" => $this->config->get('svea_invoice_username_NO'),"name_username" => 'svea_invoice_username_NO',"value_password" => $this->config->get('svea_invoice_password_NO'),"name_password" => 'svea_invoice_password_NO',"value_clientno" => $this->config->get('svea_invoice_clientno_NO'),"name_clientno" => 'svea_invoice_clientno_NO');
-        $cred[] = array("lang" => "FI","value_username" => $this->config->get('svea_invoice_username_FI'),"name_username" => 'svea_invoice_username_FI',"value_password" => $this->config->get('svea_invoice_password_FI'),"name_password" => 'svea_invoice_password_FI',"value_clientno" => $this->config->get('svea_invoice_clientno_FI'),"name_clientno" => 'svea_invoice_clientno_FI');
-        $cred[] = array("lang" => "DK","value_username" => $this->config->get('svea_invoice_username_DK'),"name_username" => 'svea_invoice_username_DK',"value_password" => $this->config->get('svea_invoice_password_DK'),"name_password" => 'svea_invoice_password_DK',"value_clientno" => $this->config->get('svea_invoice_clientno_DK'),"name_clientno" => 'svea_invoice_clientno_DK');
-        $cred[] = array("lang" => "NL","value_username" => $this->config->get('svea_invoice_username_NL'),"name_username" => 'svea_invoice_username_NL',"value_password" => $this->config->get('svea_invoice_password_NL'),"name_password" => 'svea_invoice_password_NL',"value_clientno" => $this->config->get('svea_invoice_clientno_NL'),"name_clientno" => 'svea_invoice_clientno_NL');
-        $cred[] = array("lang" => "DE","value_username" => $this->config->get('svea_invoice_username_DE'),"name_username" => 'svea_invoice_username_DE',"value_password" => $this->config->get('svea_invoice_password_DE'),"name_password" => 'svea_invoice_password_DE',"value_clientno" => $this->config->get('svea_invoice_clientno_DE'),"name_clientno" => 'svea_invoice_clientno_DE');
+        $cred[] = array("lang" => "SE","value_username" => $this->config->get('svea_invoice_username_SE'),"name_username" => 'svea_invoice_username_SE',"value_password" => $this->config->get('svea_invoice_password_SE'),"name_password" => 'svea_invoice_password_SE',"value_clientno" => $this->config->get('svea_invoice_clientno_SE'),"name_clientno" => 'svea_invoice_clientno_SE',"value_testmode" => $this->config->get('svea_invoice_testmode_SE'),"name_testmode" => 'svea_invoice_testmode_SE');
+        $cred[] = array("lang" => "NO","value_username" => $this->config->get('svea_invoice_username_NO'),"name_username" => 'svea_invoice_username_NO',"value_password" => $this->config->get('svea_invoice_password_NO'),"name_password" => 'svea_invoice_password_NO',"value_clientno" => $this->config->get('svea_invoice_clientno_NO'),"name_clientno" => 'svea_invoice_clientno_NO',"value_testmode" => $this->config->get('svea_invoice_testmode_NO'),"name_testmode" => 'svea_invoice_testmode_NO');
+        $cred[] = array("lang" => "FI","value_username" => $this->config->get('svea_invoice_username_FI'),"name_username" => 'svea_invoice_username_FI',"value_password" => $this->config->get('svea_invoice_password_FI'),"name_password" => 'svea_invoice_password_FI',"value_clientno" => $this->config->get('svea_invoice_clientno_FI'),"name_clientno" => 'svea_invoice_clientno_FI',"value_testmode" => $this->config->get('svea_invoice_testmode_FI'),"name_testmode" => 'svea_invoice_testmode_FI');
+        $cred[] = array("lang" => "DK","value_username" => $this->config->get('svea_invoice_username_DK'),"name_username" => 'svea_invoice_username_DK',"value_password" => $this->config->get('svea_invoice_password_DK'),"name_password" => 'svea_invoice_password_DK',"value_clientno" => $this->config->get('svea_invoice_clientno_DK'),"name_clientno" => 'svea_invoice_clientno_DK',"value_testmode" => $this->config->get('svea_invoice_testmode_DK'),"name_testmode" => 'svea_invoice_testmode_DK');
+        $cred[] = array("lang" => "NL","value_username" => $this->config->get('svea_invoice_username_NL'),"name_username" => 'svea_invoice_username_NL',"value_password" => $this->config->get('svea_invoice_password_NL'),"name_password" => 'svea_invoice_password_NL',"value_clientno" => $this->config->get('svea_invoice_clientno_NL'),"name_clientno" => 'svea_invoice_clientno_NL',"value_testmode" => $this->config->get('svea_invoice_testmode_NL'),"name_testmode" => 'svea_invoice_testmode_NL');
+        $cred[] = array("lang" => "DE","value_username" => $this->config->get('svea_invoice_username_DE'),"name_username" => 'svea_invoice_username_DE',"value_password" => $this->config->get('svea_invoice_password_DE'),"name_password" => 'svea_invoice_password_DE',"value_clientno" => $this->config->get('svea_invoice_clientno_DE'),"name_clientno" => 'svea_invoice_clientno_DE',"value_testmode" => $this->config->get('svea_invoice_testmode_DE'),"name_testmode" => 'svea_invoice_testmode_DE');
 
         $this->data['credentials'] = $cred;
 
 
         $this->data['svea_invoice_sort_order']    = $this->config->get('svea_invoice_sort_order');
-        $this->data['svea_invoice_testmode']      = $this->config->get('svea_invoice_testmode');
+        //WIP refactor
+        //$this->data['svea_invoice_testmode']      = $this->config->get('svea_invoice_testmode');
         $this->data['svea_invoice_auto_deliver']  = $this->config->get('svea_invoice_auto_deliver');
 
 
@@ -142,28 +143,30 @@ class ControllerPaymentsveainvoice extends Controller {
 		} else {
 			$this->data['svea_invoice_status'] = $this->config->get('svea_invoice_status');
 		}
-        
+
         //sort order
 		if (isset($this->request->post['svea_invoice_sort_order'])) {
 			$this->data['svea_invoice_sort_order'] = $this->request->post['svea_invoice_sort_order'];
 		} else {
 			$this->data['svea_invoice_sort_order'] = $this->config->get('svea_invoice_sort_order');
 		}
-        
+/**
         //testmode
         if (isset($this->request->post['svea_invoice_testmode'])) {
 			$this->data['svea_invoice_testmode'] = $this->request->post['svea_invoice_testmode'];
 		} else {
 			$this->data['svea_invoice_testmode'] = $this->config->get('svea_invoice_testmode');
 		}
-        
+ *
+ */
+
         //auto deliver
         if (isset($this->request->post['svea_invoice_auto_deliver'])) {
 	       $this->data['svea_invoice_auto_deliver'] = $this->request->post['svea_invoice_auto_deliver'];
 		} else {
 			$this->data['svea_invoice_auto_deliver'] = $this->config->get('svea_invoice_auto_deliver');
 		}
-        
+
         //Distribution type
         if (isset($this->request->post['svea_invoice_distribution_type'])) {
 	       $this->data['svea_invoice_distribution_type'] = $this->request->post['svea_invoice_distribution_type'];
