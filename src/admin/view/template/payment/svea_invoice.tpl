@@ -17,7 +17,7 @@
           <tbody>
             <tr>
                 <td>Version</td>
-                <td>2.0.14</td>
+                <td>2.0.15</td>
             </tr>
             <tr>
               <td><?php echo $entry_geo_zone; ?></td>
@@ -49,15 +49,6 @@
               <td><input type="text" name="svea_invoice_sort_order" value="<?php echo $svea_invoice_sort_order; ?>" size="1" /></td>
             </tr>
             <tr>
-                <td><?php echo $entry_testmode; ?>:</td>
-                <td>
-                    <select name="svea_invoice_testmode">
-                        <option value="1" <?php if($svea_invoice_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
-                        <option value="0" <?php if($svea_invoice_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
               <td><?php echo $entry_order_status; ?><span class="help"><?php echo $entry_order_status_text ?></span></td>
               <td><select name="svea_invoice_order_status_id">
                   <?php foreach ($order_statuses as $order_status) { ?>
@@ -70,7 +61,7 @@
                 </select></td>
             </tr>
             <tr>
-                <td><?php echo $entry_auto_deliver; ?>:<span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
+                <td><?php echo $entry_auto_deliver; ?><span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
                 <td>
                     <select name="svea_invoice_auto_deliver">
                         <option value="0" <?php if($svea_invoice_auto_deliver == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
@@ -111,23 +102,31 @@
                  <?php } ?>
                 <table class="form">
                     <tbody>
-
+                         <tr>
+                            <td><?php echo $entry_testmode; ?></td>
+                            <td>
+                                <select name="<?php echo $code['name_testmode']; ?>">
+                                    <option value="1" <?php if($code['value_testmode'] == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
+                                    <option value="0" <?php if($code['value_testmode'] == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
+                                </select>
+                            </td>
+                        </tr>
                         <tr>
-                            <td><?php echo $entry_username; ?>:</td>
+                            <td><?php echo $entry_username; ?></td>
                             <td>
                                 <input name="<?php echo $code['name_username']; ?>" type="text"
                                        value="<?php echo $code['value_username']; ?>" />
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $entry_password; ?>:</td>
+                            <td><?php echo $entry_password; ?></td>
                             <td>
                                 <input name="<?php echo $code['name_password']; ?>" type="password"
                                        value="<?php echo $code['value_password']; ?>" />
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $entry_clientno; ?>:</td>
+                            <td><?php echo $entry_clientno; ?></td>
                             <td>
                                 <input name="<?php echo $code['name_clientno']; ?>" type="text"
                                        value="<?php echo $code['value_clientno']; ?>" />

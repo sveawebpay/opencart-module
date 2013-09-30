@@ -58,15 +58,21 @@ class ControllerPaymentsveainvoice extends Controller {
         //Load SVEA includes
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        //Testmode
-        $conf = ($this->config->get('svea_invoice_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-
-        $svea = WebPay::createOrder($conf);
-
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
 
+        //Testmode
+        if(!$this->config->get('svea_invoice_testmode_'.$countryCode) == NULL){
+            $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+
+        } else {
+            $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
+            echo json_encode($response);
+            exit();
+        }
+
+        $svea = WebPay::createOrder($conf);
         //Check if company or private
         $company = ($_GET['company'] == 'true') ? true : false;
 
@@ -147,15 +153,22 @@ class ControllerPaymentsveainvoice extends Controller {
                 $item = $item->setInitials($_GET['initials']);
             }
             $svea = $svea->addCustomerDetails($item);
-        }
-
-            $svea = $svea
+            }
+             try{
+             $svea = $svea
                       ->setCountryCode($countryCode)
                       ->setCurrency($this->session->data['currency'])
                       ->setClientOrderNumber($this->session->data['order_id'])
                       ->setOrderDate(date('c'))
                       ->useInvoicePayment()
                         ->doRequest();
+            }  catch (Exception $e){
+               $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                echo json_encode($response);
+                exit();
+
+            }
+
             //If CreateOrder accepted redirect to thankyou page
             if ($svea->accepted == 1) {
                 $response = array();
@@ -185,11 +198,18 @@ class ControllerPaymentsveainvoice extends Controller {
                         $deliverObj = $this->formatVoucher($deliverObj,$voucher);
                         //$totalPrice = $this->cart->getTotal();
                    }
-                   $deliverObj = $deliverObj->setCountryCode($countryCode)
+                   try{
+
+                        $deliverObj = $deliverObj->setCountryCode($countryCode)
                                 ->setOrderId($svea->sveaOrderId)
                                 ->setInvoiceDistributionType('Post') //set in admin interface
                                     ->deliverInvoiceOrder()
                                     ->doRequest();
+                   }  catch (Exception $e){
+                        $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                        echo json_encode($response);
+                        exit();
+                   }
                   //If DeliverOrder returns true, send true to veiw
                     if($deliverObj->accepted == 1){
                        $response = array("success" => true);
@@ -226,9 +246,8 @@ class ControllerPaymentsveainvoice extends Controller {
 
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
                 $countryCode = $order['payment_iso_code_2'];
-
                  //Testmode
-                $conf = ($this->config->get('svea_invoice_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+                $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
                 $svea = WebPay::getAddresses($conf)
                     ->setOrderTypeInvoice()
                     ->setCountryCode($countryCode);
@@ -237,8 +256,13 @@ class ControllerPaymentsveainvoice extends Controller {
                     $svea = $svea->setCompany($_GET['ssn']);
                 else
                     $svea = $svea->setIndividual($_GET['ssn']);
-
-                $svea = $svea->doRequest();
+                try{
+                    $svea = $svea->doRequest();
+                }  catch (Exception $e){
+                      $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                    echo json_encode($response);
+                    exit();
+                }
 
                 $result = array();
 

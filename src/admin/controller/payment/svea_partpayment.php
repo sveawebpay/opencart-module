@@ -53,17 +53,16 @@ class ControllerPaymentsveapartpayment extends Controller {
         $this->data['version']             = floatval(VERSION);
 
         $cred = array();
-        $cred[] = array("lang" => "SE","value_username" => $this->config->get('svea_partpayment_username_SE'),"name_username" => 'svea_partpayment_username_SE',"value_password" => $this->config->get('svea_partpayment_password_SE'),"name_password" => 'svea_partpayment_password_SE',"value_clientno" => $this->config->get('svea_partpayment_clientno_SE'),"name_clientno" => 'svea_partpayment_clientno_SE',"min_amount_name" => 'svea_partpayment_min_amount_SE',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_SE'));
-        $cred[] = array("lang" => "NO","value_username" => $this->config->get('svea_partpayment_username_NO'),"name_username" => 'svea_partpayment_username_NO',"value_password" => $this->config->get('svea_partpayment_password_NO'),"name_password" => 'svea_partpayment_password_NO',"value_clientno" => $this->config->get('svea_partpayment_clientno_NO'),"name_clientno" => 'svea_partpayment_clientno_NO',"min_amount_name" => 'svea_partpayment_min_amount_NO',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_NO'));
-        $cred[] = array("lang" => "FI","value_username" => $this->config->get('svea_partpayment_username_FI'),"name_username" => 'svea_partpayment_username_FI',"value_password" => $this->config->get('svea_partpayment_password_FI'),"name_password" => 'svea_partpayment_password_FI',"value_clientno" => $this->config->get('svea_partpayment_clientno_FI'),"name_clientno" => 'svea_partpayment_clientno_FI',"min_amount_name" => 'svea_partpayment_min_amount_FI',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_FI'));
-        $cred[] = array("lang" => "DK","value_username" => $this->config->get('svea_partpayment_username_DK'),"name_username" => 'svea_partpayment_username_DK',"value_password" => $this->config->get('svea_partpayment_password_DK'),"name_password" => 'svea_partpayment_password_DK',"value_clientno" => $this->config->get('svea_partpayment_clientno_DK'),"name_clientno" => 'svea_partpayment_clientno_DK',"min_amount_name" => 'svea_partpayment_min_amount_DK',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_DK'));
-        $cred[] = array("lang" => "NL","value_username" => $this->config->get('svea_partpayment_username_NL'),"name_username" => 'svea_partpayment_username_NL',"value_password" => $this->config->get('svea_partpayment_password_NL'),"name_password" => 'svea_partpayment_password_NL',"value_clientno" => $this->config->get('svea_partpayment_clientno_NL'),"name_clientno" => 'svea_partpayment_clientno_NL',"min_amount_name" => 'svea_partpayment_min_amount_NL',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_NL'));
-        $cred[] = array("lang" => "DE","value_username" => $this->config->get('svea_partpayment_username_DE'),"name_username" => 'svea_partpayment_username_DE',"value_password" => $this->config->get('svea_partpayment_password_DE'),"name_password" => 'svea_partpayment_password_DE',"value_clientno" => $this->config->get('svea_partpayment_clientno_DE'),"name_clientno" => 'svea_partpayment_clientno_DE',"min_amount_name" => 'svea_partpayment_min_amount_DE',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_DE'));
+        $cred[] = array("lang" => "SE","value_username" => $this->config->get('svea_partpayment_username_SE'),"name_username" => 'svea_partpayment_username_SE',"value_password" => $this->config->get('svea_partpayment_password_SE'),"name_password" => 'svea_partpayment_password_SE',"value_clientno" => $this->config->get('svea_partpayment_clientno_SE'),"name_clientno" => 'svea_partpayment_clientno_SE',"min_amount_name" => 'svea_partpayment_min_amount_SE',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_SE'),"value_testmode" => $this->config->get('svea_partpayment_testmode_SE'),"name_testmode" => 'svea_partpayment_testmode_SE');
+        $cred[] = array("lang" => "NO","value_username" => $this->config->get('svea_partpayment_username_NO'),"name_username" => 'svea_partpayment_username_NO',"value_password" => $this->config->get('svea_partpayment_password_NO'),"name_password" => 'svea_partpayment_password_NO',"value_clientno" => $this->config->get('svea_partpayment_clientno_NO'),"name_clientno" => 'svea_partpayment_clientno_NO',"min_amount_name" => 'svea_partpayment_min_amount_NO',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_NO'),"value_testmode" => $this->config->get('svea_partpayment_testmode_NO'),"name_testmode" => 'svea_partpayment_testmode_NO');
+        $cred[] = array("lang" => "FI","value_username" => $this->config->get('svea_partpayment_username_FI'),"name_username" => 'svea_partpayment_username_FI',"value_password" => $this->config->get('svea_partpayment_password_FI'),"name_password" => 'svea_partpayment_password_FI',"value_clientno" => $this->config->get('svea_partpayment_clientno_FI'),"name_clientno" => 'svea_partpayment_clientno_FI',"min_amount_name" => 'svea_partpayment_min_amount_FI',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_FI'),"value_testmode" => $this->config->get('svea_partpayment_testmode_FI'),"name_testmode" => 'svea_partpayment_testmode_FI');
+        $cred[] = array("lang" => "DK","value_username" => $this->config->get('svea_partpayment_username_DK'),"name_username" => 'svea_partpayment_username_DK',"value_password" => $this->config->get('svea_partpayment_password_DK'),"name_password" => 'svea_partpayment_password_DK',"value_clientno" => $this->config->get('svea_partpayment_clientno_DK'),"name_clientno" => 'svea_partpayment_clientno_DK',"min_amount_name" => 'svea_partpayment_min_amount_DK',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_DK'),"value_testmode" => $this->config->get('svea_partpayment_testmode_DK'),"name_testmode" => 'svea_partpayment_testmode_DK');
+        $cred[] = array("lang" => "NL","value_username" => $this->config->get('svea_partpayment_username_NL'),"name_username" => 'svea_partpayment_username_NL',"value_password" => $this->config->get('svea_partpayment_password_NL'),"name_password" => 'svea_partpayment_password_NL',"value_clientno" => $this->config->get('svea_partpayment_clientno_NL'),"name_clientno" => 'svea_partpayment_clientno_NL',"min_amount_name" => 'svea_partpayment_min_amount_NL',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_NL'),"value_testmode" => $this->config->get('svea_partpayment_testmode_NL'),"name_testmode" => 'svea_partpayment_testmode_NL');
+        $cred[] = array("lang" => "DE","value_username" => $this->config->get('svea_partpayment_username_DE'),"name_username" => 'svea_partpayment_username_DE',"value_password" => $this->config->get('svea_partpayment_password_DE'),"name_password" => 'svea_partpayment_password_DE',"value_clientno" => $this->config->get('svea_partpayment_clientno_DE'),"name_clientno" => 'svea_partpayment_clientno_DE',"min_amount_name" => 'svea_partpayment_min_amount_DE',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_DE'),"value_testmode" => $this->config->get('svea_partpayment_testmode_DE'),"name_testmode" => 'svea_partpayment_testmode_DE');
 
         $this->data['credentials'] = $cred;
 
         $this->data['svea_partpayment_sort_order']    = $this->config->get('svea_partpayment_sort_order');
-        $this->data['svea_partpayment_testmode']      = $this->config->get('svea_partpayment_testmode');
         $this->data['svea_partpayment_auto_deliver']      = $this->config->get('svea_partpayment_auto_deliver');
 
  		if (isset($this->error['warning'])) {
@@ -128,12 +127,15 @@ class ControllerPaymentsveapartpayment extends Controller {
 		} else {
 			$this->data['svea_partpayment_sort_order'] = $this->config->get('svea_partpayment_sort_order');
 		}
+                /**
                 //testmode
                 if (isset($this->request->post['svea_testmode'])) {
 			$this->data['svea_partpayment_testmode'] = $this->request->post['svea_partpayment_testmode'];
 		} else {
 			$this->data['svea_partpayment_testmode'] = $this->config->get('svea_partpayment_testmode');
 		}
+                 * 
+                 */
                 //auto deliver
                 if (isset($this->request->post['svea_partpayment_auto_deliver'])) {
 			$this->data['svea_partpayment_auto_deliver'] = $this->request->post['svea_partpayment_auto_deliver'];
@@ -146,7 +148,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		} else {
 			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->config->get('svea_partpayment_auto_deliver_status_id');
 		}
-             
+
 
 		$this->template = 'payment/svea_partpayment.tpl';
 		$this->children = array(

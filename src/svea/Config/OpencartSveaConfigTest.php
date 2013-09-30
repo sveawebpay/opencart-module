@@ -33,10 +33,9 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
     }
 
     public function getMerchantId($type, $country) {
-        $country = strtoupper($country);
-        $card = $this->config->get('svea_card_merchant_id_test_'.$country);
+        $card = $this->config->get('svea_card_merchant_id_test');
         if($card == ""){
-            return $this->config->get('svea_directbank_merchant_id_test_'.$country);
+            return $this->config->get('svea_directbank_merchant_id_test');
         }else{
             return $card;
         }
@@ -52,10 +51,9 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
     }
 
     public function getSecret($type, $country) {
-        $country = strtoupper($country);
-        $secret = $this->config->get('svea_card_sw_test_'.$country);
+        $secret = $this->config->get('svea_card_sw_test');
         if($secret == ""){
-            return $this->config->get('svea_directbank_sw_test'.$country);
+            return $this->config->get('svea_directbank_sw_test');
         }  else {
             return $secret;
         }
