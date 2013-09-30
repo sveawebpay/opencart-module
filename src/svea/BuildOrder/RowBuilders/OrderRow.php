@@ -1,29 +1,27 @@
 <?php
+namespace Svea;
+
 /**
- * Description of OrderRow
- *
  * @author anne-hal
  */
 class OrderRow {
 
-   /**
+    /**
      * Contains empty string if not set
-     * @var type
+     * @var string
      */
     public $unit = "";
 
     /**
      * Contains int 0 if not set
-     * @var type
+     * @var int
      */
     public $vatDiscount = 0;
 
-
-
     /**
      * Optional
-     * @param type $articleNumberAsString
-     * @return \OrderRow
+     * @param string $articleNumberAsString
+     * @return Svea\OrderRow
      */
     public function setArticleNumber($articleNumberAsString) {
         $this->articleNumber = $articleNumberAsString;
@@ -32,8 +30,8 @@ class OrderRow {
 
     /**
      * Required
-     * @param type $quantityAsInt
-     * @return \OrderRow
+     * @param int $quantityAsInt
+     * @return Svea\OrderRow
      */
     public function setQuantity($quantityAsInt) {
         $this->quantity = $quantityAsInt;
@@ -42,8 +40,8 @@ class OrderRow {
 
     /**
      * Optional
-     * @param type $unitAsString
-     * @return \OrderRow
+     * @param string $unitAsString
+     * @return Svea\OrderRow
      */
     public function setUnit($unitAsString) {
         $this->unit = $unitAsString;
@@ -52,17 +50,18 @@ class OrderRow {
 
     /**
      * Optional
-     * @param type $AmountAsFloat
-     * @return \OrderRow
+     * @param float $AmountAsFloat
+     * @return Svea\OrderRow
      */
     public function setAmountExVat($AmountAsFloat) {
         $this->amountExVat = $AmountAsFloat;
         return $this;
     }
+    
     /**
      * Optional
-     * @param type $AmountAsFloat
-     * @return \OrderRow
+     * @param float $AmountAsFloat
+     * @return Svea\OrderRow
      */
     public function setAmountIncVat($AmountAsFloat) {
         $this->amountIncVat = $AmountAsFloat;
@@ -71,8 +70,8 @@ class OrderRow {
 
     /**
      * Optional
-     * @param type $nameAsString
-     * @return \OrderRow
+     * @param string $nameAsString
+     * @return Svea\OrderRow
      */
     public function setName($nameAsString) {
         $this->name = $nameAsString;
@@ -81,8 +80,8 @@ class OrderRow {
 
     /**
      * Optional
-     * @param type $descriptionAsString
-     * @return \OrderRow
+     * @param string $descriptionAsString
+     * @return Svea\OrderRow
      */
     public function setDescription($descriptionAsString) {
         $this->description = $descriptionAsString;
@@ -91,8 +90,8 @@ class OrderRow {
 
     /**
      * Optional
-     * @param type $percentAsInt
-     * @return \OrderRow
+     * @param int $percentAsInt
+     * @return Svea\OrderRow
      */
     public function setVatPercent($percentAsInt) {
         $this->vatPercent = $percentAsInt;
@@ -101,8 +100,8 @@ class OrderRow {
 
     /**
      * Optional
-     * @param type $discountPercentAsInteger
-     * @return \OrderRow
+     * @param int $discountPercentAsInteger
+     * @return Svea\OrderRow
      */
     public function setDiscountPercent($discountPercentAsInteger) {
         $this->discountPercent = $discountPercentAsInteger;

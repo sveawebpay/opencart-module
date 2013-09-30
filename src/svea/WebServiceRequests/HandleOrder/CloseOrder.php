@@ -1,4 +1,5 @@
 <?php
+namespace Svea;
 
 require_once 'HandleOrder.php';
 
@@ -46,7 +47,7 @@ class CloseOrder extends HandleOrder {
         $request = new SveaDoRequest($url);
         $svea_req = $request->CloseOrderEu($object);
 
-        $response = new SveaResponse($svea_req,"");
+        $response = new \SveaResponse($svea_req,"");
         return $response->response;
     }
 }

@@ -54,14 +54,21 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         //Load SVEA includes
         include(DIR_APPLICATION.'../svea/Includes.php');
-               //Testmode
-        $conf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-
-        $svea = WebPay::createOrder($conf);
 
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
+        //Testmode
+        if(!$this->config->get('svea_partpayment_testmode_'.$countryCode) == NULL){
+            $conf = $this->config->get('svea_partpayment_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+
+        } else {
+            $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
+            echo json_encode($response);
+            exit();
+        }
+
+        $svea = WebPay::createOrder($conf);
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
@@ -110,14 +117,19 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
 
         $svea = $svea->addCustomerDetails($item);
-
-        $svea = $svea
-                  ->setCountryCode($countryCode)
-                  ->setCurrency($this->session->data['currency'])
-                  ->setClientOrderNumber($this->session->data['order_id'])
-                  ->setOrderDate(date('c'))
-                  ->usePaymentPlanPayment($_GET["paySel"])
-                    ->doRequest();
+        try{
+            $svea = $svea
+                      ->setCountryCode($countryCode)
+                      ->setCurrency($this->session->data['currency'])
+                      ->setClientOrderNumber($this->session->data['order_id'])
+                      ->setOrderDate(date('c'))
+                      ->usePaymentPlanPayment($_GET["paySel"])
+                        ->doRequest();
+        }  catch (Exception $e){
+            $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+            echo json_encode($response);
+            exit();
+        }
 
 
         $response = array();
@@ -129,11 +141,17 @@ class ControllerPaymentsveapartpayment extends Controller {
                 if($this->config->get('svea_partpayment_auto_deliver') == 1){
                     $deliverObj = WebPay::deliverOrder($conf);
                     //Product rows
+                    try{
                         $deliverObj = $deliverObj
                                 ->setCountryCode($svea->customerIdentity->countryCode)
                                 ->setOrderId($svea->sveaOrderId)
                                     ->deliverPaymentPlanOrder()
                                     ->doRequest();
+                    }  catch (Exception $e){
+                        $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+                        echo json_encode($response);
+                        exit();
+                    }
 
                   //If DeliverOrder returns true, send true to veiw
                     if($deliverObj->accepted == 1){
@@ -169,16 +187,21 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
-
         //Testmode
-        $conf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = $this->config->get('svea_partpayment_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
 
         $svea = WebPay::getAddresses($conf)
             ->setOrderTypePaymentPlan()
             ->setCountryCode($countryCode);
 
         $svea = $svea->setIndividual($ssn);
-        $svea = $svea->doRequest();
+        try{
+            $svea = $svea->doRequest();
+        }  catch (Exception $e){
+            $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+            echo json_encode($response);
+            exit();
+        }
 
         $result = array();
 
@@ -197,7 +220,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             }
         }
 
-        return $result;
+        echo json_encode($result);
     }
 
 
@@ -209,15 +232,25 @@ class ControllerPaymentsveapartpayment extends Controller {
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
 
-        //Testmode
-        $sveaConf = ($this->config->get('svea_partpayment_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-        $svea = WebPay::getPaymentPlanParams($sveaConf);
-        $svea = $svea->setCountryCode($countryCode)
-                    ->doRequest();
-
         $result = array();
+        if(!$this->config->get('svea_partpayment_testmode_'.$countryCode) == NULL){
+            $sveaConf = ($this->config->get('svea_partpayment_testmode_'.$countryCode) == "1") ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        } else {
+              $result = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
+              return $result;
+              exit();
+        }
+        $svea = WebPay::getPaymentPlanParams($sveaConf);
+        try{
+            $svea = $svea->setCountryCode($countryCode)
+                    ->doRequest();
+        }  catch (Exception $e){
+            $result[] = array("error" => $e->getMessage());
+        }
+
+
         if (isset($svea->errormessage)) {
-            $result = array("error" => $svea->errormessage);
+            $result[] = array("error" => $svea->errormessage);
         }else{
             $currency = floatval(VERSION) >= 1.5 ? $order['currency_code'] : $order['currency'];
             $this->load->model('localisation/currency');
@@ -248,7 +281,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
         $paymentOptions = $this->getPaymentOptions();
-
         if ($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO")
             $adresses = $this->getAddress($_GET['ssn']);
         else

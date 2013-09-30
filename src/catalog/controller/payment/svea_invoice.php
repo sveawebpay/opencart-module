@@ -58,15 +58,21 @@ class ControllerPaymentsveainvoice extends Controller {
         //Load SVEA includes
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        //Testmode
-        $conf = ($this->config->get('svea_invoice_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-
-        $svea = WebPay::createOrder($conf);
-
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
 
+        //Testmode
+        if(!$this->config->get('svea_invoice_testmode_'.$countryCode) == NULL){
+            $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+
+        } else {
+            $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
+            echo json_encode($response);
+            exit();
+        }
+
+        $svea = WebPay::createOrder($conf);
         //Check if company or private
         $company = ($_GET['company'] == 'true') ? true : false;
 
@@ -147,15 +153,22 @@ class ControllerPaymentsveainvoice extends Controller {
                 $item = $item->setInitials($_GET['initials']);
             }
             $svea = $svea->addCustomerDetails($item);
-        }
-
-            $svea = $svea
+            }
+             try{
+             $svea = $svea
                       ->setCountryCode($countryCode)
                       ->setCurrency($this->session->data['currency'])
                       ->setClientOrderNumber($this->session->data['order_id'])
                       ->setOrderDate(date('c'))
                       ->useInvoicePayment()
                         ->doRequest();
+            }  catch (Exception $e){
+               $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                echo json_encode($response);
+                exit();
+
+            }
+
             //If CreateOrder accepted redirect to thankyou page
             if ($svea->accepted == 1) {
                 $response = array();
@@ -185,11 +198,18 @@ class ControllerPaymentsveainvoice extends Controller {
                         $deliverObj = $this->formatVoucher($deliverObj,$voucher);
                         //$totalPrice = $this->cart->getTotal();
                    }
-                   $deliverObj = $deliverObj->setCountryCode($countryCode)
+                   try{
+
+                        $deliverObj = $deliverObj->setCountryCode($countryCode)
                                 ->setOrderId($svea->sveaOrderId)
                                 ->setInvoiceDistributionType('Post') //set in admin interface
                                     ->deliverInvoiceOrder()
                                     ->doRequest();
+                   }  catch (Exception $e){
+                        $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                        echo json_encode($response);
+                        exit();
+                   }
                   //If DeliverOrder returns true, send true to veiw
                     if($deliverObj->accepted == 1){
                        $response = array("success" => true);
@@ -211,8 +231,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
             }
 
+//            $tmp =  sprintf("%c",31) . json_encode($response);  // reproduce JSON.parse error (junk chars) that shows up w/i.e. quickcheckout plugin
+//            echo $tmp;
             echo json_encode($response);
-
         }
 
 
@@ -225,9 +246,8 @@ class ControllerPaymentsveainvoice extends Controller {
 
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
                 $countryCode = $order['payment_iso_code_2'];
-
                  //Testmode
-                $conf = ($this->config->get('svea_invoice_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+                $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
                 $svea = WebPay::getAddresses($conf)
                     ->setOrderTypeInvoice()
                     ->setCountryCode($countryCode);
@@ -236,8 +256,13 @@ class ControllerPaymentsveainvoice extends Controller {
                     $svea = $svea->setCompany($_GET['ssn']);
                 else
                     $svea = $svea->setIndividual($_GET['ssn']);
-
-                $svea = $svea->doRequest();
+                try{
+                    $svea = $svea->doRequest();
+                }  catch (Exception $e){
+                      $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                    echo json_encode($response);
+                    exit();
+                }
 
                 $result = array();
 
@@ -266,28 +291,36 @@ class ControllerPaymentsveainvoice extends Controller {
 
     private function formatOrderRows($svea,$products){
         $this->load->language('payment/svea_invoice');
-                //Product rows
+        
+        //Product rows
         foreach ($products as $product) {
-            $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+            $productPriceExVat = $product['price'];
+            
             //Get the tax, difference in version 1.4.x
-            if(floatval(VERSION) >= 1.5){
-                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
-                 $productPriceIncVat = $productPriceExVat + $productTax;
-            }  else {
+            if (floatval(VERSION) >= 1.5) {
+                $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
+                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                $taxPercent = "";
+                foreach ($tax as $key => $value) {
+                    $taxPercent = $value['rate'];
+                }
+                $productPriceIncVat = $productPriceExVat + $productTax;
+            } else {
                 $taxRate = $this->tax->getRate($product['tax_class_id']);
-                $productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
+
+                $productPriceIncVat = (($taxRate / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
-                        ->setQuantity($product['quantity'])
-                        ->setAmountExVat($productPriceExVat)
-                        ->setAmountIncVat($productPriceIncVat)
-                        ->setName($product['name'])
-                        ->setUnit($this->language->get('unit'))
-                        ->setArticleNumber($product['product_id'])
-                        ->setDescription($product['model'])
-                    );
-
+                    ->setQuantity($product['quantity'])
+                    ->setAmountExVat($productPriceExVat)
+                    //->setAmountIncVat($productPriceIncVat)
+                    ->setVatPercent($taxPercent)
+                    ->setName($product['name'])
+                    ->setUnit($this->language->get('unit'))
+                    ->setArticleNumber($product['product_id'])
+                    ->setDescription($product['model'])
+            );
         }
         return $svea;
     }

@@ -1,4 +1,5 @@
 <?php
+namespace Svea;
 
 require_once SVEA_REQUEST_DIR . '/WebServiceRequests/svea_soap/SveaSoapConfig.php';
 require_once SVEA_REQUEST_DIR . '/Config/SveaConfig.php';
@@ -18,16 +19,15 @@ class GetPaymentPlanParams {
     public $conf;
     public $countryCode;
 
-
     function __construct($config) {
-         $this->conf = $config;
+        $this->conf = $config;
     }
 
-     /*
+    /*
      * @param type $countryCodeAsString
      */
 
-    public function setCountryCode($countryCodeAsString){
+    public function setCountryCode($countryCodeAsString) {
         $this->countryCode = $countryCodeAsString;
         return $this;
     }
@@ -57,7 +57,7 @@ class GetPaymentPlanParams {
         $request = new SveaDoRequest($url);
         $svea_req = $request->GetPaymentPlanParamsEu($object);
 
-        $response = new SveaResponse($svea_req,"");
+        $response = new \SveaResponse($svea_req,"");
         return $response->response;
     }
 }

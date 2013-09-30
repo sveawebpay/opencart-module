@@ -23,20 +23,18 @@ class OpencartSveaConfig implements ConfigurationProvider{
     public function getEndPoint($type) {
         $type = strtoupper($type);
           if($type == "HOSTED"){
-            return   SveaConfig::SWP_PROD_URL;
+            return   Svea\SveaConfig::SWP_PROD_URL;
         }elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
-             return SveaConfig::SWP_PROD_WS_URL;
+             return Svea\SveaConfig::SWP_PROD_WS_URL;
         }  else {
            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
         }
     }
 
     public function getMerchantId($type, $country) {
-
-        $country = strtoupper($country);
-        $card = $this->config->get('svea_card_merchant_id_prod_'.$country);
+        $card = $this->config->get('svea_card_merchant_id_prod');
         if($card == ""){
-            return $this->config->get('svea_directbank_merchant_id_prod_'.$country);
+            return $this->config->get('svea_directbank_merchant_id_prod');
         }else{
             return $card;
         }
@@ -52,10 +50,9 @@ class OpencartSveaConfig implements ConfigurationProvider{
     }
 
     public function getSecret($type, $country) {
-        $country = strtoupper($country);
-        $secret = $this->config->get('svea_card_sw_prod_'.$country);
+        $secret = $this->config->get('svea_card_sw_prod');
         if($secret == ""){
-            return $this->config->get('svea_directbank_sw_prod'.$country);
+            return $this->config->get('svea_directbank_sw_prod');
         }  else {
             return $secret;
         }
