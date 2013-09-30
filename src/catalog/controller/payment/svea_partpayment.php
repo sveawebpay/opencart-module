@@ -59,7 +59,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
-        if(!$this->config->get('svea_partpayment_testmode_'.$countryCode) == NULL){
+        if($this->config->get('svea_partpayment_testmode_'.$countryCode) !== NULL){
             $conf = $this->config->get('svea_partpayment_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
 
         } else {
@@ -233,7 +233,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $countryCode = $order['payment_iso_code_2'];
 
         $result = array();
-        if(!$this->config->get('svea_partpayment_testmode_'.$countryCode) == NULL){
+        if($this->config->get('svea_partpayment_testmode_'.$countryCode) !== NULL){
             $sveaConf = ($this->config->get('svea_partpayment_testmode_'.$countryCode) == "1") ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         } else {
               $result = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));

@@ -63,7 +63,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $countryCode = $order['payment_iso_code_2'];
 
         //Testmode
-        if(!$this->config->get('svea_invoice_testmode_'.$countryCode) == NULL){
+        if($this->config->get('svea_invoice_testmode_'.$countryCode) !== NULL){
             $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
 
         } else {
@@ -163,7 +163,7 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->useInvoicePayment()
                         ->doRequest();
             }  catch (Exception $e){
-               $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+               $response = array("error" => $this->responseCodes(0,$e->getMessage()));
                 echo json_encode($response);
                 exit();
 
@@ -206,7 +206,7 @@ class ControllerPaymentsveainvoice extends Controller {
                                     ->deliverInvoiceOrder()
                                     ->doRequest();
                    }  catch (Exception $e){
-                        $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                        $response = array("error" => $this->responseCodes(0,$e->getMessage()));
                         echo json_encode($response);
                         exit();
                    }
@@ -259,7 +259,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 try{
                     $svea = $svea->doRequest();
                 }  catch (Exception $e){
-                      $response = array("Svea error" => $this->responseCodes(0,$e->getMessage()));
+                      $response = array("error" => $this->responseCodes(0,$e->getMessage()));
                     echo json_encode($response);
                     exit();
                 }
@@ -291,11 +291,11 @@ class ControllerPaymentsveainvoice extends Controller {
 
     private function formatOrderRows($svea,$products){
         $this->load->language('payment/svea_invoice');
-        
+
         //Product rows
         foreach ($products as $product) {
             $productPriceExVat = $product['price'];
-            
+
             //Get the tax, difference in version 1.4.x
             if (floatval(VERSION) >= 1.5) {
                 $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
