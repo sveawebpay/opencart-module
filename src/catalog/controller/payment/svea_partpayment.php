@@ -54,7 +54,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         //Load SVEA includes
         include(DIR_APPLICATION.'../svea/Includes.php');
-
+         $response = array();
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
@@ -132,11 +132,8 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
 
 
-        $response = array();
-
         //If response accepted redirect to thankyou page
         if ($svea->accepted == 1) {
-             $response = array();
                 //If Auto deliver order is set, DeliverOrder
                 if($this->config->get('svea_partpayment_auto_deliver') == 1){
                     $deliverObj = WebPay::deliverOrder($conf);
@@ -195,15 +192,12 @@ class ControllerPaymentsveapartpayment extends Controller {
             ->setCountryCode($countryCode);
 
         $svea = $svea->setIndividual($ssn);
+        $result = array();
         try{
             $svea = $svea->doRequest();
         }  catch (Exception $e){
-            $response = array("error" => $this->responseCodes(0,$e->getMessage()));
-            echo json_encode($response);
-            exit();
+            $result = array("error" => $this->responseCodes(0,$e->getMessage()));
         }
-
-        $result = array();
 
         if (isset($svea->errormessage)) {
             $result = array("error" => $svea->errormessage);
@@ -212,15 +206,15 @@ class ControllerPaymentsveapartpayment extends Controller {
 
                 $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
 
-                $result[] = array("fullName"  => $name,
+                $result = array("fullName"  => $name,
                                   "street"    => $ci->street,
                                   "zipCode"   => $ci->zipCode,
                                   "locality"  => $ci->locality,
                                   "addressSelector" => $ci->addressSelector);
             }
         }
-
-        echo json_encode($result);
+        return $result;
+       // echo json_encode($result);
     }
 
 
@@ -238,7 +232,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         } else {
               $result = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
               return $result;
-              exit();
         }
         $svea = WebPay::getPaymentPlanParams($sveaConf);
         try{
@@ -276,17 +269,19 @@ class ControllerPaymentsveapartpayment extends Controller {
 
 
     public function getAddressAndPaymentOptions(){
-
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
         $paymentOptions = $this->getPaymentOptions();
-        if ($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO")
-            $adresses = $this->getAddress($_GET['ssn']);
-        else
-            $adresses = array();
 
-        $result = array("addresses" => $adresses, "paymentOptions" => $paymentOptions);
+        if ($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){
+            $addresses = $this->getAddress($_GET['ssn']);
+        }elseif ($countryCode != "SE" && $countryCode != "NO" && $countryCode != "DK" && $countryCode != "FI" && $countryCode != "NL" && $countryCode != "DE") {
+            $addresses = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
+        }  else {
+            $addresses = array();
+        }
+        $result = array("addresses" => $addresses, "paymentOptions" => $paymentOptions);
 
         echo json_encode($result);
 

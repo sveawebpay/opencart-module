@@ -1,8 +1,8 @@
 <div class="buttons">
     <div class="right">
-        
+
         <div><p><?php echo $logo; ?></p></div>
-        
+
         <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
         <?php echo $this->language->get('text_ssn')?>: <input type="text" id="ssn" name="ssn" /><br /><br />
         <?php }else{
