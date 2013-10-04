@@ -65,8 +65,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
 
         $this->data['svea_invoice_sort_order']    = $this->config->get('svea_invoice_sort_order');
-        //WIP refactor
-        //$this->data['svea_invoice_testmode']      = $this->config->get('svea_invoice_testmode');
+
         $this->data['svea_invoice_auto_deliver']  = $this->config->get('svea_invoice_auto_deliver');
 
 
@@ -150,15 +149,6 @@ class ControllerPaymentsveainvoice extends Controller {
 		} else {
 			$this->data['svea_invoice_sort_order'] = $this->config->get('svea_invoice_sort_order');
 		}
-/**
-        //testmode
-        if (isset($this->request->post['svea_invoice_testmode'])) {
-			$this->data['svea_invoice_testmode'] = $this->request->post['svea_invoice_testmode'];
-		} else {
-			$this->data['svea_invoice_testmode'] = $this->config->get('svea_invoice_testmode');
-		}
- *
- */
 
         //auto deliver
         if (isset($this->request->post['svea_invoice_auto_deliver'])) {
