@@ -385,7 +385,7 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     private function formatCouponRows($svea, $coupon) {
-        if ($coupon['type'] == 'F') {
+        if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
             $discount = $this->currency->format($coupon['discount'],'',false,false);
 
             $svea = $svea
@@ -397,7 +397,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         );
 
 
-        } elseif ($coupon['type'] == 'P') {
+        } elseif ($coupon['discount'] > 0 && $coupon['type'] == 'P') {
 
             $svea = $svea
                     ->addDiscount(

@@ -98,7 +98,7 @@ class ControllerPaymentsveadirectbank extends Controller {
 
         $totalPrice = $this->cart->getTotal();
 
-        if ($coupon['type'] == 'F') {
+        if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
             $discount = $this->currency->format($coupon['discount'],'',false,false);
             $svea = $svea
                     ->addDiscount(
@@ -107,7 +107,7 @@ class ControllerPaymentsveadirectbank extends Controller {
                             ->setName($coupon['name'])
                             ->setUnit($this->language->get('unit'))
                         );
-        } elseif ($coupon['type'] == 'P') {
+        } elseif ($coupon['discount'] > 0 && $coupon['type'] == 'P') {
             $svea = $svea
                     ->addDiscount(
                         Item::relativeDiscount()
