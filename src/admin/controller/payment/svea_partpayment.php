@@ -127,15 +127,6 @@ class ControllerPaymentsveapartpayment extends Controller {
 		} else {
 			$this->data['svea_partpayment_sort_order'] = $this->config->get('svea_partpayment_sort_order');
 		}
-                /**
-                //testmode
-                if (isset($this->request->post['svea_testmode'])) {
-			$this->data['svea_partpayment_testmode'] = $this->request->post['svea_partpayment_testmode'];
-		} else {
-			$this->data['svea_partpayment_testmode'] = $this->config->get('svea_partpayment_testmode');
-		}
-                 * 
-                 */
                 //auto deliver
                 if (isset($this->request->post['svea_partpayment_auto_deliver'])) {
 			$this->data['svea_partpayment_auto_deliver'] = $this->request->post['svea_partpayment_auto_deliver'];
