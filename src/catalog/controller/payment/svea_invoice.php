@@ -245,6 +245,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 $this->load->model('checkout/order');
 
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
                 $countryCode = $order['payment_iso_code_2'];
                  //Testmode
                 $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
@@ -300,15 +301,13 @@ class ControllerPaymentsveainvoice extends Controller {
             if (floatval(VERSION) >= 1.5) {
                 $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
-                $taxPercent = "";
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
                 }
                 $productPriceIncVat = $productPriceExVat + $productTax;
             } else {
-                $taxRate = $this->tax->getRate($product['tax_class_id']);
-
-                $productPriceIncVat = (($taxRate / 100) + 1) * $productPriceExVat;
+                $taxPercent = intval($this->tax->getRate($product['tax_class_id']));
+                //$productPriceIncVat = (($taxPercent / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
