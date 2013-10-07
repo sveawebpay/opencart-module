@@ -302,9 +302,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
                 foreach ($tax as $key => $value) {
-                    $taxPercent = $value['rate'];
+                    $taxPercent = intval($value['rate']);
                 }
-                $productPriceIncVat = $productPriceExVat + $productTax;
+                //$productPriceIncVat = $productPriceExVat + $productTax;
             } else {
                 $taxPercent = intval($this->tax->getRate($product['tax_class_id']));
                 //$productPriceIncVat = (($taxPercent / 100) + 1) * $productPriceExVat;
@@ -330,17 +330,19 @@ class ControllerPaymentsveainvoice extends Controller {
             //Invoice Fee
             $invoiceFeeExTax = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
             $invoiceFeeTaxId = $this->config->get('svea_fee_tax_class_id');
-
             $invoiceTax = 0;
 
             if($invoiceFeeTaxId > 0){
-                    if(floatval(VERSION) >= 1.5){
+                if(floatval(VERSION) >= 1.5){
                    $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
                    $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
                }  else {
                    $taxRate = $this->tax->getRate($invoiceFeeTaxId);
                    $invoiceFeeIncVat = (($taxRate / 100) +1) * $invoiceFeeExTax;
                }
+            }  else {
+                //no tax for invoicefee is set
+                $invoiceFeeIncVat = $invoiceFeeExTax;
             }
 
             $svea = $svea
@@ -411,10 +413,11 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     private function formatVoucher($svea, $voucher) {
-        $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
+        $voucherAmount = $voucher['amount'];
         $svea = $svea
                 ->addDiscount(
                     Item::fixedDiscount()
+                        ->setVatPercent(0)//No vat on voucher. Concidered a debt.
                         ->setAmountIncVat($voucherAmount)
                         ->setName($voucher['code'])
                         ->setDescription($voucher["message"])

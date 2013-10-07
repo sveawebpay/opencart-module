@@ -76,13 +76,16 @@
 
 //Loader
 var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
+var runningCheckout = false;
 $("a#checkout").hide();
 $('#svea_partpayment_tr').hide();
 $('#svea_partpaymentalt_tr').hide();
 
-
 $('a#checkout').click(function() {
-
+     if(runningCheckout){
+       return false;
+    }
+    runningCheckout = true;
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -95,27 +98,31 @@ $('a#checkout').click(function() {
 
 	$.ajax({
 		type: 'GET',
-        data: {ssn: ssnNo, paySel: paymentSelector,initials: Initials, birthDay: birthDay, birthMonth: birthMonth, birthYear: birthYear},
+                data: {ssn: ssnNo, paySel: paymentSelector,initials: Initials, birthDay: birthDay, birthMonth: birthMonth, birthYear: birthYear},
 		url: 'index.php?route=payment/svea_partpayment/confirm',
 		success: function(data) {
 
-            var json = JSON.parse(data);
+                    var json = JSON.parse(data);
 
-            if(json.success){
-                location = '<?php echo $continue; ?>';
-            }else{
-                $("#svea_partpayment_err").show().append('<br>'+json.error);
-            }
+                    if(json.success){
+                        location = '<?php echo $continue; ?>';
+                    }else{
+                        $("#svea_partpayment_err").show().append('<br>'+json.error);
+                    }
 
-            $('#sveaLoading').remove();
+                    $('#sveaLoading').remove();
+                    runningCheckout = false;
 		}
 	});
 });
 
 
-
+var runningGetPlan = false;
 $('#getPlan').click(function() {
-
+    if(runningGetPlan){
+       return false;
+    }
+    runningGetPlan = true;
     //Show loader
     $(this).parent().after().append(sveaLoading);
     var ssnNo = $('#ssn').val();
@@ -158,6 +165,7 @@ $('#getPlan').click(function() {
                 }
 
                 $('#sveaLoading').remove();
+                 runningGetPlan = false;
     		}
     	});
 

@@ -119,8 +119,12 @@ $("#svea_invoice_company").change(function(){
 
 //Loader
 var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
-
+var runningCheckout = false;
 $('a#checkout').click(function() {
+    if(runningCheckout){
+       return false;
+    }
+    runningCheckout = true;
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -136,14 +140,14 @@ $('a#checkout').click(function() {
 	$.ajax({
             type: 'GET',
             data: {
-                ssn: ssnNo, 
-                company: company, 
-                addSel: adressSelector, 
-                initials: Initials, 
-                birthDay: birthDay, 
-                birthMonth: birthMonth, 
-                birthYear: birthYear, 
-                vatno: vatNo 
+                ssn: ssnNo,
+                company: company,
+                addSel: adressSelector,
+                initials: Initials,
+                birthDay: birthDay,
+                birthMonth: birthMonth,
+                birthYear: birthYear,
+                vatno: vatNo
             },
             url: 'index.php?route=payment/svea_invoice/confirm',
             success: function(data) {
@@ -162,13 +166,20 @@ $('a#checkout').click(function() {
                     }
 
                     $('#sveaLoading').remove();
+                    runningCheckout = false;
             }
+
 	});
 });
 
 
 //Get address
+var runningGetSSN = false;
 $('#getSSN').click(function() {
+    if(runningGetSSN){
+       return false;
+    }
+    runningGetSSN = true;
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -187,7 +198,7 @@ $('#getSSN').click(function() {
             type: 'GET',
             url: 'index.php?route=payment/svea_invoice/getAddress',
             data: {
-                ssn: ssnNo, 
+                ssn: ssnNo,
                 company: company
             },
             success: function(data) {
@@ -227,7 +238,7 @@ $('#getSSN').click(function() {
                 }
 
                 $('#sveaLoading').remove();
-
+                runningGetSSN = false;
     		}
     	});
     }

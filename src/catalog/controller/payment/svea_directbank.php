@@ -123,16 +123,17 @@ class ControllerPaymentsveadirectbank extends Controller {
 
             $totalPrice = $this->cart->getTotal();
 
-            $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
-
+            $voucherAmount = $voucher['amount'];
             $svea = $svea
                     ->addDiscount(
                         Item::fixedDiscount()
+                            ->setVatPercent(0)//No vat on voucher. Concidered a debt.
                             ->setAmountIncVat($voucherAmount)
                             ->setName($voucher['code'])
                             ->setDescription($voucher["message"])
                             ->setUnit($this->language->get('unit'))
                         );
+
 
         }
          $payPageLanguage = "";

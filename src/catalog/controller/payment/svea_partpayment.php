@@ -301,20 +301,26 @@ class ControllerPaymentsveapartpayment extends Controller {
         $this->load->language('payment/svea_partpayment');
         //Product rows
         foreach ($products as $product) {
-            $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+            $productPriceExVat  = $product['price'];
 
-            if(floatval(VERSION) >= 1.5){
-                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
-                $productPriceIncVat = $productPriceExVat + $productTax;
-            }  else {
-                $taxRate = $this->tax->getRate($product['tax_class_id']);
-                $productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
+            //Get the tax, difference in version 1.4.x
+            if (floatval(VERSION) >= 1.5) {
+                $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
+                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                foreach ($tax as $key => $value) {
+                    $taxPercent = $value['rate'];
+                }
+                //$productPriceIncVat = $productPriceExVat + $productTax;
+            } else {
+                $taxPercent = intval($this->tax->getRate($product['tax_class_id']));
+                //$productPriceIncVat = (($taxPercent / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat($productPriceExVat)
-                        ->setAmountIncVat($productPriceIncVat)
+                        //->setAmountIncVat($productPriceIncVat)
+                        ->setVatPercent($taxPercent)
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
@@ -381,14 +387,15 @@ class ControllerPaymentsveapartpayment extends Controller {
     }
 
     private function formatVoucher($svea, $voucher) {
-        $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
+         $voucherAmount = $voucher['amount'];
         $svea = $svea
                 ->addDiscount(
                     Item::fixedDiscount()
+                        ->setVatPercent(0)//No vat on voucher. Concidered a debt.
                         ->setAmountIncVat($voucherAmount)
                         ->setName($voucher['code'])
                         ->setDescription($voucher["message"])
-                        ->setUnit($this->language->get('pcs'))
+                        ->setUnit($this->language->get('unit'))
                     );
         return $svea;
     }
