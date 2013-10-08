@@ -58,8 +58,8 @@ class ControllerPaymentsveadirectbank extends Controller {
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
-                        ->setAmountExVat($productPriceExVat)
-                        ->setAmountIncVat($productPriceIncVat)
+                        ->setAmountExVat(floatval($productPriceExVat))
+                        ->setAmountIncVat(floatval($productPriceIncVat))
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
@@ -83,8 +83,8 @@ class ControllerPaymentsveadirectbank extends Controller {
             if ($shipping_info['cost'] > 0){
                 $svea = $svea
                         ->addFee(Item::shippingFee()
-                            ->setAmountExVat($shippingExVat)
-                            ->setAmountIncVat( $shippingExVat + $shippingTax)
+                            ->setAmountExVat(floatval($shippingExVat))
+                            ->setAmountIncVat( floatval($shippingExVat + $shippingTax))
                             ->setName($shipping_info['title'])
                             ->setDescription($shipping_info['text'])
                             ->setUnit($this->language->get('unit'))
@@ -169,8 +169,8 @@ class ControllerPaymentsveadirectbank extends Controller {
      }
 
          $server_url = $this->config->get('config_url');
-
-         $form = $svea
+         try{
+              $form = $svea
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
                 ->setClientOrderNumber($this->session->data['order_id'])//remove rand after developing
@@ -180,6 +180,12 @@ class ControllerPaymentsveadirectbank extends Controller {
                     ->setReturnUrl($server_url.'index.php?route=payment/svea_directbank/responseSvea')
                     ->setPayPageLanguage($payPageLanguage)
                     ->getPaymentForm();
+         }  catch (Exception $e){
+            $this->log->write($e->getMessage());
+            echo 'Logged Svea Error';
+            exit();
+         }
+
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;

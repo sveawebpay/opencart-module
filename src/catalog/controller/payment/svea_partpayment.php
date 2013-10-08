@@ -126,6 +126,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                       ->usePaymentPlanPayment($_GET["paySel"])
                         ->doRequest();
         }  catch (Exception $e){
+            $this->log->write($e->getMessage());
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             echo json_encode($response);
             exit();
@@ -145,6 +146,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                                     ->deliverPaymentPlanOrder()
                                     ->doRequest();
                     }  catch (Exception $e){
+                        $this->log->write($e->getMessage());
                         $response = array("error" => $this->responseCodes(0,$e->getMessage()));
                         echo json_encode($response);
                         exit();
@@ -196,6 +198,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         try{
             $svea = $svea->doRequest();
         }  catch (Exception $e){
+            $this->log->write($e->getMessage());
             $result = array("error" => $this->responseCodes(0,$e->getMessage()));
         }
 
@@ -238,6 +241,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             $svea = $svea->setCountryCode($countryCode)
                     ->doRequest();
         }  catch (Exception $e){
+            $this->log->write($e->getMessage());
             $result[] = array("error" => $e->getMessage());
         }
 
@@ -318,8 +322,8 @@ class ControllerPaymentsveapartpayment extends Controller {
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
-                        ->setAmountExVat($productPriceExVat)
-                        //->setAmountIncVat($productPriceIncVat)
+                        ->setAmountExVat(floatval($productPriceExVat))
+                        //->setAmountIncVat($productPriceIncVat) //Removed because bug transforming vat from 25 -> 24
                         ->setVatPercent($taxPercent)
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
@@ -349,8 +353,8 @@ class ControllerPaymentsveapartpayment extends Controller {
             $svea = $svea
                     ->addFee(
                         Item::shippingFee()
-                            ->setAmountExVat($shippingExVat)
-                            ->setAmountIncVat($shippingIncVat)
+                            ->setAmountExVat(floatval($shippingExVat))
+                            ->setAmountIncVat(floatval($shippingIncVat))
                             ->setName($shipping_info["title"])
                             ->setDescription($shipping_info["text"])
                             ->setUnit($this->language->get('pcs'))

@@ -55,8 +55,8 @@ class ControllerPaymentsveacard extends Controller {
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
-                        ->setAmountExVat($productPriceExVat)
-                        ->setAmountIncVat($productPriceIncVat)
+                        ->setAmountExVat(floatval($productPriceExVat))
+                        ->setAmountIncVat(floatval($productPriceIncVat))
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
@@ -79,8 +79,8 @@ class ControllerPaymentsveacard extends Controller {
             if ($shipping_info['cost'] > 0){
                 $svea = $svea
                         ->addFee(Item::shippingFee()
-                            ->setAmountExVat($shippingExVat)
-                            ->setAmountIncVat( $shippingExVat + $shippingTax)
+                            ->setAmountExVat(floatval($shippingExVat))
+                            ->setAmountIncVat( floatval($shippingExVat + $shippingTax))
                             ->setName($shipping_info['title'])
                             ->setDescription($shipping_info['text'])
                             ->setUnit($this->language->get('unit'))
@@ -141,11 +141,18 @@ class ControllerPaymentsveacard extends Controller {
             ->setCurrency($this->session->data['currency'])
             ->setClientOrderNumber($this->session->data['order_id'])
             ->setOrderDate(date('c'));
-
-        $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
+        try{
+            $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
            ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
            ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
            ->getPaymentForm();
+        }  catch (Exception $e){
+            $this->log->write($e->getMessage());
+            echo 'Logged Svea Error';
+            exit();
+
+        }
+
 
 
         //print form with hidden buttons
