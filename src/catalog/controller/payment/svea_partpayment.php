@@ -92,9 +92,11 @@ class ControllerPaymentsveapartpayment extends Controller {
             $svea = $this->formatVoucher($svea,$voucher);
        }
 
-        preg_match('!([^0-9]*)(.*)!',$order['payment_address_1'],$addressArr);
-        $street  = $addressArr[1];
-        $houseNo = $addressArr[2];
+
+        //Seperates the street from the housenumber according to testcases
+        $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
+        preg_match($pattern, $order['payment_address_1'], $addressArr);
+        if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; } //fix for addresses w/o housenumber
 
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
@@ -102,12 +104,11 @@ class ControllerPaymentsveapartpayment extends Controller {
         $item = $item->setNationalIdNumber($ssn)
                      ->setEmail($order['email'])
                      ->setName($order['payment_firstname'],$order['payment_lastname'])
-                     ->setStreetAddress($street,$houseNo)
+                     ->setStreetAddress($addressArr[1],$addressArr[2])
                      ->setZipCode($order['payment_postcode'])
                      ->setLocality($order['payment_city'])
                      ->setIpAddress($order['ip'])
                      ->setPhoneNumber($order['telephone']);
-
 
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
 
