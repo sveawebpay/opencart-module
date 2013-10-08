@@ -105,10 +105,10 @@ class ControllerPaymentsveainvoice extends Controller {
             $svea = $this->formatVoucher($svea,$voucher);
        }
 
-
-        preg_match('!([^0-9]*)(.*)!',$order['payment_address_1'],$addressArr);
-        $street  = $addressArr[1];
-        $houseNo = $addressArr[2];
+        //Seperates the street from the housenumber according to testcases
+        $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
+        preg_match($pattern, $order['payment_address_1'], $addressArr);
+        if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; } //fix for addresses w/o housenumber
 
         //Set order detials if company or private
         if ($company == TRUE){
@@ -116,12 +116,11 @@ class ControllerPaymentsveainvoice extends Controller {
 
             $item = $item->setEmail($order['email'])
                          ->setCompanyName($order['payment_company'])
-                         ->setStreetAddress($street,$houseNo)
+                         ->setStreetAddress($addressArr[1],$addressArr[2])
                          ->setZipCode($order['payment_postcode'])
                          ->setLocality($order['payment_city'])
                          ->setIpAddress($order['ip'])
                          ->setPhoneNumber($order['telephone']);
-
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
 
                 $item = $item->setVatNumber($_GET['vatno']);
@@ -140,7 +139,7 @@ class ControllerPaymentsveainvoice extends Controller {
             $item = $item->setNationalIdNumber($ssn)
                          ->setEmail($order['email'])
                          ->setName($order['payment_firstname'],$order['payment_lastname'])
-                         ->setStreetAddress($street,$houseNo)
+                         ->setStreetAddress($addressArr[1],$addressArr[2])
                          ->setZipCode($order['payment_postcode'])
                          ->setLocality($order['payment_city'])
                          ->setIpAddress($order['ip'])
@@ -163,7 +162,8 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->useInvoicePayment()
                         ->doRequest();
             }  catch (Exception $e){
-               $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+                $this->log->write($e->getMessage());
+                $response = array("error" => $this->responseCodes(0,$e->getMessage()));
                 echo json_encode($response);
                 exit();
 
@@ -206,6 +206,7 @@ class ControllerPaymentsveainvoice extends Controller {
                                     ->deliverInvoiceOrder()
                                     ->doRequest();
                    }  catch (Exception $e){
+                        $this->log->write($e->getMessage());
                         $response = array("error" => $this->responseCodes(0,$e->getMessage()));
                         echo json_encode($response);
                         exit();
@@ -245,6 +246,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 $this->load->model('checkout/order');
 
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
                 $countryCode = $order['payment_iso_code_2'];
                  //Testmode
                 $conf = $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
@@ -260,6 +262,7 @@ class ControllerPaymentsveainvoice extends Controller {
                     $svea = $svea->doRequest();
                 }  catch (Exception $e){
                       $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+                      $this->log->write($e->getMessage());
                     echo json_encode($response);
                     exit();
                 }
@@ -300,22 +303,20 @@ class ControllerPaymentsveainvoice extends Controller {
             if (floatval(VERSION) >= 1.5) {
                 $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
-                $taxPercent = "";
                 foreach ($tax as $key => $value) {
-                    $taxPercent = $value['rate'];
+                    $taxPercent = intval($value['rate']);
                 }
-                $productPriceIncVat = $productPriceExVat + $productTax;
+                //$productPriceIncVat = $productPriceExVat + $productTax;
             } else {
-                $taxRate = $this->tax->getRate($product['tax_class_id']);
-
-                $productPriceIncVat = (($taxRate / 100) + 1) * $productPriceExVat;
+                $taxPercent = $this->tax->getRate($product['tax_class_id']);
+                //$productPriceIncVat = (($taxPercent / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                     ->setQuantity($product['quantity'])
-                    ->setAmountExVat($productPriceExVat)
-                    //->setAmountIncVat($productPriceIncVat)
-                    ->setVatPercent($taxPercent)
+                    ->setAmountExVat(floatval($productPriceExVat))
+                    //->setAmountIncVat($productPriceIncVat)//Removed because bug transforming vat from 25 -> 24
+                    ->setVatPercent(intval($taxPercent))
                     ->setName($product['name'])
                     ->setUnit($this->language->get('unit'))
                     ->setArticleNumber($product['product_id'])
@@ -331,24 +332,26 @@ class ControllerPaymentsveainvoice extends Controller {
             //Invoice Fee
             $invoiceFeeExTax = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
             $invoiceFeeTaxId = $this->config->get('svea_fee_tax_class_id');
-
             $invoiceTax = 0;
 
             if($invoiceFeeTaxId > 0){
-                    if(floatval(VERSION) >= 1.5){
+                if(floatval(VERSION) >= 1.5){
                    $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
                    $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
                }  else {
                    $taxRate = $this->tax->getRate($invoiceFeeTaxId);
                    $invoiceFeeIncVat = (($taxRate / 100) +1) * $invoiceFeeExTax;
                }
+            }  else {
+                //no tax for invoicefee is set
+                $invoiceFeeIncVat = $invoiceFeeExTax;
             }
 
             $svea = $svea
                     ->addFee(
                         Item::invoiceFee()
-                            ->setAmountExVat($invoiceFeeExTax)
-                            ->setAmountIncVat($invoiceFeeIncVat)
+                            ->setAmountExVat(floatval($invoiceFeeExTax))
+                            ->setAmountIncVat(floatval($invoiceFeeIncVat))
                             ->setDescription($this->language->get('text_svea_fee'))
                             ->setUnit($this->language->get('unit'))
                         );
@@ -373,8 +376,8 @@ class ControllerPaymentsveainvoice extends Controller {
             $svea = $svea
                     ->addFee(
                         Item::shippingFee()
-                            ->setAmountExVat($shippingExVat)
-                            ->setAmountIncVat($shippingIncVat)
+                            ->setAmountExVat(floatval($shippingExVat))
+                            ->setAmountIncVat(floatval($shippingIncVat))
                             ->setName($shipping_info["title"])
                             ->setDescription($shipping_info["text"])
                             ->setUnit($this->language->get('unit'))
@@ -385,7 +388,7 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     private function formatCouponRows($svea, $coupon) {
-        if ($coupon['type'] == 'F') {
+        if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
             $discount = $this->currency->format($coupon['discount'],'',false,false);
 
             $svea = $svea
@@ -397,7 +400,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         );
 
 
-        } elseif ($coupon['type'] == 'P') {
+        } elseif ($coupon['discount'] > 0 && $coupon['type'] == 'P') {
 
             $svea = $svea
                     ->addDiscount(
@@ -412,10 +415,11 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     private function formatVoucher($svea, $voucher) {
-        $voucherAmount =  $this->currency->format($voucher['amount'],'',false,false);
+        $voucherAmount = $voucher['amount'];
         $svea = $svea
                 ->addDiscount(
                     Item::fixedDiscount()
+                        ->setVatPercent(0)//No vat on voucher. Concidered a debt.
                         ->setAmountIncVat($voucherAmount)
                         ->setName($voucher['code'])
                         ->setDescription($voucher["message"])
