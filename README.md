@@ -1,12 +1,17 @@
 # OpenCart - SveaWebPay payment module
 ##Version 2.0.18
 This module is updated for the latest payment systems at SveaWebPay.
-This module has been tested with OpenCart 1.4.9.x-1.5.6.
+This module has been tested with OpenCart 1.4.9.x-1.5.6 with standard checkout, standard coupons, standard voucher, standard shipping and Svea invoicefee.
 
 Supported countries are
 _Sweden_, _Norway_, _Finland_, _Denmark_, _The Netherlands_, _Germany_.
+and the module handles the different countries approved vat rates.
 
-**NOTE**: If you are upgrading from a previous version of this module, please contact Svea support before installing. Your account settings may require updating.
+**NOTE**: If you are upgrading from a previous version of this module, please contact Svea support before installing.
+Your account settings may require updating. We strongly recommend you have an testenvironment, and make a backup before upgrading.
+
+If you experience technical issues with this module, or you have feature suggestions, please submit an issue on the Github issue list.
+If troubleshooting becomes necessary, Svea support will need an testenviroment.
 
 
 #Installation instructions
