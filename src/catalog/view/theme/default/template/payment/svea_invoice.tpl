@@ -162,7 +162,7 @@ $('a#checkout').click(function() {
                         location = '<?php echo $continue; ?>';
                     }
                     else{
-                        $("#svea_invoice_err").show().append('<br>'+json.error);
+                        $("#svea_invoice_err").empty().show().append('<br>'+json.error);
                     }
 
                     $('#sveaLoading').remove();
@@ -212,7 +212,7 @@ $('#getSSN').click(function() {
                 //on error
                 if (json.error){
 
-                    $("#svea_invoice_err").show().append('<br>'+json.error);
+                    $("#svea_invoice_err").empty().show().append('<br>'+json.error);
 
                 }
                 else{

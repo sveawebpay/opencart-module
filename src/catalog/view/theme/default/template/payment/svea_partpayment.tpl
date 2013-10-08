@@ -107,7 +107,7 @@ $('a#checkout').click(function() {
                     if(json.success){
                         location = '<?php echo $continue; ?>';
                     }else{
-                        $("#svea_partpayment_err").show().append('<br>'+json.error);
+                    $("#svea_partpayment_err").empty().show().append('<br>'+json.error);
                     }
 
                     $('#sveaLoading').remove();
@@ -144,9 +144,9 @@ $('#getPlan').click(function() {
                 var json = JSON.parse(msg);
 
                 if(json.addresses.error){
-                    $("#svea_partpayment_err").show().append('<br>'+json.addresses.error);
+                $("#svea_partpayment_err").empty().show().append('<br>'+json.addresses.error);
                 }else if(json.paymentOptions.error){
-                    $("#svea_partpayment_err").show().append('<br>'+json.paymentOptions.error);
+                    $("#svea_partpayment_err").empty().show().append('<br>'+json.paymentOptions.error);
                 }else{
 
                     if (json.addresses.length > 0){

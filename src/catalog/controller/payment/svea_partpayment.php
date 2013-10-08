@@ -316,7 +316,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                 }
                 //$productPriceIncVat = $productPriceExVat + $productTax;
             } else {
-                $taxPercent = intval($this->tax->getRate($product['tax_class_id']));
+                $taxPercent = $this->tax->getRate($product['tax_class_id']);
                 //$productPriceIncVat = (($taxPercent / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
@@ -324,7 +324,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
                         //->setAmountIncVat($productPriceIncVat) //Removed because bug transforming vat from 25 -> 24
-                        ->setVatPercent($taxPercent)
+                        ->setVatPercent(intval($taxPercent))
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
