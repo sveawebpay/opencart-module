@@ -168,7 +168,6 @@ class ControllerPaymentsveainvoice extends Controller {
                 exit();
 
             }
-
             //If CreateOrder accepted redirect to thankyou page
             if ($svea->accepted == 1) {
                 $response = array();
@@ -202,7 +201,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
                         $deliverObj = $deliverObj->setCountryCode($countryCode)
                                 ->setOrderId($svea->sveaOrderId)
-                                ->setInvoiceDistributionType('Post') //set in admin interface
+                                ->setInvoiceDistributionType($this->config->get('svea_invoice_distribution_type'))
                                     ->deliverInvoiceOrder()
                                     ->doRequest();
                    }  catch (Exception $e){
