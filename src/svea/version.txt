@@ -3,4 +3,5 @@ Uptated integrationLib 2013-10-08 to:
 sveawebpay/php-integration
 
 release/1.4.0
+updated with develop branch 13-10-09
 
