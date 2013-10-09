@@ -143,9 +143,10 @@ class ControllerPaymentsveacard extends Controller {
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
-           ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-           ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-           ->getPaymentForm();
+            ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+            ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+            ->setCardPageLanguage(strtolower($order['language_code']))
+            ->getPaymentForm();
         }  catch (Exception $e){
             $this->log->write($e->getMessage());
             echo 'Logged Svea Error';
