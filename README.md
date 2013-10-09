@@ -77,22 +77,24 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * The field _min. amount_ must match the corresponding setting in Svea admin.
 
 #### Svea Card Payment
+Module supports one Svea merchant id per Opencart installation.
 * In OpenCart admin panel, browse to _extensions -> payments_.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
 * Set _order status_ according to your preferences.
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set _testmode_ and _status_ to enabled.
-* Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
+* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
 ![Card payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/CardPayment.PNG "Invoice fee additional settings")
 
 #### Svea Direct Payment
+Module supports one Svea merchant id per Opencart installation.
 * In OpenCart admin panel, browse to _extensions -> payments_.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
 * Set _order status_ according to your preferences.
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set _testmode_ and _status_ to enabled.
-* Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
+* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
 ##Localisation and additional OpenCart configuration requirements
 
