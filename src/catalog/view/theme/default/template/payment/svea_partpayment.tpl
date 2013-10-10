@@ -1,6 +1,7 @@
 
     <div class="content">
         <div><p><?php echo $logo; ?></p></div>
+        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE"){?>
 
         <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
         <?php echo $this->language->get('text_ssn')?>: <input type="text" id="ssn" name="ssn" /><br /><br />
@@ -45,6 +46,7 @@
         <?php }?>
            </span>
         <?php }?>
+    <?php }?>
             <span id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;">
             </span>
          </div>

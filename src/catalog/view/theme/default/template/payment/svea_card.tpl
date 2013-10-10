@@ -1,4 +1,4 @@
-<div class="content">
+ <div class="buttons">
 
             <div><p><?php echo $logo; ?></p></div>
 
@@ -9,8 +9,8 @@
                     $input_mac;
             ?>
 
-</div>
- <div class="buttons">
+
+
     <div class="right">
         <?php if(floatval(VERSION) >= 1.5){?>
         <input id="checkout" class="button" type='submit' name='submit' value='<?php echo $submitMessage ?>' />

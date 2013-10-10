@@ -1,8 +1,6 @@
 <div class="content">
-
-
         <div><p><?php echo $logo; ?></p></div>
-
+     <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE"){?>
         <?php echo $this->language->get("text_private_or_company")?>: <select id="svea_invoice_company" name="svea_invoice_company">
             <option value="true"><?php echo $this->language->get("text_company")?></option>
             <option value="false" selected="selected"><?php echo $this->language->get("text_private")?></option>
@@ -14,7 +12,7 @@
         : <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span>
         <?php }?>
 
-
+   <?php }?>
     <span id="svea_invoice_err" style="color:red; margin-bottom:10px"></span>
 </div>
 <div class="buttons">
@@ -79,7 +77,6 @@
          <span id="sveaVatNoCont"><?php echo $this->language->get("text_vat_no")?>: <input type="text" id="vatno" name="vatno" /><br /><br /></span>
 
          <?php } ?>
-
 </div>
 <div class="buttons">
     <div class="right">

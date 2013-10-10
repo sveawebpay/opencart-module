@@ -1,5 +1,4 @@
-
-    <div class="content">
+<div class="buttons">
         <form action="<?php echo $continue; ?>" method="post">
             <div><p><?php echo $logo; ?></p></div>
             <table class="radio">
@@ -26,18 +25,16 @@
 
             ?>
             </table>
-        </form>
-    </div>
-    <div class="buttons">
-        <div class="right">
-    <?php if(floatval(VERSION) >= 1.5){?>
-        <input id="checkout_choose" class="button" type='submit' name='submit' value='<?php echo $button_continue; ?>' />
-        <?php }else{ ?>
 
-        <a id="checkout" class="button" onclick="document.paymentForm.submit()"><span><?php echo $button_confirm; ?></span></a>
-    <?php }?>
-        <!--
-        <a id="checkout_choose" class="button" href="<?php echo $continue; ?>"><span><?php echo $button_continue; ?></span></a>
-        -->
-        </div>
-    </div>
+                <div class="right">
+            <?php if(floatval(VERSION) >= 1.5){?>
+                <input id="checkout_choose" class="button" type='submit' name='submit' value='<?php echo $button_continue; ?>' />
+                <?php }else{ ?>
+
+                <a id="checkout" class="button" onclick="document.paymentForm.submit()"><span><?php echo $button_confirm; ?></span></a>
+            <?php }?>
+                <!--
+                <a id="checkout_choose" class="button" href="<?php echo $continue; ?>"><span><?php echo $button_continue; ?></span></a>
+                -->
+                </div>
+        </form>
