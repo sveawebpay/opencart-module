@@ -1,6 +1,5 @@
-<div class="buttons">
+<div class="content">
 
-    <div class="right">
 
         <div><p><?php echo $logo; ?></p></div>
 
@@ -12,24 +11,26 @@
         <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){?>
         <span id="svea_private_text"><?php echo $this->language->get("text_ssn")?></span>
         <span id="svea_business_text" style="display:none;"><?php echo $this->language->get("text_vat_no")?></span>
-        : <input type="text" id="ssn" name="ssn" /><br /><br />
+        : <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span>
         <?php }?>
 
+
+    <span id="svea_invoice_err" style="color:red; margin-bottom:10px"></span>
+</div>
+<div class="buttons">
+    <div class="right">
         <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){?>
         <a id="getSSN" class="button"><span><?php echo $this->language->get("text_get_address")?></span></a>
         <?php }?>
-
-
     </div>
 </div>
 
-<div class="buttons">
-    <div id="svea_invoice_err" class="right" style="color:red; margin-bottom:10px"></div><br />
 
+<div class="content" id="svea_invoice_div">
 
     <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-    <div id="svea_invoice_div" class="right" style="">
-        <br />
+
+
         <?php echo $this->language->get("text_invoice_address")?>:<br />
         <select name="svea_invoice_address" id="svea_invoice_address">
         </select>
@@ -69,7 +70,7 @@
         $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
         ?>
 
-        <div class="right" style="">
+
          <span id="sveaBirthDateCont"><?php echo $this->language->get("text_birthdate")?>: <?php  echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
         <?php if($countryCode == "NL"){ ?>
            <?php echo $this->language->get("text_initials")?>: <input type="text" id="initials" name="initials" />
@@ -78,11 +79,12 @@
          <span id="sveaVatNoCont"><?php echo $this->language->get("text_vat_no")?>: <input type="text" id="vatno" name="vatno" /><br /><br /></span>
 
          <?php } ?>
-        </div>
-</div>
 
+</div>
 <div class="buttons">
-    <div class="right" style=""><br /><br /><a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a></div>
+    <div class="right">
+        <a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a>
+    </div>
 </div>
 
 <style>
@@ -191,7 +193,8 @@ $('#getSSN').click(function() {
     $("#svea_invoice_div").hide();
 
     if(ssnNo == ''){
-        alert('Vänligen fyll i personnr');
+        $("#svea_invoice_err").empty().show().append('<br>*Required');
+        $('#sveaLoading').remove();
     }else{
 
     	$.ajax({
