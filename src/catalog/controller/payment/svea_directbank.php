@@ -4,7 +4,8 @@ class ControllerPaymentsveadirectbank extends Controller {
 
         //set template
 
-    	$this->data['button_confirm'] = $this->language->get('button_confirm');
+    	//$this->data['button_confirm'] = $this->language->get('button_confirm');
+    	$this->data['button_continue'] = $this->language->get('button_continue');
         $this->data['button_back'] = $this->language->get('button_back');
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
@@ -23,9 +24,28 @@ class ControllerPaymentsveadirectbank extends Controller {
         }
 
         $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_directbank.png'>";
+        $this->data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
+
+        /*
+         **get my methods, present page
+         */
+        $this->load->language('payment/svea_directbank');
+        include(DIR_APPLICATION.'../svea/Includes.php');
+
+       //Testmode
+        $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $svea = WebPay::getPaymentMethods($conf);
+        $this->data['sveaMethods'] = $svea
+            ->setContryCode($order_info['payment_iso_code_2'])
+            ->doRequest();
+
         $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
+        $this->render();
 
+        }
+
+        public function redirectSvea(){
 
         $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
@@ -175,28 +195,40 @@ class ControllerPaymentsveadirectbank extends Controller {
                 ->setCurrency($this->session->data['currency'])
                 ->setClientOrderNumber($this->session->data['order_id'])//remove rand after developing
                 ->setOrderDate(date('c'))
-                ->usePayPageDirectBankOnly()
+                ->usePaymentMethod($_POST['svea_directbank_payment_method'])
                     ->setCancelUrl($server_url.'index.php?route=payment/svea_directbank/responseSvea')
                     ->setReturnUrl($server_url.'index.php?route=payment/svea_directbank/responseSvea')
-                    ->setPayPageLanguage($payPageLanguage)
+                    ->setCardPageLanguage($payPageLanguage)
                     ->getPaymentForm();
          }  catch (Exception $e){
             $this->log->write($e->getMessage());
             echo 'Logged Svea Error';
             exit();
          }
-
+         echo '<html><head>
+                <script type="text/javascript">
+                    function doPost(){
+                        document.forms[0].submit();
+                        }
+                </script>
+                </head>
+                <body onload="doPost()">
+                ';
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
-        $this->data['form_start_tag'] = $fields['form_start_tag'];
-        $this->data['merchant_id'] = $fields['input_merchantId'];
-        $this->data['input_message'] = $fields['input_message'];
-        $this->data['input_mac'] = $fields['input_mac'];
-        $this->data['input_submit'] = $fields['input_submit'];
-        $this->data['form_end_tag'] = $fields['form_end_tag'];
-        $this->data['submitMessage'] = $this->language->get('button_confirm');
-        $this->render();
+        $hiddenForm = $fields['form_start_tag'];
+        $hiddenForm .= $fields['input_merchantId'];
+        $hiddenForm .= $fields['input_message'];
+        $hiddenForm .= $fields['input_mac'];
+        $hiddenForm .= $fields['form_end_tag'];
+
+        echo $hiddenForm;
+        echo'
+            </body></html>
+        ';
+        exit();
+
     }
 
     public function responseSvea(){

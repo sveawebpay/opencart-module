@@ -1,7 +1,7 @@
-<div class="buttons">
-    <div class="right">
 
+    <div class="content">
         <div><p><?php echo $logo; ?></p></div>
+        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE"){?>
 
         <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
         <?php echo $this->language->get('text_ssn')?>: <input type="text" id="ssn" name="ssn" /><br /><br />
@@ -46,31 +46,33 @@
         <?php }?>
            </span>
         <?php }?>
-        <br /><br /><a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_payment_options')?></span></a>
-    </div>
+    <?php }?>
+            <span id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;">
+            </span>
+         </div>
+        <div class="buttons">
+            <div class="right">
+                <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_payment_options')?></span></a>
+            </div>
+        </div>
 
-    <br />
-    <div id="svea_partpayment_err" class="right" style="color:red; clear:both; margin-top:15px;">
-    </div>
-
-    <div class="right" id="svea_partpayment_tr" style="clear:both; margin-top:15px;display:inline-block;">
+    <div class="content" id="svea_partpayment_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_invoice_address')?>:<br />
         <div id="svea_partpayment_address"></div>
     </div>
 
     <br />
-    <div class="right" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
+    <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_payment_options')?>:<br />
         <select name="svea_partpayment_alt" id="svea_partpayment_alt">
         </select>
     </div>
     <br />
 
-    <div class="right" style="clear:both; margin-top:15px;display:inline-block;">
+    <div class="content" style="clear:both; margin-top:15px;display:inline-block;">
         <a id="checkout"  class="button"><span><?php echo $button_confirm; ?></span></a>
     </div>
 
-</div>
 <script type="text/javascript"><!--
 
 
