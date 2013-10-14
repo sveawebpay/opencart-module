@@ -325,7 +325,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
                         //->setAmountIncVat($productPriceIncVat) //Removed because bug transforming vat from 25 -> 24
-                        ->setVatPercent(intval($taxPercent))
+                       ->setVatPercent($taxPercent ? intval($taxPercent) : 0)
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])

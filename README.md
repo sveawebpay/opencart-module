@@ -1,5 +1,5 @@
 # OpenCart - SveaWebPay payment module
-##Version 2.0.18
+##Version 2.1.0
 This module is updated for the latest payment systems at SveaWebPay.
 This module has been tested with OpenCart 1.4.9.x-1.5.6 with standard checkout, standard coupons, standard voucher, standard shipping and Svea invoicefee.
 
