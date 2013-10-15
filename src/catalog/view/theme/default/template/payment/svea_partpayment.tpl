@@ -47,8 +47,8 @@
            </span>
         <?php }?>
     <?php }?>
-            <span id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;">
-            </span>
+            <div id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;">
+            </div>
          </div>
         <div class="buttons">
             <div class="right">
@@ -109,7 +109,7 @@ $('a#checkout').click(function() {
                     if(json.success){
                         location = '<?php echo $continue; ?>';
                     }else{
-                    $("#svea_partpayment_err").empty().show().append('<br>'+json.error);
+                    $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.error);
                     }
 
                     $('#sveaLoading').remove();
@@ -148,7 +148,7 @@ $('#getPlan').click(function() {
                 if(json.addresses.error){
                 $("#svea_partpayment_err").empty().show().append('<br>'+json.addresses.error);
                 }else if(json.paymentOptions.error){
-                    $("#svea_partpayment_err").empty().show().append('<br>'+json.paymentOptions.error);
+                    $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.paymentOptions.error);
                 }else{
 
                     if (json.addresses.length > 0){

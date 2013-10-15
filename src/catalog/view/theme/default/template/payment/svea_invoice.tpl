@@ -13,7 +13,7 @@
         <?php }?>
 
    <?php }?>
-    <span id="svea_invoice_err" style="color:red; margin-bottom:10px"></span>
+    <div id="svea_invoice_err" style="color:red; margin-bottom:10px"></div>
 </div>
 <div class="buttons">
     <div class="right">
@@ -161,7 +161,7 @@ $('a#checkout').click(function() {
                         location = '<?php echo $continue; ?>';
                     }
                     else{
-                        $("#svea_invoice_err").empty().show().append('<br>'+json.error);
+                        $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
                     }
 
                     $('#sveaLoading').remove();
@@ -190,7 +190,7 @@ $('#getSSN').click(function() {
     $("#svea_invoice_div").hide();
 
     if(ssnNo == ''){
-        $("#svea_invoice_err").empty().show().append('<br>*Required');
+        $("#svea_invoice_err").empty().addClass("attention").show().append('<br>*Required');
         $('#sveaLoading').remove();
     }else{
 
@@ -212,7 +212,7 @@ $('#getSSN').click(function() {
                 //on error
                 if (json.error){
 
-                    $("#svea_invoice_err").empty().show().append('<br>'+json.error);
+                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
 
                 }
                 else{
