@@ -192,6 +192,7 @@ $('#getSSN').click(function() {
     if(ssnNo == ''){
         $("#svea_invoice_err").empty().addClass("attention").show().append('<br>*Required');
         $('#sveaLoading').remove();
+        runningGetSSN = false;
     }else{
 
     	$.ajax({
