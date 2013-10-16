@@ -146,7 +146,7 @@ $('#getPlan').click(function() {
                 var json = JSON.parse(msg);
 
                 if(json.addresses.error){
-                $("#svea_partpayment_err").empty().show().append('<br>'+json.addresses.error);
+                $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.addresses.error);
                 }else if(json.paymentOptions.error){
                     $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.paymentOptions.error);
                 }else{

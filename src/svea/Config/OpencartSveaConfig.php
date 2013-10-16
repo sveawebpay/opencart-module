@@ -26,6 +26,8 @@ class OpencartSveaConfig implements ConfigurationProvider{
             return   Svea\SveaConfig::SWP_PROD_URL;
         }elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
              return Svea\SveaConfig::SWP_PROD_WS_URL;
+        }elseif($type == "HOSTED_ADMIN"){
+             return Svea\SveaConfig::SWP_PROD_HOSTED_ADMIN_URL;
         }  else {
            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
         }
