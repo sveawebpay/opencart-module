@@ -312,6 +312,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             if (floatval(VERSION) >= 1.5) {
                 $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                $taxPercent = 0;
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
                 }
@@ -325,7 +326,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
                         //->setAmountIncVat($productPriceIncVat) //Removed because bug transforming vat from 25 -> 24
-                       ->setVatPercent($taxPercent ? intval($taxPercent) : 0)
+                       ->setVatPercent($taxPercent)
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
