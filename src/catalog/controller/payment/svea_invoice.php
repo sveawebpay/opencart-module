@@ -261,7 +261,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
                 $this->load->model('payment/svea_invoice');
                 $this->load->model('checkout/order');
-
+                $this->load->model('account/address');
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
                 $countryCode = $order['payment_iso_code_2'];
@@ -289,7 +289,12 @@ class ControllerPaymentsveainvoice extends Controller {
                 if (isset($svea->errormessage)) {
                     $result = array("error" => $svea->errormessage);
                 }else{
-
+                    print_r($svea);die;
+                    //todo: create array key => value from getAddress
+                    //Update oc address to the billing address Svea returns from Svea addressprovider to avoid fraud
+                    $this->model_payment_svea_invoice->updateAddressField($this->session->data['payment_address_id'],array('address_1' => 'Ny gata'));
+                     $newAddresses = $this->model_account_address->getAddresses();
+                    print_r($newAddresses);die;
                     foreach ($svea->customerIdentity as $ci){
 
                         $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
@@ -319,6 +324,7 @@ class ControllerPaymentsveainvoice extends Controller {
             //Get the tax, difference in version 1.4.x
             if (floatval(VERSION) >= 1.5) {
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                $taxPercent = 0;
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
                 }

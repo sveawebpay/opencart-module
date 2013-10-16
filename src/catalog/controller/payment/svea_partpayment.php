@@ -339,7 +339,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
-                       ->setVatPercent(intval($taxPercent))
+                        ->setVatPercent(intval($taxPercent))
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
