@@ -297,12 +297,10 @@ class ControllerPaymentsveainvoice extends Controller {
         //Product rows
         foreach ($products as $product) {
             $productPriceExVat = $product['price'];
-
+             $taxPercent = 0;
             //Get the tax, difference in version 1.4.x
             if (floatval(VERSION) >= 1.5) {
-                $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
-                $taxPercent = 0;
                 foreach ($tax as $key => $value) {
                     $taxPercent = intval($value['rate']);
                 }

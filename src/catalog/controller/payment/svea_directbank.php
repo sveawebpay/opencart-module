@@ -66,20 +66,24 @@ class ControllerPaymentsveadirectbank extends Controller {
         //Product rows
         foreach($products as $product){
             $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+            $taxPercent = 0;
             //Get the tax, difference in version 1.4.x
             if(floatval(VERSION) >= 1.5){
-                $productTax = $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id']),'',false,false);
-                $productPriceIncVat = $productPriceExVat + $productTax;
+                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                foreach ($tax as $key => $value) {
+                    $taxPercent = intval($value['rate']);
+                }
             }  else {
-                $taxRate = $this->tax->getRate($product['tax_class_id']);
-                $productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
+                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
+                //$productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
             }
 
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
-                        ->setAmountIncVat(floatval($productPriceIncVat))
+                        ->setVatPercent($taxPercent)
+                        //->setAmountIncVat(floatval($productPriceIncVat))
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])

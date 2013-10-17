@@ -142,7 +142,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     //Product rows
                     try{
                         $deliverObj = $deliverObj
-                                ->setCountryCode($svea->customerIdentity->countryCode)
+                                ->setCountryCode($countryCode)
                                 ->setOrderId($svea->sveaOrderId)
                                     ->deliverPaymentPlanOrder()
                                     ->doRequest();
