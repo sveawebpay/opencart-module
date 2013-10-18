@@ -43,24 +43,22 @@ class ControllerPaymentsveacard extends Controller {
        //Product rows
         $products = $this->cart->getProducts();
         foreach($products as $product){
-           $productPriceExVat  = $this->currency->format($product['price'],'',false,false);
+           $productPriceExVat  = $product['price'] * $order['currency_value'];
            $taxPercent = 0;
             //Get the tax, difference in version 1.4.x
             if(floatval(VERSION) >= 1.5){
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
                 foreach ($tax as $key => $value) {
-                    $taxPercent = intval($value['rate']);
+                    $taxPercent = $value['rate'];
                 }
             }  else {
                  $taxPercent = $this->tax->getRate($product['tax_class_id']);
-                //$productPriceIncVat = (($taxRate / 100) +1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
-                        ->setVatPercent($taxPercent)
-                        //->setAmountIncVat(floatval($productPriceIncVat))
+                        ->setVatPercent(intval($taxPercent))
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])
@@ -71,20 +69,20 @@ class ControllerPaymentsveacard extends Controller {
         //Shipping Fee
         if ( $this->cart->hasShipping() == 1){
             $shipping_info = $this->session->data['shipping_method'];
-            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
-
+            $shippingExVat = $shipping_info["cost"];
+            $shippingIncVat = 0;
             if (floatval(VERSION) >= 1.5){
                 $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
                 $shippingIncVat = $shippingExVat + $shippingTax;
             }else{
-                $taxRate = $this->tax->getRate($shipping_info['tax_class_id']);
+               $taxRate = $this->tax->getRate($shipping_info['tax_class_id']);
                 $shippingIncVat = (($taxRate / 100) +1) * $shippingExVat;
             }
             if ($shipping_info['cost'] > 0){
                 $svea = $svea
                         ->addFee(Item::shippingFee()
-                            ->setAmountExVat(floatval($shippingExVat))
-                            ->setAmountIncVat( floatval($shippingExVat + $shippingTax))
+                            ->setAmountExVat(floatval($shippingExVat * $order['currency_value']))
+                            ->setAmountIncVat(floatval($shippingIncVat * $order['currency_value']))
                             ->setName($shipping_info['title'])
                             ->setDescription($shipping_info['text'])
                             ->setUnit($this->language->get('unit'))
@@ -100,11 +98,11 @@ class ControllerPaymentsveacard extends Controller {
         $totalPrice = $this->cart->getTotal();
 
         if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
-            $discount = $this->currency->format($coupon['discount'],'',false,false);
+            $discount = $coupon['discount'];
             $svea = $svea
                     ->addDiscount(
                         Item::fixedDiscount()
-                            ->setAmountIncVat($discount)
+                            ->setAmountIncVat(floatval($discount * $order['currency_value']))
                             ->setName($coupon['name'])
                             ->setUnit($this->language->get('unit'))
                         );
@@ -130,7 +128,7 @@ class ControllerPaymentsveacard extends Controller {
                     ->addDiscount(
                         Item::fixedDiscount()
                             ->setVatPercent(0)//No vat on voucher. Concidered a debt.
-                            ->setAmountIncVat($voucherAmount)
+                            ->setAmountIncVat(floatval($voucherAmount * $order['currency_value']))
                             ->setName($voucher['code'])
                             ->setDescription($voucher["message"])
                             ->setUnit($this->language->get('unit'))
@@ -153,11 +151,10 @@ class ControllerPaymentsveacard extends Controller {
             ->getPaymentForm();
         }  catch (Exception $e){
             $this->log->write($e->getMessage());
-            echo 'Logged Svea Error';
+            echo '<div class="attention">Logged Svea Error</div>';
             exit();
 
         }
-
 
 
         //print form with hidden buttons

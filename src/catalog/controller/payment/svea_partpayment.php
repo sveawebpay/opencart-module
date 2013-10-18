@@ -74,22 +74,22 @@ class ControllerPaymentsveapartpayment extends Controller {
         $products = $this->cart->getProducts();
 
         //products
-        $svea = $this->formatOrderRows($svea,$products);
+        $svea = $this->formatOrderRows($svea,$products,$order['currency_value']);
         //Shipping
         if ($this->cart->hasShipping() == 1) {
                if($this->session->data['shipping_method']['cost'] > 0){
-                    $svea = $this->formatShippingFeeRows($svea);
+                    $svea = $this->formatShippingFeeRows($svea,$order['currency_value']);
                }
         }
         //Get coupons
         if (isset($this->session->data['coupon'])) {
             $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-            $svea = $this->formatCouponRows($svea,$coupon);
+            $svea = $this->formatCouponRows($svea,$coupon,$order['currency_value']);
         }
         //Get vouchers
         if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
             $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-            $svea = $this->formatVoucher($svea,$voucher);
+            $svea = $this->formatVoucher($svea,$voucher,$order['currency_value']);
        }
 
 
@@ -302,11 +302,11 @@ class ControllerPaymentsveapartpayment extends Controller {
               $("a#checkout").hide();';
     }
 
-        private function formatOrderRows($svea,$products){
+        private function formatOrderRows($svea,$products,$currencyValue){
         $this->load->language('payment/svea_partpayment');
         //Product rows
         foreach ($products as $product) {
-            $productPriceExVat  = $product['price'];
+            $productPriceExVat  = $product['price'] * $currencyValue;
 
             //Get the tax, difference in version 1.4.x
             if (floatval(VERSION) >= 1.5) {
@@ -316,16 +316,13 @@ class ControllerPaymentsveapartpayment extends Controller {
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
                 }
-                //$productPriceIncVat = $productPriceExVat + $productTax;
             } else {
                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
-                //$productPriceIncVat = (($taxPercent / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
-                        //->setAmountIncVat($productPriceIncVat) //Removed because bug transforming vat from 25 -> 24
                        ->setVatPercent($taxPercent)
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
@@ -338,12 +335,12 @@ class ControllerPaymentsveapartpayment extends Controller {
         return $svea;
     }
 
-    public function formatShippingFeeRows($svea) {
+    public function formatShippingFeeRows($svea,$currencyValue) {
          $this->load->language('payment/svea_partpayment');
         //Shipping Fee
             $shipping_info = $this->session->data['shipping_method'];
-            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
-
+            $shippingExVat = $shipping_info["cost"] * $currencyValue;
+             $shippingIncVat = 0;
               if (floatval(VERSION) >= 1.5){
                 $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
                 $shippingIncVat = $shippingExVat + $shippingTax;
@@ -356,7 +353,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     ->addFee(
                         Item::shippingFee()
                             ->setAmountExVat(floatval($shippingExVat))
-                            ->setAmountIncVat(floatval($shippingIncVat))
+                            ->setAmountIncVat( floatval($shippingIncVat))
                             ->setName($shipping_info["title"])
                             ->setDescription($shipping_info["text"])
                             ->setUnit($this->language->get('pcs'))
@@ -366,14 +363,14 @@ class ControllerPaymentsveapartpayment extends Controller {
         return $svea;
     }
 
-    private function formatCouponRows($svea, $coupon) {
+    private function formatCouponRows($svea, $coupon,$currencyValue) {
             if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
-                $discount = $this->currency->format($coupon['discount'],'',false,false);;
+                $discount = $coupon['discount'] * $currencyValue;
 
                 $svea = $svea
                         ->addDiscount(
                             Item::fixedDiscount()
-                                ->setAmountIncVat($discount)
+                                ->setAmountIncVat(floatval($discount))
                                 ->setName($coupon['name'])
                                 ->setUnit($this->language->get('pcs'))
                             );
@@ -392,13 +389,13 @@ class ControllerPaymentsveapartpayment extends Controller {
             return $svea;
     }
 
-    private function formatVoucher($svea, $voucher) {
-         $voucherAmount = $voucher['amount'];
+    private function formatVoucher($svea, $voucher,$currencyValue) {
+         $voucherAmount = $voucher['amount'] * $currencyValue;
         $svea = $svea
                 ->addDiscount(
                     Item::fixedDiscount()
                         ->setVatPercent(0)//No vat on voucher. Concidered a debt.
-                        ->setAmountIncVat($voucherAmount)
+                        ->setAmountIncVat(floatval($voucherAmount))
                         ->setName($voucher['code'])
                         ->setDescription($voucher["message"])
                         ->setUnit($this->language->get('unit'))
