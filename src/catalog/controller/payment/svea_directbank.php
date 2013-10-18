@@ -60,12 +60,18 @@ class ControllerPaymentsveadirectbank extends Controller {
 
           //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $currencyValue = 1.00000000;
+        if (floatval(VERSION) >= 1.5) {
+             $currencyValue = $order['currency_value'];
+         }else{
+             $currencyValue = $order['value'];
+         }
          //Product rows
         $products = $this->cart->getProducts();
 
         //Product rows
         foreach($products as $product){
-             $productPriceExVat  = $product['price'] * $order['currency_value'];
+             $productPriceExVat  = $product['price'] * $currencyValue;
             $taxPercent = 0;
             //Get the tax, difference in version 1.4.x
             if(floatval(VERSION) >= 1.5){
@@ -106,8 +112,8 @@ class ControllerPaymentsveadirectbank extends Controller {
             if ($shipping_info['cost'] > 0){
                 $svea = $svea
                         ->addFee(Item::shippingFee()
-                            ->setAmountExVat(floatval($shippingExVat * $order['currency_value']))
-                            ->setAmountIncVat(floatval($shippingIncVat * $order['currency_value']))
+                            ->setAmountExVat(floatval($shippingExVat * $currencyValue))
+                            ->setAmountIncVat(floatval($shippingIncVat * $currencyValue))
                             ->setName($shipping_info['title'])
                             ->setDescription($shipping_info['text'])
                             ->setUnit($this->language->get('unit'))
@@ -126,7 +132,7 @@ class ControllerPaymentsveadirectbank extends Controller {
             $svea = $svea
                     ->addDiscount(
                         Item::fixedDiscount()
-                            ->setAmountIncVat(floatval($discount * $order['currency_value']))
+                            ->setAmountIncVat(floatval($discount * $currencyValue))
                             ->setName($coupon['name'])
                             ->setUnit($this->language->get('unit'))
                         );
@@ -151,7 +157,7 @@ class ControllerPaymentsveadirectbank extends Controller {
                     ->addDiscount(
                         Item::fixedDiscount()
                             ->setVatPercent(0)//No vat on voucher. Concidered a debt.
-                            ->setAmountIncVat(floatval($voucherAmount * $order['currency_value']))
+                            ->setAmountIncVat(floatval($voucherAmount * $currencyValue))
                             ->setName($voucher['code'])
                             ->setDescription($voucher["message"])
                             ->setUnit($this->language->get('unit'))

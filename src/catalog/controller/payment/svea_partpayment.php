@@ -72,24 +72,29 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
-
+        $currencyValue = 1.00000000;
+        if (floatval(VERSION) >= 1.5) {
+             $currencyValue = $order['currency_value'];
+         }else{
+             $currencyValue = $order['value'];
+         }
         //products
-        $svea = $this->formatOrderRows($svea,$products,$order['currency_value']);
+        $svea = $this->formatOrderRows($svea,$products,$currencyValue);
         //Shipping
         if ($this->cart->hasShipping() == 1) {
                if($this->session->data['shipping_method']['cost'] > 0){
-                    $svea = $this->formatShippingFeeRows($svea,$order['currency_value']);
+                    $svea = $this->formatShippingFeeRows($svea,$currencyValue);
                }
         }
         //Get coupons
         if (isset($this->session->data['coupon'])) {
             $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-            $svea = $this->formatCouponRows($svea,$coupon,$order['currency_value']);
+            $svea = $this->formatCouponRows($svea,$coupon,$currencyValue);
         }
         //Get vouchers
         if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
             $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-            $svea = $this->formatVoucher($svea,$voucher,$order['currency_value']);
+            $svea = $this->formatVoucher($svea,$voucher,$currencyValue);
        }
 
 
@@ -323,7 +328,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     ->addOrderRow(Item::orderRow()
                         ->setQuantity($product['quantity'])
                         ->setAmountExVat(floatval($productPriceExVat))
-                       ->setVatPercent($taxPercent)
+                       ->setVatPercent(intval($taxPercent))
                         ->setName($product['name'])
                         ->setUnit($this->language->get('unit'))
                         ->setArticleNumber($product['product_id'])

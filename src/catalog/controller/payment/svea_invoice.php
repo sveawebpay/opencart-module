@@ -78,17 +78,23 @@ class ControllerPaymentsveainvoice extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
+        $currencyValue = 1.00000000;
+        if (floatval(VERSION) >= 1.5) {
+             $currencyValue = $order['currency_value'];
+         }else{
+             $currencyValue = $order['value'];
+         }
         //Products
-        $svea = $this->formatOrderRows($svea,$products,$order['currency_value']);
+        $svea = $this->formatOrderRows($svea,$products,$currencyValue);
         if ($this->config->get('svea_fee_status') == 1) {
-            $svea = $this->formatInvoiceFeeRows($svea,$order['currency_value']);
+            $svea = $this->formatInvoiceFeeRows($svea,$currencyValue);
 
         }
 
         //Shipping
         if ($this->cart->hasShipping() == 1){
             if($this->session->data['shipping_method']['cost'] > 0){
-                 $svea = $this->formatShippingFeeRows($svea,$order['currency_value']);
+                 $svea = $this->formatShippingFeeRows($svea,$currencyValue);
             }
         }
 
@@ -96,12 +102,12 @@ class ControllerPaymentsveainvoice extends Controller {
         //Get coupons
         if (isset($this->session->data['coupon'])) {
             $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-            $svea = $this->formatCouponRows($svea,$coupon,$order['currency_value']);
+            $svea = $this->formatCouponRows($svea,$coupon,$currencyValue);
         }
         //Get vouchers
         if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
             $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-            $svea = $this->formatVoucher($svea,$voucher,$order['currency_value']);
+            $svea = $this->formatVoucher($svea,$voucher,$currencyValue);
        }
 
         //Seperates the street from the housenumber according to testcases
@@ -174,26 +180,26 @@ class ControllerPaymentsveainvoice extends Controller {
                 if($this->config->get('svea_invoice_auto_deliver') == 1){
                     $deliverObj = WebPay::deliverOrder($conf);
                     //Product rows
-                    $deliverObj = $this->formatOrderRows($deliverObj, $products,$order['currency_value']);
+                    $deliverObj = $this->formatOrderRows($deliverObj, $products,$currencyValue);
                     //InvoiceFee
                     if ($this->config->get('svea_fee_status') == 1) {
-                    $deliverObj = $this->formatInvoiceFeeRows($deliverObj,$order['currency_value']);
+                    $deliverObj = $this->formatInvoiceFeeRows($deliverObj,$currencyValue);
                     }
                      //Shipping
                     if ($this->cart->hasShipping() == 1) {
                         if($this->session->data['shipping_method']['cost'] > 0){
-                          $deliverObj = $this->formatShippingFeeRows($deliverObj,$order['currency_value']);
+                          $deliverObj = $this->formatShippingFeeRows($deliverObj,$currencyValue);
                         }
                     }
                      //Get coupons
                     if (isset($this->session->data['coupon'])) {
                         $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-                        $deliverObj = $this->formatCouponRows($deliverObj,$coupon,$order['currency_value']);
+                        $deliverObj = $this->formatCouponRows($deliverObj,$coupon,$currencyValue);
                     }
                      //Get vouchers
                     if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
                         $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-                        $deliverObj = $this->formatVoucher($deliverObj,$voucher,$order['currency_value']);
+                        $deliverObj = $this->formatVoucher($deliverObj,$voucher,$currencyValue);
                         //$totalPrice = $this->cart->getTotal();
                    }
                    try{
@@ -301,7 +307,7 @@ class ControllerPaymentsveainvoice extends Controller {
             if (floatval(VERSION) >= 1.5) {
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
                 foreach ($tax as $key => $value) {
-                    $taxPercent = intval($value['rate']);
+                    $taxPercent = $value['rate'];
                 }
             } else {
                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
@@ -310,7 +316,7 @@ class ControllerPaymentsveainvoice extends Controller {
                     ->addOrderRow(Item::orderRow()
                     ->setQuantity($product['quantity'])
                     ->setAmountExVat(floatval($productPriceExVat))
-                    ->setVatPercent($taxPercent)
+                    ->setVatPercent(intval($taxPercent))
                     ->setName($product['name'])
                     ->setUnit($this->language->get('unit'))
                     ->setArticleNumber($product['product_id'])
