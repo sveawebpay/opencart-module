@@ -351,89 +351,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         return $svea;
     }
 
-    public function formatShippingFeeRows($svea,$currencyValue) {
-         $this->load->language('payment/svea_partpayment');
-        //Shipping Fee
-            $shipping_info = $this->session->data['shipping_method'];
-            $shippingExVat = $shipping_info["cost"] * $currencyValue;
-             $shippingIncVat = 0;
-              if (floatval(VERSION) >= 1.5){
-                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
-                $shippingIncVat = $shippingExVat + $shippingTax;
-            }else{
-                $taxRate = $this->tax->getRate($shipping_info['tax_class_id']);
-                $shippingIncVat = (($taxRate / 100) +1) * $shippingExVat;
-            }
-
-            $svea = $svea
-                    ->addFee(
-                        Item::shippingFee()
-                            ->setAmountExVat(floatval($shippingExVat))
-                            ->setAmountIncVat( floatval($shippingIncVat))
-                            ->setName($shipping_info["title"])
-                            ->setDescription($shipping_info["text"])
-                            ->setUnit($this->language->get('pcs'))
-                       );
-
-
-        return $svea;
-    }
-
-    private function formatCouponRows($svea, $coupon,$currencyValue) {
-            if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
-                $discount = $coupon['discount'] * $currencyValue;
-
-                $svea = $svea
-                        ->addDiscount(
-                            Item::fixedDiscount()
-                                ->setAmountIncVat(floatval($discount))
-                                ->setName($coupon['name'])
-                                ->setUnit($this->language->get('pcs'))
-                            );
-
-
-            } elseif ($coupon['discount'] > 0 && $coupon['type'] == 'P') {
-
-                $svea = $svea
-                        ->addDiscount(
-                            Item::relativeDiscount()
-                                ->setDiscountPercent($coupon['discount'])
-                                ->setName($coupon['name'])
-                                ->setUnit($this->language->get('pcs'))
-                            );
-                }
-            return $svea;
-    }
-
-    private function formatVoucher($svea, $voucher,$currencyValue) {
-         $voucherAmount = $voucher['amount'] * $currencyValue;
-        $svea = $svea
-                ->addDiscount(
-                    Item::fixedDiscount()
-                        ->setVatPercent(0)//No vat on voucher. Concidered a debt.
-                        ->setAmountIncVat(floatval($voucherAmount))
-                        ->setName($voucher['code'])
-                        ->setDescription($voucher["message"])
-                        ->setUnit($this->language->get('unit'))
-                    );
-        return $svea;
-    }
-
-    private function getLogo($countryCode){
-
-        switch ($countryCode){
-            case "SE": $country = "swedish";    break;
-            case "NO": $country = "norwegian";  break;
-            case "DK": $country = "danish";     break;
-            case "FI": $country = "finnish";    break;
-            case "NL": $country = "dutch";      break;
-            case "DE": $country = "german";     break;
-            default:   $country = "english";    break;
-        }
-
-        return $country;
-    }
-
     public function formatAddons() {
         //Get all addons
         $this->load->model('setting/extension');
@@ -482,6 +399,21 @@ class ControllerPaymentsveapartpayment extends Controller {
                 }
             }
             return $total_data;
+    }
+
+        private function getLogo($countryCode){
+
+        switch ($countryCode){
+            case "SE": $country = "swedish";    break;
+            case "NO": $country = "norwegian";  break;
+            case "DK": $country = "danish";     break;
+            case "FI": $country = "finnish";    break;
+            case "NL": $country = "dutch";      break;
+            case "DE": $country = "german";     break;
+            default:   $country = "english";    break;
+        }
+
+        return $country;
     }
 }
 ?>
