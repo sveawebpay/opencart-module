@@ -72,75 +72,35 @@ class ControllerPaymentsveacard extends Controller {
                     );
         }
 
-        //Shipping Fee
-        if ( $this->cart->hasShipping() == 1){
-            $shipping_info = $this->session->data['shipping_method'];
-            $shippingExVat = $shipping_info["cost"];
-            $shippingIncVat = 0;
-            if (floatval(VERSION) >= 1.5){
-                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
-                $shippingIncVat = $shippingExVat + $shippingTax;
-            }else{
-               $taxRate = $this->tax->getRate($shipping_info['tax_class_id']);
-                $shippingIncVat = (($taxRate / 100) +1) * $shippingExVat;
-            }
-            if ($shipping_info['cost'] > 0){
-                $svea = $svea
-                        ->addFee(Item::shippingFee()
-                            ->setAmountExVat(floatval($shippingExVat * $currencyValue))
-                            ->setAmountIncVat(floatval($shippingIncVat * $currencyValue))
-                            ->setName($shipping_info['title'])
-                            ->setDescription($shipping_info['text'])
-                            ->setUnit($this->language->get('unit'))
-                            );
-            }
-
-        }
-
-        //Add coupon
-        if (isset($this->session->data['coupon'])){
-        $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-
-        $totalPrice = $this->cart->getTotal();
-
-        if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
-            $discount = $coupon['discount'];
-            $svea = $svea
+         $addons = $this->formatAddons();
+         //extra charge addons like shipping and invoice fee
+         foreach ($addons as $addon) {
+             if($addon['value'] >= 0){
+                  $svea = $svea
+                    ->addOrderRow(Item::orderRow()
+                    ->setQuantity(1)
+                    ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                    ->setVatPercent(intval($addon['tax_rate']))
+                    ->setName($addon['title'])
+                    ->setUnit($this->language->get('unit'))
+                    ->setArticleNumber($addon['code'])
+                    ->setDescription($addon['text'])
+            );
+            //discounts
+             }  elseif($addon['value'] < 0) {
+                  $svea = $svea
                     ->addDiscount(
                         Item::fixedDiscount()
-                            ->setAmountIncVat(floatval($discount * $currencyValue))
-                            ->setName($coupon['name'])
+                            ->setAmountIncVat(floatval($addon['value']))
+                            ->setName($addon['name'])
+                            ->setDescription($addon['text'])
                             ->setUnit($this->language->get('unit'))
                         );
-        } elseif ($coupon['discount'] > 0 && $coupon['type'] == 'P') {
-            $svea = $svea
-                    ->addDiscount(
-                        Item::relativeDiscount()
-                            ->setDiscountPercent($coupon['discount'])
-                            ->setName($coupon['name'])
-                            ->setUnit($this->language->get('unit'))
-                        );
-                }
-        }
+             }
 
-        //Get vouchers
-        if (isset($this->session->data['voucher'])) {
-            $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
+         }
 
-            $totalPrice = $this->cart->getTotal();
 
-            $voucherAmount = $voucher['amount'];
-            $svea = $svea
-                    ->addDiscount(
-                        Item::fixedDiscount()
-                            ->setVatPercent(0)//No vat on voucher. Concidered a debt.
-                            ->setAmountIncVat(floatval($voucherAmount * $currencyValue))
-                            ->setName($voucher['code'])
-                            ->setDescription($voucher["message"])
-                            ->setUnit($this->language->get('unit'))
-                        );
-
-        }
 
         $server_url = $this->config->get('config_url');
 
@@ -262,6 +222,56 @@ class ControllerPaymentsveacard extends Controller {
         }
 
         return $country;
+    }
+
+     public function formatAddons() {
+        //Get all addons
+        $this->load->model('setting/extension');
+        $total_data = array();
+        $total = 0;
+        $svea_tax = array();
+        $cartTax = $this->cart->getTaxes();
+        $results = $this->model_setting_extension->getExtensions('total');
+        foreach ($results as $result) {
+          //if this result is activated
+           if($this->config->get($result['code'] . '_status')){
+               $amount = 0;
+               $taxes = array();
+               foreach ($cartTax as $key => $value) {
+                   $taxes[$key] = 0;
+               }
+               $this->load->model('total/' . $result['code']);
+
+               $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+
+               foreach ($taxes as $tax_id => $value) {
+                   $amount += $value;
+               }
+
+               $svea_tax[$result['code']] = $amount;
+           }
+
+        }
+        foreach ($total_data as $key => $value) {
+
+            if (isset($svea_tax[$value['code']])) {
+                if ($svea_tax[$value['code']]) {
+                    $total_data[$key]['tax_rate'] = $svea_tax[$value['code']] / $value['value'] * 100;
+                } else {
+                    $total_data[$key]['tax_rate'] = 0;
+                }
+            } else {
+                $total_data[$key]['tax_rate'] = '0';
+            }
+        }
+          $ignoredTotals = 'sub_total, total, taxes';
+           $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
+            foreach ($total_data as $key => $orderTotal) {
+                if (in_array($orderTotal['code'], $ignoredOrderTotals)) {
+                    unset($total_data[$key]);
+                }
+            }
+            return $total_data;
     }
 
 }

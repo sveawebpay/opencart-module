@@ -80,6 +80,36 @@ class ControllerPaymentsveapartpayment extends Controller {
          }
         //products
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);
+        //get all addons
+        $addons = $this->formatAddons();
+        //extra charge addons like shipping and invoice fee
+        foreach ($addons as $addon) {
+            if($addon['value'] >= 0){
+                 $svea = $svea
+                   ->addOrderRow(Item::orderRow()
+                   ->setQuantity(1)
+                   ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                   ->setVatPercent(intval($addon['tax_rate']))
+                   ->setName($addon['title'])
+                   ->setUnit($this->language->get('unit'))
+                   ->setArticleNumber($addon['code'])
+                   ->setDescription($addon['text'])
+           );
+           //discounts
+            }  elseif($addon['value'] < 0) {
+                 $svea = $svea
+                   ->addDiscount(
+                       Item::fixedDiscount()
+                           ->setAmountIncVat(floatval($addon['value']))
+                           ->setName($addon['name'])
+                           ->setDescription($addon['text'])
+                           ->setUnit($this->language->get('unit'))
+                       );
+            }
+
+        }
+
+        /**
         //Shipping
         if ($this->cart->hasShipping() == 1) {
                if($this->session->data['shipping_method']['cost'] > 0){
@@ -96,6 +126,8 @@ class ControllerPaymentsveapartpayment extends Controller {
             $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
             $svea = $this->formatVoucher($svea,$voucher,$currencyValue);
        }
+         *
+         */
 
 
         //Seperates the street from the housenumber according to testcases
@@ -421,6 +453,56 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
 
         return $country;
+    }
+
+    public function formatAddons() {
+        //Get all addons
+        $this->load->model('setting/extension');
+        $total_data = array();
+        $total = 0;
+        $svea_tax = array();
+        $cartTax = $this->cart->getTaxes();
+        $results = $this->model_setting_extension->getExtensions('total');
+        foreach ($results as $result) {
+          //if this result is activated
+           if($this->config->get($result['code'] . '_status')){
+               $amount = 0;
+               $taxes = array();
+               foreach ($cartTax as $key => $value) {
+                   $taxes[$key] = 0;
+               }
+               $this->load->model('total/' . $result['code']);
+
+               $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+
+               foreach ($taxes as $tax_id => $value) {
+                   $amount += $value;
+               }
+
+               $svea_tax[$result['code']] = $amount;
+           }
+
+        }
+        foreach ($total_data as $key => $value) {
+
+            if (isset($svea_tax[$value['code']])) {
+                if ($svea_tax[$value['code']]) {
+                    $total_data[$key]['tax_rate'] = $svea_tax[$value['code']] / $value['value'] * 100;
+                } else {
+                    $total_data[$key]['tax_rate'] = 0;
+                }
+            } else {
+                $total_data[$key]['tax_rate'] = '0';
+            }
+        }
+          $ignoredTotals = 'sub_total, total, taxes';
+           $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
+            foreach ($total_data as $key => $orderTotal) {
+                if (in_array($orderTotal['code'], $ignoredOrderTotals)) {
+                    unset($total_data[$key]);
+                }
+            }
+            return $total_data;
     }
 }
 ?>
