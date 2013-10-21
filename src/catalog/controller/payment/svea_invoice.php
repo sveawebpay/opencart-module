@@ -169,8 +169,7 @@ class ControllerPaymentsveainvoice extends Controller {
                       ->setClientOrderNumber($this->session->data['order_id'])
                       ->setOrderDate(date('c'))
                       ->useInvoicePayment()
-                        ->prepareRequest();
-                print_r($svea);die;
+                        ->doRequest();
             }  catch (Exception $e){
                 $this->log->write($e->getMessage());
                 $response = array("error" => $this->responseCodes(0,$e->getMessage()));
