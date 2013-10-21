@@ -100,25 +100,25 @@ class ControllerPaymentsveadirectbank extends Controller {
          //extra charge addons like shipping and invoice fee
          foreach ($addons as $addon) {
              if($addon['value'] >= 0){
-                  $svea = $svea
-                    ->addOrderRow(Item::orderRow()
-                    ->setQuantity(1)
-                    ->setAmountExVat(floatval($addon['value'] * $currencyValue))
-                    ->setVatPercent(intval($addon['tax_rate']))
-                    ->setName($addon['title'])
-                    ->setUnit($this->language->get('unit'))
-                    ->setArticleNumber($addon['code'])
-                    ->setDescription($addon['text'])
-            );
+                   $svea = $svea
+                   ->addOrderRow(Item::orderRow()
+                   ->setQuantity(1)
+                   ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                   ->setVatPercent(intval($addon['tax_rate']))
+                   ->setName(isset($addon['title']) ? $addon['title'] : "")
+                   ->setUnit($this->language->get('unit'))
+                   ->setArticleNumber($addon['code'])
+                   ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+           );
             //discounts
              }  elseif($addon['value'] < 0) {
                   $svea = $svea
                     ->addDiscount(
                         Item::fixedDiscount()
                             ->setAmountIncVat(floatval($addon['value']))
-                            ->setName($addon['name'])
-                            ->setDescription($addon['text'])
-                            ->setUnit($this->language->get('unit'))
+                           ->setName(isset($addon['name']) ? $addon['name'] : "")
+                           ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                           ->setUnit($this->language->get('unit'))
                         );
              }
 

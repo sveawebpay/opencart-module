@@ -88,6 +88,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);
         //get all addons
          $addons = $this->formatAddons();
+
          //extra charge addons like shipping and invoice fee
          foreach ($addons as $addon) {
              if($addon['value'] >= 0){
@@ -96,10 +97,10 @@ class ControllerPaymentsveainvoice extends Controller {
                     ->setQuantity(1)
                     ->setAmountExVat(floatval($addon['value'] * $currencyValue))
                     ->setVatPercent(intval($addon['tax_rate']))
-                    ->setName($addon['title'])
+                    ->setName(isset($addon['title']) ? $addon['title'] : "")
                     ->setUnit($this->language->get('unit'))
                     ->setArticleNumber($addon['code'])
-                    ->setDescription($addon['text'])
+                    ->setDescription(isset($addon['text']) ? $addon['text'] : "")
             );
             //discounts
              }  elseif($addon['value'] < 0) {
@@ -107,13 +108,14 @@ class ControllerPaymentsveainvoice extends Controller {
                     ->addDiscount(
                         Item::fixedDiscount()
                             ->setAmountIncVat(floatval($addon['value']))
-                            ->setName($addon['name'])
-                            ->setDescription($addon['text'])
+                            ->setName(isset($addon['name']) ? $addon['name'] : "")
+                            ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                             ->setUnit($this->language->get('unit'))
                         );
              }
 
          }
+
         //Seperates the street from the housenumber according to testcases
         $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
         preg_match($pattern, $order['payment_address_1'], $addressArr);
@@ -185,27 +187,34 @@ class ControllerPaymentsveainvoice extends Controller {
                     $deliverObj = WebPay::deliverOrder($conf);
                     //Product rows
                     $deliverObj = $this->formatOrderRows($deliverObj, $products,$currencyValue);
-                    //InvoiceFee
-                    if ($this->config->get('svea_fee_status') == 1) {
-                    $deliverObj = $this->formatInvoiceFeeRows($deliverObj,$currencyValue);
-                    }
-                     //Shipping
-                    if ($this->cart->hasShipping() == 1) {
-                        if($this->session->data['shipping_method']['cost'] > 0){
-                          $deliverObj = $this->formatShippingFeeRows($deliverObj,$currencyValue);
+
+                     //extra charge addons like shipping and invoice fee
+                    foreach ($addons as $addon) {
+                        if($addon['value'] >= 0){
+                             $deliverObj = $deliverObj
+                               ->addOrderRow(Item::orderRow()
+                               ->setQuantity(1)
+                               ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                               ->setVatPercent(intval($addon['tax_rate']))
+                               ->setName(isset($addon['title']) ? $addon['title'] : "")
+                               ->setUnit($this->language->get('unit'))
+                               ->setArticleNumber($addon['code'])
+                               ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                       );
+                       //discounts
+                        }  elseif($addon['value'] < 0) {
+                             $deliverObj = $deliverObj
+                               ->addDiscount(
+                                   Item::fixedDiscount()
+                                       ->setAmountIncVat(floatval($addon['value']))
+                                       ->setName(isset($addon['name']) ? $addon['name'] : "")
+                                       ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                                       ->setUnit($this->language->get('unit'))
+                                   );
                         }
+
                     }
-                     //Get coupons
-                    if (isset($this->session->data['coupon'])) {
-                        $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-                        $deliverObj = $this->formatCouponRows($deliverObj,$coupon,$currencyValue);
-                    }
-                     //Get vouchers
-                    if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
-                        $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-                        $deliverObj = $this->formatVoucher($deliverObj,$voucher,$currencyValue);
-                        //$totalPrice = $this->cart->getTotal();
-                   }
+
                    try{
 
                         $deliverObj = $deliverObj->setCountryCode($countryCode)

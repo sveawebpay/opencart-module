@@ -90,10 +90,10 @@ class ControllerPaymentsveapartpayment extends Controller {
                    ->setQuantity(1)
                    ->setAmountExVat(floatval($addon['value'] * $currencyValue))
                    ->setVatPercent(intval($addon['tax_rate']))
-                   ->setName($addon['title'])
+                   ->setName(isset($addon['title']) ? $addon['title'] : "")
                    ->setUnit($this->language->get('unit'))
                    ->setArticleNumber($addon['code'])
-                   ->setDescription($addon['text'])
+                   ->setDescription(isset($addon['text']) ? $addon['text'] : "")
            );
            //discounts
             }  elseif($addon['value'] < 0) {
@@ -101,34 +101,13 @@ class ControllerPaymentsveapartpayment extends Controller {
                    ->addDiscount(
                        Item::fixedDiscount()
                            ->setAmountIncVat(floatval($addon['value']))
-                           ->setName($addon['name'])
-                           ->setDescription($addon['text'])
+                           ->setName(isset($addon['name']) ? $addon['name'] : "")
+                           ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                            ->setUnit($this->language->get('unit'))
                        );
             }
 
         }
-
-        /**
-        //Shipping
-        if ($this->cart->hasShipping() == 1) {
-               if($this->session->data['shipping_method']['cost'] > 0){
-                    $svea = $this->formatShippingFeeRows($svea,$currencyValue);
-               }
-        }
-        //Get coupons
-        if (isset($this->session->data['coupon'])) {
-            $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-            $svea = $this->formatCouponRows($svea,$coupon,$currencyValue);
-        }
-        //Get vouchers
-        if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
-            $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-            $svea = $this->formatVoucher($svea,$voucher,$currencyValue);
-       }
-         *
-         */
-
 
         //Seperates the street from the housenumber according to testcases
         $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
