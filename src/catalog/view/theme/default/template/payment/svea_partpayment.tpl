@@ -97,10 +97,30 @@ $('a#checkout').click(function() {
     var birthDay = $("#birthDay").val();
     var birthMonth = $("#birthMonth").val();
     var birthYear = $("#birthYear").val();
+    var firstname = $('#firstname').val();
+    var lastname = $('#lastname').val();
+    var street = $('#street').val();
+    var address_2 = $('#address_2').val();
+    var postcode = $('#postcode').val();
+    var countryCode = $('#countryCode').val();
+    var locality = $('#locality').val();
 
 	$.ajax({
 		type: 'GET',
-                data: {ssn: ssnNo, paySel: paymentSelector,initials: Initials, birthDay: birthDay, birthMonth: birthMonth, birthYear: birthYear},
+                data: { ssn: ssnNo,
+                        paySel: paymentSelector,
+                        initials: Initials,
+                        birthDay: birthDay,
+                        birthMonth: birthMonth,
+                        birthYear: birthYear,
+                        firstname : firstname,
+                        lastname : lastname,
+                        street : street,
+                        address_2 : address_2,
+                        postcode : postcode,
+                        countryCode : countryCode,
+                        locality : locality
+                    },
 		url: 'index.php?route=payment/svea_partpayment/confirm',
 		success: function(data) {
 
@@ -157,9 +177,16 @@ $('#getPlan').click(function() {
                         $("#svea_partpayment_address").empty().append('<strong>'+json.addresses[0].fullName+'</strong><br>'+json.addresses[0].street+'<br>'+json.addresses[0].zipCode+' '+json.addresses[0].locality);
                         $("#svea_partpayment_tr").show();
                     }
-
                     $.each(json.paymentOptions,function(key,value){
                          $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.price_per_month+')</option>');
+                          $("#svea_partpayment_alt").append('<div id="sveaAdditionalInfo"><input type="hidden" name="firstname" id="firstname" value="'+json.addresses[0].firstname+'">'
+                                                        + '<input type="hidden" name="lastname" id="lastname" value="'+json.addresses[0].lastname+'">'
+                                                        + '<input type="hidden" name="street" id="street" value="'+json.addresses[0].street+'">'
+                                                        + '<input type="hidden" name="address_2" id="address_2" value="'+json.addresses[0].address_2+'">'
+                                                        + '<input type="hidden" name="postcode" id="postcode" value="'+json.addresses[0].postcode+'">'
+                                                        + '<input type="hidden" name="countryCode" id="countryCode" value="'+json.addresses[0].countryCode+'">'
+                                                        + '<input type="hidden" name="fullname" id="fullname" value="'+json.addresses[0].fullName+'">'
+                                                        + '<input type="hidden" name="locality" id="locality" value="'+json.addresses[0].locality+'"></div>');
                     });
 
                     $("#svea_partpaymentalt_tr").show();
