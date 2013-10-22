@@ -106,7 +106,7 @@ Module supports one Svea merchant id per Opencart installation.
 
 * For use with voucher, the voucher module sort order must be after taxes
 * For use with coupons, the coupon module sort order must be:
- * After taxes, if coupon is for a fixed amount
+ * Before taxes, with fixed amount coupons. These are always specified excluding vat, and the vat will be calculated in accordance with OpenCart standard behaviour.
  * Before taxes, if coupon gives a percentage discount
 
 
