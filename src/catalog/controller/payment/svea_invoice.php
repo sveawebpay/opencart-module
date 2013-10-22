@@ -52,6 +52,8 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/coupon');
+        $this->load->model('account/address');
+
         if (floatval(VERSION) >= 1.5) {
             $this->load->model('checkout/voucher');
         }
@@ -119,8 +121,22 @@ class ControllerPaymentsveainvoice extends Controller {
         preg_match($pattern, $order['payment_address_1'], $addressArr);
         if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; } //fix for addresses w/o housenumber
 
-        //Set order detials if company or private
         if ($company == TRUE){
+            $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($_GET['countryCode']));
+            $sveaAddresses = array(
+                "payment_company" => $_GET['fullname'],
+                "payment_company_id" => $_GET['vatno'],
+                "payment_address_1" => $_GET['street'],
+                "payment_address_2" => $_GET['address_2'],
+                "payment_city" => $_GET['locality'],
+                "payment_postcode" => $_GET['postcode'],
+                "payment_country_id" => $countryId['country_id'],
+                "payment_country" => $countryId['country_name'],
+                "payment_method" => $this->language->get('text_title')
+            );
+            //Update oc order address to the billing address Svea returns from Svea addressprovider to avoid fraud
+            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
+
             $item = Item::companyCustomer();
 
             $item = $item->setEmail($order['email'])
@@ -138,13 +154,27 @@ class ControllerPaymentsveainvoice extends Controller {
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
-
-
         }else{
+            $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($_GET['countryCode']));
+            $sveaAddresses = array(
+                "payment_firstname" => $_GET['firstname'],
+                "payment_lastname" => $_GET['lastname'],
+                "payment_address_1" => $_GET['street'],
+                "payment_address_2" => $_GET['address_2'],
+                "payment_city" => $_GET['locality'],
+                "payment_postcode" => $_GET['postcode'],
+                "payment_country_id" => $countryId['country_id'],
+                "payment_country" => $countryId['country_name'],
+                "payment_method" => $this->language->get('text_title')
+
+            );
+            //Update oc address to the billing address Svea returns from Svea addressprovider to avoid fraud
+            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
+
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
             $item = Item::individualCustomer();
-
+            //send customer filled address to svea. Svea will use address from getAddress for the invoice.
             $item = $item->setNationalIdNumber($ssn)
                          ->setEmail($order['email'])
                          ->setName($order['payment_firstname'],$order['payment_lastname'])
@@ -261,7 +291,6 @@ class ControllerPaymentsveainvoice extends Controller {
 
                 $this->load->model('payment/svea_invoice');
                 $this->load->model('checkout/order');
-
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
                 $countryCode = $order['payment_iso_code_2'];
@@ -289,16 +318,19 @@ class ControllerPaymentsveainvoice extends Controller {
                 if (isset($svea->errormessage)) {
                     $result = array("error" => $svea->errormessage);
                 }else{
-
                     foreach ($svea->customerIdentity as $ci){
 
                         $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
 
-                        $result[] = array("fullName" => $name,
-                                          "street"    => $ci->street,
-                                          "zipCode"   => $ci->zipCode,
-                                          "locality"  => $ci->locality,
-                                          "addressSelector" => $ci->addressSelector);
+                        $result[] = array(  "fullName"  => $name,
+                                            "firstname" => $ci->firstName,
+                                            "lastname" => $ci->lastName,
+                                            "street"    => $ci->street,
+                                            "address_2" => $ci->coAddress,
+                                            "locality"  => $ci->locality,
+                                            "postcode"  => $ci->zipCode,
+                                            "countryCode"  => $countryCode,
+                                            "addressSelector" => $ci->addressSelector);
                     }
                 }
 
@@ -316,6 +348,7 @@ class ControllerPaymentsveainvoice extends Controller {
             //Get the tax, difference in version 1.4.x
             if (floatval(VERSION) >= 1.5) {
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                $taxPercent = 0;
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
                 }
