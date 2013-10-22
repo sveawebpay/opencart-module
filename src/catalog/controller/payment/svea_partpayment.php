@@ -45,11 +45,13 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     public function confirm() {
         $this->load->language('payment/svea_partpayment');
-
         //Load models
+        $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/coupon');
+        $this->load->model('account/address');
+
         floatval(VERSION) >= 1.5 ? $this->load->model('checkout/voucher') : $this->load->model('checkout/extension');
 
         //Load SVEA includes
@@ -113,7 +115,21 @@ class ControllerPaymentsveapartpayment extends Controller {
         $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
         preg_match($pattern, $order['payment_address_1'], $addressArr);
         if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; } //fix for addresses w/o housenumber
+        $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($_GET['countryCode']));
+        $sveaAddresses = array(
+            "payment_firstname" => $_GET['firstname'],
+            "payment_lastname" => $_GET['lastname'],
+            "payment_address_1" => $_GET['street'],
+            "payment_address_2" => $_GET['address_2'],
+            "payment_city" => $_GET['locality'],
+            "payment_postcode" => $_GET['postcode'],
+            "payment_country_id" => $countryId['country_id'],
+            "payment_country" => $countryId['country_name'],
+            "payment_method" => $this->language->get('text_title')
 
+        );
+        //Update oc address to the billing address Svea returns from Svea addressprovider to avoid fraud
+        $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
@@ -226,12 +242,15 @@ class ControllerPaymentsveapartpayment extends Controller {
 
                 $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
 
-                $result = array("fullName"  => $name,
-                                  "street"    => $ci->street,
-                                  "zipCode"   => $ci->zipCode,
-                                  "locality"  => $ci->locality,
-                                  "addressSelector" => $ci->addressSelector);
-            }
+                 $result[] = array(  "fullName"  => $name,
+                                            "firstname" => $ci->firstName,
+                                            "lastname" => $ci->lastName,
+                                            "street"    => $ci->street,
+                                             "address_2" => $ci->coAddress,
+                                            "locality"  => $ci->locality,
+                                            "postcode"  => $ci->zipCode,
+                                            "countryCode"  => $countryCode);
+                    }
         }
         return $result;
        // echo json_encode($result);

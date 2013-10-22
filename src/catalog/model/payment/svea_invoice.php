@@ -37,22 +37,29 @@ class ModelPaymentsveainvoice extends Model {
          * @param type $address_id
          * @param type $data
          */
-        public function updateAddressField($address_id,$data){
-              $query = "UPDATE " . DB_PREFIX .
-                                "address SET ";
-              $row = "";
-              $counter = 0;
-              foreach ($data as $key => $value){
-                  $counter == 0 ? $row = "" : $row .= ",";
-                  $row .= $this->db->escape($key)." = '".$this->db->escape($value)."'";
-                  $counter ++;
-              }
-              $query .= $row;
-              $query .=  " WHERE address_id  = '" . (int)$address_id .
-                                "' AND customer_id = '" . (int)$this->customer->getId() .
-                                "'";
-                        $this->db->query($query);
+        public function updateAddressField($order_id,$data){
+            $query = "UPDATE " . DB_PREFIX .
+                              "order SET ";
+            $row = "";
+            $counter = 0;
+            foreach ($data as $key => $value){
+                $counter == 0 ? $row = "" : $row .= ",";
+                $row .= $this->db->escape($key)." = '".$this->db->escape($value)."'";
+                $counter ++;
+            }
+            $query .= $row;
+            $query .=  " WHERE order_id  = '" . (int)$order_id . "'";
+
+            $this->db->query($query);
 
           }
+
+          public function getCountryIdFromCountryCode($countryCode){
+                $query = $this->db->query("SELECT country_id, name FROM " . DB_PREFIX . "country WHERE status = '1' AND iso_code_2 = '$countryCode' ORDER BY name ASC");
+                $country = $query->rows;
+                return array("country_id" => $country[0]['country_id'], "country_name" => $country[0]['name']);
+          }
+
+
 }
 ?>

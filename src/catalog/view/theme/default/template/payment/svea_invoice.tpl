@@ -135,6 +135,15 @@ $('a#checkout').click(function() {
     var birthMonth = $("#birthMonth").val();
     var birthYear = $("#birthYear").val();
     var vatNo = $('#vatno').val();
+    var firstname = $('#firstname').val();
+    var lastname = $('#lastname').val();
+    var street = $('#street').val();
+    var address_2 = $('#address_2').val();
+    var postcode = $('#postcode').val();
+    var countryCode = $('#countryCode').val();
+    var locality = $('#locality').val();
+    var fullname = $('#fullname').val();
+
 
 	$.ajax({
             type: 'GET',
@@ -146,7 +155,15 @@ $('a#checkout').click(function() {
                 birthDay: birthDay,
                 birthMonth: birthMonth,
                 birthYear: birthYear,
-                vatno: vatNo
+                vatno: vatNo,
+                firstname : firstname,
+                lastname : lastname,
+                street : street,
+                address_2 : address_2,
+                postcode : postcode,
+                countryCode : countryCode,
+                locality : locality,
+                fullname : fullname
             },
             url: 'index.php?route=payment/svea_invoice/confirm',
             success: function(data) {
@@ -217,11 +234,18 @@ $('#getSSN').click(function() {
 
                 }
                 else{
-
-                    if (company){
+                    if (company == true){
                         $("#SveaAddressDiv").empty();
                         $.each(json,function(key,value){
                             $("#svea_invoice_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
+                            $("#svea_invoice_address").append('<div id="sveaAdditionalInfo"><input type="hidden" name="firstname" id="firstname" value="'+value.firstname+'">'
+                                                        + '<input type="hidden" name="lastname" id="lastname value="'+value.lastname+'">'
+                                                        + '<input type="hidden" name="street" id="street" value="'+value.street+'">'
+                                                        + '<input type="hidden" name="address_2" id="address_2" value="'+value.address_2+'">'
+                                                        + '<input type="hidden" name="postcode" id="postcode" value="'+value.postcode+'">'
+                                                        + '<input type="hidden" name="countryCode" id="countryCode" value="'+value.countryCode+'">'
+                                                        + '<input type="hidden" name="fullname" id="fullname" value="'+value.fullName+'">'
+                                                        + '<input type="hidden" name="locality" id="locality" value="'+value.locality+'"></div>');
                         });
 
                         $("#svea_invoice_address").show();
@@ -230,6 +254,16 @@ $('#getSSN').click(function() {
                         $("#svea_invoice_address").hide();
                         $("#SveaAddressDiv").remove();
                         $("#svea_invoice_div").append('<div id="SveaAddressDiv"><strong>'+json[0].fullName+'</strong><br> '+json[0].street+' <br>'+json[0].zipCode+' '+json[0].locality+'</div>');
+                        $("#svea_invoice_div").append('<div id="sveaAdditionalInfo"><input type="hidden" name="firstname" id="firstname" value="'+json[0].firstname+'">'
+                                                        + '<input type="hidden" name="lastname" id="lastname" value="'+json[0].lastname+'">'
+                                                        + '<input type="hidden" name="street" id="street" value="'+json[0].street+'">'
+                                                        + '<input type="hidden" name="address_2" id="address_2" value="'+json[0].address_2+'">'
+                                                        + '<input type="hidden" name="postcode" id="postcode" value="'+json[0].postcode+'">'
+                                                        + '<input type="hidden" name="countryCode" id="countryCode" value="'+json[0].countryCode+'">'
+                                                        + '<input type="hidden" name="fullname" id="fullname" value="'+json[0].fullName+'">'
+                                                        + '<input type="hidden" name="locality" id="locality" value="'+json[0].locality+'"></div>');
+
+
                     }
 
                     $("#svea_invoice_div").show();
@@ -245,3 +279,13 @@ $('#getSSN').click(function() {
     }
 });
 //--></script>
+<!--
+ "fullName"  => $name,
+                                            "firstname" => $ci->firstName,
+                                            "lastname" => $ci->lastName,
+                                            "street"    => $ci->street,
+                                             "address_2" => $ci->coAddress,
+                                            "locality"  => $ci->locality,
+                                            "postcode"  => $ci->zipCode,
+                                            "addressSelector" => $ci->addressSelector);
+-->
