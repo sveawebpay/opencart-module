@@ -38,8 +38,7 @@ class ModelPaymentsveainvoice extends Model {
          * @param type $data
          */
         public function updateAddressField($order_id,$data){
-            $query = "UPDATE " . DB_PREFIX .
-                              "order SET ";
+            $query = "UPDATE `" . DB_PREFIX . "order` SET ";    //added ` around order as it is a reserved word when no prefix is used
             $row = "";
             $counter = 0;
             foreach ($data as $key => $value){
