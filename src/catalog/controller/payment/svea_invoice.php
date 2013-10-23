@@ -93,7 +93,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
          //extra charge addons like shipping and invoice fee
          foreach ($addons as $addon) {
-             
+
             if($addon['value'] >= 0){
                 $svea = $svea
                     ->addOrderRow(Item::orderRow()
@@ -106,9 +106,9 @@ class ControllerPaymentsveainvoice extends Controller {
                     ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
             }
-            //discounts            
-            else {    
-                $taxRates = $this->getTaxRatesInOrder($svea);                               
+            //discounts
+            else {
+                $taxRates = $this->getTaxRatesInOrder($svea);
                 $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
@@ -122,20 +122,6 @@ class ControllerPaymentsveainvoice extends Controller {
         if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; } //fix for addresses w/o housenumber
 
         if ($company == TRUE){
-            $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($_GET['countryCode']));
-            $sveaAddresses = array(
-                "payment_company" => $_GET['fullname'],
-                "payment_company_id" => $_GET['vatno'],
-                "payment_address_1" => $_GET['street'],
-                "payment_address_2" => $_GET['address_2'],
-                "payment_city" => $_GET['locality'],
-                "payment_postcode" => $_GET['postcode'],
-                "payment_country_id" => $countryId['country_id'],
-                "payment_country" => $countryId['country_name'],
-                "payment_method" => $this->language->get('text_title')
-            );
-            //Update oc order address to the billing address Svea returns from Svea addressprovider to avoid fraud
-            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
 
             $item = Item::companyCustomer();
 
@@ -148,28 +134,13 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setPhoneNumber($order['telephone']);
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
 
-                $item = $item->setVatNumber($_GET['vatno']);
+                $item = $item->setVatNumber(isset($_GET['vatno']) ? $_GET['vatno'] : $_GET['ssn'] );
             }else{
                 $item = $item->setNationalIdNumber($_GET['ssn']);
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
         }else{
-            $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($_GET['countryCode']));
-            $sveaAddresses = array(
-                "payment_firstname" => $_GET['firstname'],
-                "payment_lastname" => $_GET['lastname'],
-                "payment_address_1" => $_GET['street'],
-                "payment_address_2" => $_GET['address_2'],
-                "payment_city" => $_GET['locality'],
-                "payment_postcode" => $_GET['postcode'],
-                "payment_country_id" => $countryId['country_id'],
-                "payment_country" => $countryId['country_name'],
-                "payment_method" => $this->language->get('text_title')
-
-            );
-            //Update oc address to the billing address Svea returns from Svea addressprovider to avoid fraud
-            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
 
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
@@ -209,16 +180,62 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             //If CreateOrder accepted redirect to thankyou page
             if ($svea->accepted == 1) {
+                //update order billingaddress
+                if ($svea->customerIdentity->customerType == 'Company'){
+                    $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+                    $sveaAddresses = array();
+                    if(isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName)){
+                       $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName;
+                       $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
+                    }elseif( isset($svea->customerIdentity->firstName) == false || isset($svea->customerIdentity->lastName) == false &&  isset($svea->customerIdentity->fullName)){
+                        $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
+                        $sveaAddresses["payment_lastname"] = "";
+                    }
+                    isset($svea->customerIdentity->fullName) ? $sveaAddresses["payment_company"] = $svea->customerIdentity->fullName : "";
+                    isset($svea->customerIdentity->nationalIdNumber) ? $sveaAddresses["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
+                    isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+                    isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+                    isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
+                    isset($svea->customerIdentity->zipCode) ? $sveaAddresses["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+                    $sveaAddresses["payment_country_id"] = $countryId['country_id'];
+                    $sveaAddresses["payment_country"] = $countryId['country_name'];
+                    $sveaAddresses["payment_method"] = $this->language->get('text_title');
+                    $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
+
+                    $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
+                }  else {
+                    $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+                    $sveaAddresses = array();
+                    if(isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName)){
+                       $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName;
+                       $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
+                    }elseif( isset($svea->customerIdentity->firstName) == false || isset($svea->customerIdentity->lastName) == false &&  isset($svea->customerIdentity->fullName)){
+                        $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
+                        $sveaAddresses["payment_lastname"] = "";
+                    }
+                    isset($svea->customerIdentity->firstName) ? $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName : "";
+                    isset($svea->customerIdentity->lastName) ? $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName : "";                    isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+                    isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+                    isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+                    isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
+                    isset($svea->customerIdentity->zipCode) ? $sveaAddresses["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+                    $sveaAddresses["payment_country_id"] = $countryId['country_id'];
+                    $sveaAddresses["payment_country"] = $countryId['country_name'];
+                    $sveaAddresses["payment_method"] = $this->language->get('text_title');
+                    $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
+
+                    $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
+                }
                 $response = array();
-                
+
                 //If Auto deliver order is set, DeliverOrder
                 if($this->config->get('svea_invoice_auto_deliver') == 1) {
-                    $deliverObj = WebPay::deliverOrder($conf);                 
+                    $deliverObj = WebPay::deliverOrder($conf);
                     //Product rows
                     $deliverObj = $this->formatOrderRows($deliverObj, $products,$currencyValue);
 
                     // no need to formatAddons again
-                    
+
                     //extra charge addons like shipping and invoice fee
                     foreach ($addons as $addon) {
                         if($addon['value'] >= 0) {
@@ -232,17 +249,17 @@ class ControllerPaymentsveainvoice extends Controller {
                                 ->setArticleNumber($addon['code'])
                                 ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                             );
-                        } 
-                        //discounts 
-                        else {    
-                            $taxRates = $this->getTaxRatesInOrder($deliverObj);                               
+                        }
+                        //discounts
+                        else {
+                            $taxRates = $this->getTaxRatesInOrder($deliverObj);
                             $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                             foreach($discountRows as $row) {
                                 $deliverObj = $deliverObj->addDiscount( $row );
                             }
                         }
-                    } 
-                
+                    }
+
                     // try to do deliverOrder request
                     try {
                         $deliverObj = $deliverObj
@@ -270,7 +287,7 @@ class ControllerPaymentsveainvoice extends Controller {
                         $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
                     }
 
-                }  
+                }
                 //if auto deliver not set, send true to view
                 else {
                    $response = array("success" => true);
@@ -323,13 +340,10 @@ class ControllerPaymentsveainvoice extends Controller {
                         $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
 
                         $result[] = array(  "fullName"  => $name,
-                                            "firstname" => $ci->firstName,
-                                            "lastname" => $ci->lastName,
                                             "street"    => $ci->street,
                                             "address_2" => $ci->coAddress,
+                                            "zipCode"  => $ci->zipCode,
                                             "locality"  => $ci->locality,
-                                            "postcode"  => $ci->zipCode,
-                                            "countryCode"  => $countryCode,
                                             "addressSelector" => $ci->addressSelector);
                     }
                 }
@@ -435,33 +449,33 @@ class ControllerPaymentsveainvoice extends Controller {
 
     /**
      * TODO replace these with the one in php integration package Helper class in next release
-     * 
+     *
      * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
      * returns an array of FixedDiscount objects representing the discount split
      * over the allowed Tax Rates, defined using AmountExVat & VatPercent.
-     * 
+     *
      * Note: only supports two allowed tax rates for now.
      */
     private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
-        
+
         $fixedDiscounts = array();
- 
+
         // m = $discountMeanVat
         // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
         // m = a r0 + b r1 => m = a r0 + (1-a) r1 => m = (r0-r1) a + r1 => a = (m-r1)/(r0-r1)
-        // d = $discountAmountExVat;  
-        // d = d (a+b) => 1 = a+b => b = 1-a       
-        
+        // d = $discountAmountExVat;
+        // d = d (a+b) => 1 = a+b => b = 1-a
+
         $a = ($discountMeanVat - $allowedTaxRates[1]) / ( $allowedTaxRates[0] - $allowedTaxRates[1] );
         $b = 1 - $a;
-        
+
         $discountA = WebPayItem::fixedDiscount()
                         ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $a),2) )
                         ->setVatPercent( $allowedTaxRates[0] )
                         ->setName( isset( $discountName) ? $discountName : "" )
                         ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[0]. '%)' )
         ;
-        
+
         $discountB = WebPayItem::fixedDiscount()
                         ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $b),2) )
                         ->setVatPercent(  $allowedTaxRates[1] )
@@ -471,18 +485,18 @@ class ControllerPaymentsveainvoice extends Controller {
 
         $fixedDiscounts[] = $discountA;
         $fixedDiscounts[] = $discountB;
-        
+
         return $fixedDiscounts;
-    }   
+    }
     /**
      * TODO replace these with the one in php integration package Helper class in next release
-     * 
+     *
      * Takes a createOrderBuilder object, iterates over its orderRows, and
      * returns an array containing the distinct taxrates present in the order
      */
     private function getTaxRatesInOrder($order) {
         $taxRates = array();
-        
+
         foreach( $order->orderRows as $orderRow ) {
 
             if( isset($orderRow->vatPercent) ) {
@@ -490,13 +504,13 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
                 $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
-            }  
-            
+            }
+
             if(isset($seenRate)) {
                 isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
             }
         }
         return array_keys($taxRates);   //we want the keys
-    }    
+    }
 }
 ?>

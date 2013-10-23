@@ -98,9 +98,9 @@ class ControllerPaymentsveapartpayment extends Controller {
                    ->setDescription(isset($addon['text']) ? $addon['text'] : "")
             );
             //discounts
-            }  
-            else {    
-                $taxRates = $this->getTaxRatesInOrder($svea);                               
+            }
+            else {
+                $taxRates = $this->getTaxRatesInOrder($svea);
                 $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
@@ -112,21 +112,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
         preg_match($pattern, $order['payment_address_1'], $addressArr);
         if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; } //fix for addresses w/o housenumber
-        $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($_GET['countryCode']));
-        $sveaAddresses = array(
-            "payment_firstname" => $_GET['firstname'],
-            "payment_lastname" => $_GET['lastname'],
-            "payment_address_1" => $_GET['street'],
-            "payment_address_2" => $_GET['address_2'],
-            "payment_city" => $_GET['locality'],
-            "payment_postcode" => $_GET['postcode'],
-            "payment_country_id" => $countryId['country_id'],
-            "payment_country" => $countryId['country_name'],
-            "payment_method" => $this->language->get('text_title')
-
-        );
-        //Update oc address to the billing address Svea returns from Svea addressprovider to avoid fraud
-        $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
@@ -165,43 +150,65 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         //If response accepted redirect to thankyou page
         if ($svea->accepted == 1) {
-                //If Auto deliver order is set, DeliverOrder
-                if($this->config->get('svea_partpayment_auto_deliver') == 1){
-                    $deliverObj = WebPay::deliverOrder($conf);
-                    //Product rows
-                    try{
-                        $deliverObj = $deliverObj
-                                ->setCountryCode($countryCode)
-                                ->setOrderId($svea->sveaOrderId)
-                                    ->deliverPaymentPlanOrder()
-                                    ->doRequest();
-                    }  catch (Exception $e){
-                        $this->log->write($e->getMessage());
-                        $response = array("error" => $this->responseCodes(0,$e->getMessage()));
-                        echo json_encode($response);
-                        exit();
-                    }
+            //update order billingaddress
+            $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+            $sveaAddresses = array();
+            if(isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName)){
+               $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName;
+               $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
+            }elseif( isset($svea->customerIdentity->firstName) == false || isset($svea->customerIdentity->lastName) == false &&  isset($svea->customerIdentity->fullName)){
+                $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
+                $sveaAddresses["payment_lastname"] = "";
+            }
+            isset($svea->customerIdentity->firstName) ? $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName : "";
+            isset($svea->customerIdentity->lastName) ? $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName : "";                    isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+            isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
+            isset($svea->customerIdentity->zipCode) ? $sveaAddresses["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+            $sveaAddresses["payment_country_id"] = $countryId['country_id'];
+            $sveaAddresses["payment_country"] = $countryId['country_name'];
+            $sveaAddresses["payment_method"] = $this->language->get('text_title');
+            $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
 
-                  //If DeliverOrder returns true, send true to veiw
-                    if($deliverObj->accepted == 1){
-                       $response = array("success" => true);
-                       //update order status for delivered
-                       $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_auto_deliver_status_id'));
-                    //I not, send error codes
-                    }  else {
-                        $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
-                    }
-                //if auto deliver not set, send true to view
-                }  else {
-                     $response = array("success" => true);
-                    //update order status for created
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'));
+            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
+            //If Auto deliver order is set, DeliverOrder
+            if($this->config->get('svea_partpayment_auto_deliver') == 1){
+                $deliverObj = WebPay::deliverOrder($conf);
+                //Product rows
+                try{
+                    $deliverObj = $deliverObj
+                            ->setCountryCode($countryCode)
+                            ->setOrderId($svea->sveaOrderId)
+                                ->deliverPaymentPlanOrder()
+                                ->doRequest();
+                }  catch (Exception $e){
+                    $this->log->write($e->getMessage());
+                    $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+                    echo json_encode($response);
+                    exit();
                 }
 
-            //else send errors to view
+              //If DeliverOrder returns true, send true to veiw
+                if($deliverObj->accepted == 1){
+                   $response = array("success" => true);
+                   //update order status for delivered
+                   $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_auto_deliver_status_id'));
+                //I not, send error codes
+                }  else {
+                    $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
+                }
+            //if auto deliver not set, send true to view
             }  else {
-                $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
+                 $response = array("success" => true);
+                //update order status for created
+                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'));
             }
+
+            //else send errors to view
+        }  else {
+            $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
+        }
         echo json_encode($response);
     }
 
@@ -239,14 +246,11 @@ class ControllerPaymentsveapartpayment extends Controller {
 
                 $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
 
-                 $result[] = array(  "fullName"  => $name,
-                                            "firstname" => $ci->firstName,
-                                            "lastname" => $ci->lastName,
-                                            "street"    => $ci->street,
-                                             "address_2" => $ci->coAddress,
-                                            "locality"  => $ci->locality,
-                                            "postcode"  => $ci->zipCode,
-                                            "countryCode"  => $countryCode);
+                 $result[] = array( "fullName"  => $name,
+                                    "street"    => $ci->street,
+                                    "address_2" => $ci->coAddress,
+                                    "zipCode"  => $ci->zipCode,
+                                    "locality"  => $ci->locality);
                     }
         }
         return $result;
@@ -431,36 +435,36 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         return $country;
     }
-    
+
         /**
      * TODO replace these with the one in php integration package Helper class in next release
-     * 
+     *
      * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
      * returns an array of FixedDiscount objects representing the discount split
      * over the allowed Tax Rates, defined using AmountExVat & VatPercent.
-     * 
+     *
      * Note: only supports two allowed tax rates for now.
      */
     private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
-        
+
         $fixedDiscounts = array();
- 
+
         // m = $discountMeanVat
         // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
         // m = a r0 + b r1 => m = a r0 + (1-a) r1 => m = (r0-r1) a + r1 => a = (m-r1)/(r0-r1)
-        // d = $discountAmountExVat;  
-        // d = d (a+b) => 1 = a+b => b = 1-a       
-        
+        // d = $discountAmountExVat;
+        // d = d (a+b) => 1 = a+b => b = 1-a
+
         $a = ($discountMeanVat - $allowedTaxRates[1]) / ( $allowedTaxRates[0] - $allowedTaxRates[1] );
         $b = 1 - $a;
-        
+
         $discountA = WebPayItem::fixedDiscount()
                         ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $a),2) )
                         ->setVatPercent( $allowedTaxRates[0] )
                         ->setName( isset( $discountName) ? $discountName : "" )
                         ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[0]. '%)' )
         ;
-        
+
         $discountB = WebPayItem::fixedDiscount()
                         ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $b),2) )
                         ->setVatPercent(  $allowedTaxRates[1] )
@@ -470,19 +474,19 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $fixedDiscounts[] = $discountA;
         $fixedDiscounts[] = $discountB;
-        
+
         return $fixedDiscounts;
     }
-    
+
     /**
      * TODO replace these with the one in php integration package Helper class in next release
-     * 
+     *
      * Takes a createOrderBuilder object, iterates over its orderRows, and
      * returns an array containing the distinct taxrates present in the order
      */
     private function getTaxRatesInOrder($order) {
         $taxRates = array();
-        
+
         foreach( $order->orderRows as $orderRow ) {
 
             if( isset($orderRow->vatPercent) ) {
@@ -490,13 +494,13 @@ class ControllerPaymentsveapartpayment extends Controller {
             }
             elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
                 $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
-            }  
-            
+            }
+
             if(isset($seenRate)) {
                 isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
             }
         }
         return array_keys($taxRates);   //we want the keys
-    } 
+    }
 }
 ?>

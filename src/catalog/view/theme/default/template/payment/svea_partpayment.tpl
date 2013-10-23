@@ -1,9 +1,9 @@
 <div class="content">
     <div><?php echo $logo; ?></div>
-    <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE"){?>
+    <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE"){ ?>
 
     <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-    <?php echo $this->language->get('text_ssn')?>: <input type="text" id="ssn" name="ssn" /><br /><br />
+    <?php echo $this->language->get('text_ssn') ?>: <input type="text" id="ssn" name="ssn" /><br /><br />
     <?php }else{
 
         //Days, to 31
@@ -39,29 +39,31 @@
         $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
 
     ?>
+     <?php if($countryCode == "NL"){ ?>
        <span id="sveaBirthDateCont"><?php echo $this->language->get('text_birthdate')?>: <?php echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
-    <?php if($countryCode == "NL"){ ?>
-       <?php echo $this->language->get('text_initials')?>: <input type="text" id="initials" name="initials" />
-    <?php }?>
+
+       <?php echo $this->language->get('text_initials') ?>: <input type="text" id="initials" name="initials" />
+
        </span>
-    <?php }?>
-<?php }?>
+      <?php } ?>
+    <?php } ?>
+<?php } ?>
     <div id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;"></div>
 </div>
 <div class="buttons">
     <div class="right">
-        <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_payment_options')?></span></a>
+        <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_payment_options') ?></span></a>
     </div>
 </div>
 
     <div class="content" id="svea_partpayment_tr" style="clear:both; margin-top:15px;display:inline-block;">
-        <?php echo $this->language->get('text_invoice_address')?>:<br />
+        <?php echo $this->language->get('text_invoice_address') ?>:<br />
         <div id="svea_partpayment_address"></div>
     </div>
 
     <br />
     <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
-        <?php echo $this->language->get('text_payment_options')?>:<br />
+        <?php echo $this->language->get('text_payment_options') ?>:<br />
         <select name="svea_partpayment_alt" id="svea_partpayment_alt">
         </select>
     </div>
@@ -97,13 +99,6 @@ $('a#checkout').click(function() {
     var birthDay = $("#birthDay").val();
     var birthMonth = $("#birthMonth").val();
     var birthYear = $("#birthYear").val();
-    var firstname = $('#firstname').val();
-    var lastname = $('#lastname').val();
-    var street = $('#street').val();
-    var address_2 = $('#address_2').val();
-    var postcode = $('#postcode').val();
-    var countryCode = $('#countryCode').val();
-    var locality = $('#locality').val();
 
 	$.ajax({
 		type: 'GET',
@@ -112,14 +107,7 @@ $('a#checkout').click(function() {
                         initials: Initials,
                         birthDay: birthDay,
                         birthMonth: birthMonth,
-                        birthYear: birthYear,
-                        firstname : firstname,
-                        lastname : lastname,
-                        street : street,
-                        address_2 : address_2,
-                        postcode : postcode,
-                        countryCode : countryCode,
-                        locality : locality
+                        birthYear: birthYear
                     },
 		url: 'index.php?route=payment/svea_partpayment/confirm',
 		success: function(data) {
@@ -179,14 +167,6 @@ $('#getPlan').click(function() {
                     }
                     $.each(json.paymentOptions,function(key,value){
                          $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.price_per_month+')</option>');
-                          $("#svea_partpayment_alt").append('<div id="sveaAdditionalInfo"><input type="hidden" name="firstname" id="firstname" value="'+json.addresses[0].firstname+'">'
-                                                        + '<input type="hidden" name="lastname" id="lastname" value="'+json.addresses[0].lastname+'">'
-                                                        + '<input type="hidden" name="street" id="street" value="'+json.addresses[0].street+'">'
-                                                        + '<input type="hidden" name="address_2" id="address_2" value="'+json.addresses[0].address_2+'">'
-                                                        + '<input type="hidden" name="postcode" id="postcode" value="'+json.addresses[0].postcode+'">'
-                                                        + '<input type="hidden" name="countryCode" id="countryCode" value="'+json.addresses[0].countryCode+'">'
-                                                        + '<input type="hidden" name="fullname" id="fullname" value="'+json.addresses[0].fullName+'">'
-                                                        + '<input type="hidden" name="locality" id="locality" value="'+json.addresses[0].locality+'"></div>');
                     });
 
                     $("#svea_partpaymentalt_tr").show();
