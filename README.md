@@ -4,7 +4,7 @@ This module is updated for the latest payment systems at SveaWebPay.
 This module has been tested with OpenCart 1.4.9.x-1.5.6 with standard checkout, standard coupons, standard voucher, standard shipping and Svea invoicefee.
 
 Supported countries are
-_Sweden_, _Norway_, _Finland_, _Denmark_, _The Netherlands_, _Germany_
+_Sweden_, _Norway_, _Finland_, _Denmark_, _the Netherlands_ & _Germany_
 and the module handles the different countries approved vat rates.
 
 **NOTE**: If you are upgrading from a previous version of this module, please contact Svea support before installing.
@@ -104,11 +104,10 @@ Module supports one Svea merchant id per Opencart installation.
 
 * For use in Dutch and German stores the postal code needs to be set to required for customer registrations
 
-* For use with voucher, the voucher module sort order must be after taxes
-* For use with coupons, the coupon module sort order must be:
- * Before taxes, with fixed amount coupons. These are always specified excluding vat, and the vat will be calculated in accordance with OpenCart standard behaviour.
- * Before taxes, if coupon gives a percentage discount
-
+* For use with vouchers, the voucher module sort order must be after taxes
+* For coupons, the coupon module sort order (in admin, under extensions/order totals) must be set to have a lower sort order than taxes.
+* Also, the coupon discount amount (in admin, under sales/coupon) must be specified excluding tax. The coupon tax discount will then be calculated in accordance with OpenCart standard behaviour, and is specified in the order history.
+* The recommended order total sort order is: sub-total (lowest), svea invoice fee, shipping, coupon, taxes, store credit, voucher and total.
 
 ##Extended functionality
 
