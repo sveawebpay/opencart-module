@@ -52,6 +52,8 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/coupon');
+        $this->load->model('account/address');
+
         if (floatval(VERSION) >= 1.5) {
             $this->load->model('checkout/voucher');
         }
@@ -78,40 +80,49 @@ class ControllerPaymentsveainvoice extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
-
+        $currencyValue = 1.00000000;
+        if (floatval(VERSION) >= 1.5) {
+             $currencyValue = $order['currency_value'];
+         }else{
+             $currencyValue = $order['value'];
+         }
         //Products
-        $svea = $this->formatOrderRows($svea,$products);
-        if ($this->config->get('svea_fee_status') == 1) {
-            $svea = $this->formatInvoiceFeeRows($svea);
+        $svea = $this->formatOrderRows($svea,$products,$currencyValue);
+        //get all addons
+         $addons = $this->formatAddons();
 
-        }
+         //extra charge addons like shipping and invoice fee
+         foreach ($addons as $addon) {
 
-        //Shipping
-        if ($this->cart->hasShipping() == 1){
-            if($this->session->data['shipping_method']['cost'] > 0){
-                 $svea = $this->formatShippingFeeRows($svea);
+            if($addon['value'] >= 0){
+                $svea = $svea
+                    ->addOrderRow(Item::orderRow()
+                    ->setQuantity(1)
+                    ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                    ->setVatPercent(intval($addon['tax_rate']))
+                    ->setName(isset($addon['title']) ? $addon['title'] : "")
+                    ->setUnit($this->language->get('unit'))
+                    ->setArticleNumber($addon['code'])
+                    ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                );
             }
-        }
-
-
-        //Get coupons
-        if (isset($this->session->data['coupon'])) {
-            $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-            $svea = $this->formatCouponRows($svea,$coupon);
-        }
-        //Get vouchers
-        if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
-            $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-            $svea = $this->formatVoucher($svea,$voucher);
-       }
+            //discounts
+            else {
+                $taxRates = $this->getTaxRatesInOrder($svea);
+                $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                foreach($discountRows as $row) {
+                    $svea = $svea->addDiscount( $row );
+                }
+            }
+         }
 
         //Seperates the street from the housenumber according to testcases
         $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
         preg_match($pattern, $order['payment_address_1'], $addressArr);
         if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; } //fix for addresses w/o housenumber
 
-        //Set order detials if company or private
         if ($company == TRUE){
+
             $item = Item::companyCustomer();
 
             $item = $item->setEmail($order['email'])
@@ -123,19 +134,18 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setPhoneNumber($order['telephone']);
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
 
-                $item = $item->setVatNumber($_GET['vatno']);
+                $item = $item->setVatNumber(isset($_GET['vatno']) ? $_GET['vatno'] : $_GET['ssn'] );
             }else{
                 $item = $item->setNationalIdNumber($_GET['ssn']);
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
-
-
         }else{
+
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
             $item = Item::individualCustomer();
-
+            //send customer filled address to svea. Svea will use address from getAddress for the invoice.
             $item = $item->setNationalIdNumber($ssn)
                          ->setEmail($order['email'])
                          ->setName($order['payment_firstname'],$order['payment_lastname'])
@@ -168,83 +178,136 @@ class ControllerPaymentsveainvoice extends Controller {
                 exit();
 
             }
-
             //If CreateOrder accepted redirect to thankyou page
             if ($svea->accepted == 1) {
+                //update order billingaddress
+                if ($svea->customerIdentity->customerType == 'Company'){
+                    $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+                    $sveaAddresses = array();
+                    if(isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName)){
+                       $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName;
+                       $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
+                    }elseif( isset($svea->customerIdentity->firstName) == false || isset($svea->customerIdentity->lastName) == false &&  isset($svea->customerIdentity->fullName)){
+                        $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
+                        $sveaAddresses["payment_lastname"] = "";
+                    }
+                    isset($svea->customerIdentity->fullName) ? $sveaAddresses["payment_company"] = $svea->customerIdentity->fullName : "";
+                    isset($svea->customerIdentity->nationalIdNumber) ? $sveaAddresses["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
+                    isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+                    isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+                    isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
+                    isset($svea->customerIdentity->zipCode) ? $sveaAddresses["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+                    $sveaAddresses["payment_country_id"] = $countryId['country_id'];
+                    $sveaAddresses["payment_country"] = $countryId['country_name'];
+                    $sveaAddresses["payment_method"] = $this->language->get('text_title');
+                    $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
+
+                    $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
+                }  else {
+                    $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+                    $sveaAddresses = array();
+                    if(isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName)){
+                       $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName;
+                       $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
+                    }elseif( isset($svea->customerIdentity->firstName) == false || isset($svea->customerIdentity->lastName) == false &&  isset($svea->customerIdentity->fullName)){
+                        $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
+                        $sveaAddresses["payment_lastname"] = "";
+                    }
+                    isset($svea->customerIdentity->firstName) ? $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName : "";
+                    isset($svea->customerIdentity->lastName) ? $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName : "";                    isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+                    isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
+                    isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+                    isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
+                    isset($svea->customerIdentity->zipCode) ? $sveaAddresses["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+                    $sveaAddresses["payment_country_id"] = $countryId['country_id'];
+                    $sveaAddresses["payment_country"] = $countryId['country_name'];
+                    $sveaAddresses["payment_method"] = $this->language->get('text_title');
+                    $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
+
+                    $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
+                }
                 $response = array();
+
                 //If Auto deliver order is set, DeliverOrder
-                if($this->config->get('svea_invoice_auto_deliver') == 1){
+                if($this->config->get('svea_invoice_auto_deliver') == 1) {
                     $deliverObj = WebPay::deliverOrder($conf);
                     //Product rows
-                    $deliverObj = $this->formatOrderRows($deliverObj, $products);
-                    //InvoiceFee
-                    if ($this->config->get('svea_fee_status') == 1) {
-                    $deliverObj = $this->formatInvoiceFeeRows($deliverObj);
-                    }
-                     //Shipping
-                    if ($this->cart->hasShipping() == 1) {
-                        if($this->session->data['shipping_method']['cost'] > 0){
-                          $deliverObj = $this->formatShippingFeeRows($deliverObj);
+                    $deliverObj = $this->formatOrderRows($deliverObj, $products,$currencyValue);
+
+                    // no need to formatAddons again
+
+                    //extra charge addons like shipping and invoice fee
+                    foreach ($addons as $addon) {
+                        if($addon['value'] >= 0) {
+                            $deliverObj = $deliverObj
+                                ->addOrderRow(Item::orderRow()
+                                ->setQuantity(1)
+                                ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                                ->setVatPercent(intval($addon['tax_rate']))
+                                ->setName(isset($addon['title']) ? $addon['title'] : "")
+                                ->setUnit($this->language->get('unit'))
+                                ->setArticleNumber($addon['code'])
+                                ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                            );
+                        }
+                        //discounts
+                        else {
+                            $taxRates = $this->getTaxRatesInOrder($deliverObj);
+                            $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                            foreach($discountRows as $row) {
+                                $deliverObj = $deliverObj->addDiscount( $row );
+                            }
                         }
                     }
-                     //Get coupons
-                    if (isset($this->session->data['coupon'])) {
-                        $coupon = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
-                        $deliverObj = $this->formatCouponRows($deliverObj,$coupon);
-                    }
-                     //Get vouchers
-                    if (isset($this->session->data['voucher']) && floatval(VERSION) >= 1.5) {
-                        $voucher = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
-                        $deliverObj = $this->formatVoucher($deliverObj,$voucher);
-                        //$totalPrice = $this->cart->getTotal();
-                   }
-                   try{
 
-                        $deliverObj = $deliverObj->setCountryCode($countryCode)
-                                ->setOrderId($svea->sveaOrderId)
-                                ->setInvoiceDistributionType('Post') //set in admin interface
-                                    ->deliverInvoiceOrder()
-                                    ->doRequest();
-                   }  catch (Exception $e){
+                    // try to do deliverOrder request
+                    try {
+                        $deliverObj = $deliverObj
+                                        ->setCountryCode($countryCode)
+                                        ->setOrderId($svea->sveaOrderId)    // match doRequest orderId
+                                        ->setInvoiceDistributionType($this->config->get('svea_invoice_distribution_type'))
+                                        ->deliverInvoiceOrder()
+                                        ->doRequest();
+                    }
+                    catch (Exception $e) {
                         $this->log->write($e->getMessage());
                         $response = array("error" => $this->responseCodes(0,$e->getMessage()));
                         echo json_encode($response);
                         exit();
-                   }
-                  //If DeliverOrder returns true, send true to veiw
+                    }
+
+                    //if DeliverOrder returns true, send true to view
                     if($deliverObj->accepted == 1){
-                       $response = array("success" => true);
-                       //update order status for delivered
-                       $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_auto_deliver_status_id'));
-                    //I not, send error codes
-                    }  else {
+                        $response = array("success" => true);
+                        //update order status for delivered
+                        $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_auto_deliver_status_id'));
+                    }
+                    //if not, send error codes
+                    else {
                         $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
                     }
+
+                }
                 //if auto deliver not set, send true to view
-                }  else {
-                     $response = array("success" => true);
-                    //update order status for created
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
+                else {
+                   $response = array("success" => true);
+                   //update order status for created
+                   $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
                 }
 
-            //else send errors to view
+            // not accepted, send errors to view
             }  else {
                 $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
             }
 
-//            $tmp =  sprintf("%c",31) . json_encode($response);  // reproduce JSON.parse error (junk chars) that shows up w/i.e. quickcheckout plugin
-//            echo $tmp;
             echo json_encode($response);
         }
-
-
 
         public function getAddress() {
                 include(DIR_APPLICATION.'../svea/Includes.php');
 
                 $this->load->model('payment/svea_invoice');
                 $this->load->model('checkout/order');
-
                 $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
                 $countryCode = $order['payment_iso_code_2'];
@@ -272,50 +335,44 @@ class ControllerPaymentsveainvoice extends Controller {
                 if (isset($svea->errormessage)) {
                     $result = array("error" => $svea->errormessage);
                 }else{
-
                     foreach ($svea->customerIdentity as $ci){
 
                         $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
 
-                        $result[] = array("fullName" => $name,
-                                          "street"    => $ci->street,
-                                          "zipCode"   => $ci->zipCode,
-                                          "locality"  => $ci->locality,
-                                          "addressSelector" => $ci->addressSelector);
-
+                        $result[] = array(  "fullName"  => $name,
+                                            "street"    => $ci->street,
+                                            "address_2" => $ci->coAddress,
+                                            "zipCode"  => $ci->zipCode,
+                                            "locality"  => $ci->locality,
+                                            "addressSelector" => $ci->addressSelector);
                     }
-
-
                 }
 
                 echo json_encode($result);
 
             }
 
-    private function formatOrderRows($svea,$products){
+    private function formatOrderRows($svea,$products,$currencyValue){
         $this->load->language('payment/svea_invoice');
 
         //Product rows
         foreach ($products as $product) {
-            $productPriceExVat = $product['price'];
-
+            $productPriceExVat = $product['price'] * $currencyValue;
+             $taxPercent = 0;
             //Get the tax, difference in version 1.4.x
             if (floatval(VERSION) >= 1.5) {
-                $productTax = $this->tax->getTax($product['price'], $product['tax_class_id']);
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                $taxPercent = 0;
                 foreach ($tax as $key => $value) {
-                    $taxPercent = intval($value['rate']);
+                    $taxPercent = $value['rate'];
                 }
-                //$productPriceIncVat = $productPriceExVat + $productTax;
             } else {
                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
-                //$productPriceIncVat = (($taxPercent / 100) + 1) * $productPriceExVat;
             }
             $svea = $svea
                     ->addOrderRow(Item::orderRow()
                     ->setQuantity($product['quantity'])
                     ->setAmountExVat(floatval($productPriceExVat))
-                    //->setAmountIncVat($productPriceIncVat)//Removed because bug transforming vat from 25 -> 24
                     ->setVatPercent(intval($taxPercent))
                     ->setName($product['name'])
                     ->setUnit($this->language->get('unit'))
@@ -326,109 +383,56 @@ class ControllerPaymentsveainvoice extends Controller {
         return $svea;
     }
 
-    private function formatInvoiceFeeRows($svea) {
-         $this->load->language('payment/svea_invoice');
-         $this->load->language('total/svea_fee');
-            //Invoice Fee
-            $invoiceFeeExTax = $this->currency->format($this->config->get('svea_fee_fee'),'',false,false);
-            $invoiceFeeTaxId = $this->config->get('svea_fee_tax_class_id');
-            $invoiceTax = 0;
+    public function formatAddons() {
+         //Get all addons
+        $this->load->model('setting/extension');
+         $total_data = array();
+          $total = 0;
+          $svea_tax = array();
+         $cartTax = $this->cart->getTaxes();
+        $results = $this->model_setting_extension->getExtensions('total');
+        foreach ($results as $result) {
+           //if this result is activated
+            if($this->config->get($result['code'] . '_status')){
+                $amount = 0;
+                $taxes = array();
+                foreach ($cartTax as $key => $value) {
+                    $taxes[$key] = 0;
+                }
+                $this->load->model('total/' . $result['code']);
 
-            if($invoiceFeeTaxId > 0){
-                if(floatval(VERSION) >= 1.5){
-                   $invoiceTax =$this->tax->getTax($invoiceFeeExTax, $invoiceFeeTaxId);
-                   $invoiceFeeIncVat = $invoiceFeeExTax + $invoiceTax;
-               }  else {
-                   $taxRate = $this->tax->getRate($invoiceFeeTaxId);
-                   $invoiceFeeIncVat = (($taxRate / 100) +1) * $invoiceFeeExTax;
-               }
-            }  else {
-                //no tax for invoicefee is set
-                $invoiceFeeIncVat = $invoiceFeeExTax;
+                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+
+                foreach ($taxes as $tax_id => $value) {
+                    $amount += $value;
+                }
+
+                $svea_tax[$result['code']] = $amount;
             }
+        }
+        foreach ($total_data as $key => $value) {
 
-            $svea = $svea
-                    ->addFee(
-                        Item::invoiceFee()
-                            ->setAmountExVat(floatval($invoiceFeeExTax))
-                            ->setAmountIncVat(floatval($invoiceFeeIncVat))
-                            ->setDescription($this->language->get('text_svea_fee'))
-                            ->setUnit($this->language->get('unit'))
-                        );
-
-        return $svea;
-    }
-
-    public function formatShippingFeeRows($svea) {
-         $this->load->language('payment/svea_invoice');
-        //Shipping Fee
-           $shipping_info = $this->session->data['shipping_method'];
-            $shippingExVat = $this->currency->format($shipping_info["cost"],'',false,false);
-
-            if (floatval(VERSION) >= 1.5){
-                $shippingTax = $this->tax->getTax($shippingExVat, $shipping_info["tax_class_id"]);
-                $shippingIncVat = $shippingExVat + $shippingTax;
-            }else{
-                $taxRate = $this->tax->getRate($shipping_info['tax_class_id']);
-                $shippingIncVat = (($taxRate / 100) +1) * $shippingExVat;
+            if (isset($svea_tax[$value['code']])) {
+                if ($svea_tax[$value['code']]) {
+                    $total_data[$key]['tax_rate'] = $svea_tax[$value['code']] / $value['value'] * 100;
+                } else {
+                    $total_data[$key]['tax_rate'] = 0;
+                }
+            } else {
+                $total_data[$key]['tax_rate'] = '0';
             }
-
-            $svea = $svea
-                    ->addFee(
-                        Item::shippingFee()
-                            ->setAmountExVat(floatval($shippingExVat))
-                            ->setAmountIncVat(floatval($shippingIncVat))
-                            ->setName($shipping_info["title"])
-                            ->setDescription($shipping_info["text"])
-                            ->setUnit($this->language->get('unit'))
-                       );
-
-
-        return $svea;
-    }
-
-    private function formatCouponRows($svea, $coupon) {
-        if ($coupon['discount'] > 0 && $coupon['type'] == 'F') {
-            $discount = $this->currency->format($coupon['discount'],'',false,false);
-
-            $svea = $svea
-                    ->addDiscount(
-                        Item::fixedDiscount()
-                            ->setAmountIncVat($discount)
-                            ->setName($coupon['name'])
-                            ->setUnit($this->language->get('unit'))
-                        );
-
-
-        } elseif ($coupon['discount'] > 0 && $coupon['type'] == 'P') {
-
-            $svea = $svea
-                    ->addDiscount(
-                        Item::relativeDiscount()
-                            ->setDiscountPercent($coupon['discount'])
-                            ->setName($coupon['name'])
-                            ->setUnit($this->language->get('unit'))
-                        );
-
+        }
+          $ignoredTotals = 'sub_total, total, taxes';
+           $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
+            foreach ($total_data as $key => $orderTotal) {
+                if (in_array($orderTotal['code'], $ignoredOrderTotals)) {
+                    unset($total_data[$key]);
+                }
             }
-            return $svea;
+            return $total_data;
     }
 
-    private function formatVoucher($svea, $voucher) {
-        $voucherAmount = $voucher['amount'];
-        $svea = $svea
-                ->addDiscount(
-                    Item::fixedDiscount()
-                        ->setVatPercent(0)//No vat on voucher. Concidered a debt.
-                        ->setAmountIncVat($voucherAmount)
-                        ->setName($voucher['code'])
-                        ->setDescription($voucher["message"])
-                        ->setUnit($this->language->get('unit'))
-                    );
-        return $svea;
-    }
-
-    private function getLogo($countryCode){
+      private function getLogo($countryCode){
 
         switch ($countryCode){
             case "SE": $country = "swedish";    break;
@@ -443,5 +447,83 @@ class ControllerPaymentsveainvoice extends Controller {
         return $country;
     }
 
+    /**
+     * TODO replace these with the one in php integration package Helper class in next release
+     *
+     * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
+     * returns an array of FixedDiscount objects representing the discount split
+     * over the allowed Tax Rates, defined using AmountExVat & VatPercent.
+     *
+     * Note: only supports two allowed tax rates for now.
+     */
+    private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
+
+        $fixedDiscounts = array();
+
+        if( sizeof( $allowedTaxRates ) > 1 ) {
+
+            // m = $discountMeanVat
+            // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
+            // m = a r0 + b r1 => m = a r0 + (1-a) r1 => m = (r0-r1) a + r1 => a = (m-r1)/(r0-r1)
+            // d = $discountAmountExVat;
+            // d = d (a+b) => 1 = a+b => b = 1-a
+
+            $a = ($discountMeanVat - $allowedTaxRates[1]) / ( $allowedTaxRates[0] - $allowedTaxRates[1] );
+            $b = 1 - $a;
+
+            $discountA = WebPayItem::fixedDiscount()
+                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $a),2) )
+                            ->setVatPercent( $allowedTaxRates[0] )
+                            ->setName( isset( $discountName) ? $discountName : "" )
+                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[0]. '%)' )
+            ;
+
+            $discountB = WebPayItem::fixedDiscount()
+                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $b),2) )
+                            ->setVatPercent(  $allowedTaxRates[1] )
+                            ->setName( isset( $discountName) ? $discountName : "" )
+                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[1]. '%)' )
+            ;
+
+            $fixedDiscounts[] = $discountA;
+            $fixedDiscounts[] = $discountB;
+        }
+        // single tax rate, so use shop supplied mean as vat rate
+        else {
+            $discountA = WebPayItem::fixedDiscount()
+                ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat),2) )
+                ->setVatPercent( $allowedTaxRates[0] )
+                ->setName( isset( $discountName) ? $discountName : "" )
+                ->setDescription( (isset( $discountDescription) ? $discountDescription : "") )
+            ;
+            $fixedDiscounts[] = $discountA;
+        }
+
+        return $fixedDiscounts;
+    }
+    /**
+     * TODO replace these with the one in php integration package Helper class in next release
+     *
+     * Takes a createOrderBuilder object, iterates over its orderRows, and
+     * returns an array containing the distinct taxrates present in the order
+     */
+    private function getTaxRatesInOrder($order) {
+        $taxRates = array();
+
+        foreach( $order->orderRows as $orderRow ) {
+
+            if( isset($orderRow->vatPercent) ) {
+                $seenRate = $orderRow->vatPercent; //count
+            }
+            elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
+                $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
+            }
+
+            if(isset($seenRate)) {
+                isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
+            }
+        }
+        return array_keys($taxRates);   //we want the keys
+    }
 }
 ?>

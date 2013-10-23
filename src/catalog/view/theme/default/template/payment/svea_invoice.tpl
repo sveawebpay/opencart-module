@@ -1,41 +1,39 @@
-<div class="buttons">
-
-    <div class="right">
-
+<div class="content">
         <div><p><?php echo $logo; ?></p></div>
-
+     <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE"){ ?>
         <?php echo $this->language->get("text_private_or_company")?>: <select id="svea_invoice_company" name="svea_invoice_company">
-            <option value="true"><?php echo $this->language->get("text_company")?></option>
+            <option value="true"><?php echo $this->language->get("text_company") ?></option>
             <option value="false" selected="selected"><?php echo $this->language->get("text_private")?></option>
         </select><br /><br />
 
-        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){?>
+        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
         <span id="svea_private_text"><?php echo $this->language->get("text_ssn")?></span>
         <span id="svea_business_text" style="display:none;"><?php echo $this->language->get("text_vat_no")?></span>
-        : <input type="text" id="ssn" name="ssn" /><br /><br />
-        <?php }?>
+        : <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span>
+        <?php } ?>
 
-        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){?>
-        <a id="getSSN" class="button"><span><?php echo $this->language->get("text_get_address")?></span></a>
-        <?php }?>
+   <?php }?>
+    <div id="svea_invoice_err" style="color:red; margin-bottom:10px"></div>
+</div>
+  <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){ ?>
+<div class="buttons">
+    <div class="right">
 
+        <a id="getSSN" class="button"><span><?php echo $this->language->get("text_get_address") ?></span></a>
 
     </div>
 </div>
-
-<div class="buttons">
-    <div id="svea_invoice_err" class="right" style="color:red; margin-bottom:10px"></div><br />
+  <?php } ?>
 
 
+
+
+<div class="content" id="svea_invoice_div">
     <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-    <div id="svea_invoice_div" class="right" style="">
-        <br />
-        <?php echo $this->language->get("text_invoice_address")?>:<br />
-        <select name="svea_invoice_address" id="svea_invoice_address">
-        </select>
+        <p><?php echo $this->language->get("text_invoice_address") ?>:</p>
+        <select name="svea_invoice_address" id="svea_invoice_address"></select>
 
     <?php }else{
-
         //Days, to 31
         $days = "";
         $zero = "";
@@ -69,20 +67,20 @@
         $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
         ?>
 
-        <div class="right" style="">
+
          <span id="sveaBirthDateCont"><?php echo $this->language->get("text_birthdate")?>: <?php  echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
         <?php if($countryCode == "NL"){ ?>
            <?php echo $this->language->get("text_initials")?>: <input type="text" id="initials" name="initials" />
-        <?php }?>
+        <?php } ?>
          </span>
          <span id="sveaVatNoCont"><?php echo $this->language->get("text_vat_no")?>: <input type="text" id="vatno" name="vatno" /><br /><br /></span>
-
-         <?php } ?>
-        </div>
+<?php } ?>
 </div>
 
 <div class="buttons">
-    <div class="right" style=""><br /><br /><a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a></div>
+    <div class="right">
+        <a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a>
+    </div>
 </div>
 
 <style>
@@ -91,13 +89,13 @@
 <script type="text/javascript"><!--
 
 
-<?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){?>
+<?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){ ?>
 $("a#checkout").hide();
-<?php }?>
+
 
 $('#svea_invoice_div').hide();
+<?php } ?>
 $('#sveaVatNoCont').hide();
-
 //Selection of business or private
 $("#svea_invoice_company").change(function(){
 
@@ -162,7 +160,7 @@ $('a#checkout').click(function() {
                         location = '<?php echo $continue; ?>';
                     }
                     else{
-                        $("#svea_invoice_err").empty().show().append('<br>'+json.error);
+                        $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
                     }
 
                     $('#sveaLoading').remove();
@@ -191,7 +189,9 @@ $('#getSSN').click(function() {
     $("#svea_invoice_div").hide();
 
     if(ssnNo == ''){
-        alert('Vänligen fyll i personnr');
+        $("#svea_invoice_err").empty().addClass("attention").show().append('<br>*Required');
+        $('#sveaLoading').remove();
+        runningGetSSN = false;
     }else{
 
     	$.ajax({
@@ -212,16 +212,15 @@ $('#getSSN').click(function() {
                 //on error
                 if (json.error){
 
-                    $("#svea_invoice_err").empty().show().append('<br>'+json.error);
+                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
 
                 }
                 else{
-
-                    if (company){
+                    if (company == "true"){
                         $("#SveaAddressDiv").empty();
                         $.each(json,function(key,value){
                             $("#svea_invoice_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
-                        });
+                       });
 
                         $("#svea_invoice_address").show();
 
