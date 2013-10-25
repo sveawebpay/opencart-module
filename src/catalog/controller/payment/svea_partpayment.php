@@ -292,7 +292,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             $decimals = "";
             foreach ($currencies as $key => $val) {
                 if($key == $currency){
-                    $decimals = $val['decimal_place'];
+                    $decimals = intval($val['decimal_place']);
                 }
             }
             $formattedPrice = round($this->currency->format(($order['total']),'',false,false),2);
