@@ -150,7 +150,9 @@ class ControllerPaymentsveadirectbank extends Controller {
              $payPageLanguage = "en";
              break;
      }
-         $server_url = $this->config->get('config_url');
+     
+        $server_url = $this->setServerURL();
+		
          try{
               $form = $svea
                 ->setCountryCode($order['payment_iso_code_2'])
@@ -408,5 +410,21 @@ class ControllerPaymentsveadirectbank extends Controller {
         }
         return array_keys($taxRates);   //we want the keys
     }  
+
+    /**
+     * Gets the current server name, adds the path from the server url settings (for installs below server root)
+     * this aims to accommodate sites that rewrite the server name dynamically on i.e. user language change
+     */
+    private function setServerURL() {
+        $server_url = $this->config->get('config_url');
+        $server_name = $_SERVER['SERVER_NAME'];
+
+        $type = substr( $server_url, 0, strpos($server_url, "//")+2 );
+        $subpath = substr( $server_url, strpos($server_url, "//")+2 );		
+        $return_url = $type . $server_name . substr( $subpath, strpos($subpath, "/") );	
+
+        return $return_url;
+    }
+   
 }
 ?>
