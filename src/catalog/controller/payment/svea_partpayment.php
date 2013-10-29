@@ -310,7 +310,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $countryCode = $order['payment_iso_code_2'];
         $paymentOptions = $this->getPaymentOptions();
 
-        if ($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") {
+        if ($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO") {    // getAddresses() turned off for Norway oct'13
             $addresses = $this->getAddress($_GET['ssn']);
         } elseif ($countryCode != "SE" && $countryCode != "NO" && $countryCode != "DK" && $countryCode != "FI" && $countryCode != "NL" && $countryCode != "DE") {
             $addresses = array("error" => $this->responseCodes(40001, "The country is not supported for this paymentmethod"));
