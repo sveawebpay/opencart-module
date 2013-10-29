@@ -442,9 +442,8 @@ class ControllerPaymentsveainvoice extends Controller {
         foreach ($total_data as $key => $value) {
             if (isset($svea_tax[$value['code']])) {
                 if ($svea_tax[$value['code']]) {
-                    $total_data[$key]['tax_rate'] = $svea_tax[$value['code']] / $value['value'] * 100;
-                } 
-                else {
+                    $total_data[$key]['tax_rate'] = (int)round( $svea_tax[$value['code']] / $value['value'] * 100 ); // round and cast, or may get i.e. 24.9999, which shows up as 25f in debugger & written to screen, but converts to 24i
+                } else {
                     $total_data[$key]['tax_rate'] = 0;
                 }
             } 
