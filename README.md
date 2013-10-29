@@ -1,5 +1,5 @@
 # OpenCart - SveaWebPay payment module
-##Version 2.1.2
+##Version 2.1.3
 This module is updated for the latest payment systems at SveaWebPay.
 This module has been tested with OpenCart 1.4.9.x-1.5.6 with standard checkout, standard coupons, standard voucher, standard shipping and Svea invoicefee.
 
@@ -163,6 +163,7 @@ We can recommend the following certificate providers:
 
 ### Release history
 
+2.1.3   (20131029) Hotfix to amend invoice and partpayment checkout flow in Norway (getAddresses no longer available).
 2.1.2   (20131029) Hotfix for float to int conversion error, showed up intermittently with invoice fee vat.
 2.1.1   (20131025) Hotfix for payment plan monthly cost presentation.
 2.1.0   (20131023) Fixes for increased compatibility with third party OpenCart extensions, vat calculation accuracy et al.
