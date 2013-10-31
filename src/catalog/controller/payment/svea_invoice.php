@@ -203,7 +203,12 @@ class ControllerPaymentsveainvoice extends Controller {
                     $sveaAddresses["payment_lastname"] = "";
                 }
                 isset($svea->customerIdentity->fullName) ? $sveaAddresses["payment_company"] = $svea->customerIdentity->fullName : "";
-                isset($svea->customerIdentity->nationalIdNumber) ? $sveaAddresses["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
+                
+                // in table order, the column payment_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
+                if( floatval(substr(VERSION,0,3)) > 1.5 || ( floatval(substr(VERSION,0,3)) == 1.5 && intval( substr(VERSION,4)) >= 3 ) ) { // oc 1.5.3+
+                    isset($svea->customerIdentity->nationalIdNumber) ? $sveaAddresses["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
+                }
+                
                 isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
                 isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
                 isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
@@ -246,7 +251,7 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             
             $response = array();
-
+            
             //If Auto deliver order is set, DeliverOrder
             if($this->config->get('svea_invoice_auto_deliver') == 1) {
                 $deliverObj = WebPay::deliverOrder($conf);
