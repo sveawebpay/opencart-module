@@ -92,11 +92,15 @@ $("a#checkout").hide();
 $('#svea_partpayment_tr').hide();
 $('#svea_partpaymentalt_tr').hide();
 
-$('a#checkout').click(function() {
-     if(runningCheckout){
-       return false;
+$('a#checkout').click(function(event) {
+
+    // we don't accept multiple confirmations of one onder
+    if(runningCheckout){
+        event.preventDefault();
+        return false;
     }
     runningCheckout = true;
+    
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -107,30 +111,32 @@ $('a#checkout').click(function() {
     var birthMonth = $("#birthMonth").val();
     var birthYear = $("#birthYear").val();
 
-	$.ajax({
-		type: 'GET',
-                data: { ssn: ssnNo,
-                        paySel: paymentSelector,
-                        initials: Initials,
-                        birthDay: birthDay,
-                        birthMonth: birthMonth,
-                        birthYear: birthYear
-                    },
-		url: 'index.php?route=payment/svea_partpayment/confirm',
-		success: function(data) {
+    $.ajax({
+            type: 'GET',
+            data: { ssn: ssnNo,
+                    paySel: paymentSelector,
+                    initials: Initials,
+                    birthDay: birthDay,
+                    birthMonth: birthMonth,
+                    birthYear: birthYear
+                },
+            url: 'index.php?route=payment/svea_partpayment/confirm',
+            success: function(data) {
 
-                    var json = JSON.parse(data);
+                var json = JSON.parse(data);
 
-                    if(json.success){
-                        location = '<?php echo $continue; ?>';
-                    }else{
+                if(json.success){
+                    location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
+                }
+                else{
                     $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.error);
-                    }
 
+                    // remove runningCheckout so that we can retry the payment
                     $('#sveaLoading').remove();
                     runningCheckout = false;
-		}
-	});
+                }
+            }
+    });
 });
 
 
