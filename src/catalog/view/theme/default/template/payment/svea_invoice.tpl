@@ -135,11 +135,15 @@ $("#svea_invoice_company").change(function(){
 //Loader
 var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
 var runningCheckout = false;
-$('a#checkout').click(function() {
+$('a#checkout').click(function(event) {    
+
+    // we don't accept multiple confirmations of one onder
     if(runningCheckout){
-       return false;
+        event.preventDefault();
+        return false;
     }
     runningCheckout = true;
+    
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -174,16 +178,16 @@ $('a#checkout').click(function() {
                 var json = JSON.parse(data);
 
                 if(json.success){
-                    location = '<?php echo $continue; ?>';
+                    location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
                 }
                 else{
                     $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
+                    
+                    // remove runningCheckout so that we can retry the payment
+                    $('#sveaLoading').remove();     
+                    runningCheckout = false;
                 }
-
-                $('#sveaLoading').remove();
-                runningCheckout = false;
         }
-
     });
 });
 
