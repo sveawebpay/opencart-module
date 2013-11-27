@@ -1,40 +1,47 @@
-<div class="buttons">
-
-    <div class="right">
-
-        <div><p><?php echo $logo; ?></p></div>
-
-        <?php echo $this->language->get("text_private_or_company")?>: <select id="svea_invoice_company" name="svea_invoice_company">
-            <option value="true"><?php echo $this->language->get("text_company")?></option>
+<div class="content">
+    <div><p><?php echo $logo; ?></p></div>
+    <?php 
+    if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE") { 
+        echo $this->language->get("text_private_or_company")?>:
+        <select id="svea_invoice_company" name="svea_invoice_company">
+            <option value="true"><?php echo $this->language->get("text_company") ?></option>
             <option value="false" selected="selected"><?php echo $this->language->get("text_private")?></option>
         </select><br /><br />
 
-        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){?>
-        <span id="svea_private_text"><?php echo $this->language->get("text_ssn")?></span>
-        <span id="svea_business_text" style="display:none;"><?php echo $this->language->get("text_vat_no")?></span>
-        : <input type="text" id="ssn" name="ssn" /><br /><br />
-        <?php }?>
+        <?php 
+        if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
+            <span id="svea_private_text"><?php echo $this->language->get("text_ssn")?></span>
+            <span id="svea_business_text" style="display:none;"><?php echo $this->language->get("text_vat_no")?></span>: 
+            <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span>
+        <?php 
+        } ?>
 
-        <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){?>
-        <a id="getSSN" class="button"><span><?php echo $this->language->get("text_get_address")?></span></a>
-        <?php }?>
-
-
-    </div>
+    <?php 
+    }?>
+    <div id="svea_invoice_err" style="color:red; margin-bottom:10px"></div>
 </div>
 
+<?php 
+if($countryCode == "SE" || $countryCode == "DK") { // || $countryCode == "NO") { ?>
 <div class="buttons">
-    <div id="svea_invoice_err" class="right" style="color:red; margin-bottom:10px"></div><br />
+    <div class="right">
+        <a id="getSSN" class="button"><span><?php echo $this->language->get("text_get_address") ?></span></a>
+    </div>
+</div>
+<?php 
+} ?>
 
+<div class="content" id="svea_invoice_div">
+    <?php 
+    if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI") { // || $countryCode == "NO" ){ ?>
+        <p><?php echo $this->language->get("text_invoice_address") ?>:</p>
+        <select name="svea_invoice_address" id="svea_invoice_address"></select>
 
-    <?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-    <div id="svea_invoice_div" class="right" style="">
-        <br />
-        <?php echo $this->language->get("text_invoice_address")?>:<br />
-        <select name="svea_invoice_address" id="svea_invoice_address">
-        </select>
+    <?php 
+    } ?>
 
-    <?php }else{
+    <?php 
+    if($countryCode == "DE" || $countryCode == "NL") {
 
         //Days, to 31
         $days = "";
@@ -48,7 +55,6 @@
             $days .= "<option value='$val'>$d</option>";
         }
         $birthDay = "<select name='birthDay' id='birthDay'>$days</select>";
-
 
         //Months to 12
         $months = "";
@@ -69,33 +75,42 @@
         $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
         ?>
 
-        <div class="right" style="">
-         <span id="sveaBirthDateCont"><?php echo $this->language->get("text_birthdate")?>: <?php  echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
-        <?php if($countryCode == "NL"){ ?>
-           <?php echo $this->language->get("text_initials")?>: <input type="text" id="initials" name="initials" />
-        <?php }?>
-         </span>
-         <span id="sveaVatNoCont"><?php echo $this->language->get("text_vat_no")?>: <input type="text" id="vatno" name="vatno" /><br /><br /></span>
-
-         <?php } ?>
-        </div>
+        <span id="sveaBirthDateCont"><?php echo $this->language->get("text_birthdate")?>: <?php  echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
+            <?php 
+            if($countryCode == "NL"){ ?>
+                <?php echo $this->language->get("text_initials")?>: <input type="text" id="initials" name="initials" />
+            <?php 
+            } ?>
+        </span>
+        <span id="sveaVatNoCont"><?php echo $this->language->get("text_vat_no")?>: <input type="text" id="vatno" name="vatno" /><br /><br /></span>
+    <?php 
+    } ?>
 </div>
 
 <div class="buttons">
-    <div class="right" style=""><br /><br /><a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a></div>
+    <div class="right">
+        <a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a>
+    </div>
 </div>
 
 <style>
-#SveaAddressDiv{margin:10px 0;}
+    #SveaAddressDiv{margin:10px 0;}
 </style>
+
 <script type="text/javascript"><!--
 
+<?php 
+if($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO"){ ?>
+    $("a#checkout").hide();
+<?php 
+} ?>
 
-<?php if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){?>
-$("a#checkout").hide();
-<?php }?>
+<?php 
+if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){ ?>
+    $('#svea_invoice_div').hide();
+<?php 
+} ?>
 
-$('#svea_invoice_div').hide();
 $('#sveaVatNoCont').hide();
 
 //Selection of business or private
@@ -107,24 +122,28 @@ $("#svea_invoice_company").change(function(){
 
         $('#svea_private_text').hide();
         $('#svea_business_text').show();
-    }else{
+    }
+    else{
         $('#sveaVatNoCont').hide();
         $('#sveaBirthDateCont').show();
 
         $('#svea_private_text').show();
         $('#svea_business_text').hide();
     }
-
 });
 
 //Loader
 var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
 var runningCheckout = false;
-$('a#checkout').click(function() {
+$('a#checkout').click(function(event) {    
+
+    // we don't accept multiple confirmations of one onder
     if(runningCheckout){
-       return false;
+        event.preventDefault();
+        return false;
     }
     runningCheckout = true;
+    
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -137,49 +156,49 @@ $('a#checkout').click(function() {
     var birthYear = $("#birthYear").val();
     var vatNo = $('#vatno').val();
 
-	$.ajax({
-            type: 'GET',
-            data: {
-                ssn: ssnNo,
-                company: company,
-                addSel: adressSelector,
-                initials: Initials,
-                birthDay: birthDay,
-                birthMonth: birthMonth,
-                birthYear: birthYear,
-                vatno: vatNo
-            },
-            url: 'index.php?route=payment/svea_invoice/confirm',
-            success: function(data) {
+    $.ajax({
+        type: 'GET',
+        data: {
+            ssn: ssnNo,
+            company: company,
+            addSel: adressSelector,
+            initials: Initials,
+            birthDay: birthDay,
+            birthMonth: birthMonth,
+            birthYear: birthYear,
+            vatno: vatNo
+        },
+        url: 'index.php?route=payment/svea_invoice/confirm',
+        success: function(data) {
 
-                    // clean response from junk chars
-                    data = data.replace(/[\x00-\x1F]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
+                // clean response from junk chars
+                data = data.replace(/[\x00-\x1F]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
 
-                    // parse response
-                    var json = JSON.parse(data);
+                // parse response
+                var json = JSON.parse(data);
 
-                    if(json.success){
-                        location = '<?php echo $continue; ?>';
-                    }
-                    else{
-                        $("#svea_invoice_err").empty().show().append('<br>'+json.error);
-                    }
-
-                    $('#sveaLoading').remove();
+                if(json.success){
+                    location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
+                }
+                else{
+                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
+                    
+                    // remove runningCheckout so that we can retry the payment
+                    $('#sveaLoading').remove();     
                     runningCheckout = false;
-            }
-
-	});
+                }
+        }
+    });
 });
-
 
 //Get address
 var runningGetSSN = false;
 $('#getSSN').click(function() {
     if(runningGetSSN){
-       return false;
+        return false;
     }
     runningGetSSN = true;
+    
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -191,9 +210,11 @@ $('#getSSN').click(function() {
     $("#svea_invoice_div").hide();
 
     if(ssnNo == ''){
-        alert('Vänligen fyll i personnr');
-    }else{
-
+        $("#svea_invoice_err").empty().addClass("attention").show().append('<br>*Required');
+        $('#sveaLoading').remove();
+        runningGetSSN = false;
+    }
+    else{
     	$.ajax({
             type: 'GET',
             url: 'index.php?route=payment/svea_invoice/getAddress',
@@ -212,16 +233,15 @@ $('#getSSN').click(function() {
                 //on error
                 if (json.error){
 
-                    $("#svea_invoice_err").empty().show().append('<br>'+json.error);
+                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
 
                 }
                 else{
-
-                    if (company){
+                    if (company == "true"){
                         $("#SveaAddressDiv").empty();
                         $.each(json,function(key,value){
                             $("#svea_invoice_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
-                        });
+                       });
 
                         $("#svea_invoice_address").show();
 

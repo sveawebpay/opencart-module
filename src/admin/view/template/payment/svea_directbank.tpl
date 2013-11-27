@@ -15,7 +15,7 @@
         <tbody>
             <tr>
                 <td>Version</td>
-                <td>2.0.18</td>
+                <td>2.1.0</td>
             </tr>
             <tr>
                 <td><?php echo $entry_order_status; ?></td>
@@ -78,83 +78,57 @@
         <?php } ?>
         <!-- Countrycode and testmode specific -->
         <!--Test -->
+         <?php
+        if($version < 1.5){
+            echo '<h2>Test</h2>';
+        }
+        ?>
         <div id="tab-directbank_test" style="display: inline;">
-             <?php if($version >= 1.5){ ?>
-            <div id="vtabs" class="vtabs">
-                <?php foreach ($test as $code){ ?>
-                    <a href="#tab-directbank_test_<?php echo $code['lang'] ?>"><?php echo $code['lang'] ?></a>
-                <?php } ?>
-            </div>
-             <?php } else{ ?>
-             <h2>Test Credentials</h2>
-             <?php } ?>
-        <?php foreach($test as $code){ ?>
-            <div id="tab-directbank_test_<?php echo $code['lang'] ?>" class="vtabs-content">
-                 <?php if($version < 1.5){ ?>
-                 <h3><?php echo $code['lang']; ?></h3>
-                 <?php } ?>
-                <table class="form">
-                    <tbody>
-
-                        <tr>
-                            <td><?php echo $entry_merchant_id; ?>:</td>
-                            <td>
-                                <input name="<?php echo $code['name_merchant']; ?>" type="text"
-                                       value="<?php echo $code['value_merchant']; ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><?php echo $entry_sw; ?>:</td>
-                            <td>
-                                <input name="<?php echo $code['name_sw']; ?>" type="text"
-                                       value="<?php echo $code['value_sw']; ?>" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        <?php } ?>
+            <table class="form">
+                <tbody>
+                    <tr>
+                        <td><?php echo $entry_merchant_id; ?>:</td>
+                        <td>
+                            <input name="svea_directbank_merchant_id_test" type="text"
+                                   value="<?php echo $value_merchant_test; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $entry_sw; ?>:</td>
+                        <td>
+                            <input name="svea_directbank_sw_test" type="text"
+                                   value="<?php echo $value_sw_test; ?>" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 <!--Prod -->
+      <?php
+        if($version < 1.5){
+            echo '<h2>Prod</h2>';
+        }
+        ?>
      <div id="tab-directbank_prod" style="display: inline;">
-          <?php if($version >= 1.5){ ?>
-            <div id="vtabs" class="vtabs">
-                <?php foreach ($prod as $code){ ?>
-                    <a href="#tab-directbank_prod_<?php echo $code['lang'] ?>"><?php echo $code['lang'] ?></a>
-                <?php } ?>
-            </div>
-          <?php }else{ ?>
-          <h2>Prod credentials</h2>
-          <?php } ?>
-
-        <?php foreach($prod as $code){ ?>
-            <div id="tab-directbank_prod_<?php echo $code['lang'] ?>" class="vtabs-content">
-                 <?php if($version < 1.5){ ?>
-                 <h3><?php echo $code['lang']; ?></h3>
-                 <?php } ?>
-                <table class="form">
-                    <tbody>
-
-                        <tr>
-                            <td><?php echo $entry_merchant_id; ?>:</td>
-                            <td>
-                                <input name="<?php echo $code['name_merchant']; ?>" type="text"
-                                       value="<?php echo $code['value_merchant']; ?>" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><?php echo $entry_sw; ?>:</td>
-                            <td>
-                                <input name="<?php echo $code['name_sw']; ?>" type="text"
-                                       value="<?php echo $code['value_sw']; ?>" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        <?php } ?>
+            <table class="form">
+                <tbody>
+                    <tr>
+                        <td><?php echo $entry_merchant_id; ?>:</td>
+                        <td>
+                            <input name="svea_directbank_merchant_id_prod" type="text"
+                                   value="<?php echo $value_merchant_prod; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $entry_sw; ?>:</td>
+                        <td>
+                            <input name="svea_directbank_sw_prod" type="text"
+                                   value="<?php echo $value_sw_prod; ?>" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
   </form>
     </div>
     <div style="height:100px"></div>

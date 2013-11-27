@@ -1,11 +1,9 @@
-# OpenCart - SveaWebPay payment module
-##Version 2.0.18
+# OpenCart - Svea payment module
+##Version 2.1.5
 This module is updated for the latest payment systems at SveaWebPay.
-This module has been tested with OpenCart 1.4.9.x-1.5.6 with standard checkout, standard coupons, standard voucher, standard shipping and Svea invoicefee.
+This module has been tested with OpenCart 1.4.9.x-1.5.6 with the pre-installed checkout, coupon, voucher, and shipping modules, as well as the Svea invoice fee module.
 
-Supported countries are
-_Sweden_, _Norway_, _Finland_, _Denmark_, _The Netherlands_, _Germany_
-and the module handles the different countries approved vat rates.
+This module supports invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments.
 
 **NOTE**: If you are upgrading from a previous version of this module, please contact Svea support before installing.
 Your account settings may require updating. We strongly recommend you have an testenvironment, and make a backup before upgrading.
@@ -77,22 +75,24 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * The field _min. amount_ must match the corresponding setting in Svea admin.
 
 #### Svea Card Payment
+Module supports one Svea merchant id per Opencart installation.
 * In OpenCart admin panel, browse to _extensions -> payments_.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
 * Set _order status_ according to your preferences.
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set _testmode_ and _status_ to enabled.
-* Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
+* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
 ![Card payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/CardPayment.PNG "Invoice fee additional settings")
 
 #### Svea Direct Payment
+Module supports one Svea merchant id per Opencart installation.
 * In OpenCart admin panel, browse to _extensions -> payments_.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
 * Set _order status_ according to your preferences.
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set _testmode_ and _status_ to enabled.
-* Fill out the required fields _merchant id_ and _secret word_. There are two tabs for each locale, _test_ and _prod_. For _prod_, use your Svea account credentials corresponding to country in question. For _test_, make sure to use the supplied test account credentials.
+* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
 ##Localisation and additional OpenCart configuration requirements
 
@@ -102,11 +102,10 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 
 * For use in Dutch and German stores the postal code needs to be set to required for customer registrations
 
-* For use with voucher, the voucher module sort order must be after taxes
-* For use with coupons, the coupon module sort order must be:
- * After taxes, if coupon is for a fixed amount
- * Before taxes, if coupon gives a percentage discount
-
+* For use with vouchers, the voucher module sort order must be after taxes
+* For coupons, the coupon module sort order (in admin, under extensions/order totals) must be set to have a lower sort order than taxes.
+* Also, the coupon discount amount (in admin, under sales/coupon) must be specified excluding tax. The coupon tax discount will then be calculated in accordance with OpenCart standard behaviour, and is specified in the order history.
+* The recommended order total sort order is: sub-total (lowest), svea invoice fee, shipping, coupon, taxes, store credit, voucher and total.
 
 ##Extended functionality
 
@@ -159,3 +158,13 @@ Would the customer then click cancel, the process does not continue.  This does 
 We can recommend the following certificate providers:
 * InfraSec:  infrasec.se
 * VeriSign : verisign.com
+
+### Release history
+
+* 2.1.5   (20131115) Hotfix to close window for submitting duplicate orders after confirm() callback has fired but opencart has not yet redirected.
+* 2.1.4   (20131031) Hotfix to workaround error when rewriting billing address to invoice address, affected versions of OpenCart < 1.5.3.
+* 2.1.3   (20131029) Hotfix to amend invoice and partpayment checkout flow in Norway (getAddresses no longer available).
+* 2.1.2   (20131029) Hotfix for float to int conversion error, showed up intermittently with invoice fee vat.
+* 2.1.1   (20131025) Hotfix for payment plan monthly cost presentation.
+* 2.1.0   (20131023) Fixes for increased compatibility with third party OpenCart extensions, vat calculation accuracy et al.
+
