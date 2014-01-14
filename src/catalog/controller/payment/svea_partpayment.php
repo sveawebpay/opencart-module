@@ -107,7 +107,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
 
         //Seperates the street from the housenumber according to testcases
-        $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
+        $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*(?:\s*[0-9]*)?[^\s])?(?:\s)*$/";
         preg_match($pattern, $order['payment_address_1'], $addressArr);
         if (!array_key_exists(2, $addressArr)) {
             $addressArr[2] = "";
