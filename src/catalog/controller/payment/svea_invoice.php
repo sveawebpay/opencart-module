@@ -68,7 +68,7 @@ class ControllerPaymentsveainvoice extends Controller {
         if($this->config->get('svea_invoice_testmode_'.$countryCode) !== NULL){
             $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" )
                     ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
-        } 
+        }
         else {
             $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
             echo json_encode($response);
@@ -88,7 +88,7 @@ class ControllerPaymentsveainvoice extends Controller {
         }else{
             $currencyValue = $order['value'];
         }
-        
+
         //Products
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);
         //get all addons
@@ -96,7 +96,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //extra charge addons like shipping and invoice fee
         foreach ($addons as $addon) {
-            
+
             if($addon['value'] >= 0){
                 $svea = $svea
                     ->addOrderRow(Item::orderRow()
@@ -167,7 +167,7 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             $svea = $svea->addCustomerDetails($item);
         }
-        
+
         try {
             $svea = $svea
                 ->setCountryCode($countryCode)
@@ -176,14 +176,14 @@ class ControllerPaymentsveainvoice extends Controller {
                 ->setOrderDate(date('c'))
                 ->useInvoicePayment()
                 ->doRequest();
-        }  
+        }
         catch (Exception $e){
             $this->log->write($e->getMessage());
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             echo json_encode($response);
             exit();
         }
-        
+
         //If CreateOrder accepted redirect to thankyou page
         if ($svea->accepted == 1) {
             //update order billingaddress
@@ -197,18 +197,18 @@ class ControllerPaymentsveainvoice extends Controller {
                 }
                 elseif( isset($svea->customerIdentity->firstName) == false ||
                         isset($svea->customerIdentity->lastName) == false &&
-                        isset($svea->customerIdentity->fullName) ) 
+                        isset($svea->customerIdentity->fullName) )
                 {
                     $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
                     $sveaAddresses["payment_lastname"] = "";
                 }
                 isset($svea->customerIdentity->fullName) ? $sveaAddresses["payment_company"] = $svea->customerIdentity->fullName : "";
-                
+
                 // in table order, the column payment_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
                 if( floatval(substr(VERSION,0,3)) > 1.5 || ( floatval(substr(VERSION,0,3)) == 1.5 && intval( substr(VERSION,4)) >= 3 ) ) { // oc 1.5.3+
                     isset($svea->customerIdentity->nationalIdNumber) ? $sveaAddresses["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
                 }
-                
+
                 isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
                 isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
                 isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
@@ -219,7 +219,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
 
                 $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
-            } 
+            }
             else {
                 $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
                 $sveaAddresses = array();
@@ -249,9 +249,9 @@ class ControllerPaymentsveainvoice extends Controller {
 
                 $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
             }
-            
+
             $response = array();
-            
+
             //If Auto deliver order is set, DeliverOrder
             if($this->config->get('svea_invoice_auto_deliver') == 1) {
                 $deliverObj = WebPay::deliverOrder($conf);
@@ -323,12 +323,12 @@ class ControllerPaymentsveainvoice extends Controller {
         }  else {
             $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
         }
-        
+
         echo json_encode($response);
     }
 
     public function getAddress() {          
-        
+
         include(DIR_APPLICATION.'../svea/Includes.php');
 
         $this->load->model('payment/svea_invoice');
@@ -350,10 +350,10 @@ class ControllerPaymentsveainvoice extends Controller {
         else {
             $svea = $svea->setIndividual($_GET['ssn']);
         }
-        
+
         try{
             $svea = $svea->doRequest();
-        }  
+        }
         catch (Exception $e){
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             $this->log->write($e->getMessage());
@@ -397,7 +397,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
                 }
-            } 
+            }
             else {
                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
             }
@@ -422,7 +422,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $total = 0;
         $svea_tax = array();
         $cartTax = $this->cart->getTaxes();
-        
+
         $results = $this->model_setting_extension->getExtensions('total');
         foreach ($results as $result) {
            //if this result is activated
@@ -443,7 +443,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 $svea_tax[$result['code']] = $amount;
             }
         }
-        
+
         foreach ($total_data as $key => $value) {
             if (isset($svea_tax[$value['code']])) {
                 if ($svea_tax[$value['code']]) {
@@ -451,12 +451,12 @@ class ControllerPaymentsveainvoice extends Controller {
                 } else {
                     $total_data[$key]['tax_rate'] = 0;
                 }
-            } 
+            }
             else {
                 $total_data[$key]['tax_rate'] = '0';
             }
         }
-        
+
         $ignoredTotals = 'sub_total, total, taxes';
         $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
         foreach ($total_data as $key => $orderTotal) {
@@ -464,7 +464,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 unset($total_data[$key]);
             }
         }
-        
+
         return $total_data;
     }
 
