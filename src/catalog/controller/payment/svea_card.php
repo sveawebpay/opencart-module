@@ -86,18 +86,18 @@ class ControllerPaymentsveacard extends Controller {
                     ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
             //discounts
-            }  
-            else {    
-                $taxRates = $this->getTaxRatesInOrder($svea);                               
+            }
+            else {
+                $taxRates = $this->getTaxRatesInOrder($svea);
                 $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
                 }
-            }   
+            }
         }
 
         $server_url = $this->setServerURL();
-		
+
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
@@ -142,9 +142,7 @@ class ControllerPaymentsveacard extends Controller {
 
          //Testmode
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
-
         $this->session->data['order_id'] = $resp->response->clientOrderNumber;
 
         if($resp->response->resultcode != '0'){
@@ -178,7 +176,6 @@ class ControllerPaymentsveacard extends Controller {
 			'common/column_left',
 			'common/header'
 		);
-
         $this->data['text_message'] = "<br />".  $this->responseCodes($rejection->resultcode, $rejection->errormessage)."<br /><br /><br />";
         $this->data['heading_title'] = $this->language->get('error_heading');
         $this->data['footer'] = "";
@@ -270,15 +267,15 @@ class ControllerPaymentsveacard extends Controller {
 
     /**
      * TODO replace these with the one in php integration package Helper class in next release
-     * 
+     *
      * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
      * returns an array of FixedDiscount objects representing the discount split
      * over the allowed Tax Rates, defined using AmountExVat & VatPercent.
-     * 
+     *
      * Note: only supports two allowed tax rates for now.
      */
     private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
-        
+
         $fixedDiscounts = array();
 
         if( sizeof( $allowedTaxRates ) > 1 ) {
@@ -286,8 +283,8 @@ class ControllerPaymentsveacard extends Controller {
             // m = $discountMeanVat
             // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
             // m = a r0 + b r1 => m = a r0 + (1-a) r1 => m = (r0-r1) a + r1 => a = (m-r1)/(r0-r1)
-            // d = $discountAmountExVat;  
-            // d = d (a+b) => 1 = a+b => b = 1-a       
+            // d = $discountAmountExVat;
+            // d = d (a+b) => 1 = a+b => b = 1-a
 
             $a = ($discountMeanVat - $allowedTaxRates[1]) / ( $allowedTaxRates[0] - $allowedTaxRates[1] );
             $b = 1 - $a;
@@ -320,16 +317,16 @@ class ControllerPaymentsveacard extends Controller {
             $fixedDiscounts[] = $discountA;
         }
         return $fixedDiscounts;
-    }   
+    }
     /**
      * TODO replace these with the one in php integration package Helper class in next release
-     * 
+     *
      * Takes a createOrderBuilder object, iterates over its orderRows, and
      * returns an array containing the distinct taxrates present in the order
      */
     private function getTaxRatesInOrder($order) {
         $taxRates = array();
-        
+
         foreach( $order->orderRows as $orderRow ) {
 
             if( isset($orderRow->vatPercent) ) {
@@ -337,26 +334,32 @@ class ControllerPaymentsveacard extends Controller {
             }
             elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
                 $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
-            }  
-            
+            }
+
             if(isset($seenRate)) {
                 isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
             }
         }
         return array_keys($taxRates);   //we want the keys
-    }    
-   
+    }
+
     /**
      * Gets the current server name, adds the path from the server url settings (for installs below server root)
      * this aims to accommodate sites that rewrite the server name dynamically on i.e. user language change
+     * Also adds server port if exists. (e.g. :8080)
      */
     private function setServerURL() {
             $server_url = $this->config->get('config_url');
             $server_name = $_SERVER['SERVER_NAME'];
-
+            $server_port = $_SERVER['SERVER_PORT'];
             $type = substr( $server_url, 0, strpos($server_url, "//")+2 );
-            $subpath = substr( $server_url, strpos($server_url, "//")+2 );		
-            $return_url = $type . $server_name . substr( $subpath, strpos($subpath, "/") );	
+            $subpath = substr( $server_url, strpos($server_url, "//")+2 );
+            if($server_port != "" || $server_port != "80"){
+                $server_port = ":" . $server_port;
+            }  else {
+                $server_port = "";
+            }
+            $return_url = $type . $server_name . $server_port . substr( $subpath, strpos($subpath, "/") );
 
             return $return_url;
     }
