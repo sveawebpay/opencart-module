@@ -10,7 +10,7 @@ Your account settings may require updating. We strongly recommend you have an te
 
 If you experience technical issues with this module, or you have feature suggestions, please submit an issue on the Github issue list.
 
-
+For release history: [**Github releases Tags**](https://github.com/sveawebpay/opencart-module/releases)
 
 #Installation instructions
 
@@ -158,13 +158,3 @@ Would the customer then click cancel, the process does not continue.  This does 
 We can recommend the following certificate providers:
 * InfraSec:  infrasec.se
 * VeriSign : verisign.com
-
-### Release history
-
-* 2.1.5   (20131115) Hotfix to close window for submitting duplicate orders after confirm() callback has fired but opencart has not yet redirected.
-* 2.1.4   (20131031) Hotfix to workaround error when rewriting billing address to invoice address, affected versions of OpenCart < 1.5.3.
-* 2.1.3   (20131029) Hotfix to amend invoice and partpayment checkout flow in Norway (getAddresses no longer available).
-* 2.1.2   (20131029) Hotfix for float to int conversion error, showed up intermittently with invoice fee vat.
-* 2.1.1   (20131025) Hotfix for payment plan monthly cost presentation.
-* 2.1.0   (20131023) Fixes for increased compatibility with third party OpenCart extensions, vat calculation accuracy et al.
-
