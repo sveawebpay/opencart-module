@@ -140,6 +140,9 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             else{
                 $item = $item->setNationalIdNumber($_GET['ssn']);
+            }
+            //only for SE, NO, DK where getAddress i prior done
+            if($order["payment_iso_code_2"] == "SE" || $order["payment_iso_code_2"] == "NO" || $order["payment_iso_code_2"] == "DK") {
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
@@ -327,7 +330,7 @@ class ControllerPaymentsveainvoice extends Controller {
         echo json_encode($response);
     }
 
-    public function getAddress() {          
+    public function getAddress() {
 
         include(DIR_APPLICATION.'../svea/Includes.php');
 
