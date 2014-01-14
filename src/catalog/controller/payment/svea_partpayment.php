@@ -281,7 +281,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
 
         if (isset($svea->errormessage)) {
-            $result[] = array("error" => $svea->errormessage);
+            $result = array("error" => $svea->errormessage);
         } else {
             $currency = floatval(VERSION) >= 1.5 ? $order['currency_code'] : $order['currency'];
             $this->load->model('localisation/currency');
