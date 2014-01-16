@@ -203,7 +203,8 @@ class ControllerPaymentsveainvoice extends Controller {
                         isset($svea->customerIdentity->fullName) )
                 {
                     $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
-                    $sveaAddresses["payment_lastname"] = "";
+                    //$sveaAddresses["payment_lastname"] = ""; //will couse form validation in admin to scream
+
                 }
                 isset($svea->customerIdentity->fullName) ? $sveaAddresses["payment_company"] = $svea->customerIdentity->fullName : "";
 

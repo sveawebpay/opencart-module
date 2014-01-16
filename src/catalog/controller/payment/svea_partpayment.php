@@ -157,7 +157,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                 $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
             } elseif (isset($svea->customerIdentity->firstName) == false || isset($svea->customerIdentity->lastName) == false && isset($svea->customerIdentity->fullName)) {
                 $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
-                $sveaAddresses["payment_lastname"] = "";
+                //$sveaAddresses["payment_lastname"] = ""; //will cause form validation in admin to scream
             }
             isset($svea->customerIdentity->firstName) ? $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName : "";
             isset($svea->customerIdentity->lastName) ? $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName : "";
