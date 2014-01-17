@@ -28,7 +28,8 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
             <a id="getSSN" class="button"><span><?php echo $this->language->get("text_get_address") ?></span></a>
         </div>
     </div>
-
+<?php
+} ?>
 
     <div class="content" id="svea_invoice_div">
     <?php
@@ -85,8 +86,7 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
     <?php
     } ?>
 </div>
-<?php
-} ?>
+
 <div class="buttons">
     <div class="right">
         <a id="checkout" class="button"><span><?php echo $button_confirm; ?></span></a>
@@ -113,11 +113,8 @@ if($countryCode == "NO"){ ?>
 
 
 
-<?php
-if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO"){ ?>
-    $('#svea_invoice_div').hide();
-<?php
-} ?>
+
+$('#svea_invoice_div').hide();
 
 $('#sveaVatNoCont').hide();
 
