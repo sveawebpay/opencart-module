@@ -32,13 +32,14 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
 } ?>
 
     <div class="content" id="svea_invoice_div">
-    <?php
-    if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $countryCode == "NO" ){ ?>
-        <p><?php echo $this->language->get("text_invoice_address") ?>:</p>
-        <select name="svea_invoice_address" id="svea_invoice_address"></select>
-
-    <?php
-    } ?>
+<?php
+if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $countryCode == "NO" ){ ?>
+<div id="svea_invoice_address_div">
+    <label for="svea_invoice_address"><?php echo $this->language->get("text_invoice_address") ?>:</label>
+    <select name="svea_invoice_address" id="svea_invoice_address"></select>
+</div>
+<?php
+} ?>
 
     <?php
     if($countryCode == "DE" || $countryCode == "NL") {
@@ -103,7 +104,7 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
 
 <script type="text/javascript"><!--
 <?php
-if($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO"){ ?>
+if($countryCode == "SE" || $countryCode == "DK"){//|| $countryCode == "NO"){ ?>
     $("a#checkout").hide();
 <?php
 } ?>
@@ -111,16 +112,11 @@ if($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO"){ ?
 //If norway, hide getAddress for selected private
 if($countryCode == "NO"){ ?>
     $("#getSSN").hide();
-    $("#svea_invoice_div").hide();
+
 <?php
 } ?>
-
-
-
-
-$('#svea_invoice_div').hide();
-
 $('#sveaVatNoCont').hide();
+$('#svea_invoice_address_div').hide();
 
 //Selection of business or private
 $("#svea_invoice_company").change(function(){
@@ -133,7 +129,8 @@ $("#svea_invoice_company").change(function(){
         $('#svea_business_text').show();
 
         //if norway show get address
-        $('#getSSN').show();
+            $('#getSSN').show();
+        //$('#svea_invoice_div').show();
        // $('#svea_invoice_div').show();
     } else {
         $('#sveaVatNoCont').hide();
@@ -143,8 +140,14 @@ $("#svea_invoice_company").change(function(){
         $('#svea_business_text').hide();
 
          //if norway hide get address
-        $('#getSSN').hide();
-        $('#svea_invoice_div').hide();
+         <?php
+        if( $countryCode == "NO"){ ?>
+            $("#getSSN").hide();
+            $("#svea_invoice_div").hide();
+        <?php }else{ ?>
+            $('#getSSN').show();
+        <?php } ?>
+        //$('#svea_invoice_div').hide();
     }
 });
 
@@ -260,10 +263,10 @@ $('#getSSN').click(function() {
                             $("#svea_invoice_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
                        });
 
-                        $("#svea_invoice_address").show();
+                        $("#svea_invoice_address_div").show();
 
                     }else{
-                        $("#svea_invoice_address").hide();
+                        $("#svea_invoice_address_div").hide();
                         $("#SveaAddressDiv").remove();
                         $("#svea_invoice_div").append('<div id="SveaAddressDiv"><strong>'+json[0].fullName+'</strong><br> '+json[0].street+' <br>'+json[0].zipCode+' '+json[0].locality+'</div>');
                     }
