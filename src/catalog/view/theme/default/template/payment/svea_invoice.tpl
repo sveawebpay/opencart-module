@@ -67,10 +67,14 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
         }
         $birthMonth = "<select name='birthMonth' id='birthMonth'>$months</select>";
 
-        //Years from 1913 to 1996
+        //Years from 1913 to date('Y')
         $years = '';
-        for($y = 1913; $y <= 1996; $y++){
-            $years .= "<option value='$y'>$y</option>";
+        for($y = 1913; $y <= date('Y'); $y++){
+            $selected = "";
+            if( $y == (date('Y')-30) )      // selected is backdated 30 years
+                $selected = "selected";
+
+            $years .= "<option value='$y' $selected>$y</option>";
         }
         $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
         ?>

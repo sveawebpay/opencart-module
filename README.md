@@ -111,7 +111,7 @@ Module supports one Svea merchant id per Opencart installation.
 
 ###Auto deliver option
 
-Set up to auto deliver the order. If not set this can be done from Sveas admin panel. TODO clarify this
+Set up to auto deliver the order. If not set this can be done from Sveas admin panel.
 
 * Browse to _extensions -> payments -> Svea payment method_ (applies only to the Invoice or Payment plan payment methods)
 * Set _auto deliver_ to _enabled_
