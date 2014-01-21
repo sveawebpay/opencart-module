@@ -32,13 +32,13 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
 } ?>
 
     <div class="content" id="svea_invoice_div">
-    <?php
-    if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $countryCode == "NO" ){ ?>
-        <p><?php echo $this->language->get("text_invoice_address") ?>:</p>
-        <select name="svea_invoice_address" id="svea_invoice_address"></select>
+<?php
+if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $countryCode == "NO" ){ ?>
+    <p><?php echo $this->language->get("text_invoice_address") ?>:</p>
+    <select name="svea_invoice_address" id="svea_invoice_address"></select>
 
-    <?php
-    } ?>
+<?php
+} ?>
 
     <?php
     if($countryCode == "DE" || $countryCode == "NL") {
@@ -103,7 +103,7 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
 
 <script type="text/javascript"><!--
 <?php
-if($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO"){ ?>
+if($countryCode == "SE" || $countryCode == "DK"){//|| $countryCode == "NO"){ ?>
     $("a#checkout").hide();
 <?php
 } ?>
@@ -111,15 +111,10 @@ if($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO"){ ?
 //If norway, hide getAddress for selected private
 if($countryCode == "NO"){ ?>
     $("#getSSN").hide();
-    $("#svea_invoice_div").hide();
+
 <?php
 } ?>
-
-
-
-
-$('#svea_invoice_div').hide();
-
+ $("#svea_invoice_div").hide();
 $('#sveaVatNoCont').hide();
 
 //Selection of business or private
@@ -133,7 +128,8 @@ $("#svea_invoice_company").change(function(){
         $('#svea_business_text').show();
 
         //if norway show get address
-        $('#getSSN').show();
+            $('#getSSN').show();
+        //$('#svea_invoice_div').show();
        // $('#svea_invoice_div').show();
     } else {
         $('#sveaVatNoCont').hide();
@@ -143,8 +139,14 @@ $("#svea_invoice_company").change(function(){
         $('#svea_business_text').hide();
 
          //if norway hide get address
-        $('#getSSN').hide();
-        $('#svea_invoice_div').hide();
+         <?php
+        if( $countryCode == "NO"){ ?>
+            $("#getSSN").hide();
+            $("#svea_invoice_div").hide();
+        <?php }else{ ?>
+            $('#getSSN').show();
+        <?php } ?>
+        //$('#svea_invoice_div').hide();
     }
 });
 
