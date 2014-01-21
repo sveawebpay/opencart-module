@@ -1,6 +1,7 @@
  <div class="buttons">
 
-            <div><p><?php echo $logo; ?></p></div>
+            <div><span><?php echo $logo; ?></span></div>
+            <div><span><?php echo $cardLogos; ?></span></div>
 
             <?php
                 echo $form_start_tag,

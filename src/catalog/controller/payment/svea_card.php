@@ -24,6 +24,10 @@ class ControllerPaymentsveacard extends Controller {
         }
 
         $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_card.png'>";
+        $this->data['cardLogos'] = "<img src='admin/view/image/payment/svea_direct/KORTCERT.png'>
+                                    <img src='admin/view/image/payment/svea_direct/AMEX.png'>
+                                    <img src='admin/view/image/payment/svea_direct/DINERS.png'>
+                                    ";
         $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
 
