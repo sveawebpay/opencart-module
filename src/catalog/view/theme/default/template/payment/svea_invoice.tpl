@@ -34,9 +34,10 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
     <div class="content" id="svea_invoice_div">
 <?php
 if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $countryCode == "NO" ){ ?>
-    <p><?php echo $this->language->get("text_invoice_address") ?>:</p>
+<div id="svea_invoice_address_div">
+    <label for="svea_invoice_address"><?php echo $this->language->get("text_invoice_address") ?>:</label>
     <select name="svea_invoice_address" id="svea_invoice_address"></select>
-
+</div>
 <?php
 } ?>
 
@@ -114,8 +115,8 @@ if($countryCode == "NO"){ ?>
 
 <?php
 } ?>
- $("#svea_invoice_div").hide();
 $('#sveaVatNoCont').hide();
+$('#svea_invoice_address_div').hide();
 
 //Selection of business or private
 $("#svea_invoice_company").change(function(){
@@ -262,10 +263,10 @@ $('#getSSN').click(function() {
                             $("#svea_invoice_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
                        });
 
-                        $("#svea_invoice_address").show();
+                        $("#svea_invoice_address_div").show();
 
                     }else{
-                        $("#svea_invoice_address").hide();
+                        $("#svea_invoice_address_div").hide();
                         $("#SveaAddressDiv").remove();
                         $("#svea_invoice_div").append('<div id="SveaAddressDiv"><strong>'+json[0].fullName+'</strong><br> '+json[0].street+' <br>'+json[0].zipCode+' '+json[0].locality+'</div>');
                     }
