@@ -52,7 +52,7 @@ In this example we'll first configure the Svea invoice payment method, instructi
 * Browse to _extensions -> order totals_.
 * Locate _Svea handling fee_ in the list, choose _install_ and then _edit_:
 * Set the _order total_ field to a large number, 99999999 is recommended.
-* Set the _fee_ to the amount charged.
+* Set the _fee_ to the amount you want to charge in the Store default Currency. It will be converted into the customer currency on order.
 * Set the corresponding _tax class_.
 * Also, set the _status_ field to _enabled_.
 * Finally, the _sort order_ field must be set to apply before taxes.
