@@ -107,11 +107,8 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
 
         //Seperates the street from the housenumber according to testcases
-        $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*(?:\s*[0-9]*)?[^\s])?(?:\s)*$/";
-        preg_match($pattern, $order['payment_address_1'], $addressArr);
-        if (!array_key_exists(2, $addressArr)) {
-            $addressArr[2] = "";
-        } //fix for addresses w/o housenumber
+        $addressArr = Helper::splitStreetAddress( $order['payment_address_1'] );         
+
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
