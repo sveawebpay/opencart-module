@@ -106,9 +106,13 @@ class ControllerPaymentsveapartpayment extends Controller {
             }
         }
 
-        //Seperates the street from the housenumber according to testcases
-        $addressArr = Helper::splitStreetAddress( $order['payment_address_1'] );         
 
+         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
+           $addressArr = Helper::splitStreetAddress( $order['payment_address_1'] );  
+        }  else {
+            $addressArr[1] =  $order['payment_address_1'];
+            $addressArr[2] =  "";
+        }
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
