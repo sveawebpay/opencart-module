@@ -1,6 +1,6 @@
-Uptated integrationLib 2013-10-21 to:
+Uptated integrationLib 2014-01-24 to:
 
 sveawebpay/php-integration
 
-release/1.5.1
+release/1.6.1
 
