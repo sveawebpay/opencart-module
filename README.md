@@ -1,16 +1,19 @@
 # OpenCart - Svea payment module
-##Version 2.1.6
-This module is updated for the latest payment systems at SveaWebPay.
-This module has been tested with OpenCart 1.4.9.x-1.5.6 with the pre-installed checkout, coupon, voucher, and shipping modules, as well as the Svea invoice fee module.
+## Version 2.1.6
+* Supports OpenCart 1.4.9+
+* Requires PHP 5.3 or higher (namespace support)
 
-This module supports invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments.
+This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
 
-**NOTE**: If you are upgrading from a previous version of this module, please contact Svea support before installing.
-Your account settings may require updating. We strongly recommend you have an testenvironment, and make a backup before upgrading.
+The module has been tested with OpenCart and any pre-installed checkout, coupon, voucher and shipping modules, including the Svea invoice fee module. The module has been updated to make use of the latest payment systems at Svea, and builds upon the included Svea php integration package.
 
-If you experience technical issues with this module, or you have feature suggestions, please submit an issue on the Github issue list.
+**NOTE**: If you are upgrading from the previous version 1.x of this module, please contact Svea support before installing the module, your account settings may require updating.
 
-For release history: [**Github releases Tags**](https://github.com/sveawebpay/opencart-module/releases)
+As always, we strongly recommend that you have a test environment set up, and make a backup of your existing site, database and settings before upgrading.
+
+If you experience technical issues with this module, or if you have feature suggestions, please submit an issue on the Github issue list.
+
+For release history, see [**github release tags**](https://github.com/sveawebpay/opencart-module/releases)
 
 #Installation instructions
 
