@@ -1,16 +1,20 @@
 # OpenCart - Svea payment module
-##Version 2.1.6
-This module is updated for the latest payment systems at SveaWebPay.
-This module has been tested with OpenCart 1.4.9.x-1.5.6 with the pre-installed checkout, coupon, voucher, and shipping modules, as well as the Svea invoice fee module.
 
-This module supports invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments.
+##Version 2.1.7
+* Supports OpenCart 1.4.9+
+* Requires PHP 5.3 or higher (namespace support)
 
-**NOTE**: If you are upgrading from a previous version of this module, please contact Svea support before installing.
-Your account settings may require updating. We strongly recommend you have an testenvironment, and make a backup before upgrading.
+This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
 
-If you experience technical issues with this module, or you have feature suggestions, please submit an issue on the Github issue list.
+The module has been tested with OpenCart and any pre-installed checkout, coupon, voucher and shipping modules, including the Svea invoice fee module. The module has been updated to make use of the latest payment systems at Svea, and builds upon the included Svea php integration package.
 
+**NOTE**: If you are upgrading from the previous version 1.x of this module, please contact Svea support before installing the module, your account settings may require updating.
 
+As always, we strongly recommend that you have a test environment set up, and make a backup of your existing site, database and settings before upgrading.
+
+If you experience technical issues with this module, or if you have feature suggestions, please submit an issue on the Github issue list.
+
+For release history, see [**github release tags**](https://github.com/sveawebpay/opencart-module/releases)
 
 #Installation instructions
 
@@ -52,7 +56,7 @@ In this example we'll first configure the Svea invoice payment method, instructi
 * Browse to _extensions -> order totals_.
 * Locate _Svea handling fee_ in the list, choose _install_ and then _edit_:
 * Set the _order total_ field to a large number, 99999999 is recommended.
-* Set the _fee_ to the amount charged.
+* Set the _fee_ to the amount you want to charge in the Store default Currency. It will be converted into the customer currency on order.
 * Set the corresponding _tax class_.
 * Also, set the _status_ field to _enabled_.
 * Finally, the _sort order_ field must be set to apply before taxes.
@@ -111,7 +115,7 @@ Module supports one Svea merchant id per Opencart installation.
 
 ###Auto deliver option
 
-Set up to auto deliver the order. If not set this can be done from Sveas admin panel. TODO clarify this
+Set up to auto deliver the order. If not set this can be done from Sveas admin panel.
 
 * Browse to _extensions -> payments -> Svea payment method_ (applies only to the Invoice or Payment plan payment methods)
 * Set _auto deliver_ to _enabled_
@@ -158,14 +162,3 @@ Would the customer then click cancel, the process does not continue.  This does 
 We can recommend the following certificate providers:
 * InfraSec:  infrasec.se
 * VeriSign : verisign.com
-
-### Release history
-
-* 2.1.6   (20131223) Hotfix to handle addresses with alternative apartment number format. Incremented module version numbers, as shown in admin.
-* 2.1.5   (20131115) Hotfix to close window for submitting duplicate orders after confirm() callback has fired but opencart has not yet redirected.
-* 2.1.4   (20131031) Hotfix to workaround error when rewriting billing address to invoice address, affected versions of OpenCart < 1.5.3.
-* 2.1.3   (20131029) Hotfix to amend invoice and partpayment checkout flow in Norway (getAddresses no longer available).
-* 2.1.2   (20131029) Hotfix for float to int conversion error, showed up intermittently with invoice fee vat.
-* 2.1.1   (20131025) Hotfix for payment plan monthly cost presentation.
-* 2.1.0   (20131023) Fixes for increased compatibility with third party OpenCart extensions, vat calculation accuracy et al.
-

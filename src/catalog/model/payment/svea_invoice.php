@@ -1,37 +1,36 @@
 <?php
 class ModelPaymentsveainvoice extends Model {
-  	public function getMethod($address) {
+  	public function getMethod($address,$total) {
             $this->load->language('payment/svea_invoice');
-            $this->load->model('payment/svea_invoice');
 
             if ($this->config->get('svea_invoice_status')) {
-                    $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('svea_invoice_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('svea_invoice_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
                 if (!$this->config->get('svea_invoice_geo_zone_id')) {
-                        $status = TRUE;
+                    $status = TRUE;
                 } elseif ($query->num_rows) {
-                        $status = TRUE;
+                    $status = TRUE;
                 } else {
-                        $status = FALSE;
+                    $status = FALSE;
                 }
             } else {
-                    $status = FALSE;
+                $status = FALSE;
             }
 
             $method_data = array();
 
-            if ($status) {
+        if ($status) {
             $method_data = array(
-                    'id'         => 'svea_invoice',
-            'code'         => 'svea_invoice',
-                    'title'      => $this->language->get('text_title'),
-                            'sort_order' => $this->config->get('svea_invoice_sort_order')
-            );
-            }
+                                'id'         => 'svea_invoice',
+                                'code'         => 'svea_invoice',
+                                'title'      => $this->language->get('text_title'),
+                                'sort_order' => $this->config->get('svea_invoice_sort_order')
+                                );
+        }
 
 
             return $method_data;
-  	}
+    }
         /**
          * Update shops address so billing address is the same as address recieved from Svea UC
          * @param type $address_id

@@ -106,12 +106,13 @@ class ControllerPaymentsveapartpayment extends Controller {
             }
         }
 
-        //Seperates the street from the housenumber according to testcases
-        $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*(?:\s*[0-9]*)?[^\s])?(?:\s)*$/";
-        preg_match($pattern, $order['payment_address_1'], $addressArr);
-        if (!array_key_exists(2, $addressArr)) {
-            $addressArr[2] = "";
-        } //fix for addresses w/o housenumber
+
+         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
+           $addressArr = Svea\Helper::splitStreetAddress( $order['payment_address_1'] );  
+        }  else {
+            $addressArr[1] =  $order['payment_address_1'];
+            $addressArr[2] =  "";
+        }
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
@@ -157,7 +158,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                 $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
             } elseif (isset($svea->customerIdentity->firstName) == false || isset($svea->customerIdentity->lastName) == false && isset($svea->customerIdentity->fullName)) {
                 $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
-                $sveaAddresses["payment_lastname"] = "";
+                //$sveaAddresses["payment_lastname"] = ""; //will cause form validation in admin to scream
             }
             isset($svea->customerIdentity->firstName) ? $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName : "";
             isset($svea->customerIdentity->lastName) ? $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName : "";
@@ -281,7 +282,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
 
         if (isset($svea->errormessage)) {
-            $result[] = array("error" => $svea->errormessage);
+            $result = array("error" => $svea->errormessage);
         } else {
             $currency = floatval(VERSION) >= 1.5 ? $order['currency_code'] : $order['currency'];
             $this->load->model('localisation/currency');
