@@ -1,13 +1,8 @@
 # OpenCart - Svea payment module
-<<<<<<< HEAD
+
 ##Version 2.1.7
-This module is updated for the latest payment systems at SveaWebPay.
-This module has been tested with OpenCart 1.4.9.x-1.5.6 with the pre-installed checkout, coupon, voucher, and shipping modules, as well as the Svea invoice fee module.
-=======
-## Version 2.1.6
-* Supports OpenCart 1.4.9+
+* Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
->>>>>>> origin/develop
 
 This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
 
