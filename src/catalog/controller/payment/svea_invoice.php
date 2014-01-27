@@ -121,7 +121,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //Seperates the street from the housenumber according to testcases for NL and DE
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-            $addressArr = Helper::splitStreetAddress( $order['payment_address_1'] );
+            $addressArr = Svea\Helper::splitStreetAddress( $order['payment_address_1'] );
         }  else {
             $addressArr[1] =  $order['payment_address_1'];
             $addressArr[2] =  "";
