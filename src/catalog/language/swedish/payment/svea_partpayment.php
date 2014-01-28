@@ -26,7 +26,7 @@ $_['response_27002'] = "Det går ej att delleverera en delbetalning";
 $_['response_27003'] = "Det går ej att kombinera CampaignCode med en fast summa.";
 $_['response_27004'] = "Det går ej att hitta en passande kampanjkod för den angivna summan";
 
-$_['response_30000'] = "Krediteringen nekades";
+$_['response_30000'] = "Kreditupplysningen avslogs";
 $_['response_30001'] = "Kunden är blockerad eller har uppvisat udda köpbeteende.";
 $_['response_30002'] = "Ordern nekades baserat på kreditupplysningen.";
 $_['response_30003'] = "Det går ej att hitta kunden i kreditupplysningen.";

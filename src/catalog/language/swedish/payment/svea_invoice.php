@@ -23,7 +23,7 @@ $_['response_20006'] = "Summan av orderraderna kan ej vara noll eller negativ.";
 $_['response_20013'] = "Ordern väntar";
 $_['response_24000'] = "Fakturabeloppet överstiger tillåtet orderbelopp.";
 
-$_['response_30000'] = "Krediteringen nekades.";
+$_['response_30000'] = "Kreditupplysningen avslogs";
 $_['response_30001'] = "Kunden är blockerad eller har uppvisat udda köpbeteende.";
 $_['response_30002'] = "Baserat på kreditupplysningen nekades ordern.";
 $_['response_30003'] = "Det går ej att hitta kunden i kreditupplysningen.";
