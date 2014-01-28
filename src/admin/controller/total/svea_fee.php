@@ -20,21 +20,74 @@ class ControllerTotalSveaFee extends Controller {
             $this->redirect($this->getLink('extension/total'));
         }
 
+        // localisation
         $this->data['heading_title'] = $this->language->get('heading_title');
 
         $this->data['text_enabled'] = $this->language->get('text_enabled');
         $this->data['text_disabled'] = $this->language->get('text_disabled');
         $this->data['text_none'] = $this->language->get('text_none');
 
-        $this->data['entry_total'] = $this->language->get('entry_total');
-        $this->data['entry_fee'] = $this->language->get('entry_fee');
-        $this->data['entry_tax_class'] = $this->language->get('entry_tax_class');
-        $this->data['entry_status'] = $this->language->get('entry_status');
-        $this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-
         $this->data['button_save'] = $this->language->get('button_save');
-        $this->data['button_cancel'] = $this->language->get('button_cancel');
+        $this->data['button_cancel'] = $this->language->get('button_cancel');		
+        $this->data['tab_general'] = $this->language->get('tab_general');
+        
+        // localisation of our config settings
+        $this->data['version']  = floatval(VERSION);
 
+        // create array of config cred(entials) for each country
+        $cred = array();
+        
+        $cred[] = array(
+            "lang" => "SE",
+            "entry_total" => $this->config->get('entry_total_SE'),
+            'entry_fee' => $this->config->get('entry_fee_SE'),
+            'entry_tax_class' => $this->config->get('entry_tax_class_SE'),
+            'entry_status' => $this->config->get('entry_status_SE'),
+            'entry_sort_order' => $this->config->get('entry_sort_order_SE')       
+        );
+        $cred[] = array(
+            "lang" => "NO",
+            "entry_total" => $this->config->get('entry_total_NO'),
+            'entry_fee' => $this->config->get('entry_fee_NO'),
+            'entry_tax_class' => $this->config->get('entry_tax_class_NO'),
+            'entry_status' => $this->config->get('entry_status_NO'),
+            'entry_sort_order' => $this->config->get('entry_sort_order_NO')       
+        );
+        $cred[] = array(
+            "lang" => "FI",
+            "entry_total" => $this->config->get('entry_total_FI'),
+            'entry_fee' => $this->config->get('entry_fee_FI'),
+            'entry_tax_class' => $this->config->get('entry_tax_class_FI'),
+            'entry_status' => $this->config->get('entry_status_FI'),
+            'entry_sort_order' => $this->config->get('entry_sort_order_FI')       
+        );        
+        $cred[] = array(
+            "lang" => "DK",
+            "entry_total" => $this->config->get('entry_total_DK'),
+            'entry_fee' => $this->config->get('entry_fee_DK'),
+            'entry_tax_class' => $this->config->get('entry_tax_class_DK'),
+            'entry_status' => $this->config->get('entry_status_DK'),
+            'entry_sort_order' => $this->config->get('entry_sort_order_DK')       
+        );        
+        $cred[] = array(
+            "lang" => "NL",
+            "entry_total" => $this->config->get('entry_total_NL'),
+            'entry_fee' => $this->config->get('entry_fee_NL'),
+            'entry_tax_class' => $this->config->get('entry_tax_class_NL'),
+            'entry_status' => $this->config->get('entry_status_NL'),
+            'entry_sort_order' => $this->config->get('entry_sort_order_NL')       
+        );        
+        $cred[] = array(
+            "lang" => "DE",
+            "entry_total" => $this->config->get('entry_total_DE'),
+            'entry_fee' => $this->config->get('entry_fee_DE'),
+            'entry_tax_class' => $this->config->get('entry_tax_class_DE'),
+            'entry_status' => $this->config->get('entry_status_DE'),
+            'entry_sort_order' => $this->config->get('entry_sort_order_DE')       
+        );        
+     
+        $this->data['credentials'] = $cred;
+   
         if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];
         } else {
@@ -108,6 +161,10 @@ class ControllerTotalSveaFee extends Controller {
         $this->response->setOutput($this->render(TRUE));
     }
 
+    /**
+     * iff this returns true, write the (new) settings to database
+     * @return boolean
+     */
     private function validate() {
         if (!$this->user->hasPermission('modify', 'total/svea_fee')) {
             $this->error['warning'] = $this->language->get('error_permission');
