@@ -1,30 +1,51 @@
 <?php
+
 class ModelTotalSveafee extends Model {
 
+    /**
+     * getTotal is triggered to get our contribution to the cart order_total and globals total & taxes
+     * 
+     * @param type $total_data
+     * @param type $total
+     * @param type $taxes
+     * @return type
+     */
     public function getTotal(&$total_data, &$total, &$taxes) {
-
-        if ($this->config->get('svea_fee_status') == '0')
+        if ($this->config->get('svea_fee_status') == false) {
             return;
-
-            if( ($this->cart->getSubTotal() < $this->config->get('svea_fee_total')) &&
-                ($this->cart->getSubTotal() > 0) && 
-                isset($this->session->data['payment_method']['code']) && 
-                ($this->session->data['payment_method']['code'] == 'svea_invoice') )
-            {
+        }
+        
+        // applicable?
+        if(($this->cart->getSubTotal() > 0) && // only checks for lower limit
+            isset($this->session->data['payment_method']['code']) &&
+            ($this->session->data['payment_method']['code'] == 'svea_invoice') )
+        {
             $this->load->language('total/svea_fee');
+       
+            // get country from session data
+            $this->load->model('localisation/country');	
+            $country_info = $this->model_localisation_country->getCountry($this->session->data['payment_country_id']);
 
+            // get svea_fee config settings for country
+            $svea_fee_fee = $this->config->get('svea_fee_fee'."_".$country_info['iso_code_2']);
+            $svea_fee_sort_order = $this->config->get('svea_fee_sort_order'."_".$country_info['iso_code_2']);
+            $svea_fee_tax_class_id = $this->config->get('svea_fee_tax_class'."_".$country_info['iso_code_2']);
+                     
+            // add our svea_fee total to the rest of the totals
             $total_data[] = array(
                 'code' => 'svea_fee',
                 'title' => $this->language->get('text_svea_fee'),
-                'text' => $this->currency->format($this->config->get('svea_fee_fee')),
-                'value' => $this->config->get('svea_fee_fee'),
-                'sort_order' => $this->config->get('svea_fee_sort_order')
+                'text' => $this->currency->format($svea_fee_fee),
+                'value' => $svea_fee_fee,
+                'sort_order' => $svea_fee_sort_order
             );
 
-            if ($this->config->get('svea_fee_tax_class_id')) 
-            {
-                if (floatval(VERSION) >= 1.5) {
-                    $tax_rates = $this->tax->getRates($this->config->get('svea_fee_fee'), $this->config->get('svea_fee_tax_class_id'));
+            // calculate tax, add tax and fee to globals total, taxes
+            if ($svea_fee_tax_class_id) {
+                
+                if (floatval(VERSION) >= 1.5)
+                {
+                    $tax_rates = $this->tax->getRates($svea_fee_fee, $svea_fee_tax_class_id);
 
                     foreach ($tax_rates as $tax_rate) {
                         if (!isset($taxes[$tax_rate['tax_rate_id']])) {
@@ -34,23 +55,22 @@ class ModelTotalSveafee extends Model {
                         }
                     }
 
-                    $total += $this->config->get('svea_fee_fee');
+                    $total += $svea_fee_fee;
                 } 
-                else 
-                {              
-                    $tax_rates = $this->tax->getRate($this->config->get('svea_fee_tax_class_id'));
+                else // OpenCart <1.5 
+                {
+                    $tax_rates = $this->tax->getRate($svea_fee_tax_class_id);
 
-                    $fee = $this->config->get('svea_fee_fee');
+                    $fee = $svea_fee_fee;
                     $tax = (($tax_rates / 100) * $fee );
 
-                    if (!isset($taxes[$this->config->get('svea_fee_tax_class_id')])) {
-                        $taxes[$this->config->get('svea_fee_tax_class_id')] = $tax;
+                    if (!isset($taxes[$svea_fee_tax_class_id])) {
+                        $taxes[$svea_fee_tax_class_id] = $tax;
                     } else {
-                        $taxes[$this->config->get('svea_fee_tax_class_id')] += $tax;
+                        $taxes[$svea_fee_tax_class_id] += $tax;
                     }
 
-
-                    $total += $this->config->get('svea_fee_fee') + $tax;
+                    $total += $fee + $tax;
                 }
             }
         }
