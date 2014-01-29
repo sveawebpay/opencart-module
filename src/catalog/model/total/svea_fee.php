@@ -36,7 +36,7 @@ class ModelTotalSveafee extends Model {
             // add our svea_fee total to the rest of the totals
             $total_data[] = array(
                 'code' => 'svea_fee',
-                'title' => $this->language->get('text_svea_fee'),
+                'title' => $this->language->get('text_svea_fee')." (".$country_info['iso_code_2'].")",
                 'text' => $this->currency->format($svea_fee_fee),
                 'value' => $svea_fee_fee,
                 'sort_order' => $svea_fee_sort_order
