@@ -1,13 +1,14 @@
 <?php
 // Text
 $_['text_title']               = 'SVEA Ratenkauf';
-$_['text_ssn']                 = 'Social Security No';
-$_['text_get_payment_options'] = 'Get payment options';
-$_['text_invoice_address']     = 'Invoice address';
-$_['text_birthdate']           = 'Birth date';
-$_['text_vat_no']              = 'VAT no';
-$_['text_initials']            = 'Initials';
-$_['text_payment_options']     = 'Payment options';
+$_['text_ssn']                = 'Sozialversicherungsnummer ';
+$_['text_get_payment_options'] = 'Get payment options';             // TODO not translated
+$_['text_invoice_address']    = 'Rechnungsadresse';
+$_['text_birthdate']          = 'Geburtsdatum';
+$_['text_vat_no']              = 'VAT no';                          // not translated
+$_['text_initials']            = 'Initials';                        // not translated
+$_['text_payment_options']     = 'Payment options';                 // not translated
+$_['text_get_address']        = 'Adresse bekommen';
 
 //Error responses
 $_['response_20000'] = "Auftrag geschlossen";
