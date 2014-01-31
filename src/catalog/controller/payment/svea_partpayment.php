@@ -3,10 +3,12 @@
 class ControllerPaymentsveapartpayment extends Controller {
 
     protected function index() {
+
+        // populate data array for use in template        
         $this->load->language('payment/svea_partpayment');
         $this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->data['button_back'] = $this->language->get('button_back');
-
+        
         $this->data['continue'] = 'index.php?route=checkout/success';
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
@@ -17,12 +19,20 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $this->id = 'payment';
 
-        //Get the country
+        //Get the country from the order
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
 
         $this->data['logo'] = "<img src='admin/view/image/payment/" . $this->getLogo($order_info['payment_iso_code_2']) . "/svea_partpayment.png'>";
 
+//print_r( $order_info['total'] );
+//print_r( $order_info ); die;
+        
+        // we show the available payment plans w/monthly amounts as radiobuttons under the logo
+        $this->data['paymentOptions'] = $this->getPaymentOptions();
+        
+        
+        
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl')) {
             $this->template = $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl';
         } else {
@@ -256,6 +266,13 @@ class ControllerPaymentsveapartpayment extends Controller {
         // echo json_encode($result);
     }
 
+    
+    /**
+     * getPaymentOptions gets the available paymentmethods for this country and the order value and returns campaigns w/monthly cost
+     * 
+     * @return array of array("campaignCode" => same, "description" => same , "price_per_month" => (string) price/month in selected currency)
+     */
+                
     private function getPaymentOptions() {
         include(DIR_APPLICATION . '../svea/Includes.php');
         $this->load->language('payment/svea_partpayment');

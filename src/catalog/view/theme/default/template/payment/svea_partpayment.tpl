@@ -1,11 +1,27 @@
 <div class="content">
     <div><?php echo $logo; ?></div>
+
+    <?php // show payment plans here with radio button and price/month
+        //print_r( $paymentOptions );
+    ?>
+    
+    <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
+        <?php echo $this->language->get('text_payment_options') ?>:<br />
+        <?php 
+        $flag = true;
+        foreach( $paymentOptions as $p )
+        { ?>
+            <div><input name="svea_partpayment_alt" type="radio" value="<?php echo '$p[\'campaignCode\']' ?> "<?php echo $flag ? ' checked' : ''; $flag = false; ?>>
+                <?php echo $p['description'].": ".$p['price_per_month']; ?>
+            </input></div>
+        <?php
+        } ?>
+    </div>
+    <br />
+   
     <?php 
     if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE")
     { ?>
-        <?php // show payment plans here with radio button and price/month
-
-        ?>
         
         <?php // get SSN
         if( $countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI")
@@ -81,12 +97,6 @@
 </div>
 
 <br />
-<div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
-    <?php echo $this->language->get('text_payment_options') ?>:<br />
-    <select name="svea_partpayment_alt" id="svea_partpayment_alt">
-    </select>
-</div>
-<br />
 
 <div class="buttons">
     <div class="right">
@@ -101,7 +111,6 @@ var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="s
 var runningCheckout = false;
 $("a#checkout").hide();
 $('#svea_partpayment_tr').hide();
-$('#svea_partpaymentalt_tr').hide();
 
 $('a#checkout').click(function(event) {
 
