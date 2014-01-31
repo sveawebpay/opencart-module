@@ -25,9 +25,6 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $this->data['logo'] = "<img src='admin/view/image/payment/" . $this->getLogo($order_info['payment_iso_code_2']) . "/svea_partpayment.png'>";
 
-//print_r( $order_info['total'] );
-//print_r( $order_info ); die;
-        
         // we show the available payment plans w/monthly amounts as radiobuttons under the logo
         $this->data['paymentOptions'] = $this->getPaymentOptions();
         

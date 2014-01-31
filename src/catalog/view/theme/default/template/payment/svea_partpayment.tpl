@@ -4,12 +4,21 @@
     <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_payment_options') ?>:<br />
         <?php 
-        $flag = true;
-        foreach( $paymentOptions as $p )
-        { 
-            printf(   "<div><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>", 
-                            $p['campaignCode'], $flag ? 'checked' : '', $p['description'].': '.$p['price_per_month'] );
-            $flag = false;
+        //var_dump($paymentOptions);
+        
+        if( empty( $paymentOptions ) )     // catch error fetching payment plans
+        {
+            printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", "error rendering campaigns" );
+        }
+        else    // present payment plans
+        {
+            $flag = true;
+            foreach( $paymentOptions as $p )
+            { 
+                printf(   "<div><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>", 
+                                $p['campaignCode'], $flag ? 'checked' : '', $p['description'].': '.$p['price_per_month'] );
+                $flag = false;
+            } 
         } ?>
     </div>
     <br />
