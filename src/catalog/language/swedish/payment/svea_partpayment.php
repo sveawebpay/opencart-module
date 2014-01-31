@@ -9,6 +9,8 @@ $_['text_birthdate']           = 'Födelsedatum';
 $_['text_vat_no']              = 'Org. nr.';
 $_['text_initials']            = 'Initialer';
 $_['text_payment_options']     = 'Betalningsalternativ';
+$_['text_get_address']        = 'Hämta address';
+
 
 //Error responses
 $_['response_20000'] = "Ordern är stängd";
