@@ -1,20 +1,15 @@
 <div class="content">
     <div><?php echo $logo; ?></div>
-
-    <?php // show payment plans here with radio button and price/month
-        //print_r( $paymentOptions );
-    ?>
     
     <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_payment_options') ?>:<br />
         <?php 
         $flag = true;
         foreach( $paymentOptions as $p )
-        { ?>
-            <div><input name="svea_partpayment_alt" type="radio" value="<?php echo '$p[\'campaignCode\']' ?> "<?php echo $flag ? ' checked' : ''; $flag = false; ?>>
-                <?php echo $p['description'].": ".$p['price_per_month']; ?>
-            </input></div>
-        <?php
+        { 
+            printf(   "<div><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>", 
+                            $p['campaignCode'], $flag ? 'checked' : '', $p['description'].': '.$p['price_per_month'] );
+            $flag = false;
         } ?>
     </div>
     <br />
@@ -87,7 +82,7 @@
 
 <div class="buttons">
     <div class="right">
-        <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_payment_options') ?></span></a>
+        <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_address') ?></span></a>
     </div>
 </div>
 
@@ -125,7 +120,7 @@ $('a#checkout').click(function(event) {
     $(this).parent().after().append(sveaLoading);
 
     var ssnNo = $('#ssn').val();
-    var paymentSelector = $('#svea_partpayment_alt').val();
+    var paymentSelector = $("input:radio[name=svea_partpayment_alt]:checked").val();
     var Initials = $("#initials").val();
     var birthDay = $("#birthDay").val();
     var birthMonth = $("#birthMonth").val();
@@ -159,9 +154,9 @@ $('a#checkout').click(function(event) {
     });
 });
 
-
+// Jan'14: getPlan is only used for getAddresses call, we disregard the payment plans, as we show available payment plans when the template is rendered. 
 var runningGetPlan = false;
-$('#getPlan').click(function() {
+$('#getPlan').click(function() {   
     if(runningGetPlan){
        return false;
     }
@@ -171,11 +166,11 @@ $('#getPlan').click(function() {
     var ssnNo = $('#ssn').val();
     $("#svea_partpayment_err").empty();
     $("#svea_partpayment_address").empty();
-    $("#svea_partpayment_alt").empty();
+    //$("#svea_partpayment_alt").empty();       // we no longer touch the payment plans from this function
 
 
     if(ssnNo == ''){
-         $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>*Required');
+        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>*Required');
         $('#sveaLoading').remove();
         runningGetPlan = false;
     }
@@ -200,11 +195,10 @@ $('#getPlan').click(function() {
                             $("#svea_partpayment_address").empty().append('<strong>'+json.addresses[0].fullName+'</strong><br>'+json.addresses[0].street+'<br>'+json.addresses[0].zipCode+' '+json.addresses[0].locality);
                             $("#svea_partpayment_tr").show();
                         }
-                        $.each(json.paymentOptions,function(key,value){
-                            $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.price_per_month+')</option>');
-                        });
-
-                        $("#svea_partpaymentalt_tr").show();
+                        //$.each(json.paymentOptions,function(key,value){
+                        //    $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.price_per_month+')</option>');
+                        //});
+                        //$("#svea_partpaymentalt_tr").show();
 
                         $("#svea_partpayment_err").hide();
                         $("a#checkout").show();
