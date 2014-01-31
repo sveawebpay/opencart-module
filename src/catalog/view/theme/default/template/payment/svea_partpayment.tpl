@@ -1,14 +1,21 @@
 <div class="content">
     <div><?php echo $logo; ?></div>
     <?php 
-    if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE"){ ?>
-        <?php 
-        if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
+    if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE")
+    { ?>
+        <?php // show payment plans here with radio button and price/month
+
+        ?>
+        
+        <?php // get SSN
+        if( $countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI")
+        { ?>
             <?php echo $this->language->get('text_ssn') ?>: 
             <input type="text" id="ssn" name="ssn" /><br /><br />
         <?php 
         }
-        else {
+        elseif( $countryCode == "NL" || $countryCode == "DE" )
+        {
             //Days, to 31
             $days = "";
             $zero = "";
@@ -44,7 +51,7 @@
                 $years .= "<option value='$y' $selected>$y</option>";
             }           
             $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
-
+            
             if($countryCode == "NL"){ ?>
                 <span id="sveaBirthDateCont">
                     <?php echo $this->language->get('text_birthdate')?>: 
