@@ -8,6 +8,7 @@ $_['text_invoice_address']    = 'Laskutusosoite';
 $_['text_birthdate']          = 'Syntymäaika';
 $_['text_vat_no']             = 'ALV';
 $_['text_initials']           = 'Tunnukset';
+$_['text_get_address']        = 'Hae osoite';
 
 
 //Error responses

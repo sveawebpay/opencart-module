@@ -7,9 +7,9 @@ $_['text_invoice_address']    = 'Betalingsadresse';
 $_['text_birthdate']          = 'Fødselsdato';
 $_['text_vat_no']             = 'CVR-nummer';
 $_['text_initials']           = 'Initialer';
-
 $_['text_get_payment_options'] = 'Hente betalingsmuligheder';
 $_['text_payment_options']     = 'Betalingsmuligheder';
+$_['text_get_address']        = 'Adresse';
 
 //Error responses
 $_['response_20000'] = 'Ordre lukket';
