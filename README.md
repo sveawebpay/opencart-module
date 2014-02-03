@@ -1,6 +1,6 @@
 # OpenCart - Svea payment module
 
-##Version 2.2.0
+##Version 2.2.1
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
 
