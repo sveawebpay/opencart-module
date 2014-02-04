@@ -8,6 +8,7 @@ $_['text_birthdate']           = 'Geboortedatum';
 $_['text_vat_no']              = 'BTW nr';
 $_['text_initials']            = 'Initialen';
 $_['text_payment_options']     = 'Betaalopties';
+$_['text_get_address']        = 'Adresgegevens ophalen';
 
 //Error responses
 $_['response_20000'] = "De order is gesloten";

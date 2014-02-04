@@ -1,7 +1,7 @@
 # OpenCart - Svea payment module
 
-##Version 2.1.7
-* Supports OpenCart 1.4.9+
+##Version 2.2.1
+* Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
 
 This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
@@ -38,6 +38,7 @@ In this example we'll first configure the Svea invoice payment method, instructi
 ![Svea payment modules] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Modules.PNG "Svea payment modules")
 
 #### Svea invoice configuration
+The various Svea payment modules are located under Extensions/Payments in the OpenCart administration interface.
 
 * Log in to your OpenCart admin panel.
 * Browse to _extensions -> payments_ where the various Svea payment methods should appear in the list.
@@ -46,20 +47,21 @@ In this example we'll first configure the Svea invoice payment method, instructi
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set the fields _status_ and _testmode_ to enabled_.
 * Also set _order status_ and _auto deliver order_ according to your preferences.
-* Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing purposes, make sure to use the supplied test account credentials.
+* Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing purposes, make sure to use the supplied test account credentials. Note that there are separate settings for each country in which you have an agreement with Svea to accept invoice payments, each country has its own unique client no and credentials.
 * Finally, remember to _save_ your settings.
 
 ![Invoice payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Invoice.PNG "Invoice settings")
 
-#### Next we set up the Svea handling fee (used by Svea Invoice payment method )
+#### Next we set up the Svea invoice fee (used by Svea Invoice payment method )
+The Svea invoice fee has its own module, which is located under Extensions/Order Totals in the OpenCart administration interface.
 
 * Browse to _extensions -> order totals_.
-* Locate _Svea handling fee_ in the list, choose _install_ and then _edit_:
-* Set the _order total_ field to a large number, 99999999 is recommended.
-* Set the _fee_ to the amount you want to charge in the Store default Currency. It will be converted into the customer currency on order.
-* Set the corresponding _tax class_.
-* Also, set the _status_ field to _enabled_.
-* Finally, the _sort order_ field must be set to apply before taxes.
+* Locate _Svea invoice fee_ in the list, choose _install_ and then _edit_:
+* For each country which you accept invoice payments from, selected the corresponding tab an fill in the fields:
+* Set the _status_ field to _enabled_ to add the invoice fee to invoice orders from this country.
+* Set the _fee_ to the amount you want to charge. The fee is always specified in the store default Currency. It will be converted into the customer currency on order.
+* Set the corresponding _tax class_ which should apply to the Svea invoice fee.
+* Finally, the _sort order_ field should be set to apply before taxes (i.e. to a lower value than Order Totals/Taxes).
 
 ![Invoice fee additional settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/InvoiceFee.PNG "Invoice fee additional settings")
 
@@ -100,16 +102,26 @@ Module supports one Svea merchant id per Opencart installation.
 
 ##Localisation and additional OpenCart configuration requirements
 
-* The product price must be given in the default currency if multiple currencies are used
-* Also, price must be given excluding any taxes
-* Currency decimals must be set to two (2) when using Euro currency
+### Specifying prices
+* The product prices must be given in the default currency if multiple currencies are used.
+* Also, prices must be given excluding any taxes.
+* Currency decimals must be set to two (2) when using Euro currency.
 
-* For use in Dutch and German stores the postal code needs to be set to required for customer registrations
+### Customer registration required fields
+* For use in Dutch and German stores the postal code needs to be set to required for customer registrations.
 
-* For use with vouchers, the voucher module sort order must be after taxes
+### Order Total module sort order
+* For use with vouchers, the voucher module sort order must be after taxes.
 * For coupons, the coupon module sort order (in admin, under extensions/order totals) must be set to have a lower sort order than taxes.
 * Also, the coupon discount amount (in admin, under sales/coupon) must be specified excluding tax. The coupon tax discount will then be calculated in accordance with OpenCart standard behaviour, and is specified in the order history.
-* The recommended order total sort order is: sub-total (lowest), svea invoice fee, shipping, coupon, taxes, store credit, voucher and total.
+* The recommended order total sort order is: sub-total (lowest), Svea invoice fee, shipping, coupon, taxes, store credit, voucher and total.
+
+### A note on specifying taxes in OpenCart
+If you have your shop set up to sell mainly to Swedish customers, but have a substantial number of sales to a foreign country (here: Norway), you might want to charge Swedish tax for Swedish customers, and Norwegian tax for Norwegian customers. Ask your accountant for the precise sales numbers required, or sales abroad in general.
+
+This is done by specifying a tax class containing two different tax rates, one for Sweden and one for Norway with the appropriate tax rates. The tax rates each contain a geo zone. For the Swedish tax rate, the geo zone should include all countries where Swedish vat should be charged (i.e. typically all countries that you sell to, but excluding Norway). The Norwegian tax rate geo zone should then include the countries where Norwegian vat should be charged (i.e. Norway only). 
+
+In the tax class settings, make sure that the Norwegian tax rate applies before the Swedish tax rate, i.e. has a higher priority than the Swedish tax rate, and that all tax rate selections are based on the customer Payment Address. The same procedure applies be used for products and i.e. the Svea invoice fee.
 
 ##Extended functionality
 
