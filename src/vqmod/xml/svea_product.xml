@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+<id>SveaWebPay Product Price</id>
+<version>1.1.0</version>
+<vqmver>1.0.8</vqmver>
+<author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
+    <file name="catalog/controller/product/product.php">
+       <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
+        <operation name="svea controller load data to view">
+            <search position="before"><![CDATA[  if ((float)$product_info['special']) { ]]></search>
+            <add><![CDATA[
+                        $this->load->model('localisation/country');
+                        $country_id = $this->config->get('config_country_id');
+                        $country = $this->model_localisation_country->getCountry($country_id);
+
+                        $this->load->language('payment/svea_partpayment');
+
+                        $q = "  SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,`monthlyAnnuityFactor`,`initialFee`,
+                        `notificationFee`,`interestRatePercent`,`numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
+                        FROM `"  . DB_PREFIX .  "svea_params_table`
+                        WHERE timestamp=(SELECT MAX(timestamp) from `"  . DB_PREFIX .  "svea_params_table`)
+                        ORDER BY `id` DESC";
+                        $query = $this->db->query($q);
+                        $campaigns = $query->rows;
+                        $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
+                        if(sizeof($priceList)){//&& admin settings for product display is set to yes
+
+                                     $prices = array();
+                            foreach ($priceList as $value) {
+                                $prices[] = $value['description'] ." ".
+                                             $this->currency->format($value['pricePerMonth']).
+                                            "/".$this->language->get('month');
+
+
+                            }
+                              //copypaste
+                            $viewProduct = array();
+                            $viewProduct['price_list'] = $prices;
+                            $viewProduct['logo'] =  "<img src='admin/view/image/payment/" .$this->getCountryName($country['iso_code_2']). "/svea_partpayment.png'>";
+                            $viewProduct['lowest_price'] =  $this->currency->format($priceList[0]['pricePerMonth']) . "/" . $this->language->get('month');
+                            $viewProduct['arrow'] = "<img src='admin/view/image/green_arrow.png'>";
+                            $viewProduct['line'] = "<img src='admin/view/image/grey_line.png'>";
+                            //copypaste
+
+
+
+                        }
+                        $this->data['svea_widget'] = $viewProduct;
+
+       ]]>  </add>
+        </operation>
+        <!--inserted somewhere as their own functions in controller product.php -->
+        <operation name="svea controller helper functions">
+            <search position="before"><![CDATA[   	public function upload() { ]]></search>
+            <add><![CDATA[
+                            /**
+                     * svea helper function
+                     */
+                    private function sveaPaymentPlanParamsHelper($price,$params){
+                        $values = array();
+                                if (!empty($params)) {
+                        foreach ($params as $key => $value) {
+                                $pair = array();
+                                $pair['pricePerMonth'] = $price * $value['monthlyAnnuityFactor'] + $value['notificationFee'];
+                                foreach ($value as $key => $val) {
+                                    if ($key == "campaignCode") {
+                                        $pair[$key] = $val;
+                                    }
+
+                                if($key == "description"){
+                                    $pair[$key] = $val;
+                                }
+
+                                }
+                                array_push($values, $pair);
+
+                            }
+                        }
+                    return $values;
+                    }
+                /**
+                 * svea to transfor country to string
+                 * @param type $countryCode
+                 * @return string
+                 */
+                private function getCountryName($countryCode) {
+
+                    switch ($countryCode) {
+                        case "SE": $country = "swedish";
+                            break;
+                        case "NO": $country = "norwegian";
+                            break;
+                        case "DK": $country = "danish";
+                            break;
+                        case "FI": $country = "finnish";
+                            break;
+                        case "NL": $country = "dutch";
+                            break;
+                        case "DE": $country = "german";
+                            break;
+                        default: $country = "english";
+                            break;
+                    }
+
+                    return $country;
+                }
+
+       ]]>  </add>
+        </operation>
+    </file>
+    <file name="catalog/view/theme/*/template/product/product.tpl">
+<!--inserted between cart and review divs in product.tpl -->
+        <operation name="svea widget style and html">
+            <search position="before" offset="3">
+            <![CDATA[ <div><img src="catalog/view/theme/default/image/stars-<?php echo $rating; ?>.png" alt="<?php echo $reviews; ?>" />&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $reviews; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $text_write; ?></a></div>
+        ]]> </search>
+                <add><![CDATA[
+                        <?php if ($svea_widget) { ?>
+                         <div class="svea_widget" style="margin-bottom: 20px; ">
+                                <div id="svea_price_box" style="width: 200px; ">
+                           <div id="svea_product_price_lowest"
+                                style="display:block;
+                                       width: 100%;
+                                       outline: 0,5px solid #B5B5B5;
+                                       box-shadow: inset 10px 10px 10px -11px #d2d2d2;
+                                       border-radius: 4px 4px 4px 4px;
+                                       -moz-border-radius: 4px 4px 4px 4px;
+                                       -webkit-border-radius: 4px 4px 4px 4px;
+                                       border: 0.5px solid #bdbdbd;
+                                       background-color: #ededed;
+                                       overflow: hidden;
+                                       position: relative;">
+                                      <div style="
+                                           width:50%;
+                                           margin-left: auto;
+                                           margin-right: auto;
+                                           margin-bottom: -9px;
+                                           "><?php echo $svea_widget['logo']; ?>
+                                      </div>
+                                       <div style="width:auto; float: left;"><?php echo $svea_widget['line']; ?></div>
+                                         <div id="svea_arrow" style="
+                                           width:18%;
+                                           float: left;
+                                           margin: 0px 0px 3px 17px;
+                                           "><?php echo $svea_widget['arrow']; ?>
+                                         </div>
+                                       <div style="
+                                           width:auto;
+                                           width:50%;
+                                           padding: 3px;
+                                           margin-left: auto;
+                                           margin-right: auto;"><?php echo $svea_widget['lowest_price'] ?>
+                                       </div>
+
+
+
+
+                           </div>
+
+                                <div id="svea_product_price_all"
+                                   style="
+                                   display:none;
+                                   float: left;
+                                   width: 100%;
+                                   max-width: 200px;
+                                   padding: 5px;
+                                   outline: 0.5px solid #B5B5B5;
+                                   box-shadow: inset 10px 10px 10px -11px #d2d2d2;
+                                   border-radius: 4px 4px 4px 4px;
+                                   -moz-border-radius: 4px 4px 4px 4px;
+                                   -webkit-border-radius: 4px 4px 4px 4px;
+                                   background-color: #ededed;
+                                   border: 0.5px solid #bdbdbd;
+                                   z-index: 10;
+                                   overflow: hidden;
+                                   padding: 10px 10px 10px 0px;
+                                   ">
+                                    <ul style="
+                                        list-style-type: circle;">
+                                      <?php
+                                      foreach ($svea_widget['price_list'] as $value) {
+                                           echo '<li class="svea_product_price_item" style="display:block;  margin-bottom: 8px">- '.$value.'</li>';
+                                      }
+
+                                      ?>
+                                    </ul>
+                               </div>
+                           </div>
+                             </div>
+
+                        <?php } ?>
+            ]]></add>
+        </operation>
+<!--inserted befort footer in product.tpl -->
+        <operation name="svea script ">
+            <search position="before"><![CDATA[  <?php echo $footer; ?> ]]></search>
+            <add><![CDATA[
+
+<script type="text/javascript"><!--
+     jQuery('#svea_arrow').hover(
+     function (){
+          jQuery("#svea_product_price_all").slideDown();
+          jQuery(this).css({"cursor" : "pointer"});
+    },
+     function(){
+           jQuery("#svea_product_price_all").css({"display" : "none"});
+    });
+
+
+//--></script>
+
+
+            ]]></add>
+        </operation>
+    </file>
+</modification>
