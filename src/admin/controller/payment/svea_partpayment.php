@@ -35,6 +35,8 @@ class ControllerPaymentsveapartpayment extends Controller {
                 $this->data['entry_username']      = $this->language->get('entry_username');
                 $this->data['entry_password']      = $this->language->get('entry_password');
                 $this->data['entry_clientno']      = $this->language->get('entry_clientno');
+                $this->data['entry_product']      = $this->language->get('entry_product');
+                $this->data['entry_product_text'] = $this->language->get('entry_product_text');
 
                 $this->data['entry_sweden']        = $this->language->get('entry_sweden');
                 $this->data['entry_finland']       = $this->language->get('entry_finland');
@@ -53,8 +55,8 @@ class ControllerPaymentsveapartpayment extends Controller {
                 $this->data['entry_min_amount']    = $this->language->get('entry_min_amount');
 
                 $this->data['version']             = floatval(VERSION);
-                
-                //As you might notice is the word we're really looking for is "country" not "lang". Leaving it like that so it won't ruin anything though.
+
+                //As you might notice the word we're really looking for is "country" not "lang". Leaving it like that so it won't ruin anything though.
                 $cred = array();
                 $cred[] = array("lang" => "SE","value_username" => $this->config->get('svea_partpayment_username_SE'),"name_username" => 'svea_partpayment_username_SE',"value_password" => $this->config->get('svea_partpayment_password_SE'),"name_password" => 'svea_partpayment_password_SE',"value_clientno" => $this->config->get('svea_partpayment_clientno_SE'),"name_clientno" => 'svea_partpayment_clientno_SE',"min_amount_name" => 'svea_partpayment_min_amount_SE',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_SE'),"value_testmode" => $this->config->get('svea_partpayment_testmode_SE'),"name_testmode" => 'svea_partpayment_testmode_SE');
                 $cred[] = array("lang" => "NO","value_username" => $this->config->get('svea_partpayment_username_NO'),"name_username" => 'svea_partpayment_username_NO',"value_password" => $this->config->get('svea_partpayment_password_NO'),"name_password" => 'svea_partpayment_password_NO',"value_clientno" => $this->config->get('svea_partpayment_clientno_NO'),"name_clientno" => 'svea_partpayment_clientno_NO',"min_amount_name" => 'svea_partpayment_min_amount_NO',"min_amount_value" => $this->config->get('svea_partpayment_min_amount_NO'),"value_testmode" => $this->config->get('svea_partpayment_testmode_NO'),"name_testmode" => 'svea_partpayment_testmode_NO');
@@ -141,6 +143,12 @@ class ControllerPaymentsveapartpayment extends Controller {
 			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->request->post['svea_partpayment_auto_deliver_status_id'];
 		} else {
 			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->config->get('svea_partpayment_auto_deliver_status_id');
+		}
+                 //show price on product
+		if (isset($this->request->post['svea_partpayment_product_price'])) {
+			$this->data['svea_partpayment_product_price'] = $this->request->post['svea_partpayment_product_price'];
+		} else {
+			$this->data['svea_partpayment_product_price'] = $this->config->get('svea_partpayment_product_price');
 		}
 
 		$this->template = 'payment/svea_partpayment.tpl';

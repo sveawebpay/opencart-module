@@ -9,9 +9,11 @@
         <operation name="svea controller load data to view">
             <search position="before"><![CDATA[  if ((float)$product_info['special']) { ]]></search>
             <add><![CDATA[
+                    $this->load->model('payment/svea_partpayment');
+                    $svea_show =  $this->model_payment_svea_partpayment->getProductPriceMode();
+                    if($svea_show == '1'){
                         $this->load->model('localisation/country');
-                        $country_id = $this->config->get('config_country_id');
-                        $country = $this->model_localisation_country->getCountry($country_id);
+                        $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
 
                         $this->load->language('payment/svea_partpayment');
 
@@ -36,7 +38,7 @@
                               //copypaste
                             $viewProduct = array();
                             $viewProduct['price_list'] = $prices;
-                            $viewProduct['logo'] =  "<img src='admin/view/image/payment/" .$this->getCountryName($country['iso_code_2']). "/svea_partpayment.png'>";
+                            $viewProduct['logo'] =  "<img src='admin/view/image/payment/" .$this->getCountryName($svea_country['iso_code_2']). "/svea_partpayment.png'>";
                             $viewProduct['lowest_price'] =  $this->currency->format($priceList[0]['pricePerMonth']) . "/" . $this->language->get('month');
                             $viewProduct['arrow'] = "<img src='admin/view/image/green_arrow.png'>";
                             $viewProduct['line'] = "<img src='admin/view/image/grey_line.png'>";
@@ -45,7 +47,11 @@
 
 
                         }
-                        $this->data['svea_widget'] = $viewProduct;
+
+                }else{
+                $viewProduct = null;
+                }
+                  $this->data['svea_widget'] = $viewProduct;
 
        ]]>  </add>
         </operation>
@@ -111,14 +117,14 @@
     <file name="catalog/view/theme/*/template/product/product.tpl">
 <!--inserted between cart and review divs in product.tpl -->
         <operation name="svea widget style and html">
-            <search position="before" offset="3">
+            <search position="before" offset="2">
             <![CDATA[ <div><img src="catalog/view/theme/default/image/stars-<?php echo $rating; ?>.png" alt="<?php echo $reviews; ?>" />&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $reviews; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $text_write; ?></a></div>
         ]]> </search>
                 <add><![CDATA[
                         <?php if ($svea_widget) { ?>
-                         <div class="svea_widget" style="margin-bottom: 20px; ">
-                                <div id="svea_price_box" style="width: 200px; ">
-                           <div id="svea_product_price_lowest"
+                         <div class="svea_widget" style="margin-bottom: 20px; border-bottom: 1px solid #E7E7E7; padding: 0 5px 10px; ">
+                            <div id="svea_price_box" style="width: 200px; ">
+                                <div id="svea_product_price_lowest"
                                 style="display:block;
                                        width: 100%;
                                        outline: 0,5px solid #B5B5B5;

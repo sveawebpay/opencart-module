@@ -34,5 +34,9 @@ class ModelPaymentsveapartpayment extends Model {
 
     return $method_data;
     }
+
+    public function getProductPriceMode(){
+        return $this->config->get('svea_partpayment_product_price');
+    }
 }
 ?>

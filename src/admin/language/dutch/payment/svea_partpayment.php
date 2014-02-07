@@ -28,6 +28,8 @@ $_['entry_auto_deliver_text'] = 'Indien ingeschakeld, wordt de factuur automatis
 $_['entry_distribution_type'] = 'Factuur distributie type (Zoals overeengekomen met Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
+$_['entry_product_text'] 'Toon bedrag deelbetaling van product';
+$_['entry_product'] = 'Product:';
 
 // Error
 $_['error_permission']   = 'Waarschuwing: U heeft geen toestemming om de module Svea Deelbetalen te wijzigen!';
