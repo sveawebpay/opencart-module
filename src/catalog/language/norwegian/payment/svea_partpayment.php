@@ -10,6 +10,7 @@ $_['text_vat_no']             = 'Organisasjonsnummer';
 $_['text_initials']           = 'Initialer';
 $_['text_payment_options']     = 'Betalingsalternativer';
 $_['text_get_address']        = 'Adresse';
+$_['text_from']        			= 'Fra';
 
 
 //Error responses

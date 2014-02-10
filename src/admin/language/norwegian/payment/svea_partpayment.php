@@ -23,6 +23,8 @@ $_['text_svea_partpayment']   = '<img src="view/image/payment/norwegian/svea_par
 	$_['entry_distribution_type'] = 'Distribusjonsform for faktura (Etter avtale med Svea):';
 	$_['entry_post'] = 'Post';
 	$_['entry_email'] = 'Email';
+	$_['entry_product_text'] = 'Vis delbetala pris på produktsiden';
+	$_['entry_product'] = 'Produktsiden:';
 	// Error
 	$_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å modifisere Svea Delbetaling betalmodul!';
 	

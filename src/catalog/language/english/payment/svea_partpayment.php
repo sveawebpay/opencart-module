@@ -8,7 +8,8 @@ $_['text_birthdate']           = 'Birth date';
 $_['text_vat_no']              = 'VAT no';
 $_['text_initials']            = 'Initials';
 $_['text_payment_options']     = 'Payment options';
-$_['text_get_address']        = 'Get address';                  //TODO also other languages!
+$_['text_get_address']        = 'Get address';
+$_['text_from']        			= 'From';
 
 //Error responses
 $_['response_20000'] = "Order closed";

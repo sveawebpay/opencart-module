@@ -24,10 +24,12 @@ $_['entry_no']           = 'ei';
 $_['entry_testmode']     = 'Testitila';
 
 $_['entry_auto_deliver'] = 'Toimita automaattisesti:';
-$_['entry_auto_deliver_text'] = 'Mikäli aktivoitu toimitetaan lasku automaattisesti tilauksen luonnin yhteydessä. Muussa tapauksessa laskun toimitus suoritetaan Svean adminiss�.';
+$_['entry_auto_deliver_text'] = 'Mikäli aktivoitu toimitetaan lasku automaattisesti tilauksen luonnin yhteydessä. Muussa tapauksessa laskun toimitus suoritetaan Svean adminissä.';
 $_['entry_distribution_type'] = 'Laskun jakelutapa (Svean kanssa sovitun mukaan):';
 $_['entry_post'] = 'Posti';
 $_['entry_email'] = 'Sähköposti';
+$_['entry_product_text'] = 'Näytä tuotteen yhteydessä kuukausihinta';
+$_['entry_product'] = 'Tuotteen:';
 
 // Error
 $_['error_permission']   = 'Varoitus: Sinulla ei ole oikeuksia muuttaa Svea Osamaksu maksumodulia!';

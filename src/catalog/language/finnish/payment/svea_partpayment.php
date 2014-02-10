@@ -9,6 +9,7 @@ $_['text_birthdate']          = 'Syntymäaika';
 $_['text_vat_no']             = 'ALV';
 $_['text_initials']           = 'Tunnukset';
 $_['text_get_address']        = 'Hae osoite';
+$_['text_from']        			= 'Alkaen';
 
 
 //Error responses

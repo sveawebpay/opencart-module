@@ -28,6 +28,8 @@ $_['entry_auto_deliver_text'] = 'Ved aktivering leveres fakturaen automatisk nå
 $_['entry_distribution_type'] = 'Distributionsform for faktura (efter aftale med Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
+$_['entry_product_text'] = 'Se delbetala pris på produktsiden';
+$_['entry_product'] = 'Produktsiden:';
 
 // Error
 $_['error_permission']        = 'Advarsel: Du har ikke tilladelse til at modificere Svea Delbetaling betalingsmodul!';
