@@ -27,19 +27,22 @@
                         $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
                         if(sizeof($priceList)){//&& admin settings for product display is set to yes
 
-                                     $prices = array();
+                            $prices = array();
                             foreach ($priceList as $value) {
-                                $prices[] = $value['description'] ." ".
-                                             $this->currency->format($value['pricePerMonth']).
-                                            "/".$this->language->get('month');
+                                $prices[] = "<div style='float:left;'>".
+                                    $value['description'] ."</div><div style='float:right;'><strong>".
+                                             $this->currency->format(round($value['pricePerMonth'],1)).
+                                            "/".$this->language->get('month')."</strong></div>";
 
 
                             }
+
                               //copypaste
                             $viewProduct = array();
                             $viewProduct['price_list'] = $prices;
                             $viewProduct['logo'] =  "<img src='admin/view/image/payment/" .$this->getCountryName($svea_country['iso_code_2']). "/svea_partpayment.png'>";
-                            $viewProduct['lowest_price'] =  $this->currency->format($priceList[0]['pricePerMonth']) . "/" . $this->language->get('month');
+                            $viewProduct['text_from'] =  $this->language->get('text_from')." ";
+                            $viewProduct['lowest_price'] =  $this->currency->format(round($priceList[0]['pricePerMonth'],1)) . "/" . $this->language->get('month');
                             $viewProduct['arrow'] = "<img src='admin/view/image/green_arrow.png'>";
                             $viewProduct['line'] = "<img src='admin/view/image/grey_line.png'>";
                             //copypaste
@@ -152,10 +155,11 @@
                                          </div>
                                        <div style="
                                            width:auto;
-                                           width:50%;
+                                           width:85%;
                                            padding: 3px;
                                            margin-left: auto;
-                                           margin-right: auto;"><?php echo $svea_widget['lowest_price'] ?>
+                                           margin-right: auto;">
+                                        <?php echo $svea_widget['text_from'].$svea_widget['lowest_price'] ?>
                                        </div>
 
 
@@ -179,17 +183,17 @@
                                    border: 0.5px solid #bdbdbd;
                                    z-index: 10;
                                    overflow: hidden;
-                                   padding: 10px 10px 10px 0px;
+                                   padding: 3px 3px 0px 0px;
                                    ">
-                                    <ul style="
-                                        list-style-type: circle;">
+
                                       <?php
                                       foreach ($svea_widget['price_list'] as $value) {
-                                           echo '<li class="svea_product_price_item" style="display:block;  margin-bottom: 8px">- '.$value.'</li>';
-                                      }
+                                           echo '<div class="svea_product_price_item" style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'.$value.'</div>';
+                                           echo $svea_widget['line'];
+                                        }
 
                                       ?>
-                                    </ul>
+
                                </div>
                            </div>
                              </div>
