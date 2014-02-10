@@ -11,6 +11,7 @@
             <add><![CDATA[
                     $this->load->model('payment/svea_partpayment');
                     $svea_show =  $this->model_payment_svea_partpayment->getProductPriceMode();
+                    $viewProduct = null;
                     if($svea_show == '1'){
                         $this->load->model('localisation/country');
                         $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
@@ -51,8 +52,6 @@
 
                         }
 
-                }else{
-                $viewProduct = null;
                 }
                   $this->data['svea_widget'] = $viewProduct;
 
