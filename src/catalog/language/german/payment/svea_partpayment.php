@@ -9,6 +9,7 @@ $_['text_vat_no']              = 'VAT no';                          // not trans
 $_['text_initials']            = 'Initials';                        // not translated
 $_['text_payment_options']     = 'Payment options';                 // not translated
 $_['text_get_address']        = 'Adresse bekommen';
+$_['text_from']        			= 'Ab';
 
 //Error responses
 $_['response_20000'] = "Auftrag geschlossen";

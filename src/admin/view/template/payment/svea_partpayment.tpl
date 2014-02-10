@@ -15,7 +15,7 @@
           <tbody>
             <tr>
                 <td>Version</td>
-                <td>2.2.1</td>
+                <td>2.3.0</td>
             </tr>
             <tr>
               <td><?php echo $entry_geo_zone; ?></td>
@@ -75,6 +75,22 @@
                         <?php } ?>
                     <?php } ?>
                     </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $entry_product; ?><span class="help"><?php echo $entry_product_text ?></span></td>
+                <td>
+                    <?php if ($svea_partpayment_product_price) { ?>
+                    <input type="radio" name="svea_partpayment_product_price" value="1" checked="checked" />
+                    <?php echo $entry_yes; ?>
+                    <input type="radio" name="svea_partpayment_product_price" value="0" />
+                    <?php echo $entry_no; ?>
+                    <?php } else { ?>
+                    <input type="radio" name="svea_partpayment_product_price" value="1" />
+                    <?php echo $entry_yes; ?>
+                    <input type="radio" name="svea_partpayment_product_price" value="0" checked="checked" />
+                    <?php echo $entry_no; ?>
+                    <?php } ?>
                 </td>
             </tr>
           </tbody>

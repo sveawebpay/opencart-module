@@ -28,6 +28,8 @@ $_['entry_auto_deliver_text'] = ' Wenn aktiviert wird Lieferung von Rechnung aut
 $_['entry_distribution_type'] = 'Distributionsform für Rechnung (Nach Zustimmung mit Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'E-Post';
+$_['entry_product_text'] = 'Zeigen Teilzahlung Preis an Produktseite';
+$_['entry_product'] = 'Produktseite:';
 
 // Error
 $_['error_permission']        = 'Achtung: Sie sind nicht genehmigt in Svea Teilzahlung Zahlungsmodul zu ändern!';

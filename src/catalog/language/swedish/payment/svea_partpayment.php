@@ -10,6 +10,7 @@ $_['text_vat_no']              = 'Org. nr.';
 $_['text_initials']            = 'Initialer';
 $_['text_payment_options']     = 'Betalningsalternativ';
 $_['text_get_address']        = 'Hämta address';
+$_['text_from']        			= 'Från';
 
 
 //Error responses
