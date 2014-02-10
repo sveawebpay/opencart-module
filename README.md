@@ -3,6 +3,7 @@
 ##Version 2.3.0
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
+* Feature _Show _PaymentPlan _price on product page requirers [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
 
 This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
 
@@ -79,7 +80,7 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * Also set _order status_ and _auto deliver order_ according to your preferences.
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing, make sure to use the supplied test account credentials.
 * The field _min. amount_ must match the corresponding setting in Svea admin.
-* Set _yes to display _price _per _month on product display
+* Set _yes to display _price _per _month on product display. Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
 
 #### Svea Card Payment
 Module supports one Svea merchant id per Opencart installation.
