@@ -17,12 +17,13 @@
                         $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
 
                         $this->load->language('payment/svea_partpayment');
-
-                        $q = "  SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,`monthlyAnnuityFactor`,`initialFee`,
+                        $q = "
+                            SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,`monthlyAnnuityFactor`,`initialFee`,
                         `notificationFee`,`interestRatePercent`,`numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
-                        FROM `"  . DB_PREFIX .  "svea_params_table`
-                        WHERE timestamp=(SELECT MAX(timestamp) from `"  . DB_PREFIX .  "svea_params_table`)
-                        ORDER BY `id` DESC";
+                            FROM `"  . DB_PREFIX .  "svea_params_table`
+                            WHERE `timestamp`=(SELECT MAX(timestamp) from `"  . DB_PREFIX .  "svea_params_table`  WHERE `countryCode` = '".$svea_country['iso_code_2']."')
+                        ORDER BY `monthlyAnnuityFactor` ASC";
+
                         $query = $this->db->query($q);
                         $campaigns = $query->rows;
                         $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
