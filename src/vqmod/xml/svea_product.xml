@@ -17,12 +17,13 @@
                         $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
 
                         $this->load->language('payment/svea_partpayment');
-                        $q = "
-                            SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,`monthlyAnnuityFactor`,`initialFee`,
-                        `notificationFee`,`interestRatePercent`,`numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
+                        $q ="SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
+                            `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
+                            `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
                             FROM `"  . DB_PREFIX .  "svea_params_table`
-                            WHERE `timestamp`=(SELECT MAX(timestamp) from `"  . DB_PREFIX .  "svea_params_table`  WHERE `countryCode` = '".$svea_country['iso_code_2']."')
-                        ORDER BY `monthlyAnnuityFactor` ASC";
+                            WHERE `timestamp`=(SELECT MAX(timestamp) FROM `"  . DB_PREFIX .  "svea_params_table` WHERE `countryCode` = '".$svea_country['iso_code_2']."')
+                            AND `countryCode` = '".$svea_country['iso_code_2']."'
+                            ORDER BY `monthlyAnnuityFactor` ASC";
 
                         $query = $this->db->query($q);
                         $campaigns = $query->rows;
