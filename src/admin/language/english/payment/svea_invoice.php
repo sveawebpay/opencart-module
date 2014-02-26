@@ -17,6 +17,7 @@ $_['entry_sort_order']        = 'Sort Order:';
 $_['entry_username']          = 'Username:';
 $_['entry_password']          = 'Password:';
 $_['entry_clientno']          = 'Client No:';
+$_['entry_min_amount']   = 'Product´s min.price:';
 
 $_['entry_yes']               = 'yes';
 $_['entry_no']                = 'no';
@@ -27,6 +28,8 @@ $_['entry_auto_deliver_text'] = 'If enabled the invoice will automatically be de
 $_['entry_distribution_type'] = 'Invoice distribution type (As agreed with Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
+$_['entry_product_text'] = 'Minimum amount to pay. Show on product display';
+$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']        = 'Warning: You do not have permission to modify Svea Invoice payment module!';

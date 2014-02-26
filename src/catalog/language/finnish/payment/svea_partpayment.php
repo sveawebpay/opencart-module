@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']               = 'SVEA Osamaksu';
+$_['text_title']               = 'Svea Osamaksu';
+$_['text_paymentplan']        = 'Osamaksu';
 $_['text_ssn']                = 'Henkilötunnus';
 $_['text_get_payment_options'] = 'Hae maksuvaihtoehdot';
 $_['text_payment_options']     = 'Maksuvaihtoehdot';

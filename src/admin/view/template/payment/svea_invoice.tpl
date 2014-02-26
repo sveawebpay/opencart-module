@@ -84,6 +84,25 @@
                             </select>
                         </td>
                     </tr>
+                     <tr>
+                        <td><?php echo $entry_product; ?><span class="help"><?php echo $entry_product_text ?></span></td>
+                        <td>
+                            <?php if ($svea_invoice_product_price) { ?>
+                            <input type="radio" name="svea_invoice_product_price" value="1" checked="checked" />
+                            <?php echo $entry_yes; ?>
+                            <input type="radio" name="svea_invoice_product_price" value="0" />
+                            <?php echo $entry_no; ?>
+                            <?php } else { ?>
+                            <input type="radio" name="svea_invoice_product_price" value="1" />
+                            <?php echo $entry_yes; ?>
+                            <input type="radio" name="svea_invoice_product_price" value="0" checked="checked" />
+                            <?php echo $entry_no; ?>
+                            <?php } ?>
+                            <span class="help"><?php echo $entry_min_amount; ?></span>
+                            <input name="svea_invoice_product_price_min" type="text"
+                                           value="<?php echo $svea_invoice_product_price_min; ?>" />
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <!-- Countrycode specific -->

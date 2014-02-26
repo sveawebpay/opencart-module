@@ -17,6 +17,7 @@ $_['entry_sort_order']        = 'Sortierungsordnung:';
 $_['entry_username']          = 'Anwendername:';
 $_['entry_password']          = 'Passwort:';
 $_['entry_clientno']          = 'Klient-Nr:';
+$_['entry_min_amount']   	  = 'Produkt der Mindestpreis:';
 
 $_['entry_yes']               = 'ja';
 $_['entry_no']                = 'nein';
@@ -27,6 +28,8 @@ $_['entry_auto_deliver_text'] = ' Wenn aktiviert wird Lieferung von Rechnung aut
 $_['entry_distribution_type'] = 'Distributionsform für Rechnung (Nach Zustimmung mit Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'E-Post';
+$_['entry_product_text'] = 'Mindestbetrag zu zahlen. Zeigen an Produktseite';
+$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']        = 'Achtung: Sie sind nicht genehmigt in Svea Rechnung Zahlungsmodul zu ändern!';

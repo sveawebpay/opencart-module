@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']               = 'SVEA Partpayment';
+$_['text_title']               = 'SveaWebPay Partpayment';
+$_['text_paymentplan']        = 'Partpayment';
 $_['text_ssn']                 = 'Social Security No';
 $_['text_get_payment_options'] = 'Get payment options';
 $_['text_invoice_address']     = 'Invoice address';

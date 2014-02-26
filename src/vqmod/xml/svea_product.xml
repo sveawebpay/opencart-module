@@ -9,67 +9,143 @@
         <operation name="svea controller load data to view">
             <search position="before"><![CDATA[  if ((float)$product_info['special']) { ]]></search>
             <add><![CDATA[
-                    $this->load->model('payment/svea_partpayment');
-                    $svea_show =  $this->model_payment_svea_partpayment->getProductPriceMode();
-                    $viewProduct = null;
-                    if($svea_show == '1'){
-                        $this->load->model('localisation/country');
+                                       $this->load->model('localisation/country');
+                        $this->load->model('payment/svea_partpayment');
+                        $this->load->model('payment/svea_invoice');
                         $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
-
-                        $this->load->language('payment/svea_partpayment');
-                        $q ="SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
-                            `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
-                            `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
-                            FROM `"  . DB_PREFIX .  "svea_params_table`
-                            WHERE `timestamp`=(SELECT MAX(timestamp) FROM `"  . DB_PREFIX .  "svea_params_table` WHERE `countryCode` = '".$svea_country['iso_code_2']."')
-                            AND `countryCode` = '".$svea_country['iso_code_2']."'
-                            ORDER BY `monthlyAnnuityFactor` ASC";
-
-                        $query = $this->db->query($q);
-                        $campaigns = $query->rows;
-                        $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
-                        if(sizeof($priceList)){//&& admin settings for product display is set to yes
-
+                        $svea_show_paymentplan =  $this->model_payment_svea_partpayment->getProductPriceMode();
+                        $svea_show_invoice =  $this->model_payment_svea_invoice->getProductPriceMode();
+                        $svea_show_invoice_min =  $this->model_payment_svea_invoice->getProductPriceModeMin();
+                        $viewProduct = null;
+                        if($svea_show_paymentplan === '1' || $svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "DE"){
+                            $currency_decimals = $_SESSION['currency'] == 'EUR' ? 1 : 0;
+                            $price_list = array();
                             $prices = array();
-                            foreach ($priceList as $value) {
-                                $prices[] = "<div style='float:left;'>".
-                                    $value['description'] ."</div><div style='float:right;'><strong>".
-                                             $this->currency->format(round($value['pricePerMonth'],1)).
-                                            "/".$this->language->get('month')."</strong></div>";
 
+                            $symbolRight = $this->currency->getSymbolRight($_SESSION['currency']);
+                            $symbolLeft = $this->currency->getSymbolLeft($_SESSION['currency']);
+                            //paymentplan
+                            if($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "NL"){
+                                $this->load->language('payment/svea_partpayment');
+                                $q ="SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
+                                    `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
+                                    `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
+                                    FROM `"  . DB_PREFIX .  "svea_params_table`
+                                    WHERE `timestamp`=(SELECT MAX(timestamp) FROM `"  . DB_PREFIX .  "svea_params_table` WHERE `countryCode` = '".$svea_country['iso_code_2']."')
+                                    AND `countryCode` = '".$svea_country['iso_code_2']."'
+                                    ORDER BY `monthlyAnnuityFactor` ASC";
 
+                                $query = $this->db->query($q);
+                                $campaigns = $query->rows;
+                                $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
+                                if(sizeof($priceList)){//&& admin settings for product display is set to yes
+                                    $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_paymentplan').'</h4>';
+
+                                    foreach ($priceList as $value) {
+                                    $prices[] = $value['pricePerMonth'];
+                                       $price_list[] = '<div class="svea_product_price_item" style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'.
+                                                    "<div style='float:left;'>".
+                                                        $value['description'] .
+                                                   "</div>
+                                                    <div style='color: #002A46;
+                                                                width:90%;
+                                                                margin-left: 80px;
+                                                                margin-right: auto;
+                                                                float:left;'>
+                                                        <strong >".
+                                                   $symbolLeft.round(round($value['pricePerMonth'],$currency_decimals)).$symbolRight.
+                                                              "/".$this->language->get('month').
+                                                        "</strong>
+                                                    </div>
+                                                </div>";
+
+                                    }
+
+                                }
+                            }
+                            //invoice
+                            if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $product_info['price'] >= $svea_show_invoice_min){
+                                  $this->load->language('payment/svea_invoice');
+                                $lowest_to_pay = $this->svea_get_invoice_lowest($svea_country['iso_code_2']);
+                                $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_invoice').'</h4>';
+                                //Based on condition to pay 3% of amount or 100
+                                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * 0.03 < $lowest_to_pay ? $lowest_to_pay : $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * 0.03;
+                                $prices[] = $price;
+                                $price_list[] = '<div class="svea_product_price_item" style="display:block; margin: 5px 10px 10px 10px">'.
+                                                    "<div style='float:left;'>".
+                                                    $this->language->get('text_product_invoice')."</div>
+                                                    <div style='color: #002A46;
+                                                                width:90%;
+                                                                margin-left: 80px;
+                                                                margin-right: auto;
+                                                                float:left;'>
+                                                        <strong >".
+                                                    $symbolLeft.round(round($price,$currency_decimals)).$symbolRight.
+                                                        "</strong>
+                                                    </div>
+                                                </div>";
                             }
 
-                              //copypaste
+                            //lowest price
+                            if(sizeof($prices) > 0){
+                                $lowest_price = $symbolLeft.round(min($prices)).$symbolRight;
+                            }
                             $viewProduct = array();
-                            $viewProduct['price_list'] = $prices;
-                            $viewProduct['logo'] =  "<img src='admin/view/image/payment/" .$this->getCountryName($svea_country['iso_code_2']). "/svea_partpayment.png'>";
-                            $viewProduct['text_from'] =  $this->language->get('text_from')." ";
-                            $viewProduct['lowest_price'] =  $this->currency->format(round($priceList[0]['pricePerMonth'],1)) . "/" . $this->language->get('month');
-                            $viewProduct['arrow'] = "<img src='admin/view/image/green_arrow.png'>";
-                            $viewProduct['line'] = "<img src='admin/view/image/grey_line.png'>";
-                            //copypaste
+                            if(sizeof($price_list) > 0){
+                                $viewProduct['price_list'] = $price_list;
+                                $viewProduct['text_from'] =  $this->language->get('text_from')." ";
+                                $viewProduct['lowest_price'] = $lowest_price;
+                                $viewProduct['arrow'] = "<img src='admin/view/image/payment/svea_direct/blue_arrow.png'>";
+                                $viewProduct['line'] = "<img width='163' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
 
-
+                            }
+                            $this->data['svea_widget'] = $viewProduct;
 
                         }
 
-                }
-                  $this->data['svea_widget'] = $viewProduct;
-
-       ]]>  </add>
+       ]]></add>
         </operation>
         <!--inserted somewhere as their own functions in controller product.php -->
         <operation name="svea controller helper functions">
             <search position="before"><![CDATA[   	public function upload() { ]]></search>
             <add><![CDATA[
-                            /**
+                private function svea_get_invoice_lowest($svea_country_code) {
+                        switch ($svea_country_code) {
+                            case "SE":
+                                return 100;
+                                break;
+                            case "NO":
+                                return 100;
+                                break;
+                            case "FI":
+                                return 10;
+                                break;
+                            case "DK":
+                                return 100;
+                                break;
+                            /** not yew available
+                            case "NL":
+                                return 100;
+                                break;
+                            case "DE":
+                                return 100;
+                                break;
+                             *
+                             */
+
+                            default:
+                                break;
+                        }
+                    }
+
+                    /**
                      * svea helper function
                      */
                     private function sveaPaymentPlanParamsHelper($price,$params){
                         $values = array();
                                 if (!empty($params)) {
                         foreach ($params as $key => $value) {
+                              if ($price >= $value['fromAmount'] && $price <= $value['toAmount']) {
                                 $pair = array();
                                 $pair['pricePerMonth'] = $price * $value['monthlyAnnuityFactor'] + $value['notificationFee'];
                                 foreach ($value as $key => $val) {
@@ -83,11 +159,13 @@
 
                                 }
                                 array_push($values, $pair);
+                              }
 
                             }
                         }
                     return $values;
                     }
+
                 /**
                  * svea to transfor country to string
                  * @param type $countryCode
@@ -114,8 +192,7 @@
 
                     return $country;
                 }
-
-       ]]>  </add>
+       ]]></add>
         </operation>
     </file>
     <file name="catalog/view/theme/*/template/product/product.tpl">
@@ -125,81 +202,83 @@
             <![CDATA[ <div><img src="catalog/view/theme/default/image/stars-<?php echo $rating; ?>.png" alt="<?php echo $reviews; ?>" />&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $reviews; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $text_write; ?></a></div>
         ]]> </search>
                 <add><![CDATA[
-                        <?php if ($svea_widget) { ?>
-                         <div class="svea_widget" style="margin-bottom: 20px; border-bottom: 1px solid #E7E7E7; padding: 0 5px 10px; ">
-                            <div id="svea_price_box" style="width: 200px; ">
-                                <div id="svea_product_price_lowest"
-                                style="display:block;
-                                       width: 100%;
-                                       outline: 0,5px solid #B5B5B5;
-                                       box-shadow: inset 10px 10px 10px -11px #d2d2d2;
-                                       border-radius: 4px 4px 4px 4px;
-                                       -moz-border-radius: 4px 4px 4px 4px;
-                                       -webkit-border-radius: 4px 4px 4px 4px;
-                                       border: 0.5px solid #bdbdbd;
-                                       background-color: #ededed;
-                                       overflow: hidden;
-                                       position: relative;">
-                                      <div style="
-                                           width:50%;
-                                           margin-left: auto;
-                                           margin-right: auto;
-                                           margin-bottom: -9px;
-                                           "><?php echo $svea_widget['logo']; ?>
-                                      </div>
-                                       <div style="width:auto; float: left;"><?php echo $svea_widget['line']; ?></div>
-                                         <div id="svea_arrow" style="
-                                           width:18%;
-                                           float: left;
-                                           margin: 0px 0px 3px 17px;
-                                           "><?php echo $svea_widget['arrow']; ?>
-                                         </div>
-                                       <div style="
-                                           width:auto;
-                                           width:85%;
-                                           padding: 3px;
-                                           margin-left: auto;
-                                           margin-right: auto;">
+                        <?php
+                    if ($svea_widget) { ?>
+
+                     <div id="svea_price_box"
+                                style=" width: auto;
+                                         height: 40px;
+                                         margin: 0 0 15px;
+                                         ">
+                        <div style="position:relative; z-index:1;" >
+                            <div id="svea_product_price_lowest"
+                                style="overflow: hidden;">
+                                <div style="
+                                    float: left;
+                                    width:50px;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                    ">
+                                        <img width="170"
+                                            style="position:absolute;
+                                                  z-index:1;" src='admin/view/image/payment/svea_direct/svea_background.png'/>
+                                </div>
+                                <div id="svea_price_arrow">
+                                    <div id="svea_arrow" style="
+                                                width:auto;
+                                                position:absolute;
+                                                z-index:2;
+                                                left: -2px;
+                                                top:26px;
+                                               margin: 7px -10px 3px 17px;
+                                               "><?php echo $svea_widget['arrow']; ?>
+                                    </div>
+                                    <div style="
+                                          position:absolute;
+                                           z-index:2;
+                                           left:50px;
+                                           top:26px;
+                                          color: #002A46;
+                                          width:auto;
+                                          padding: 3px;
+                                          margin-left: auto;
+                                          margin-right: auto;">
                                         <?php echo $svea_widget['text_from'].$svea_widget['lowest_price'] ?>
-                                       </div>
-
-
-
-
-                           </div>
+                                    </div>
+                                </div>
 
                                 <div id="svea_product_price_all"
-                                   style="
-                                   display:none;
-                                   float: left;
-                                   width: 100%;
-                                   max-width: 200px;
-                                   padding: 5px;
-                                   outline: 0.5px solid #B5B5B5;
-                                   box-shadow: inset 10px 10px 10px -11px #d2d2d2;
-                                   border-radius: 4px 4px 4px 4px;
-                                   -moz-border-radius: 4px 4px 4px 4px;
-                                   -webkit-border-radius: 4px 4px 4px 4px;
-                                   background-color: #ededed;
-                                   border: 0.5px solid #bdbdbd;
-                                   z-index: 10;
-                                   overflow: hidden;
-                                   padding: 3px 3px 0px 0px;
-                                   ">
+                                    style="
+                                    float: none;
+                                    display:none;
+                                    width: 100% !important;
+                                    max-width: 206px;
+                                    padding: 5px;
+                                    box-shadow: inset 10px 10px 10px -11px #d2d2d2;
+                                    border-radius: 4px 4px 4px 4px;
+                                    -moz-border-radius: 4px 4px 4px 4px;
+                                    -webkit-border-radius: 4px 4px 4px 4px;
+                                    background-color: #ededed;
+                                    border: 0.5px solid #bdbdbd;
+                                    z-index: 1000000;
+                                    position: absolute;
+                                    top:50px;
+                                    padding: 3px 3px 0px 0px !important;
+                                    visibility: visible;
+                                    ">
 
-                                      <?php
-                                      foreach ($svea_widget['price_list'] as $value) {
-                                           echo '<div class="svea_product_price_item" style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'.$value.'</div>';
-                                           echo $svea_widget['line'];
-                                        }
+                              <?php
+                              foreach ($svea_widget['price_list'] as $value) {
+                                   echo $value;
+                                   echo $svea_widget['line'];
+                                }
 
-                                      ?>
-
-                               </div>
+                              ?>
                            </div>
-                             </div>
-
-                        <?php } ?>
+                       </div>
+                    </div>
+                </div>
+            <?php } ?>
             ]]></add>
         </operation>
 <!--inserted befort footer in product.tpl -->
@@ -208,14 +287,24 @@
             <add><![CDATA[
 
 <script type="text/javascript"><!--
-     jQuery('#svea_arrow').hover(
-     function (){
-          jQuery("#svea_product_price_all").slideDown();
-          jQuery(this).css({"cursor" : "pointer"});
-    },
-     function(){
-           jQuery("#svea_product_price_all").css({"display" : "none"});
-    });
+    jQuery(document).ready(function () {
+
+                jQuery("#svea_price_arrow").hover(function (){
+                     jQuery(this).css({"cursor" : "pointer"});
+                });
+                jQuery("#svea_product_price_all").click(function (){
+                     jQuery("#svea_product_price_all").slideUp();
+                });
+                jQuery("#svea_price_arrow").toggle(
+                    function (){
+                         jQuery("#svea_product_price_all").slideDown();
+                         jQuery(this).css({"cursor" : "pointer"});
+                   },
+                    function(){
+                         jQuery("#svea_product_price_all").slideUp();
+                   });
+
+               });
 
 
 //--></script>

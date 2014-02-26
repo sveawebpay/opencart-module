@@ -17,6 +17,7 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/norwegian/svea_inv
 	$_['entry_username']     = 'Brukernavn:';
 $_['entry_password']     = 'Passord:';
 	$_['entry_clientno']     = 'Klientnr:';
+		$_['entry_min_amount']  	= 'Produktets minstepris:';
 
 $_['entry_yes']               = 'ja';
 $_['entry_no']                = 'nei';
@@ -27,6 +28,8 @@ $_['entry_auto_deliver'] = 'Levere automatisk:';
 	$_['entry_distribution_type'] = 'Distribusjonsform for faktura (Etter avtale med Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
+	$_['entry_product_text'] = 'Minstebeløp å betale. Vis på produktsiden';
+	$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å modifisere Svea Faktura betalingsmodul!';

@@ -34,6 +34,8 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['entry_username']      = $this->language->get('entry_username');
         $this->data['entry_password']      = $this->language->get('entry_password');
         $this->data['entry_clientno']      = $this->language->get('entry_clientno');
+        $this->data['entry_product']      = $this->language->get('entry_product');
+        $this->data['entry_product_text'] = $this->language->get('entry_product_text');
 
         $this->data['entry_sweden']        = $this->language->get('entry_sweden');
         $this->data['entry_finland']       = $this->language->get('entry_finland');
@@ -50,6 +52,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['entry_email']          = $this->language->get('entry_email');
         $this->data['entry_yes']            = $this->language->get('entry_yes');
         $this->data['entry_no']             = $this->language->get('entry_no');
+        $this->data['entry_min_amount']    = $this->language->get('entry_min_amount');
 
         $this->data['version']  = floatval(VERSION);
 
@@ -119,7 +122,18 @@ class ControllerPaymentsveainvoice extends Controller {
 			$this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_auto_deliver_status_id');
 		}
 
-
+                 //show price on product
+		if (isset($this->request->post['svea_invoice_product_price'])) {
+			$this->data['svea_invoice_product_price'] = $this->request->post['svea_invoice_product_price'];
+		} else {
+			$this->data['svea_invoice_product_price'] = $this->config->get('svea_invoice_product_price');
+		}
+                 //min amount to show price on product
+		if (isset($this->request->post['svea_invoice_product_price_min'])) {
+			$this->data['svea_invoice_product_price_min'] = $this->request->post['svea_invoice_product_price_min'];
+		} else {
+			$this->data['svea_invoice_product_price_min'] = $this->config->get('svea_invoice_product_price_min');
+		}
 
 		$this->load->model('localisation/order_status');
 

@@ -18,13 +18,15 @@ $_['text_svea_partpayment']   = '<img src="view/image/payment/norwegian/svea_par
 	$_['entry_testmode']     = 'Testmodus:';
 	$_['entry_password']     = 'Passord:';
 	$_['entry_clientno']     = 'Klientnr:';
+	$_['entry_min_amount']  	= 'Min. beløp:';
+	
 	$_['entry_auto_deliver'] = 'Leverere automatisk:';
 	$_['entry_auto_deliver_text'] = 'Om aktivert levereres fakturaen automatiskt ved opprettelse av ordren. Ellers gjøres dette via Sveas admin.';
 	$_['entry_distribution_type'] = 'Distribusjonsform for faktura (Etter avtale med Svea):';
 	$_['entry_post'] = 'Post';
 	$_['entry_email'] = 'Email';
 	$_['entry_product_text'] = 'Vis delbetala pris på produktsiden';
-	$_['entry_product'] = 'Produktsiden:';
+	$_['entry_product'] = 'Product Price Widget:';
 	// Error
 	$_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å modifisere Svea Delbetaling betalmodul!';
 	
