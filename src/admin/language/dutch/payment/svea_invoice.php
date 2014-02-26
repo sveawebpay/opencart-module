@@ -18,6 +18,7 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/dutch/svea_invoice
 	$_['entry_username']          = 'Gebruikersnaam:';
 	$_['entry_password']          = 'Wachtwoord:';
 	$_['entry_clientno']          = 'Klantnr:';
+	$_['entry_min_amount']   		= 'Products min.prijs:';
 
 	$_['entry_yes']               = 'ja';
 	$_['entry_no']                = 'nee';
@@ -28,6 +29,8 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/dutch/svea_invoice
 	$_['entry_distribution_type'] = 'Factuur distributie type (Zoals overeengekomen met Svea):';
 	$_['entry_post'] = 'Post';
 	$_['entry_email'] = 'Email';
+	$_['entry_product_text'] ='Laagst te betalen bedrag. Toon van product';
+	$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']        = 'Waarschuwing: U heeft geen toestemming om de module Svea Factuur te wijzigen!';

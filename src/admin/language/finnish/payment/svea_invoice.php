@@ -17,6 +17,7 @@ $_['entry_sort_order']        = 'Lajittelujärjestys:';
 $_['entry_username']          = 'Käyttäjätunnus:';
 $_['entry_password']          = 'Salasana:';
 $_['entry_clientno']          = 'Asiakasnro:';
+$_['entry_min_amount']   = 'Tuotteen vähimmäishinta';
 
 $_['entry_yes']               = 'kyllä';
 $_['entry_no']                = 'ei';
@@ -27,6 +28,8 @@ $_['entry_auto_deliver_text'] = 'Mikäli aktivoitu toimitetaan lasku automaattis
 $_['entry_distribution_type'] = 'Laskun jakelutapa (Svean kanssa sovitun mukaan):';
 $_['entry_post'] = 'Posti';
 $_['entry_email'] = 'Sähköposti';
+$_['entry_product_text'] = 'Vähimmäismäärästä maksamaan. Näytä yhdessä tuote.';
+$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']        = 'Varoitus: Sinulla ei ole oikeuksia muuttaa Svea Lasku maksumodulia!';

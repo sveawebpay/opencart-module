@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']              = 'SVEA Faktura';
+$_['text_title']              = 'SveaWebPay Faktura';
+$_['text_invoice']        = 'Faktura';
 $_['text_ssn']                = 'Cpr.nr.';
 $_['text_private_or_company'] = 'Type';
 $_['text_company']            = 'Erhverv';
@@ -10,7 +11,7 @@ $_['text_invoice_address']    = 'Betalingsadresse';
 $_['text_birthdate']          = 'Fødselsdato';
 $_['text_vat_no']             = 'CVR-nummer';
 $_['text_initials']           = 'Initialer';
-
+$_['text_product_invoice'] 		= 'Mindste beløb til at betale';
 
 //Error responses
 $_['response_20000'] = 'Ordre lukket';

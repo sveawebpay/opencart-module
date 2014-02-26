@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']              = 'Svea Factuur';
+$_['text_title']              = 'SveaWebPay Factuur';
+$_['text_invoice']        = 'Factuur';
 $_['text_ssn']                = 'Sofi-nummer';
 $_['text_private_or_company'] = 'Type';
 $_['text_company']            = 'Bedrijf';
@@ -10,7 +11,7 @@ $_['text_invoice_address']    = 'Factuuradres';
 $_['text_birthdate']          = 'Geboortedatum';
 $_['text_vat_no']             = 'BTW nr';
 $_['text_initials']           = 'Initialen';
-
+$_['text_product_invoice'] 		= 'Laagst te betalen bedrag';
 
 //Error responses
 $_['response_20000'] = "De order is gesloten";

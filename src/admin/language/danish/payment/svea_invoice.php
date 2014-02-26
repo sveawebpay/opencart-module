@@ -13,6 +13,7 @@ $_['entry_order_status_text'] = 'Ordrestatus for for afgivet men ikke leveret or
 $_['entry_geo_zone']          = 'Geo Zone:';
 $_['entry_status']            = 'Status:';
 $_['entry_sort_order']        = 'Sorteringsorden:';
+$_['entry_min_amount']   	= 'Produktens min.pris:';
 
 $_['entry_username']          = 'Anvendernavn:';
 $_['entry_password']          = 'Password:';
@@ -27,6 +28,8 @@ $_['entry_auto_deliver_text'] = 'Ved aktivering leveres fakturaen automatisk nå
 $_['entry_distribution_type'] = 'Distributionsform for faktura (efter aftale med Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
+$_['entry_product_text'] = 'Mindste beløb til at betale. Se på produktsiden';
+$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']        = 'Advarsel: Du har ikke tilladelse til at modificere Svea Fakturas betalingsmodul!';

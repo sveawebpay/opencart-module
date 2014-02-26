@@ -1,7 +1,8 @@
 <?php
 
 // Text
-$_['text_title']               = 'SVEA Delbetalning';
+$_['text_title']               = 'SveaWebPay Delbetalning';
+$_['text_paymentplan']         = 'Delbetala';
 $_['text_ssn']                 = 'Personnummer';
 $_['text_get_payment_options'] = 'Hämta betalningsalternativ';
 $_['text_invoice_address']     = 'fakturaaddress';
