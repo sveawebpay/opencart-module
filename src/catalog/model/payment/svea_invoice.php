@@ -58,6 +58,11 @@ class ModelPaymentsveainvoice extends Model {
                 return array("country_id" => $country[0]['country_id'], "country_name" => $country[0]['name']);
           }
 
-
+        public function getProductPriceMode(){
+             return $this->config->get('svea_invoice_product_price');
+        }
+        public function getProductPriceModeMin(){
+             return $this->config->get('svea_invoice_product_price_min');
+        }
 }
 ?>

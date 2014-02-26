@@ -29,7 +29,7 @@ $_['entry_distribution_type'] = 'Laskun jakelutapa (Svean kanssa sovitun mukaan)
 $_['entry_post'] = 'Posti';
 $_['entry_email'] = 'Sähköposti';
 $_['entry_product_text'] = 'Näytä tuotteen yhteydessä kuukausihinta';
-$_['entry_product'] = 'Tuotteen:';
+$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']   = 'Varoitus: Sinulla ei ole oikeuksia muuttaa Svea Osamaksu maksumodulia!';

@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']              = 'SVEA Lasku';
+$_['text_title']              = 'SveaWebPay Lasku';
+$_['text_invoice']        = 'Lasku';
 $_['text_ssn']                = 'Henkilötunnus';
 $_['text_private_or_company'] = 'Tyyppi';
 $_['text_company']            = 'Yritys';
@@ -10,7 +11,7 @@ $_['text_invoice_address']    = 'Laskutusosoite';
 $_['text_birthdate']          = 'Syntymäaika';
 $_['text_vat_no']             = 'ALV';
 $_['text_initials']           = 'Tunnukset';
-
+$_['text_product_invoice'] 		= 'Vähintään maksettava';
 
 //Error responses
 $_['response_20000'] = "Tilaus suljettu";

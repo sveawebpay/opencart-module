@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']               = 'Svea Deelbetalen';
+$_['text_title']               = 'SveaWebPay Deelbetalen';
+$_['text_paymentplan']        = 'Deelbetalen';
 $_['text_ssn']                 = 'Sofi-nr';
 $_['text_get_payment_options'] = 'Betaalopties ophalen';
 $_['text_invoice_address']     = 'Factuuradres';

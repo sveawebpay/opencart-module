@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']               = 'SVEA Ratenkauf';
+$_['text_title']               = 'SveaWebPay Ratenkauf';
+$_['text_paymentplan']        = 'Ratenkauf';
 $_['text_ssn']                = 'Sozialversicherungsnummer ';
 $_['text_get_payment_options'] = 'Get payment options';             // TODO not translated
 $_['text_invoice_address']    = 'Rechnungsadresse';

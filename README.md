@@ -1,9 +1,9 @@
 # OpenCart - Svea payment module
 
-##Version 2.3.2
+##Version 2.4.0
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
-* Feature _Show _PaymentPlan _price on product page requirers [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
+* Feature _Product_ _Price_ _Widget requirers [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
 
 This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
 
@@ -46,8 +46,17 @@ The various Svea payment modules are located under Extensions/Payments in the Op
 * Click the _install_ link of the payment method you want to install. For now, select install the Svea Invoice payment method.
 * Then select _edit_ next to the now installed payment method. You will now see a view with various payment method settings.
 * Set _geo zone_ and _sort order_ according to your preferences.
-* Set the fields _status_ and _testmode_ to enabled_.
+* Set the fields _status_ and _testmode_ to _enabled_.
 * Also set _order status_ and _auto deliver order_ according to your preferences.
+* Show _Product_ _Price_ _Widget_: If set to true, the Svea Product Price Widget will be shown on product pages,
+displaying the minimum invoice amount to pay. Note: Only applicable if Svea buys the invoices, and for private customers.
+Only applies in Sweden, Norway, Finland and the Netherlands.
+
+Widget will be displayed if the product price equals or exceeds the amount given.
+If not set, the _Product_ _Price_ _Widget_ will be displayed regardless of product price.
+Please contact your Svea account manager if you have further questions.
+Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
+
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing purposes, make sure to use the supplied test account credentials. Note that there are separate settings for each country in which you have an agreement with Svea to accept invoice payments, each country has its own unique client no and credentials.
 * Finally, remember to _save_ your settings.
 
@@ -80,7 +89,10 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * Also set _order status_ and _auto deliver order_ according to your preferences.
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing, make sure to use the supplied test account credentials.
 * The field _min. amount_ must match the corresponding setting in Svea admin.
-* Set _yes to display _price _per _month on product display. Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
+* Show _Product_ _Price_ _Widget_: If set to true, the Svea Product Price Widget will be shown on product pages,
+displaying the minimum payment plan amount to pay each month.
+Only applies in Sweden, Norway, Finland and Denmark.
+Please contact your Svea account manager if you have further questions. Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
 
 #### Svea Card Payment
 Module supports one Svea merchant id per Opencart installation.

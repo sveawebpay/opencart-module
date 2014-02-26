@@ -29,7 +29,7 @@ $_['entry_distribution_type'] = 'Distributionsform for faktura (efter aftale med
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';
 $_['entry_product_text'] = 'Se delbetala pris på produktsiden';
-$_['entry_product'] = 'Produktsiden:';
+$_['entry_product'] = 'Product Price Widget:';
 
 // Error
 $_['error_permission']        = 'Advarsel: Du har ikke tilladelse til at modificere Svea Delbetaling betalingsmodul!';

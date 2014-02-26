@@ -1,6 +1,7 @@
 <?php
 // Text
-$_['text_title']              = 'SVEA Rechnung';
+$_['text_title']              = 'SveaWebPay Rechnung';
+$_['text_invoice']        = 'Rechnung';
 $_['text_ssn']                = 'Sozialversicherungsnummer ';
 $_['text_private_or_company'] = 'Art';
 $_['text_company']            = 'Geschäft';
@@ -10,7 +11,7 @@ $_['text_invoice_address']    = 'Rechnungsadresse';
 $_['text_birthdate']          = 'Geburtsdatum';
 $_['text_vat_no']             = 'MwSt';
 $_['text_initials']           = 'Initialen';
-
+$_['text_product_invoice'] 		= 'Mindestbetrag zu zahlen';
 
 //Error responses
 $_['response_20000'] = "Auftrag geschlossen";
