@@ -2,6 +2,21 @@
 
 class ControllerPaymentsveainvoice extends Controller {
 
+    /**
+     * Returns the currency used for an invoice country.
+     */
+    protected function getInvoiceCurrency( $countryCode ) {
+        $country_currencies = array(
+            'SE' => 'SEK',
+            'NO' => 'NOK',
+            'FI' => 'EUR',
+            'DK' => 'DKK',
+            'NL' => 'EUR',
+            'DE' => 'EUR'
+        );
+        return $country_currencies[$countryCode];
+    } 
+    
     protected function index() {
         $this->load->language('payment/svea_invoice');
         $this->load->model('checkout/order');
@@ -61,7 +76,7 @@ class ControllerPaymentsveainvoice extends Controller {
         include(DIR_APPLICATION.'../svea/Includes.php');
 
         //Get order information
-        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);     
         $countryCode = $order['payment_iso_code_2'];
 
         //Testmode
@@ -82,12 +97,11 @@ class ControllerPaymentsveainvoice extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
-        $currencyValue = 1.00000000;
-        if (floatval(VERSION) >= 1.5) {
-            $currencyValue = $order['currency_value'];
-        }else{
-            $currencyValue = $order['value'];
-        }
+        
+        // make sure we use the currency matching the invoice clientno 
+        $this->load->model('localisation/currency');
+        $currency_info = $this->model_localisation_currency->getCurrencyByCode( $this->getInvoiceCurrency($countryCode) );
+        $currencyValue = $currency_info['value'];
 
         //Products
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);

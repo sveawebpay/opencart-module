@@ -2,6 +2,21 @@
 
 class ControllerPaymentsveapartpayment extends Controller {
 
+    /**
+     * Returns the currency used for an invoice country.
+     */
+    protected function getPartpaymentCurrency( $countryCode ) {
+        $country_currencies = array(
+            'SE' => 'SEK',
+            'NO' => 'NOK',
+            'FI' => 'EUR',
+            'DK' => 'DKK',
+            'NL' => 'EUR',
+            'DE' => 'EUR'
+        );
+        return $country_currencies[$countryCode];
+    } 
+    
     protected function index() {
         // populate data array for use in template
         $this->load->language('payment/svea_partpayment');
@@ -80,12 +95,12 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
-        $currencyValue = 1.00000000;
-        if (floatval(VERSION) >= 1.5) {
-            $currencyValue = $order['currency_value'];
-        } else {
-            $currencyValue = $order['value'];
-        }
+
+        // make sure we use the currency matching the clientno 
+        $this->load->model('localisation/currency');
+        $currency_info = $this->model_localisation_currency->getCurrencyByCode( $this->getPartpaymentCurrency($countryCode) );
+        $currencyValue = $currency_info['value'];
+
         //products
         $svea = $this->formatOrderRows($svea, $products, $currencyValue);
         //get all addons
