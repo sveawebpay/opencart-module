@@ -1,38 +1,44 @@
 <div class="content">
     <div><?php echo $logo; ?></div>
-    
+
     <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_payment_options') ?>:<br />
-        <?php 
+        <?php
         //var_dump($paymentOptions);
-        
+
         if( empty( $paymentOptions ) )     // catch error fetching payment plans
         {
             printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", "error rendering campaigns" );
         }
         else    // present payment plans
         {
-            $flag = true;
-            foreach( $paymentOptions as $p )
-            { 
-                printf(   "<div><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>", 
-                                $p['campaignCode'], $flag ? 'checked' : '', $p['description'].': '.$p['price_per_month'] );
-                $flag = false;
-            } 
+            if( key_exists("error", $paymentOptions)){
+                printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>",  $paymentOptions['error'] );
+            }else{
+                $flag = true;
+                foreach( $paymentOptions as $p )
+                {
+                    printf(   "<div><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>",
+                                    $p['campaignCode'], $flag ? 'checked' : '', $p['description'].': '.$p['price_per_month'] );
+                    $flag = false;
+                }
+            }
+
+
         } ?>
     </div>
     <br />
-   
-    <?php 
+
+    <?php
     if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE")
     { ?>
-        
+
         <?php // get SSN
         if( $countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI")
         { ?>
-            <?php echo $this->language->get('text_ssn') ?>: 
+            <?php echo $this->language->get('text_ssn') ?>:
             <input type="text" id="ssn" name="ssn" /><br /><br />
-        <?php 
+        <?php
         }
         elseif( $countryCode == "NL" || $countryCode == "DE" )
         {
@@ -69,21 +75,21 @@
                     $selected = "selected";
 
                 $years .= "<option value='$y' $selected>$y</option>";
-            }           
+            }
             $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
-            
+
             if($countryCode == "NL"){ ?>
                 <span id="sveaBirthDateCont">
-                    <?php echo $this->language->get('text_birthdate')?>: 
+                    <?php echo $this->language->get('text_birthdate')?>:
                     <?php echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
-                    <?php echo $this->language->get('text_initials') ?>: 
+                    <?php echo $this->language->get('text_initials') ?>:
                     <input type="text" id="initials" name="initials" />
                </span>
-            <?php 
+            <?php
             } ?>
-        <?php 
+        <?php
         } ?>
-    <?php 
+    <?php
     } ?>
 
     <div id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;"></div>
@@ -124,7 +130,7 @@ $('a#checkout').click(function(event) {
         return false;
     }
     runningCheckout = true;
-    
+
     //Show loader
     $(this).parent().after().append(sveaLoading);
 
@@ -163,9 +169,9 @@ $('a#checkout').click(function(event) {
     });
 });
 
-// Jan'14: getPlan is only used for getAddresses call, we disregard the payment plans, as we show available payment plans when the template is rendered. 
+// Jan'14: getPlan is only used for getAddresses call, we disregard the payment plans, as we show available payment plans when the template is rendered.
 var runningGetPlan = false;
-$('#getPlan').click(function() {   
+$('#getPlan').click(function() {
     if(runningGetPlan){
        return false;
     }

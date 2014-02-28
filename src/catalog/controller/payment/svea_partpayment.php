@@ -294,7 +294,6 @@ class ControllerPaymentsveapartpayment extends Controller {
             $result[] = array("error" => $e->getMessage());
         }
 
-
         if (isset($svea->errormessage)) {
             $result = array("error" => $svea->errormessage);
         } else {
@@ -314,7 +313,6 @@ class ControllerPaymentsveapartpayment extends Controller {
                     "description" => $cc['description'],
                     "price_per_month" => (string) round($cc['pricePerMonth'], $decimals) . " " . $currency . "/" . $this->language->get('month'));
         }
-
 
         return $result;
     }
