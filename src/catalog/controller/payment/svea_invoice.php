@@ -4,7 +4,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
     protected function index() {
         $this->load->language('payment/svea_invoice');
-
+        $this->load->model('checkout/order');
         //Definitions
         $this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->data['button_back'] = $this->language->get('button_back');

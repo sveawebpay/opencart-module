@@ -1,9 +1,7 @@
 <?php
 class ControllerPaymentsveadirectbank extends Controller {
 	protected function index() {
-
-        //set template
-
+        $this->load->model('checkout/order');
     	//$this->data['button_confirm'] = $this->language->get('button_confirm');
     	$this->data['button_continue'] = $this->language->get('button_continue');
         $this->data['button_back'] = $this->language->get('button_back');
