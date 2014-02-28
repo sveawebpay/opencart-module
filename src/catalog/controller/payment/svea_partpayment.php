@@ -177,8 +177,8 @@ class ControllerPaymentsveapartpayment extends Controller {
             $sveaAddresses["payment_country_id"] = $countryId['country_id'];
             $sveaAddresses["payment_country"] = $countryId['country_name'];
             $sveaAddresses["payment_method"] = $this->language->get('text_title');
-            $sveaAddresses["comment"] = "Svea order id: " . $svea->sveaOrderId;
-
+            $sveaAddresses["comment"] = $order['comment'] . "\n\nSvea order id: ".$svea->sveaOrderId;
+                
             $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'], $sveaAddresses);
             //If Auto deliver order is set, DeliverOrder
             if ($this->config->get('svea_partpayment_auto_deliver') == 1) {
