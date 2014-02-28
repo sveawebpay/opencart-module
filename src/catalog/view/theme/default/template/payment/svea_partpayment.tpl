@@ -95,11 +95,20 @@
     <div id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;"></div>
 </div>
 
-<div class="buttons">
-    <div class="right">
-        <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_address') ?></span></a>
+<?php // show getAddress button for private persons in SE, DK
+if( $countryCode == "SE" || $countryCode == "DK" )
+{ ?>
+    <div class="buttons">
+        <div class="right">
+            <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_address') ?></span></a>
+        </div>
     </div>
-</div>
+
+    <script type="text/javascript"><!--
+        $("a#checkout").hide();
+    //--></script>
+<?php
+} ?>
 
 <div class="content" id="svea_partpayment_tr" style="clear:both; margin-top:15px;display:inline-block;">
     <?php echo $this->language->get('text_invoice_address') ?>:<br />
@@ -119,12 +128,12 @@
 //Loader
 var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
 var runningCheckout = false;
-$("a#checkout").hide();
+//$("a#checkout").hide();
 $('#svea_partpayment_tr').hide();
 
 $('a#checkout').click(function(event) {
 
-    // we don't accept multiple confirmations of one onder
+    // we don't accept multiple confirmations of one order
     if(runningCheckout){
         event.preventDefault();
         return false;
