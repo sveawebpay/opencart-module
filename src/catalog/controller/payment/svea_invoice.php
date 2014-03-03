@@ -2,6 +2,21 @@
 
 class ControllerPaymentsveainvoice extends Controller {
 
+    /**
+     * Returns the currency used for an invoice country.
+     */
+    protected function getInvoiceCurrency( $countryCode ) {
+        $country_currencies = array(
+            'SE' => 'SEK',
+            'NO' => 'NOK',
+            'FI' => 'EUR',
+            'DK' => 'DKK',
+            'NL' => 'EUR',
+            'DE' => 'EUR'
+        );
+        return $country_currencies[$countryCode];
+    } 
+    
     protected function index() {
         $this->load->language('payment/svea_invoice');
         $this->load->model('checkout/order');
@@ -61,7 +76,7 @@ class ControllerPaymentsveainvoice extends Controller {
         include(DIR_APPLICATION.'../svea/Includes.php');
 
         //Get order information
-        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);     
         $countryCode = $order['payment_iso_code_2'];
 
         //Testmode
@@ -82,12 +97,11 @@ class ControllerPaymentsveainvoice extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
-        $currencyValue = 1.00000000;
-        if (floatval(VERSION) >= 1.5) {
-            $currencyValue = $order['currency_value'];
-        }else{
-            $currencyValue = $order['value'];
-        }
+        
+        // make sure we use the currency matching the invoice clientno 
+        $this->load->model('localisation/currency');
+        $currency_info = $this->model_localisation_currency->getCurrencyByCode( $this->getInvoiceCurrency($countryCode) );
+        $currencyValue = $currency_info['value'];
 
         //Products
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);
@@ -127,7 +141,7 @@ class ControllerPaymentsveainvoice extends Controller {
             $addressArr[2] =  "";
         }
 
-        if ($company == TRUE){
+        if ($company == TRUE){  // company customer
 
             $item = Item::companyCustomer();
 
@@ -145,13 +159,14 @@ class ControllerPaymentsveainvoice extends Controller {
             else{
                 $item = $item->setNationalIdNumber($_GET['ssn']);
             }
-            //only for SE, NO, DK where getAddress i prior done
+            //only for SE, NO, DK where getAddress has been performed
             if($order["payment_iso_code_2"] == "SE" || $order["payment_iso_code_2"] == "NO" || $order["payment_iso_code_2"] == "DK") {
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
         }
-        else {
+        else {  // private customer
+            
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
             $item = Item::individualCustomer();
@@ -196,6 +211,7 @@ class ControllerPaymentsveainvoice extends Controller {
         if ($svea->accepted == 1) {
             //update order billingaddress
             if ($svea->customerIdentity->customerType == 'Company'){
+                
                 $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
                 $sveaAddresses = array();
                 if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
@@ -225,11 +241,12 @@ class ControllerPaymentsveainvoice extends Controller {
                 $sveaAddresses["payment_country_id"] = $countryId['country_id'];
                 $sveaAddresses["payment_country"] = $countryId['country_name'];
                 $sveaAddresses["payment_method"] = $this->language->get('text_title');
-                $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
-
+                $sveaAddresses["comment"] = $order['comment'] . "\n\nSvea order id: ".$svea->sveaOrderId;
+                
                 $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
             }
-            else {
+            else {  // private customer
+                
                 $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
                 $sveaAddresses = array();
                 if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
@@ -254,8 +271,8 @@ class ControllerPaymentsveainvoice extends Controller {
                 $sveaAddresses["payment_country_id"] = $countryId['country_id'];
                 $sveaAddresses["payment_country"] = $countryId['country_name'];
                 $sveaAddresses["payment_method"] = $this->language->get('text_title');
-                $sveaAddresses["comment"] = "Svea order id: ".$svea->sveaOrderId;
-
+                $sveaAddresses["comment"] = $order['comment'] . "\n\nSvea order id: ".$svea->sveaOrderId;
+                                                
                 $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
             }
 

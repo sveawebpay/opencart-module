@@ -2,6 +2,21 @@
 
 class ControllerPaymentsveapartpayment extends Controller {
 
+    /**
+     * Returns the currency used for an invoice country.
+     */
+    protected function getPartpaymentCurrency( $countryCode ) {
+        $country_currencies = array(
+            'SE' => 'SEK',
+            'NO' => 'NOK',
+            'FI' => 'EUR',
+            'DK' => 'DKK',
+            'NL' => 'EUR',
+            'DE' => 'EUR'
+        );
+        return $country_currencies[$countryCode];
+    } 
+    
     protected function index() {
         // populate data array for use in template
         $this->load->language('payment/svea_partpayment');
@@ -80,12 +95,12 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
-        $currencyValue = 1.00000000;
-        if (floatval(VERSION) >= 1.5) {
-            $currencyValue = $order['currency_value'];
-        } else {
-            $currencyValue = $order['value'];
-        }
+
+        // make sure we use the currency matching the clientno 
+        $this->load->model('localisation/currency');
+        $currency_info = $this->model_localisation_currency->getCurrencyByCode( $this->getPartpaymentCurrency($countryCode) );
+        $currencyValue = $currency_info['value'];
+
         //products
         $svea = $this->formatOrderRows($svea, $products, $currencyValue);
         //get all addons
@@ -177,8 +192,8 @@ class ControllerPaymentsveapartpayment extends Controller {
             $sveaAddresses["payment_country_id"] = $countryId['country_id'];
             $sveaAddresses["payment_country"] = $countryId['country_name'];
             $sveaAddresses["payment_method"] = $this->language->get('text_title');
-            $sveaAddresses["comment"] = "Svea order id: " . $svea->sveaOrderId;
-
+            $sveaAddresses["comment"] = $order['comment'] . "\n\nSvea order id: ".$svea->sveaOrderId;
+                
             $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'], $sveaAddresses);
             //If Auto deliver order is set, DeliverOrder
             if ($this->config->get('svea_partpayment_auto_deliver') == 1) {
@@ -294,7 +309,6 @@ class ControllerPaymentsveapartpayment extends Controller {
             $result[] = array("error" => $e->getMessage());
         }
 
-
         if (isset($svea->errormessage)) {
             $result = array("error" => $svea->errormessage);
         } else {
@@ -314,7 +328,6 @@ class ControllerPaymentsveapartpayment extends Controller {
                     "description" => $cc['description'],
                     "price_per_month" => (string) round($cc['pricePerMonth'], $decimals) . " " . $currency . "/" . $this->language->get('month'));
         }
-
 
         return $result;
     }
