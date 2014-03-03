@@ -70,7 +70,7 @@ The Svea invoice fee has its own module, which is located under Extensions/Order
 * For each country which you accept invoice payments from, selected the corresponding tab an fill in the fields:
 * Set the _status_ field to _enabled_ to add the invoice fee to invoice orders from this country.
 * Set the _fee_ to the amount you want to charge. The fee is always specified in the store default Currency. It will be converted into the customer currency on order.
-* Set the corresponding _tax class_ which should apply to the Svea invoice fee.
+* Set the corresponding _tax class_ which should apply to the Svea invoice fee. Note that you must specify a _tax class_ or the invoice fee will show up in the order total display, but it will not be included in the order total.
 * Finally, the _sort order_ field should be set to apply before taxes (i.e. to a lower value than Order Totals/Taxes).
 
 ![Invoice fee additional settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/InvoiceFee.PNG "Invoice fee additional settings")
@@ -165,6 +165,9 @@ Always check that you have set up your settings correctly before posting issues 
 * You are using correct test case credentials when conducting test purchases.
 
 ### Specific payment method problems FAQ
+
+#### The invoice fee shows doesn't seem to be included in the OpenCart order total, though it is present in the Svea invoice?
+Ensure that you have specified a valid tax class for the country in question in the svea invoice fee module.
 
 #### My card or direct payments don't go through after reinstalling my shop?
 Check that you don't attempt to reuse order numbers, they need to be unique. I.e. in the call to

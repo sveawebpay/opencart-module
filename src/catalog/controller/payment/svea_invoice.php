@@ -141,7 +141,7 @@ class ControllerPaymentsveainvoice extends Controller {
             $addressArr[2] =  "";
         }
 
-        if ($company == TRUE){
+        if ($company == TRUE){  // company customer
 
             $item = Item::companyCustomer();
 
@@ -159,13 +159,14 @@ class ControllerPaymentsveainvoice extends Controller {
             else{
                 $item = $item->setNationalIdNumber($_GET['ssn']);
             }
-            //only for SE, NO, DK where getAddress i prior done
+            //only for SE, NO, DK where getAddress has been performed
             if($order["payment_iso_code_2"] == "SE" || $order["payment_iso_code_2"] == "NO" || $order["payment_iso_code_2"] == "DK") {
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
         }
-        else {
+        else {  // private customer
+            
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
             $item = Item::individualCustomer();
@@ -210,6 +211,7 @@ class ControllerPaymentsveainvoice extends Controller {
         if ($svea->accepted == 1) {
             //update order billingaddress
             if ($svea->customerIdentity->customerType == 'Company'){
+                
                 $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
                 $sveaAddresses = array();
                 if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
@@ -243,7 +245,8 @@ class ControllerPaymentsveainvoice extends Controller {
                 
                 $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
             }
-            else {
+            else {  // private customer
+                
                 $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
                 $sveaAddresses = array();
                 if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
