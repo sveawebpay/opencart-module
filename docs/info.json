@@ -56,7 +56,7 @@
 			"Tapiola"
 		]
 	},
-	"features": {
+	"administration": {
 		"invoice_paymentplan": {
 			"auto_deliver_order": [
 				"module_admin"
