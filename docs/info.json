@@ -1,0 +1,76 @@
+{
+    "module_name": "Opencart",
+    "module_version": "2.4.2",
+    "module_shop_version_support": [
+        "1.4.9",
+        " - ",
+		"1.5.6"
+    ],
+    "invoice_paymentplan": {
+        "invoice": [
+            "SE",
+            "NO",
+            "FI",
+            "DK",
+            "NL",
+            "DE"
+        ],
+        "paymentplan": [
+            "SE",
+            "NO",
+            "FI",
+            "DK"
+        ],
+        "product_price_widget": [
+            "SE",
+            "NO",
+            "FI",
+            "DK",
+            "NL",
+            "DE"
+        ]
+    },
+	"card": [
+	"Visa","Mastercard","Amex","Diners"
+	],
+	"direct_bank": {
+		"SE": [
+			"Danskebank",
+			"Nordea",
+			"SEB",
+			"SEB ftg",
+			"SHB",
+			"Swedbank"
+		],
+		"NO": [
+			"Bankaxess"
+		],
+		"FI": [
+			"Nordea",
+			"Sampo",
+			"Handelsbanken",
+			"Handsbanken",
+			"S-Pankki",
+			"Pohjola",
+			"Aktia",
+			"Tapiola"
+		]
+	},
+	"features": {
+		"invoice_paymentplan": {
+			"auto_deliver_order": [
+				"module_admin"
+			],
+			"deliver_order": [
+				"svea_admin"
+			],
+			"close_order": [
+				"svea_admin"
+			],
+			"credit_order": [
+				"svea_admin"
+			]
+		
+		}
+	}
+}
