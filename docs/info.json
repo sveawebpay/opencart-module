@@ -49,7 +49,6 @@
 			"Nordea",
 			"Sampo",
 			"Handelsbanken",
-			"Handsbanken",
 			"S-Pankki",
 			"Pohjola",
 			"Aktia",
@@ -61,6 +60,18 @@
 			"auto_deliver_order": [
 				"module_admin"
 			],
+			"deliver_order": [
+				"svea_admin"
+			],
+			"close_order": [
+				"svea_admin"
+			],
+			"credit_order": [
+				"svea_admin"
+			]
+		
+		},
+	"card_direct": {
 			"deliver_order": [
 				"svea_admin"
 			],
