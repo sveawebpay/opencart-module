@@ -31,7 +31,7 @@
         ]
     },
 	"card": [
-	"Visa","Mastercard","Amex","Diners"
+	"Visa","Mastercard","Amex","Diners","Dankort"
 	],
 	"direct_bank": {
 		"SE": [
@@ -39,7 +39,7 @@
 			"Nordea",
 			"SEB",
 			"SEB ftg",
-			"SHB",
+			"Handelsbanken",
 			"Swedbank"
 		],
 		"NO": [
