@@ -58,6 +58,25 @@
                   <?php } ?>
                 </select></td>
             </tr>
+            <!--shipping billing-->
+            <tr>
+                <td><?php echo $entry_shipping_billing; ?>
+                    <span class="help"><?php echo $entry_shipping_billing_text ?></span>
+                </td>
+                <td>
+                    <?php if ($svea_partpayment_shipping_billing) { ?>
+                    <input type="radio" name="svea_partpayment_shipping_billing" value="1" checked="checked" />
+                    <?php echo $entry_yes; ?>
+                    <input type="radio" name="svea_partpayment_shipping_billing" value="0" />
+                    <?php echo $entry_no; ?>
+                    <?php } else { ?>
+                    <input type="radio" name="svea_partpayment_shipping_billing" value="1" />
+                    <?php echo $entry_yes; ?>
+                    <input type="radio" name="svea_partpayment_shipping_billing" value="0" checked="checked" />
+                    <?php echo $entry_no; ?>
+                    <?php } ?>
+                </td>
+            </tr>
             <tr>
                 <td><?php echo $entry_auto_deliver; ?><span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
                 <td>
