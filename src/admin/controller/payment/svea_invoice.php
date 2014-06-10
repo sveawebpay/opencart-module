@@ -122,6 +122,12 @@ class ControllerPaymentsveainvoice extends Controller {
 			$this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_auto_deliver_status_id');
 		}
 
+                 //shipping billing
+		if (isset($this->request->post['svea_invoice_shipping_billing'])) {
+			$this->data['svea_invoice_shipping_billing'] = $this->request->post['svea_invoice_shipping_billing'];
+		} else {
+			$this->data['svea_invoice_shipping_billing'] = $this->config->get('svea_invoice_shipping_billing');
+		}
                  //show price on product
 		if (isset($this->request->post['svea_invoice_product_price'])) {
 			$this->data['svea_invoice_product_price'] = $this->request->post['svea_invoice_product_price'];
