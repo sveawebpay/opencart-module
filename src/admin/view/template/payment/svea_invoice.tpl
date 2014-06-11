@@ -62,7 +62,9 @@
                     </tr>
                     <!--shipping billing-->
                     <tr>
-                        <td><?php echo $entry_shipping_billing; ?></td>
+                        <td><?php echo $entry_shipping_billing; ?>
+                              <span class="help"><?php echo $entry_shipping_billing_text ?></span>
+                        </td>
                         <td>
                             <?php if ($svea_invoice_shipping_billing === "0") { ?>
                             <input type="radio" name="svea_invoice_shipping_billing" value="1" />
