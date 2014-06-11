@@ -110,7 +110,11 @@ if( $countryCode == "SE" || $countryCode == "DK" )
 } ?>
 
 <div class="content" id="svea_partpayment_tr" style="clear:both; margin-top:15px;display:inline-block;">
-    <?php echo $this->language->get('text_invoice_address') ?>:<br />
+    <?php echo $this->language->get('text_invoice_address');
+        if($this->config->get('svea_partpayment_shipping_billing') == '1'){
+             echo ' / '.$this->language->get('text_shipping_address');
+        }
+    ?>:<br />
     <div id="svea_partpayment_address"></div>
 </div>
 

@@ -5,6 +5,7 @@ $_['text_paymentplan']        = 'Delbetal';
 $_['text_ssn']                = 'Cpr.nr.';
 $_['text_get_address']        = 'Adresse';
 $_['text_invoice_address']    = 'Betalingsadresse';
+$_['text_shipping_address']    = 'Forsendelse adresse';
 $_['text_birthdate']          = 'Fødselsdato';
 $_['text_vat_no']             = 'CVR-nummer';
 $_['text_initials']           = 'Initialer';

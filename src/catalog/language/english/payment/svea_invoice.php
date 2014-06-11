@@ -8,6 +8,7 @@ $_['text_company']            = 'Business';
 $_['text_private']            = 'Private';
 $_['text_get_address']        = 'Get address';
 $_['text_invoice_address']    = 'Invoice address';
+$_['text_shipping_address']    = 'Shipping address';
 $_['text_birthdate']          = 'Birth date';
 $_['text_vat_no']             = 'VAT no';
 $_['text_initials']           = 'Initials';
