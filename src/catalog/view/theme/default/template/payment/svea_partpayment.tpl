@@ -4,7 +4,6 @@
     <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $this->language->get('text_payment_options') ?>:<br />
         <?php
-        //var_dump($paymentOptions);
 
         if( empty( $paymentOptions ) )     // catch error fetching payment plans
         {
