@@ -8,6 +8,7 @@ $_['text_company']            = 'Yritys';
 $_['text_private']            = 'Yksityinen';
 $_['text_get_address']        = 'Hae osoite';
 $_['text_invoice_address']    = 'Laskutusosoite';
+$_['text_shipping_address']    = 'Toimitusosoite';
 $_['text_birthdate']          = 'Syntymäaika';
 $_['text_vat_no']             = 'ALV';
 $_['text_initials']           = 'Tunnukset';

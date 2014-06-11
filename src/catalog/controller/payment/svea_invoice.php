@@ -15,8 +15,8 @@ class ControllerPaymentsveainvoice extends Controller {
             'DE' => 'EUR'
         );
         return $country_currencies[$countryCode];
-    } 
-    
+    }
+
     protected function index() {
         $this->load->language('payment/svea_invoice');
         $this->load->model('checkout/order');
@@ -76,7 +76,7 @@ class ControllerPaymentsveainvoice extends Controller {
         include(DIR_APPLICATION.'../svea/Includes.php');
 
         //Get order information
-        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);     
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
 
         //Testmode
@@ -97,8 +97,8 @@ class ControllerPaymentsveainvoice extends Controller {
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
-        
-        // make sure we use the currency matching the invoice clientno 
+
+        // make sure we use the currency matching the invoice clientno
         $this->load->model('localisation/currency');
         $currency_info = $this->model_localisation_currency->getCurrencyByCode( $this->getInvoiceCurrency($countryCode) );
         $currencyValue = $currency_info['value'];
@@ -166,7 +166,7 @@ class ControllerPaymentsveainvoice extends Controller {
             $svea = $svea->addCustomerDetails($item);
         }
         else {  // private customer
-            
+
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
             $item = Item::individualCustomer();
@@ -209,72 +209,12 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //If CreateOrder accepted redirect to thankyou page
         if ($svea->accepted == 1) {
-            //update order billingaddress
-            if ($svea->customerIdentity->customerType == 'Company'){
-                
-                $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
-                $sveaAddresses = array();
-                if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
-                {
-                    $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName;
-                    $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
-                }
-                elseif( isset($svea->customerIdentity->firstName) == false ||
-                        isset($svea->customerIdentity->lastName) == false &&
-                        isset($svea->customerIdentity->fullName) )
-                {
-                    $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
-                    //$sveaAddresses["payment_lastname"] = ""; //will couse form validation in admin to scream
+            $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
 
-                }
-                isset($svea->customerIdentity->fullName) ? $sveaAddresses["payment_company"] = $svea->customerIdentity->fullName : "";
+            if($this->config->get('svea_invoice_shipping_billing') == '1')
+                $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
 
-                // in table order, the column payment_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
-                if( floatval(substr(VERSION,0,3)) > 1.5 || ( floatval(substr(VERSION,0,3)) == 1.5 && intval( substr(VERSION,4)) >= 3 ) ) { // oc 1.5.3+
-                    isset($svea->customerIdentity->nationalIdNumber) ? $sveaAddresses["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
-                }
-
-                isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
-                isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
-                isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
-                isset($svea->customerIdentity->zipCode) ? $sveaAddresses["payment_postcode"] = $svea->customerIdentity->zipCode : "";
-                $sveaAddresses["payment_country_id"] = $countryId['country_id'];
-                $sveaAddresses["payment_country"] = $countryId['country_name'];
-                $sveaAddresses["payment_method"] = $this->language->get('text_title');
-                $sveaAddresses["comment"] = $order['comment'] . "\n\nSvea order id: ".$svea->sveaOrderId;
-                
-                $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
-            }
-            else {  // private customer
-                
-                $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
-                $sveaAddresses = array();
-                if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
-                {
-                   $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName;
-                   $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName;
-                }
-                elseif( isset($svea->customerIdentity->firstName) == false ||
-                        isset($svea->customerIdentity->lastName) == false &&
-                        isset($svea->customerIdentity->fullName))
-                {
-                    $sveaAddresses["payment_firstname"] = $svea->customerIdentity->fullName;
-                    $sveaAddresses["payment_lastname"] = "";
-                }
-                isset($svea->customerIdentity->firstName) ? $sveaAddresses["payment_firstname"] = $svea->customerIdentity->firstName : "";
-                isset($svea->customerIdentity->lastName) ? $sveaAddresses["payment_lastname"] = $svea->customerIdentity->lastName : "";
-                isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
-                isset($svea->customerIdentity->street) ? $sveaAddresses["payment_address_1"] = $svea->customerIdentity->street : "";
-                isset($svea->customerIdentity->coAddress) ? $sveaAddresses["payment_address_2"] = $svea->customerIdentity->coAddress : "";
-                isset($svea->customerIdentity->locality) ? $sveaAddresses["payment_city"] = $svea->customerIdentity->locality : "";
-                isset($svea->customerIdentity->zipCode) ? $sveaAddresses["payment_postcode"] = $svea->customerIdentity->zipCode : "";
-                $sveaAddresses["payment_country_id"] = $countryId['country_id'];
-                $sveaAddresses["payment_country"] = $countryId['country_name'];
-                $sveaAddresses["payment_method"] = $this->language->get('text_title');
-                $sveaAddresses["comment"] = $order['comment'] . "\n\nSvea order id: ".$svea->sveaOrderId;
-                                                
-                $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaAddresses);
-            }
+            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
 
             $response = array();
 
@@ -584,6 +524,123 @@ class ControllerPaymentsveainvoice extends Controller {
             }
         }
         return array_keys($taxRates);   //we want the keys
+    }
+
+    private function buildPaymentAddressQuery($svea,$countryCode,$order_comment) {
+         $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+         $paymentAddress = array();
+        //update order billingaddress
+        if ($svea->customerIdentity->customerType == 'Company'){
+            if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
+            {
+                $paymentAddress["payment_firstname"] = $svea->customerIdentity->firstName;
+                $paymentAddress["payment_lastname"] = $svea->customerIdentity->lastName;
+            }
+            elseif( isset($svea->customerIdentity->firstName) == false ||
+                    isset($svea->customerIdentity->lastName) == false &&
+                    isset($svea->customerIdentity->fullName) )
+            {
+                $paymentAddress["payment_firstname"] = $svea->customerIdentity->fullName;
+                //$paymentAddress["payment_lastname"] = ""; //will couse form validation in admin to scream
+
+            }
+            isset($svea->customerIdentity->fullName) ? $paymentAddress["payment_company"] = $svea->customerIdentity->fullName : "";
+
+            // in table order, the column payment_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
+            if( floatval(substr(VERSION,0,3)) > 1.5 || ( floatval(substr(VERSION,0,3)) == 1.5 && intval( substr(VERSION,4)) >= 3 ) ) { // oc 1.5.3+
+                isset($svea->customerIdentity->nationalIdNumber) ? $paymentAddress["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
+            }
+
+            isset($svea->customerIdentity->street) ? $paymentAddress["payment_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->coAddress) ? $paymentAddress["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+            isset($svea->customerIdentity->locality) ? $paymentAddress["payment_city"] = $svea->customerIdentity->locality : "";
+            isset($svea->customerIdentity->zipCode) ? $paymentAddress["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+            $paymentAddress["payment_country_id"] = $countryId['country_id'];
+            $paymentAddress["payment_country"] = $countryId['country_name'];
+            $paymentAddress["payment_method"] = $this->language->get('text_title');
+        } else {  // private customer
+            if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
+            {
+               $paymentAddress["payment_firstname"] = $svea->customerIdentity->firstName;
+               $paymentAddress["payment_lastname"] = $svea->customerIdentity->lastName;
+            }
+            elseif( isset($svea->customerIdentity->firstName) == false ||
+                    isset($svea->customerIdentity->lastName) == false &&
+                    isset($svea->customerIdentity->fullName))
+            {
+                $paymentAddress["payment_firstname"] = $svea->customerIdentity->fullName;
+                $paymentAddress["payment_lastname"] = "";
+            }
+            isset($svea->customerIdentity->firstName) ? $paymentAddress["payment_firstname"] = $svea->customerIdentity->firstName : "";
+            isset($svea->customerIdentity->lastName) ? $paymentAddress["payment_lastname"] = $svea->customerIdentity->lastName : "";
+            isset($svea->customerIdentity->street) ? $paymentAddress["payment_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->street) ? $paymentAddress["payment_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->coAddress) ? $paymentAddress["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+            isset($svea->customerIdentity->locality) ? $paymentAddress["payment_city"] = $svea->customerIdentity->locality : "";
+            isset($svea->customerIdentity->zipCode) ? $paymentAddress["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+            $paymentAddress["payment_country_id"] = $countryId['country_id'];
+            $paymentAddress["payment_country"] = $countryId['country_name'];
+            $paymentAddress["payment_method"] = $this->language->get('text_title');
+        }
+        $paymentAddress["comment"] = $order_comment . "\nSvea order id: ".$svea->sveaOrderId;
+            return $paymentAddress;
+    }
+
+    private function buildShippingAddressQuery($svea,$shippingAddress,$countryCode) {
+        $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+        if ($svea->customerIdentity->customerType == 'Company'){
+            if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
+            {
+                $shippingAddress["shipping_firstname"] = $svea->customerIdentity->firstName;
+                $shippingAddress["shipping_lastname"] = $svea->customerIdentity->lastName;
+            }
+            elseif( isset($svea->customerIdentity->firstName) == false ||
+                    isset($svea->customerIdentity->lastName) == false &&
+                    isset($svea->customerIdentity->fullName) )
+            {
+                $shippingAddress["shipping_firstname"] = $svea->customerIdentity->fullName;
+                //$shippingAddress["shipping_lastname"] = ""; //will couse form validation in admin to scream
+
+            }
+            isset($svea->customerIdentity->fullName) ? $shippingAddress["shipping_company"] = $svea->customerIdentity->fullName : "";
+
+            // in table order, the column shipping_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
+            if( floatval(substr(VERSION,0,3)) > 1.5 || ( floatval(substr(VERSION,0,3)) == 1.5 && intval( substr(VERSION,4)) >= 3 ) ) { // oc 1.5.3+
+                isset($svea->customerIdentity->nationalIdNumber) ? $shippingAddress["shipping_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
+            }
+
+            isset($svea->customerIdentity->street) ? $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->coAddress) ? $shippingAddress["shipping_address_2"] = $svea->customerIdentity->coAddress : "";
+            isset($svea->customerIdentity->locality) ? $shippingAddress["shipping_city"] = $svea->customerIdentity->locality : "";
+            isset($svea->customerIdentity->zipCode) ? $shippingAddress["shipping_postcode"] = $svea->customerIdentity->zipCode : "";
+            $shippingAddress["shipping_country_id"] = $countryId['country_id'];
+            $shippingAddress["shipping_country"] = $countryId['country_name'];
+
+
+        } else {  // private customer
+            if( isset($svea->customerIdentity->firstName) &&  isset($svea->customerIdentity->lastName) )
+            {
+               $shippingAddress["shipping_firstname"] = $svea->customerIdentity->firstName;
+               $shippingAddress["shipping_lastname"] = $svea->customerIdentity->lastName;
+            }
+            elseif( isset($svea->customerIdentity->firstName) == false ||
+                    isset($svea->customerIdentity->lastName) == false &&
+                    isset($svea->customerIdentity->fullName))
+            {
+                $shippingAddress["shipping_firstname"] = $svea->customerIdentity->fullName;
+                $shippingAddress["shipping_lastname"] = "";
+            }
+            isset($svea->customerIdentity->firstName) ? $shippingAddress["shipping_firstname"] = $svea->customerIdentity->firstName : "";
+            isset($svea->customerIdentity->lastName) ? $shippingAddress["shipping_lastname"] = $svea->customerIdentity->lastName : "";
+            isset($svea->customerIdentity->street) ? $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->street) ? $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->coAddress) ? $shippingAddress["shipping_address_2"] = $svea->customerIdentity->coAddress : "";
+            isset($svea->customerIdentity->locality) ? $shippingAddress["shipping_city"] = $svea->customerIdentity->locality : "";
+            isset($svea->customerIdentity->zipCode) ? $shippingAddress["shipping_postcode"] = $svea->customerIdentity->zipCode : "";
+            $shippingAddress["shipping_country_id"] = $countryId['country_id'];
+            $shippingAddress["shipping_country"] = $countryId['country_name'];
+        }
+        return $shippingAddress;
     }
 }
 ?>

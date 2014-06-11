@@ -5,6 +5,7 @@ $_['text_paymentplan']        = 'Ratenkauf';
 $_['text_ssn']                = 'Sozialversicherungsnummer ';
 $_['text_get_payment_options'] = 'Get payment options';             // TODO not translated
 $_['text_invoice_address']    = 'Rechnungsadresse';
+$_['text_shipping_address']    = 'Versandadresse';
 $_['text_birthdate']          = 'Geburtsdatum';
 $_['text_vat_no']              = 'VAT no';                          // not translated
 $_['text_initials']            = 'Initials';                        // not translated

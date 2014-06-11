@@ -25,6 +25,8 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['text_all_zones'] = $this->language->get('text_all_zones');
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
 		$this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
+		$this->data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
+		$this->data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
@@ -143,6 +145,12 @@ class ControllerPaymentsveapartpayment extends Controller {
 			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->request->post['svea_partpayment_auto_deliver_status_id'];
 		} else {
 			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->config->get('svea_partpayment_auto_deliver_status_id');
+		}
+                 //shipping billing
+		if (isset($this->request->post['svea_partpayment_shipping_billing'])) {
+			$this->data['svea_partpayment_shipping_billing'] = $this->request->post['svea_partpayment_shipping_billing'];
+		} else {
+			$this->data['svea_partpayment_shipping_billing'] = $this->config->get('svea_partpayment_shipping_billing');
 		}
                  //show price on product
 		if (isset($this->request->post['svea_partpayment_product_price'])) {

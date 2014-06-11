@@ -6,6 +6,7 @@ $_['text_ssn']                = 'Henkilötunnus';
 $_['text_get_payment_options'] = 'Hae maksuvaihtoehdot';
 $_['text_payment_options']     = 'Maksuvaihtoehdot';
 $_['text_invoice_address']    = 'Laskutusosoite';
+$_['text_shipping_address']    = 'Toimitusosoite';
 $_['text_birthdate']          = 'Syntymäaika';
 $_['text_vat_no']             = 'ALV';
 $_['text_initials']           = 'Tunnukset';

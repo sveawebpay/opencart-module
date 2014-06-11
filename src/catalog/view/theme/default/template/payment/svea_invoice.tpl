@@ -35,7 +35,14 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO") { ?>
 <?php
 if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $countryCode == "NO" ){ ?>
 <div id="svea_invoice_address_div">
-    <label for="svea_invoice_address"><?php echo $this->language->get("text_invoice_address") ?>:</label>
+    <label for="svea_invoice_address">
+        <?php
+            echo $this->language->get('text_invoice_address');
+            if($this->config->get('svea_invoice_shipping_billing') == '1'){
+                   echo ' / '.$this->language->get('text_shipping_address');
+            }
+
+        ?>:</label><br />
     <select name="svea_invoice_address" id="svea_invoice_address"></select>
 </div>
 <?php
