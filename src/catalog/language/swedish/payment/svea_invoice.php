@@ -8,6 +8,7 @@ $_['text_company']            = 'Företag';
 $_['text_private']            = 'Privatperson';
 $_['text_get_address']        = 'Hämta address';
 $_['text_invoice_address']    = 'Fakturaaddress';
+$_['text_shipping_address']    = 'Fraktadress';
 $_['text_birthdate']          = 'Födelsedatum';
 $_['text_vat_no']             = 'Org. nr.';
 $_['text_initials']           = 'Initialer';

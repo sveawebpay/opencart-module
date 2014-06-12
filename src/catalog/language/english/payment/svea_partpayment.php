@@ -5,6 +5,7 @@ $_['text_paymentplan']        = 'Partpayment';
 $_['text_ssn']                 = 'Social Security No';
 $_['text_get_payment_options'] = 'Get payment options';
 $_['text_invoice_address']     = 'Invoice address';
+$_['text_shipping_address']    = 'Shipping address';
 $_['text_birthdate']           = 'Birth date';
 $_['text_vat_no']              = 'VAT no';
 $_['text_initials']            = 'Initials';

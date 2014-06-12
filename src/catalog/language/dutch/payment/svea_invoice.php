@@ -8,6 +8,7 @@ $_['text_company']            = 'Bedrijf';
 $_['text_private']            = 'Privé';
 $_['text_get_address']        = 'Adresgegevens ophalen';
 $_['text_invoice_address']    = 'Factuuradres';
+$_['text_shipping_address']    = 'Verzendadres';
 $_['text_birthdate']          = 'Geboortedatum';
 $_['text_vat_no']             = 'BTW nr';
 $_['text_initials']           = 'Initialen';

@@ -8,6 +8,7 @@ $_['text_company']            = 'Geschäft';
 $_['text_private']            = 'Privat';
 $_['text_get_address']        = 'Adresse bekommen';
 $_['text_invoice_address']    = 'Rechnungsadresse';
+$_['text_shipping_address']    = 'Versandadresse';
 $_['text_birthdate']          = 'Geburtsdatum';
 $_['text_vat_no']             = 'MwSt';
 $_['text_initials']           = 'Initialen';
