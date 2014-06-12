@@ -1,10 +1,6 @@
 {
     "module_name": "Opencart",
-<<<<<<< HEAD
-    "module_version": "2.4.2",
-=======
     "module_version": "2.5.0",
->>>>>>> release/2.5.0
     "module_shop_version_support": [
         "1.4.9",
         " - ",
@@ -73,11 +69,6 @@
 			"credit_order": [
 				"svea_admin"
 			]
-<<<<<<< HEAD
-		
-=======
-
->>>>>>> release/2.5.0
 		},
 	"card_direct": {
 			"deliver_order": [
@@ -89,11 +80,6 @@
 			"credit_order": [
 				"svea_admin"
 			]
-<<<<<<< HEAD
-		
-=======
-
->>>>>>> release/2.5.0
 		}
 	}
 }
