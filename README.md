@@ -1,6 +1,6 @@
 # OpenCart - Svea payment module
 
-##Version 2.4.2
+##Version 2.5.0
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ requirers [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
@@ -47,6 +47,7 @@ The various Svea payment modules are located under Extensions/Payments in the Op
 * Then select _edit_ next to the now installed payment method. You will now see a view with various payment method settings.
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set the fields _status_ and _testmode_ to _enabled_.
+* _Shipping same as billing_ determines whether to use the svea billing address for both shipping and billing. It will ignore if customer tries to change the shipping address. Should be set to _yes_ if your contract with Svea does not tell otherwise.
 * Also set _order status_ and _auto deliver order_ according to your preferences.
 * Show _Product_ _Price_ _Widget_: If set to true, the Svea Product Price Widget will be shown on product pages,
 displaying the minimum invoice amount to pay. Note: Only applicable if Svea buys the invoices, and for private customers.
@@ -86,6 +87,7 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * Locate _Svea part payment_ in the list, choose _install_ and then _edit_:
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Set _testmode_ and _status_ to enabled.
+* _Shipping same as billing_ determines whether to use the svea billing address for both shipping and billing. It will ignore if customer tries to change the shipping address. Should be set to _yes_ if your contract with Svea does not tell otherwise.
 * Also set _order status_ and _auto deliver order_ according to your preferences.
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing, make sure to use the supplied test account credentials.
 * The field _min. amount_ must match the corresponding setting in Svea admin.
