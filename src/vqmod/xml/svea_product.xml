@@ -203,7 +203,7 @@
         ]]> </search>
                 <add><![CDATA[
                         <?php
-                    if ($svea_widget) { ?>
+                    if (isset($svea_widget)) { ?>
 
                      <div id="svea_price_box"
                                 style=" width: auto;
