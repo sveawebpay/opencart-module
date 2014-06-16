@@ -17,7 +17,7 @@
                         $svea_show_invoice =  $this->model_payment_svea_invoice->getProductPriceMode();
                         $svea_show_invoice_min =  $this->model_payment_svea_invoice->getProductPriceModeMin();
                         $viewProduct = null;
-                        if($svea_show_paymentplan === '1' || $svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "DE"){
+                        if($svea_show_paymentplan === '1' || $svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DE"){
                             $currency_decimals = $_SESSION['currency'] == 'EUR' ? 1 : 0;
                             $price_list = array();
                             $prices = array();

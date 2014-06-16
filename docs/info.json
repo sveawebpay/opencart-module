@@ -56,7 +56,7 @@
 		]
 	},
 	"administration": {
-		"invoice_paymentplan": {
+		"invoice": {
 			"auto_deliver_order": [
 				"module_admin"
 			],
@@ -70,13 +70,29 @@
 				"svea_admin"
 			]
 		},
-	"card_direct": {
+		"paymentplan": {
+			"auto_deliver_order": [
+				"module_admin"
+			],
+			"deliver_order": [
+				"svea_admin"
+			],
+			"close_order": [
+				"svea_admin"
+			]
+		},
+	"card": {
 			"deliver_order": [
 				"svea_admin"
 			],
 			"close_order": [
 				"svea_admin"
 			],
+			"credit_order": [
+				"svea_admin"
+			]
+		},
+	"direct": {
 			"credit_order": [
 				"svea_admin"
 			]
