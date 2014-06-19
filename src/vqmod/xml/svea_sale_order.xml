@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+<id>SveaWebPay Product Price</id>
+<version>2.5.1</version>
+<vqmver>1.0.8</vqmver>
+<author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
+    <file name="admin/model/sale/order.php">
+       <!--inserted ... order.php -->
+        <operation name="svea controller deliver invoice">
+            <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
+            <add><![CDATA[
+                        var_dump('hej från vqmod');die;
+
+       ]]></add>
+        </operation>
+    </file>
+</modification>
