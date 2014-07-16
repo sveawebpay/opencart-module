@@ -164,6 +164,10 @@ class ControllerPaymentsveainvoice extends Controller {
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
+            
+            // set customer reference to stored customer firstname + lastname, from before getaddresses
+            $svea = $svea->setCustomerReference($this->session->data['svea_reference']);
+            
         }
         else {  // private customer
 
@@ -302,6 +306,9 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
+        // store customer firstname + lastname in session as svea_reference 
+        $this->session->data['svea_reference'] = $order['payment_firstname'] ." ". $order['payment_lastname'];
+                        
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
         $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' )
