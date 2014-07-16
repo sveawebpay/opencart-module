@@ -16,7 +16,7 @@
             <tbody>
                 <tr>
                     <td>Version</td>
-                    <td>2.5.1</td>
+                    <td>2.5.2</td>
                 </tr>
                 <tr>
                     <td><?php echo $entry_order_status; ?></td>
