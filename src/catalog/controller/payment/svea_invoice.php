@@ -211,9 +211,10 @@ class ControllerPaymentsveainvoice extends Controller {
         if ($svea->accepted == 1) {
             $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
 
-            if($this->config->get('svea_invoice_shipping_billing') == '1')
+            // if set to enforce shipping = billing, fetch billing address
+            if($this->config->get('svea_invoice_shipping_billing') == '1') {
                 $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
-
+            }            
             $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
 
             $response = array();
@@ -604,10 +605,7 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             isset($svea->customerIdentity->fullName) ? $shippingAddress["shipping_company"] = $svea->customerIdentity->fullName : "";
 
-            // in table order, the column shipping_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
-            if( floatval(substr(VERSION,0,3)) > 1.5 || ( floatval(substr(VERSION,0,3)) == 1.5 && intval( substr(VERSION,4)) >= 3 ) ) { // oc 1.5.3+
-                isset($svea->customerIdentity->nationalIdNumber) ? $shippingAddress["shipping_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
-            }
+            // in table order, the column shipping_company_id (set by updateAddressField() below) doesn't exist in any version of OpenCart
 
             isset($svea->customerIdentity->street) ? $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street : "";
             isset($svea->customerIdentity->coAddress) ? $shippingAddress["shipping_address_2"] = $svea->customerIdentity->coAddress : "";
