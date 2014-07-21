@@ -1,9 +1,9 @@
 # OpenCart - Svea payment module
 
-##Version 2.5.1
+##Version 2.5.2
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
-* Feature _Product Price Widget_ requirers [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
+* Feature _Product Price Widget_ requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
 
 This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
 
