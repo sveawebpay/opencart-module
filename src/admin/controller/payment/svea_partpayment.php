@@ -23,8 +23,13 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_all_zones'] = $this->language->get('text_all_zones');
+                //order status
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
 		$this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
+                $this->data['entry_status_order'] = $this->language->get('entry_status_order');
+                $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
+                $this->data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
+
 		$this->data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
 		$this->data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
@@ -101,17 +106,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_partpayment&token=' . $this->session->data['token'];
 
 		$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
-
-		if (isset($this->request->post['svea_partpayment_order_status_id'])) {
-			$this->data['svea_partpayment_order_status_id'] = $this->request->post['svea_partpayment_order_status_id'];
-		} else {
-			$this->data['svea_partpayment_order_status_id'] = $this->config->get('svea_partpayment_order_status_id');
-		}
-
-		$this->load->model('localisation/order_status');
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-
+		
 		if (isset($this->request->post['svea_partpayment_geo_zone_id'])) {
 			$this->data['svea_partpayment_geo_zone_id'] = $this->request->post['svea_partpayment_geo_zone_id'];
 		} else {
@@ -140,12 +135,6 @@ class ControllerPaymentsveapartpayment extends Controller {
 		} else {
 			$this->data['svea_partpayment_auto_deliver'] = $this->config->get('svea_partpayment_auto_deliver');
 		}
-                 //autodeliver order status
-		if (isset($this->request->post['svea_partpayment_auto_deliver_status_id'])) {
-			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->request->post['svea_partpayment_auto_deliver_status_id'];
-		} else {
-			$this->data['svea_partpayment_auto_deliver_status_id'] = $this->config->get('svea_partpayment_auto_deliver_status_id');
-		}
                  //shipping billing
 		if (isset($this->request->post['svea_partpayment_shipping_billing'])) {
 			$this->data['svea_partpayment_shipping_billing'] = $this->request->post['svea_partpayment_shipping_billing'];
@@ -157,6 +146,24 @@ class ControllerPaymentsveapartpayment extends Controller {
 			$this->data['svea_partpayment_product_price'] = $this->request->post['svea_partpayment_product_price'];
 		} else {
 			$this->data['svea_partpayment_product_price'] = $this->config->get('svea_partpayment_product_price');
+		}
+                //order statuses
+                $this->load->model('localisation/order_status');
+                $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+                if (isset($this->request->post['svea_partpayment_order_status_id'])) {
+                    $this->data['svea_partpayment_order_status_id'] = $this->request->post['svea_partpayment_order_status_id'];
+		} else {
+                    $this->data['svea_partpayment_order_status_id'] = $this->config->get('svea_partpayment_order_status_id');
+		}
+                if (isset($this->request->post['svea_partpayment_canceled_status_id'])) {
+                    $this->data['svea_partpayment_canceled_status_id'] = $this->request->post['svea_partpayment_canceled_status_id'];
+                } else {
+                    $this->data['svea_partpayment_canceled_status_id'] = $this->config->get('svea_partpayment_canceled_status_id');
+                }
+                if (isset($this->request->post['svea_partpayment_deliver_status_id'])) {
+			$this->data['svea_partpayment_deliver_status_id'] = $this->request->post['svea_partpayment_deliver_status_id'];
+		} else {
+			$this->data['svea_partpayment_deliver_status_id'] = $this->config->get('svea_partpayment_deliver_status_id');
 		}
 
 		$this->template = 'payment/svea_partpayment.tpl';

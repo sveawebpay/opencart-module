@@ -200,7 +200,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                 if ($deliverObj->accepted == 1) {
                     $response = array("success" => true);
                     //update order status for delivered
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_auto_deliver_status_id'));
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'));
                     //I not, send error codes
                 } else {
                     $response = array("error" => $this->responseCodes($deliverObj->resultcode, $deliverObj->errormessage));
