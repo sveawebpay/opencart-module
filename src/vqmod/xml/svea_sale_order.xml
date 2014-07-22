@@ -10,8 +10,50 @@
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
 
+           if($data['payment_code'] == 'svea_invoice' || $data['payment_code'] || 'svea_partpayment'){
+                if ($this->config->get($data['payment_code'].'_canceled_status_id') == $data['order_status_id']) {
+                    include(DIR_APPLICATION.'../svea/Includes.php');
+                    //Testmode
+                    $country_info = $this->model_localisation_country->getCountry($data['payment_country_id']);
+                    if($this->config->get($data['payment_code'].'_testmode_'.$country_info['iso_code_2']) !== NULL){
+                        $conf = ( $this->config->get($data['payment_code'].'_testmode_'.$country_info['iso_code_2']) == "1" )
+                                ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+                    }
+                    //get svea order id
+                    $svea_order_id_exists = strpos($data['comment'], 'Svea',0);
+                    if( $svea_order_id_exists !== false ){
+                          preg_match_all('/\d+/', $data['comment'], $svea_order_id);
+                    }
+                    if(sizeof($svea_order_id[0]) == 0){
+                        //TODO: vad göra när det inte finns ett order id sparat. felmeddelande.typ gamla ordrar.
+                        echo 'error, no svea order id exists';
+                        return;
+                    }
+                $svea = WebPay::closeOrder($conf)
+                            ->setOrderId($svea_order_id[0][0])
+                            ->setCountryCode($country_info['iso_code_2']);
+                if($data['payment_code'] == 'svea_invoice'){
+                     $svea = $svea->closeInvoiceOrder();
+                }  else {
+                    $svea = $svea->closePaymentPlanOrder();
+                }
 
-                       // var_dump($data);die;
+                try {
+                    $svea_response = $svea->doRequest();
+                } catch (Exception $e) {
+                    $this->log->write($e->getMessage());
+                    $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+                    echo 'not canceled';//TODO: what to do when not canceled?
+                }
+
+                if($svea_response->accepted == TRUE){
+                    $data['comment'] = 'Order canceled at Svea';
+                }  else {
+                      echo 'not canceled';//TODO: what to do when not canceled?
+                }
+
+                }
+           }
 
        ]]></add>
         </operation>
