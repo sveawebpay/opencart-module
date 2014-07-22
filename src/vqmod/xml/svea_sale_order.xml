@@ -9,7 +9,9 @@
         <operation name="svea controller deliver invoice">
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
-                        var_dump('hej från vqmod');die;
+
+
+                       // var_dump($data);die;
 
        ]]></add>
         </operation>

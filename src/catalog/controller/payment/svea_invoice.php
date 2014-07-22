@@ -275,7 +275,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 if($deliverObj->accepted == 1){
                     $response = array("success" => true);
                     //update order status for delivered
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_auto_deliver_status_id'));
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'));
                 }
                 //if not, send error codes
                 else {
