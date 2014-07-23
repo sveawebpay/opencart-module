@@ -10,7 +10,7 @@
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
 
-           if($data['payment_code'] == 'svea_invoice' || $data['payment_code'] || 'svea_partpayment'){
+  if($data['payment_code'] == 'svea_invoice' || $data['payment_code'] || 'svea_partpayment'){
                 if ($this->config->get($data['payment_code'].'_canceled_status_id') == $data['order_status_id']) {
                     include(DIR_APPLICATION.'../svea/Includes.php');
                     //Testmode
