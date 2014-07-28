@@ -10,7 +10,117 @@
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
 
-        
+                        if($this->request->server['REQUEST_METHOD'] == 'POST'){
+                    //only do something if status is changed and payment is of svea type
+                    if($this->request->post['payment_code'] == 'svea_invoice'
+                        || $this->request->post['payment_code'] == 'svea_partpayment'
+                        || $this->request->post['payment_code'] == 'svea_card'){
+                        include(DIR_APPLICATION.'../svea/Includes.php');
+                        $order = $this->model_sale_order->getOrder($this->request->get['order_id']);
+                        //if old orderstatus is cancelled as configured in module,
+                        // and user trys to change it. do not allow it.
+                        if($order['order_status_id'] == $this->config->get($this->request->post['payment_code'].'_canceled_status_id')
+                            && $this->request->post['order_status_id'] != $this->config->get($this->request->post['payment_code'].'_canceled_status_id')) {
+                            $this->error['warning'] = $this->request->post['comment'] . ' Order is closed and status can not be changed.';
+                        }
+                        //Testmode
+                        if($this->config->get($this->request->post['payment_code'].'_testmode_'.$order['payment_iso_code_2']) !== NULL){
+                            $conf = ( $this->config->get($this->request->post['payment_code'].'_testmode_'.$order['payment_iso_code_2']) == "1" )
+                                    ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+                        }
+                        //get svea order id
+                        $svea_order_id_exists = strpos($this->request->post['comment'], 'Svea',0);
+                        if( $svea_order_id_exists !== false ){
+                              preg_match_all('/\d+/', $this->request->post['comment'], $svea_order_id);
+                        }
+                         if(sizeof($svea_order_id[0]) > 0){
+                        //Cancel
+                        //if this action is cancel as configured in module,
+                        //and if status wasn't already cancel
+                        if ($this->config->get($this->request->post['payment_code'].'_canceled_status_id') == $this->request->post['order_status_id']
+                            && $order['order_status_id'] != $this->request->post['order_status_id'] ) {
+
+                            $svea = WebPayAdmin::cancelOrder($conf)
+                                ->setOrderId($svea_order_id[0][0])
+                                ->setCountryCode($order['payment_iso_code_2']);
+
+                            if($this->request->post['payment_code'] == 'svea_invoice'){
+                                 $svea = $svea->cancelInvoiceOrder();
+                            }  else if ($this->request->post['payment_code'] == 'svea_partpayment') {
+                                  $svea = $svea->cancelPaymentPlanOrder();
+                            } else {
+                                 //TODO: cancel card
+                            }
+                            try {
+                                $svea_response = $svea->doRequest();
+                            } catch (Exception $e) {
+                                $this->log->write($e->getMessage());
+                                $response = $e->getMessage();
+                                $this->error['warning'] = 'Svea error: ' .  $response . ' Order was not canceled.';
+
+                            }
+                            if($svea_response->accepted == TRUE){
+                                    $this->request->post['comment'] = $this->request->post['comment'] . ' Order canceled at Svea;';
+                            }  else {
+                                    $this->error['warning'] = $this->request->post['comment'] . ' Svea Error: '.$svea_response->errormessage.'.';
+                            }
+                        //Deliver
+                        //if this action is deliver as configured in module,
+                        //and if status wasn't already deliver
+                        } elseif ($this->config->get($this->request->post['payment_code'].'_deliver_status_id') == $this->request->post['order_status_id']
+                            && $order['order_status_id'] != $this->request->post['order_status_id'] ) {
+                             $svea = WebPay::deliverOrder($conf)
+                                     ->setOrderId($svea_order_id[0][0])
+                                     ->setOrderDate(date('c'))
+                                     ->setCountryCode($order['payment_iso_code_2']);
+
+                            if($this->request->post['payment_code'] == 'svea_invoice'){
+                                $svea = $svea->setInvoiceDistributionType($this->config->get($this->request->post['payment_code'].'_distribution_type'))
+                                        ->deliverInvoiceOrder();
+                            }  else if ($this->request->post['payment_code'] == 'svea_partpayment') {
+                                //TODO: remove after validation fix in lib!
+                                $svea = $svea->setInvoiceDistributionType('POST')
+                                        ->deliverPaymentPlanOrder();
+                            } else {
+                                 //TODO: remove after validation fix in lib!
+                                $svea = $svea->setInvoiceDistributionType('POST')
+                                        ->deliverCardOrder();
+                            }
+                            try {
+                                $svea_response = $svea->doRequest();
+                            } catch (Exception $e) {
+                                $this->log->write($e->getMessage());
+                                $response = $e->getMessage();
+                                $this->error['warning'] = 'Svea error: ' .  $response . ' Order was not delivered.';
+                            }
+                            if($svea_response->accepted == TRUE){
+                                //save svea invoice no
+                                $history['order_status_id'] = (int) $this->request->post['order_status_id'];
+                                $history['notify'] = NULL;
+                                if ($svea_response->orderType == 'Invoice') {
+                                    $history['comment'] = ' Order delivered at Svea.' . ' Svea invoiceId '.$svea_response->invoiceId.'.';
+                                    $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
+                                    $this->request->post['comment'] = $this->request->post['comment'] . ' Order delivered at Svea.'
+                                                                    . ' Svea invoiceId: '.$svea_response->invoiceId.'.';
+                                } else if($svea_response->orderType == 'PaymentPlan') {
+                                    $history['comment'] = ' Order delivered at Svea.' . ' Svea contractNumber '.$svea_response->contractNumber.'.';
+                                    $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
+                                    $this->request->post['comment'] = $this->request->post['comment'] . ' Order delivered at Svea.'
+                                                                    . ' Svea contractNumber: '.$svea_response->contractNumber.'.';
+
+                                } else {
+                                    //card
+                                }
+
+                            }  else {
+                                 $this->error['warning'] = $this->request->post['comment'] . ' Svea Error: '.$svea_response->errormessage.'.';
+                            }
+                        }
+                        }else{
+                            $this->error['warning'] = ' Svea Error: Svea order id is missing. ';
+                        }
+                    }
+                }
 
        ]]></add>
         </operation>

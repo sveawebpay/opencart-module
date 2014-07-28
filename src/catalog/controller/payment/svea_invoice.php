@@ -275,7 +275,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 if($deliverObj->accepted == 1){
                     $response = array("success" => true);
                     //update order status for delivered
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'));
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
                 }
                 //if not, send error codes
                 else {
@@ -287,7 +287,7 @@ class ControllerPaymentsveainvoice extends Controller {
             else {
                $response = array("success" => true);
                //update order status for created
-               $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
+               $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'),'Svea order id '. $svea->sveaOrderId);
             }
 
         // not accepted, send errors to view
