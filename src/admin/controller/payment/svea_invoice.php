@@ -26,6 +26,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['entry_order_status'] = $this->language->get('entry_order_status');
         $this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
         $this->data['entry_status_order'] = $this->language->get('entry_status_order');
+        $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
         $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
         $this->data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
 
@@ -189,6 +190,11 @@ class ControllerPaymentsveainvoice extends Controller {
             $this->data['svea_invoice_canceled_status_id'] = $this->request->post['svea_invoice_canceled_status_id'];
         } else {
             $this->data['svea_invoice_canceled_status_id'] = $this->config->get('svea_invoice_canceled_status_id');
+        }
+        if (isset($this->request->post['svea_invoice_refunded_status_id'])) {
+            $this->data['svea_invoice_refunded_status_id'] = $this->request->post['svea_invoice_refunded_status_id'];
+        } else {
+            $this->data['svea_invoice_refunded_status_id'] = $this->config->get('svea_invoice_refunded_status_id');
         }
         if (isset($this->request->post['svea_invoice_deliver_status_id'])) {
                 $this->data['svea_invoice_deliver_status_id'] = $this->request->post['svea_invoice_deliver_status_id'];
