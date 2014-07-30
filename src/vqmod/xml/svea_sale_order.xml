@@ -10,7 +10,7 @@
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
 
-                                   if($this->request->server['REQUEST_METHOD'] == 'POST'){
+                        if($this->request->server['REQUEST_METHOD'] == 'POST'){
                     //only do something if status is changed and payment is of svea type
                     if($this->request->post['payment_code'] == 'svea_invoice'
                         || $this->request->post['payment_code'] == 'svea_partpayment'
@@ -25,19 +25,18 @@
                             $this->error['warning'] =' Order is closed and status can not be changed.';
                         }
                         //Testmode
-                        if($this->config->get($this->request->post['payment_code'].'_testmode_'.$order['payment_iso_code_2']) !== NULL){
-                            $conf = ( $this->config->get($this->request->post['payment_code'].'_testmode_'.$order['payment_iso_code_2']) == "1" )
+                        $testmode_countrycode = $this->request->post['payment_code'] == 'svea_invoice' ||  $this->request->post['payment_code'] == 'svea_partpayment' ? '_' . $order['payment_iso_code_2'] : '';
+                        if($this->config->get($this->request->post['payment_code'].'_testmode'.$testmode_countrycode) !== NULL){
+                            $conf = ( $this->config->get($this->request->post['payment_code'].'_testmode'.$testmode_countrycode) == "1" )
                                     ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
                         }
                         //get svea order id
                         $svea_order_id_exists = strpos($this->request->post['comment'], 'Svea',0);
                         if( $svea_order_id_exists !== false ){
                               preg_match_all('/\d+/', $this->request->post['comment'], $svea_order_id);
-                        }
-                        if(sizeof($svea_order_id[0]) > 0){
                             //Cancel
                             //if this action is cancel as configured in module,
-                            //and its not directbank,
+                            //and it´s not directbank,
                             //and if status wasn't already cancel
                             if ($this->config->get($this->request->post['payment_code'].'_canceled_status_id') == $this->request->post['order_status_id']
                                 && $order['order_status_id'] != $this->request->post['order_status_id']
@@ -52,7 +51,7 @@
                                 }  else if ($this->request->post['payment_code'] == 'svea_partpayment') {
                                       $svea = $svea->cancelPaymentPlanOrder();
                                 } else {
-                                     //TODO: cancel card
+                                    $svea = $svea->cancelCardOrder();
                                 }
                                 try {
                                     $svea_response = $svea->doRequest();
@@ -157,6 +156,8 @@
                                         $svea_order_id_exists = strpos($this->request->post['comment'], 'Svea invoiceId',0);
                                         if( $svea_order_id_exists !== false ){
                                             preg_match_all('/\d+/', $info, $invoiceId);
+                                        }else{
+                                             $this->error['warning'] = 'Svea error: ' .  $response . ' Order was not credited. Order must first be delivered/shipped. Check the payment module status for order delivered and set the status on edit order.';
                                         }
                                     }
                                     if($this->request->post['payment_code'] == 'svea_invoice'){
