@@ -19,18 +19,6 @@
                     <td>2.5.2</td>
                 </tr>
                 <tr>
-                    <td><?php echo $entry_order_status; ?></td>
-                    <td><select name="svea_card_order_status_id">
-                        <?php foreach ($order_statuses as $order_status) { ?>
-                            <?php if ($order_status['order_status_id'] == $svea_card_order_status_id) { ?>
-                            <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                            <?php } else { ?>
-                            <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                            <?php }
-                        } ?>
-                      </select></td>
-                </tr>
-                <tr>
                     <td><?php echo $entry_testmode; ?>:</td>
                     <td><select name="svea_card_testmode">
                           <option value="1" <?php if($svea_card_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
@@ -70,6 +58,32 @@
                 <tr>
                     <td><?php echo $entry_sort_order; ?></td>
                     <td><input type="text" name="svea_card_sort_order" value="<?php echo $svea_card_sort_order; ?>" size="1" /></td>
+                </tr>
+                <!-- order statuses -->
+                 <tr>
+                    <td><?php echo $entry_order_status; ?></td>
+                    <td>
+                        <span class="help"><?php echo $entry_status_order; ?></span>
+                        <select name="svea_card_order_status_id">
+                        <?php foreach ($order_statuses as $order_status) { ?>
+                            <?php if ($order_status['order_status_id'] == $svea_card_order_status_id) { ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                            <?php } else { ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                            <?php }
+                        } ?>
+                        </select>
+                        <span class="help"><?php echo $entry_status_canceled; ?></span>
+                        <select name="svea_card_canceled_status_id">
+                            <?php foreach ($order_statuses as $order_status) {
+                                if ($order_status['order_status_id'] == $svea_card_canceled_status_id) { ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                                <?php } else { ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                <?php } ?>
+                            <?php } ?>
+                        </select>
+                    </td>
                 </tr>
             </tbody>
         </table>
