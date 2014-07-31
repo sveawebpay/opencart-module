@@ -10,7 +10,7 @@
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
 
-                        if($this->request->server['REQUEST_METHOD'] == 'POST'){
+                                   if($this->request->server['REQUEST_METHOD'] == 'POST'){
                     //only do something if status is changed and payment is of svea type
                     if($this->request->post['payment_code'] == 'svea_invoice'
                         || $this->request->post['payment_code'] == 'svea_partpayment'
@@ -101,19 +101,23 @@
                                     //save svea invoice no
                                     $history['order_status_id'] = (int) $this->request->post['order_status_id'];
                                     $history['notify'] = NULL;
-                                    if ($svea_response->orderType == 'Invoice') {
+                                    //! isset because orderType does'nt exist in HostedService\ConfirmTransactionResponse in package version 2.1.0
+                                    if (isset($svea_response->orderType) && $svea_response->orderType == 'Invoice') {
                                         $history['comment'] = 'Order delivered at Svea.' . ' Svea invoiceId '.$svea_response->invoiceId;
                                         $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
                                         $this->request->post['comment'] = $this->request->post['comment'] . ' | Order delivered at Svea. '
                                                                         . ' Svea invoiceId: '.$svea_response->invoiceId;
-                                    } else if($svea_response->orderType == 'PaymentPlan') {
+                                    } else if(isset($svea_response->orderType) && $svea_response->orderType == 'PaymentPlan') {
                                         $history['comment'] = 'Order delivered at Svea.' . ' Svea contractNumber '.$svea_response->contractNumber;
                                         $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
                                         $this->request->post['comment'] = $this->request->post['comment'] . ' | Order delivered at Svea.'
                                                                         . ' Svea contractNumber: '.$svea_response->contractNumber;
 
                                     } else {
-                                        //card
+                                        $history['comment'] = 'Transaction confirmed at Svea.';
+                                        $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
+                                        $this->request->post['comment'] = $this->request->post['comment'] . ' | Transaction confirmed at Svea.';
+
                                     }
 
                                 }  else {

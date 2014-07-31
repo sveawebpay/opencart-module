@@ -32,6 +32,7 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['entry_order_status'] = $this->language->get('entry_order_status');
         $this->data['entry_status_order'] = $this->language->get('entry_status_order');
         $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
+        $this->data['entry_status_confirmed'] = $this->language->get('entry_status_confirmed');
         $this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
         $this->data['entry_status']       = $this->language->get('entry_status');
         $this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
@@ -105,6 +106,11 @@ class ControllerPaymentsveacard extends Controller {
             $this->data['svea_card_canceled_status_id'] = $this->request->post['svea_card_canceled_status_id'];
         } else {
             $this->data['svea_card_canceled_status_id'] = $this->config->get('svea_card_canceled_status_id');
+        }
+        if (isset($this->request->post['svea_card_deliver_status_id'])) {
+            $this->data['svea_card_deliver_status_id'] = $this->request->post['svea_card_deliver_status_id'];
+        } else {
+            $this->data['svea_card_deliver_status_id'] = $this->config->get('svea_card_deliver_status_id');
         }
 
         if (isset($this->request->post['svea_card_geo_zone_id'])) {
