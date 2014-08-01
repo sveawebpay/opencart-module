@@ -181,7 +181,9 @@
                                                  ->creditInvoiceOrderRows();
 
                                     }  else if ($this->request->post['payment_code'] == 'svea_directbank') {
-                                        //directbank
+                                         $svea = $svea
+                                                ->setOrderId($transactionId[0][0])
+                                                    ->creditDirectBankOrderRows();
                                     } else {
                                         $svea = $svea
                                                 ->setOrderId($transactionId[0][0])

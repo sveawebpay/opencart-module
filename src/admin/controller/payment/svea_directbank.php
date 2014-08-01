@@ -31,6 +31,8 @@ class ControllerPaymentsveadirectbank extends Controller {
 		$this->data['text_all_zones']     = $this->language->get('text_all_zones');
 
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
+		$this->data['entry_status_order'] = $this->language->get('entry_status_order');
+                $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
 		$this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
 		$this->data['entry_status']       = $this->language->get('entry_status');
 		$this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
@@ -90,15 +92,19 @@ class ControllerPaymentsveadirectbank extends Controller {
 
         $this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
 
+      //statuses
+        $this->load->model('localisation/order_status');
+        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
         if (isset($this->request->post['svea_directbank_order_status_id'])) {
                 $this->data['svea_directbank_order_status_id'] = $this->request->post['svea_directbank_order_status_id'];
         } else {
                 $this->data['svea_directbank_order_status_id'] = $this->config->get('svea_directbank_order_status_id');
         }
-
-        $this->load->model('localisation/order_status');
-
-        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        if (isset($this->request->post['svea_directbank_refunded_status_id'])) {
+                $this->data['svea_directbank_refunded_status_id'] = $this->request->post['svea_directbank_refunded_status_id'];
+        } else {
+                $this->data['svea_directbank_refunded_status_id'] = $this->config->get('svea_directbank_refunded_status_id');
+        }
 
         if (isset($this->request->post['svea_directbank_geo_zone_id'])) {
                 $this->data['svea_directbank_geo_zone_id'] = $this->request->post['svea_directbank_geo_zone_id'];
