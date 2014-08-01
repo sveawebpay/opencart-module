@@ -78,7 +78,6 @@ class ControllerPaymentsveainvoice extends Controller {
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
-
         //Testmode
         if($this->config->get('svea_invoice_testmode_'.$countryCode) !== NULL){
             $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" )
@@ -275,6 +274,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 if($deliverObj->accepted == 1){
                     $response = array("success" => true);
                     //update order status for delivered
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea InvoiceId: ".$deliverObj->invoiceId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_invoice_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea InvoiceId: " . $deliverObj->invoiceId . "', date_added = NOW()");
+
                     $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
                 }
                 //if not, send error codes
@@ -285,9 +287,9 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             //if auto deliver not set, send true to view
             else {
-               $response = array("success" => true);
-               //update order status for created
-               $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'),'Svea order id '. $svea->sveaOrderId);
+                $response = array("success" => true);
+                //update order status for created
+                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'),'Svea order id '. $svea->sveaOrderId);
             }
 
         // not accepted, send errors to view
@@ -590,6 +592,7 @@ class ControllerPaymentsveainvoice extends Controller {
         }
 
         $paymentAddress["comment"] = $order_comment . "\nSvea order id: ".$svea->sveaOrderId;
+        $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_invoice_order_status_id') . "', notify = '" . 1 . "', comment = 'Order created. Svea order id: " . $svea->sveaOrderId . "', date_added = NOW()");
 
         return $paymentAddress;
     }
