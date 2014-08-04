@@ -43,7 +43,7 @@ class ModelTotalSveafee extends Model {
             );
 
             // calculate tax, add tax and fee to globals total, taxes
-            if ($svea_fee_tax_class_id) {
+            if (isset($svea_fee_tax_class_id)) {
 
                 if (floatval(VERSION) >= 1.5)
                 {
