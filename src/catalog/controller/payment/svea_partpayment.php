@@ -171,7 +171,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
 
         //If response accepted redirect to thankyou page
-        if ($svea->accepted == true) {
+        if ($svea->accepted == 1) {
 
              $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
 
@@ -180,7 +180,8 @@ class ControllerPaymentsveapartpayment extends Controller {
 
             $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
             //If Auto deliver order is set, DeliverOrder
-            if ($this->config->get('svea_partpayment_auto_deliver') == 1) {
+
+            if ($this->config->get('svea_partpayment_auto_deliver') === '1') {
                 $deliverObj = WebPay::deliverOrder($conf);
                 //Product rows
                 try {
@@ -200,7 +201,9 @@ class ControllerPaymentsveapartpayment extends Controller {
                 if ($deliverObj->accepted == 1) {
                     $response = array("success" => true);
                     //update order status for delivered
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea InvoiceId: '.$deliverObj->invoiceId);
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea contractNumber '.$deliverObj->contractNumber);
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea contractNumber: ".$deliverObj->contractNumber."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_partpayment_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea contractNumber: " . $deliverObj->contractNumber . "', date_added = NOW()");
                     //I not, send error codes
                 } else {
                     $response = array("error" => $this->responseCodes($deliverObj->resultcode, $deliverObj->errormessage));
