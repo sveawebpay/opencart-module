@@ -48,9 +48,9 @@
             </tr>
             <!-- order statuses -->
             <tr>
-              <td><?php echo $entry_order_status; ?><span class="help"><?php echo $entry_order_status_text ?></span></td>
+              <td><?php echo $entry_order_status; ?><!--<span class="help"><?php echo $entry_order_status_text ?></span>--></td>
                <td>
-                    <span class="help"><?php echo $entry_status_order; ?></span>
+                    <span><?php echo $entry_status_order; ?></span>
                     <select name="svea_partpayment_order_status_id">
                         <?php foreach ($order_statuses as $order_status) { ?>
                         <?php if ($order_status['order_status_id'] == $svea_partpayment_order_status_id) { ?>
@@ -60,7 +60,10 @@
                         <?php } ?>
                         <?php } ?>
                     </select>
-                    <span class="help"><?php echo $entry_status_delivered; ?></span>
+                    <div>
+                        <span><?php echo $entry_status_delivered; ?></span>
+                        <span class="help"><?php echo $entry_status_delivered_text; ?></span>
+                    </div>
                     <select name="svea_partpayment_deliver_status_id">
                         <?php foreach ($order_statuses as $deliver_status) { ?>
                         <?php if ($deliver_status['order_status_id'] == $svea_partpayment_deliver_status_id) { ?>
@@ -70,7 +73,10 @@
                         <?php } ?>
                         <?php } ?>
                     </select>
-                    <span class="help"><?php echo $entry_status_canceled; ?></span>
+                    <div>
+                        <span><?php echo $entry_status_canceled; ?></span>
+                        <span class="help"><?php echo $entry_status_canceled_text; ?></span>
+                    </div>
                     <select name="svea_partpayment_canceled_status_id">
                    <?php foreach ($order_statuses as $order_status) {
                        if ($order_status['order_status_id'] == $svea_partpayment_canceled_status_id) { ?>

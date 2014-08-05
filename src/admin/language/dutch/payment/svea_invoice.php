@@ -10,6 +10,14 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/dutch/svea_invoice
 
 // Entry
 $_['entry_order_status']      = 'Orderstatus:';
+$_['entry_status_order'] = 'Created:';
+$_['entry_status_canceled'] = 'Cancelled/Annulled:';
+$_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/confirmed.';
+$_['entry_status_delivered'] = 'Delivered:';
+$_['entry_status_delivered_text'] = 'Delivers a created order.';
+$_['entry_status_refunded'] = 'Credited:';
+$_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
+
 $_['entry_order_status_text'] = 'Orderstatus voor de gecreëerde order, maar er is geen factuur gecreëerd. Creëer de factuur van Svea admin.';
 $_['entry_geo_zone']          = 'Geo zone:';
 $_['entry_status']            = 'Status:';

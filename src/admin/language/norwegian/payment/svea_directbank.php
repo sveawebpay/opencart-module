@@ -9,6 +9,9 @@ $_['text_svea_directbank']  = '<img src="view/image/payment/norwegian/svea_direc
 
 // Entry
 $_['entry_order_status'] = 'Ordrestatus:';
+$_['entry_status_refunded'] = 'Krediter:';
+$_['entry_status_refunded_text'] = 'Ordren må være levert før den krediteres.';
+
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';

@@ -46,7 +46,7 @@
             <tr>
                 <td><?php echo $entry_order_status; ?></td>
                 <td>
-                    <span class="help"><?php echo $entry_status_order; ?></span>
+                    <span><?php echo $entry_status_order; ?></span>
                     <select name="svea_directbank_order_status_id">
                     <?php foreach ($order_statuses as $order_status) { ?>
                         <?php if ($order_status['order_status_id'] == $svea_directbank_order_status_id) { ?>
@@ -56,7 +56,10 @@
                         <?php } ?>
                     <?php } ?>
                   </select>
-                    <span class="help"><?php echo $entry_status_refunded; ?></span>
+                   <div>
+                        <span><?php echo $entry_status_refunded; ?></span>
+                        <span class="help"><?php echo $entry_status_refunded_text; ?></span>
+                    </div>
                     <select name="svea_directbank_refunded_status_id">
                     <?php foreach ($order_statuses as $order_status) { ?>
                         <?php if ($order_status['order_status_id'] == $svea_directbank_refunded_status_id) { ?>

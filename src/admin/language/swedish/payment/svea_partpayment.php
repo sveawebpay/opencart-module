@@ -9,9 +9,16 @@ $_['text_svea_partpayment']   = '<img src="view/image/payment/swedish/svea_partp
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
-$_['entry_order_status_text'] = 'Orderstatus för skapad men ej levererad. Leverans av fakturan görs från Sveas admin.';
+$_['entry_status_order'] = 'Skapad:';
+$_['entry_status_canceled'] = 'Makulerad/annulerad:';
+$_['entry_status_canceled_text'] = 'Kan göras innan ordern är levererad/godkänd.';
+$_['entry_status_delivered'] = 'Levererad:';
+$_['entry_status_delivered_text'] = 'Levererar en skapad order.';
+
+
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
+
 $_['entry_sort_order']   = 'Sorteringsordning:';
 
 $_['entry_shipping_billing']   = 'Shipping same as billing:';

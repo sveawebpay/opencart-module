@@ -25,10 +25,11 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['text_all_zones'] = $this->language->get('text_all_zones');
                 //order status
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
-		$this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
                 $this->data['entry_status_order'] = $this->language->get('entry_status_order');
                 $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
+                $this->data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
                 $this->data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
+                $this->data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
 
 		$this->data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
 		$this->data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
@@ -106,7 +107,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_partpayment&token=' . $this->session->data['token'];
 
 		$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
-		
+
 		if (isset($this->request->post['svea_partpayment_geo_zone_id'])) {
 			$this->data['svea_partpayment_geo_zone_id'] = $this->request->post['svea_partpayment_geo_zone_id'];
 		} else {

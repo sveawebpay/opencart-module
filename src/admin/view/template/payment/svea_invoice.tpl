@@ -50,9 +50,9 @@
                     </tr>
                     <!-- order statuses -->
                     <tr>
-                        <td><?php echo $entry_order_status; ?><span class="help"><?php echo $entry_order_status_text ?></span></td>
+                        <td><?php echo $entry_order_status; ?><!--<span class="help"><?php echo $entry_order_status_text ?></span>--></td>
                         <td>
-                            <span class="help"><?php echo $entry_status_order; ?></span>
+                            <span><?php echo $entry_status_order; ?></span>
                             <select name="svea_invoice_order_status_id">
                                 <?php foreach ($order_statuses as $order_status) { ?>
                                 <?php if ($order_status['order_status_id'] == $svea_invoice_order_status_id) { ?>
@@ -62,7 +62,10 @@
                                 <?php } ?>
                                 <?php } ?>
                             </select>
-                            <span class="help"><?php echo $entry_status_delivered; ?></span>
+                            <div>
+                                 <span><?php echo $entry_status_delivered; ?></span>
+                                 <span class="help"><?php echo $entry_status_delivered_text; ?></span>
+                            </div>
                             <select name="svea_invoice_deliver_status_id">
                                 <?php foreach ($order_statuses as $deliver_status) { ?>
                                 <?php if ($deliver_status['order_status_id'] == $svea_invoice_deliver_status_id) { ?>
@@ -72,25 +75,31 @@
                                 <?php } ?>
                                 <?php } ?>
                             </select>
-                            <span class="help"><?php echo $entry_status_canceled; ?></span>
+                                <div>
+                                    <span><?php echo $entry_status_canceled; ?></span>
+                                    <span class="help"><?php echo $entry_status_canceled_text; ?></span>
+                                </div>
                             <select name="svea_invoice_canceled_status_id">
-                           <?php foreach ($order_statuses as $order_status) {
-                               if ($order_status['order_status_id'] == $svea_invoice_canceled_status_id) { ?>
-                            <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                <?php } else { ?>
-                            <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                <?php foreach ($order_statuses as $order_status) {
+                                    if ($order_status['order_status_id'] == $svea_invoice_canceled_status_id) { ?>
+                                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                                     <?php } else { ?>
+                                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                      <?php } ?>
                                  <?php } ?>
-                            <?php } ?>
                             </select>
-                            <span class="help"><?php echo $entry_status_refunded; ?></span>
+                            <div>
+                                <span><?php echo $entry_status_refunded; ?></span>
+                                <span class="help"><?php echo $entry_status_refunded_text; ?></span>
+                            </div>
                             <select name="svea_invoice_refunded_status_id">
-                           <?php foreach ($order_statuses as $order_status) {
-                               if ($order_status['order_status_id'] == $svea_invoice_refunded_status_id) { ?>
-                            <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                <?php } else { ?>
-                            <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                <?php foreach ($order_statuses as $order_status) {
+                                    if ($order_status['order_status_id'] == $svea_invoice_refunded_status_id) { ?>
+                                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                                     <?php } else { ?>
+                                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                      <?php } ?>
                                  <?php } ?>
-                            <?php } ?>
                             </select>
                         </td>
                     </tr>

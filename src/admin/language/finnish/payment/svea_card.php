@@ -9,6 +9,16 @@ $_['text_svea_card']     = '<img src="view/image/payment/finnish/svea_card.png" 
 
 // Entry
 $_['entry_order_status'] = 'Tilauksen tila:';
+$_['entry_status_order'] = 'Luotu:';
+$_['entry_status_canceled'] = 'Poistettu/Peruutettu:';
+$_['entry_status_canceled_text'] = 'Voidaan tehdä ennen kuin tilaus on toimitettu/vahvistettu.';
+$_['entry_status_delivered'] = 'Toimitettu:';
+$_['entry_status_delivered_text'] = 'Toimittaa luodun tilauksen.';
+$_['entry_status_refunded'] = 'Hyvitetty:';
+$_['entry_status_refunded_text'] = 'Tilaus pitää olla toimitettu/lunastettu ennen hyvitystä.';
+$_['entry_status_confirmed'] = 'Hyväksytty:';
+$_['entry_status_confirmed_text'] = 'Manuaalisesti hyväksytty maksu.';
+
 $_['entry_geo_zone']     = 'Maa:';
 $_['entry_status']       = 'Tila:';
 $_['entry_sort_order']   = 'Lajittelujärjestys:';

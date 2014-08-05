@@ -33,6 +33,7 @@ class ControllerPaymentsveadirectbank extends Controller {
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
 		$this->data['entry_status_order'] = $this->language->get('entry_status_order');
                 $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
+                $this->data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
 		$this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
 		$this->data['entry_status']       = $this->language->get('entry_status');
 		$this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
