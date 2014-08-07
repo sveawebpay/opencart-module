@@ -10,7 +10,7 @@
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
 
-                                if($this->request->server['REQUEST_METHOD'] == 'POST'){
+                               if($this->request->server['REQUEST_METHOD'] == 'POST'){
                     //only do something if status is changed and payment is of svea type
                     if($this->request->post['payment_code'] == 'svea_invoice'
                         || $this->request->post['payment_code'] == 'svea_partpayment'
@@ -90,13 +90,10 @@
                                     $svea = $svea->setInvoiceDistributionType($this->config->get($this->request->post['payment_code'].'_distribution_type'))
                                             ->deliverInvoiceOrder();
                                 }  else if ($this->request->post['payment_code'] == 'svea_partpayment') {
-                                    //TODO: remove after validation fix in lib!
                                     $svea = $svea->setInvoiceDistributionType('POST')
                                             ->deliverPaymentPlanOrder();
                                 } else {
-                                     //TODO: remove after validation fix in lib!
-                                    $svea = $svea->setInvoiceDistributionType('POST')
-                                            ->deliverCardOrder();
+                                    $svea = $svea->deliverCardOrder();
                                 }
                                 try {
                                     $svea_response = $svea->doRequest();
@@ -234,6 +231,7 @@
                         }
                     }
                 }
+
 
        ]]></add>
         </operation>
