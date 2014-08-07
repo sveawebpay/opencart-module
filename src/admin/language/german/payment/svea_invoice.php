@@ -9,7 +9,14 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/german/svea_invoic
 
 // Entry
 $_['entry_order_status']      = 'Orderstatus:';
-$_['entry_order_status_text'] = 'Orderstatus für erstellte aber nichtgelieferte. Lieferung der Rechnung wird in Sveas Admin gemacht.';
+$_['entry_status_order'] = 'Created:';
+$_['entry_status_canceled'] = 'Cancelled/Annulled:';
+$_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/captured.';
+$_['entry_status_delivered'] = 'Delivered:';
+$_['entry_status_delivered_text'] = 'Delivers a created order.';
+$_['entry_status_refunded'] = 'Credited:';
+$_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
+
 $_['entry_geo_zone']          = 'Geographische Zone:';
 $_['entry_status']            = 'Status:';
 $_['entry_sort_order']        = 'Sortierungsordnung:';

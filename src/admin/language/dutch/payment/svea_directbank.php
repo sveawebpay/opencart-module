@@ -9,6 +9,9 @@ $_['text_svea_directbank']  = '<img src="view/image/payment/dutch/svea_directban
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
+$_['entry_status_refunded'] = 'Gecrediteerd:';
+$_['entry_status_refunded_text'] = 'De bestelling moet zijn geleverd/binnengekomen voor creditering.';
+
 $_['entry_geo_zone']     = 'Geo zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Soort order:';

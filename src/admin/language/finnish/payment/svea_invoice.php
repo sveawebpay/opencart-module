@@ -9,7 +9,14 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/finnish/svea_invoi
 
 // Entry
 $_['entry_order_status']      = 'Tilauksen tila:';
-$_['entry_order_status_text'] = 'Tilauksen tila luotu mutta ei toimitettu. Laskun toimitus suoritetaan Svean adminissä.';
+$_['entry_status_order'] = 'Luotu:';
+$_['entry_status_canceled'] = 'Poistettu/Peruutettu:';
+$_['entry_status_canceled_text'] = 'Voidaan tehdä ennen kuin tilaus on toimitettu/lunastettu.';
+$_['entry_status_delivered'] = 'Toimitettu:';
+$_['entry_status_delivered_text'] = 'Toimittaa luodun tilauksen.';
+$_['entry_status_refunded'] = 'Hyvitetty:';
+$_['entry_status_refunded_text'] = 'Tilaus pitää olla toimitettu/lunastettu ennen hyvitystä.';
+
 $_['entry_geo_zone']          = 'Maa:';
 $_['entry_status']            = 'Tila:';
 $_['entry_sort_order']        = 'Lajittelujärjestys:';

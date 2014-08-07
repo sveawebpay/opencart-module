@@ -8,7 +8,18 @@ $_['text_success']       = 'Modifiering av Sveas Kortbetalningsmodul lyckades!';
 $_['text_svea_card']     = '<img src="view/image/payment/swedish/svea_card.png" alt="Svea Kortbetalning" title="SVEA Kortbetalning" />';
 
 // Entry
+
 $_['entry_order_status'] = 'Orderstatus:';
+$_['entry_status_order'] = 'Skapad:';
+$_['entry_status_canceled'] = 'Makulerad/annulerad:';
+$_['entry_status_canceled_text'] = 'Kan göras innan ordern är levererad/inlöst.';
+$_['entry_status_delivered'] = 'Levererad:';
+$_['entry_status_delivered_text'] = 'Levererar en skapad order.';
+$_['entry_status_confirmed'] = 'Godkänd:';
+$_['entry_status_confirmed_text'] = 'Manuellt godkänna betalning.';
+$_['entry_status_refunded'] = 'Krediterad:';
+$_['entry_status_refunded_text'] = 'Ordern måste vara levererad/inlöst innan den krediteras.';
+
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';

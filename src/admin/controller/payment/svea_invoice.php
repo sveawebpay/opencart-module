@@ -3,35 +3,43 @@ class ControllerPaymentsveainvoice extends Controller {
 	private $error = array();
 	 //
 	public function index() {
-		$this->load->language('payment/svea_invoice');
+        $this->load->language('payment/svea_invoice');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('setting/setting');
+        $this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
-			$this->model_setting_setting->editSetting('svea_invoice', $this->request->post);
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+                $this->model_setting_setting->editSetting('svea_invoice', $this->request->post);
 
-			$this->session->data['success'] = $this->language->get('text_success');
+                $this->session->data['success'] = $this->language->get('text_success');
 
-			$this->redirect(HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token']);
-		}
+                $this->redirect(HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token']);
+        }
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
+        $this->data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['text_enabled']       = $this->language->get('text_enabled');
-		$this->data['text_disabled']      = $this->language->get('text_disabled');
-		$this->data['text_all_zones']     = $this->language->get('text_all_zones');
-		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
-		$this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
-                $this->data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
-		$this->data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
-		$this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
-		$this->data['entry_status']       = $this->language->get('entry_status');
-		$this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
-		$this->data['button_save']        = $this->language->get('button_save');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-		$this->data['tab_general']        = $this->language->get('tab_general');
+        $this->data['text_enabled']       = $this->language->get('text_enabled');
+        $this->data['text_disabled']      = $this->language->get('text_disabled');
+        $this->data['text_all_zones']     = $this->language->get('text_all_zones');
+        //order status
+        $this->data['entry_order_status'] = $this->language->get('entry_order_status');
+        $this->data['entry_status_order'] = $this->language->get('entry_status_order');
+        $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
+        $this->data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
+        $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
+        $this->data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
+        $this->data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
+        $this->data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
+
+        $this->data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
+        $this->data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
+        $this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
+        $this->data['entry_status']       = $this->language->get('entry_status');
+        $this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
+        $this->data['button_save']        = $this->language->get('button_save');
+        $this->data['button_cancel']      = $this->language->get('button_cancel');
+        $this->data['tab_general']        = $this->language->get('tab_general');
         //Credentials
         $this->data['entry_username']      = $this->language->get('entry_username');
         $this->data['entry_password']      = $this->language->get('entry_password');
@@ -105,23 +113,11 @@ class ControllerPaymentsveainvoice extends Controller {
 		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_invoice&token=' . $this->session->data['token'];
 		$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
 
-                //order status
-		if (isset($this->request->post['svea_invoice_order_status_id'])) {
-			$this->data['svea_invoice_order_status_id'] = $this->request->post['svea_invoice_order_status_id'];
-		} else {
-			$this->data['svea_invoice_order_status_id'] = $this->config->get('svea_invoice_order_status_id');
-		}
-                //autodeliver order status
-		if (isset($this->request->post['svea_invoice_auto_deliver_status_id'])) {
-			$this->data['svea_invoice_auto_deliver_status_id'] = $this->request->post['svea_invoice_auto_deliver_status_id'];
-		} else {
-			$this->data['svea_invoice_auto_deliver_status_id'] = $this->config->get('svea_invoice_auto_deliver_status_id');
-		}
                 //invoice distribution type
 		if (isset($this->request->post['svea_invoice_distribution_type'])) {
 			$this->data['svea_invoice_distribution_type'] = $this->request->post['svea_invoice_distribution_type'];
 		} else {
-			$this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_auto_deliver_status_id');
+			$this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_distribution_type');
 		}
 
                  //shipping billing
@@ -143,9 +139,7 @@ class ControllerPaymentsveainvoice extends Controller {
 			$this->data['svea_invoice_product_price_min'] = $this->config->get('svea_invoice_product_price_min');
 		}
 
-		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
                 //geozone
 		if (isset($this->request->post['svea_invoice_geo_zone_id'])) {
 			$this->data['svea_invoice_geo_zone_id'] = $this->request->post['svea_invoice_geo_zone_id'];
@@ -182,18 +176,44 @@ class ControllerPaymentsveainvoice extends Controller {
         //Distribution type
         if (isset($this->request->post['svea_invoice_distribution_type'])) {
 	       $this->data['svea_invoice_distribution_type'] = $this->request->post['svea_invoice_distribution_type'];
-		} else {
-			$this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_distribution_type');
-		}
+        } else {
+                $this->data['svea_invoice_distribution_type'] = $this->config->get('svea_invoice_distribution_type');
+        }
 
-		$this->template = 'payment/svea_invoice.tpl';
-		$this->children = array(
-			'common/header',
-			'common/footer'
-		);
+        //statuses
+        $this->load->model('localisation/order_status');
+        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        if (isset($this->request->post['svea_invoice_order_status_id'])) {
+                $this->data['svea_invoice_order_status_id'] = $this->request->post['svea_invoice_order_status_id'];
+        } else {
+                $this->data['svea_invoice_order_status_id'] = $this->config->get('svea_invoice_order_status_id');
+        }
+        if (isset($this->request->post['svea_invoice_canceled_status_id'])) {
+            $this->data['svea_invoice_canceled_status_id'] = $this->request->post['svea_invoice_canceled_status_id'];
+        } else {
+            $this->data['svea_invoice_canceled_status_id'] = $this->config->get('svea_invoice_canceled_status_id');
+        }
+        if (isset($this->request->post['svea_invoice_refunded_status_id'])) {
+            $this->data['svea_invoice_refunded_status_id'] = $this->request->post['svea_invoice_refunded_status_id'];
+        } else {
+            $this->data['svea_invoice_refunded_status_id'] = $this->config->get('svea_invoice_refunded_status_id');
+        }
+        if (isset($this->request->post['svea_invoice_deliver_status_id'])) {
+                $this->data['svea_invoice_deliver_status_id'] = $this->request->post['svea_invoice_deliver_status_id'];
+        } else {
+                $this->data['svea_invoice_deliver_status_id'] = $this->config->get('svea_invoice_deliver_status_id');
+        }
 
-		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+
+        $this->template = 'payment/svea_invoice.tpl';
+        $this->children = array(
+                'common/header',
+                'common/footer'
+        );
+
+        $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
 	}
+
 
 
 	private function validate() {
