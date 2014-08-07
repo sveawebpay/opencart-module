@@ -11,7 +11,7 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/german/svea_invoic
 $_['entry_order_status']      = 'Orderstatus:';
 $_['entry_status_order'] = 'Created:';
 $_['entry_status_canceled'] = 'Cancelled/Annulled:';
-$_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/confirmed.';
+$_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/captured.';
 $_['entry_status_delivered'] = 'Delivered:';
 $_['entry_status_delivered_text'] = 'Delivers a created order.';
 $_['entry_status_refunded'] = 'Credited:';

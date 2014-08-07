@@ -11,7 +11,7 @@ $_['text_svea_invoice']     = '<img src="view/image/payment/swedish/svea_invoice
 $_['entry_order_status'] = 'Orderstatus:';
 $_['entry_status_order'] = 'Skapad:';
 $_['entry_status_canceled'] = 'Makulerad/annulerad:';
-$_['entry_status_canceled_text'] = 'Kan göras innan ordern är levererad/godkänd.';
+$_['entry_status_canceled_text'] = 'Kan göras innan ordern är levererad/inlöst.';
 $_['entry_status_delivered'] = 'Levererad:';
 $_['entry_status_delivered_text'] = 'Levererar en skapad order.';
 $_['entry_status_refunded'] = 'Krediterad:';

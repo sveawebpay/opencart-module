@@ -11,7 +11,7 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/danish/svea_invoic
 $_['entry_order_status']      = 'Ordrerstatus:';
 $_['entry_status_order'] = 'Oprettet:';
 $_['entry_status_canceled'] = 'Aflyst/Annulleret:';
-$_['entry_status_canceled_text'] = 'Kan tilføres på ordren inden levering/godkend.';
+$_['entry_status_canceled_text'] = 'Kan tilføres på ordren inden levering/indløst.';
 $_['entry_status_delivered'] = 'Leveret:';
 $_['entry_status_delivered_text'] = 'Leverer en oprettet ordre.';
 $_['entry_status_refunded'] = 'Krediteret:';

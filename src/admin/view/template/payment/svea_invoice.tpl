@@ -52,7 +52,7 @@
                     <tr>
                         <td><?php echo $entry_order_status; ?><!--<span class="help"><?php echo $entry_order_status_text ?></span>--></td>
                         <td>
-                            <span><?php echo $entry_status_order; ?></span>
+                            <div><?php echo $entry_status_order; ?></div>
                             <select name="svea_invoice_order_status_id">
                                 <?php foreach ($order_statuses as $order_status) { ?>
                                 <?php if ($order_status['order_status_id'] == $svea_invoice_order_status_id) { ?>

@@ -274,9 +274,11 @@ class ControllerPaymentsveainvoice extends Controller {
                 if($deliverObj->accepted == 1){
                     $response = array("success" => true);
                     //update order status for delivered
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea InvoiceId: ".$deliverObj->invoiceId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_invoice_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea InvoiceId: " . $deliverObj->invoiceId . "', date_added = NOW()");                }
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_invoice_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea InvoiceId: " . $deliverObj->invoiceId . "', date_added = NOW()");
+
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
+                }
                 //if not, send error codes
                 else {
                     $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));

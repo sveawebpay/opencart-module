@@ -11,7 +11,7 @@ $_['text_svea_partpayment']   = '<img src="view/image/payment/finnish/svea_partp
 $_['entry_order_status'] = 'Tilauksen tila:';
 $_['entry_status_order'] = 'Luotu:';
 $_['entry_status_canceled'] = 'Poistettu/Peruutettu:';
-$_['entry_status_canceled_text'] = 'Voidaan tehdä ennen kuin tilaus on toimitettu/vahvistettu.';
+$_['entry_status_canceled_text'] = 'Voidaan tehdä ennen kuin tilaus on toimitettu/lunastettu.';
 $_['entry_status_delivered'] = 'Toimitettu:';
 $_['entry_status_delivered_text'] = 'Toimittaa luodun tilauksen.';
 
