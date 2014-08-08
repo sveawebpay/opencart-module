@@ -32,10 +32,18 @@ class ControllerPaymentsveadirectbank extends Controller {
 
        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-        $svea = WebPay::getPaymentMethods($conf);
-        $this->data['sveaMethods'] = $svea
+        try {
+            $svea = WebPay::getPaymentMethods($conf);
+            $this->data['sveaMethods'] = $svea
             ->setContryCode($order_info['payment_iso_code_2'])
             ->doRequest();
+        } catch (Exception $e) {
+            $this->log->write($e->getMessage());
+            $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+            echo '<div class="attention">Svea '.$this->responseCodes(0,$e->getMessage()).'</div>';
+            exit();
+        }
+
 
         $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
