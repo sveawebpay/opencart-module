@@ -20,6 +20,9 @@ If you experience technical issues with this module, or if you have feature sugg
 For release history, see [**github release tags**](https://github.com/sveawebpay/opencart-module/releases)
 
 #Installation instructions
+If you are upgrading from a previous version of the Svea module follow these steps:
+* Uninstall the old module.
+* 
 
 ##Basic installation example using the Svea Invoice payment method
 
@@ -31,7 +34,8 @@ ensure that the module works properly.
 
 ### Install the OpenCart SveaWebPay module files
 
-* Download or clone the contents of [this repository from github](https://github.com/sveawebpay/opencart-module).
+* Download or clone the contents of [this repository from github](https://github.com/sveawebpay/opencart-module), and unzip to a local folder.
+* If you are upgrading from a previous version of the Svea module, uninstall the old module.
 * Copy the contents of the src folder to your OpenCart root folder.
 * Make sure to merge the files and folders from the module with the ones in your OpenCart installation (no files should be overwritten).
 
