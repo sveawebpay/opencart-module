@@ -282,22 +282,14 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         $result = array();
         if ($this->config->get('svea_partpayment_testmode_' . $countryCode) !== NULL) {
-            $sveaConf = ($this->config->get('svea_partpayment_testmode_' . $countryCode) == "1") ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+            $svea = $this->model_payment_svea_partpayment->getPaymentPlanParams($countryCode);
         } else {
             $result = array("error" => $this->responseCodes(40001, "The country is not supported for this paymentmethod"));
             return $result;
         }
-        $svea = WebPay::getPaymentPlanParams($sveaConf);
-        try {
-            $svea = $svea->setCountryCode($countryCode)
-                    ->doRequest();
-        } catch (Exception $e) {
-            $this->log->write($e->getMessage());
-            $result[] = array("error" => $e->getMessage());
-        }
 
-       if ($svea->accepted != TRUE) {
-            $result = array("error" => $svea->errormessage);
+       if (sizeof($svea) < 1) {
+            $result = array("error" => 'Svea error: '.$this->language->get('response_27000'));
         } else {
             $currency = floatval(VERSION) >= 1.5 ? $order['currency_code'] : $order['currency'];
             $this->load->model('localisation/currency');
@@ -305,7 +297,11 @@ class ControllerPaymentsveapartpayment extends Controller {
             $decimals = "";
             foreach ($currencies as $key => $val) {
                 if ($key == $currency) {
-                    $decimals = intval($val['decimal_place']);
+                    if($key == 'EUR'){
+                        $decimals = 2;
+                    }  else {
+                        $decimals = 0;
+                    }
                 }
             }
             $formattedPrice = round($this->currency->format(($order['total']), '', false, false), 2);
