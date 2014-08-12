@@ -9,15 +9,15 @@ $_['text_svea_card']     = '<img src="view/image/payment/german/svea_card.png" a
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
-$_['entry_status_order'] = 'Created:';
-$_['entry_status_canceled'] = 'Cancelled/Annulled:';
-$_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/captured.';
-$_['entry_status_delivered'] = 'Delivered:';
-$_['entry_status_delivered_text'] = 'Delivers a created order.';
-$_['entry_status_refunded'] = 'Credited:';
-$_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
-$_['entry_status_confirmed'] = 'Confirm:';
-$_['entry_status_confirmed_text'] = 'Manually confirms payment.';
+$_['entry_status_order'] = 'Registriert:';
+$_['entry_status_canceled'] = 'Makuliert/ annuliert:';
+$_['entry_status_canceled_text'] = 'Ist möglich, bevor die Bestellung geliefert/ eingelöst ist.';
+$_['entry_status_delivered'] = 'Geliefert:';
+$_['entry_status_delivered_text'] = 'Liefert eine registrierte Bestellung.';
+$_['entry_status_refunded'] = 'Kreditiert:';
+$_['entry_status_refunded_text'] = 'Gilt für gelieferte Bestellungen.';
+$_['entry_status_confirmed'] = 'Bestätigt:';
+$_['entry_status_confirmed_text'] = 'Manuell bestätigt Zahlung.';
 
 $_['entry_geo_zone']     = 'Geographische Zone:';
 $_['entry_status']       = 'Status:';

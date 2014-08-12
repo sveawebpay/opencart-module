@@ -21,8 +21,8 @@ $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';
 $_['entry_payment_description']   = 'Beskrivning i kassan:';
-$_['entry_shipping_billing']   = 'Shipping same as billing:';
-$_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
+$_['entry_shipping_billing']   = 'Frakt samma som fakturering:';
+$_['entry_shipping_billing_text']   = 'När vi hämtar adress i kassan skriver vi alltid över fakturaadressen. Den här inställningen skriver över även fraktadressen. Viktigt! Inställt på Ja om det inte står något annat i ert Kontrakt med Svea:';
 
 $_['entry_username']     = 'Användarnamn:';
 $_['entry_password']     = 'Lösenord:';

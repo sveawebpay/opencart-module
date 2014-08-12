@@ -9,8 +9,8 @@ $_['text_svea_directbank']  = '<img src="view/image/payment/german/svea_directba
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
-$_['entry_status_refunded'] = 'Credited:';
-$_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
+$_['entry_status_refunded'] = 'Kreditiert:';
+$_['entry_status_refunded_text'] = 'Gilt für gelieferte Bestellungen.';
 
 $_['entry_geo_zone']     = 'Geographische Zone:';
 $_['entry_status']       = 'Status:';
