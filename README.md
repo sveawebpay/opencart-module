@@ -22,7 +22,7 @@ For release history, see [**github release tags**](https://github.com/sveawebpay
 #Installation instructions
 If you are upgrading from a previous version of the Svea module follow these steps:
 * Uninstall the old module.
-* 
+*
 
 ##Basic installation example using the Svea Invoice payment method
 
@@ -52,6 +52,7 @@ The various Svea payment modules are located under Extensions/Payments in the Op
 * Click the _install_ link of the payment method you want to install. For now, select install the Svea Invoice payment method.
 * Then select _edit_ next to the now installed payment method. You will now see a view with various payment method settings.
 * Set _geo zone_ and _sort order_ according to your preferences.
+* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
 * Set the fields _status_ and _testmode_ to _enabled_.
 * Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for invoice are Deliver, Credit and Cancel order.
 * _Shipping same as billing_ determines whether to use the svea billing address for both shipping and billing. It will ignore if customer tries to change the shipping address. Should be set to _yes_ if your contract with Svea does not tell otherwise.
@@ -93,6 +94,7 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * In OpenCart admin panel, browse to _extensions -> payments_.
 * Locate _Svea part payment_ in the list, choose _install_ and then _edit_:
 * Set _geo zone_ and _sort order_ according to your preferences.
+* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
 * Set _testmode_ and _status_ to enabled.
 * Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Payment Plan are Deliver and Cancel order.
 * _Shipping same as billing_ determines whether to use the svea billing address for both shipping and billing. It will ignore if customer tries to change the shipping address. Should be set to _yes_ if your contract with Svea does not tell otherwise.
@@ -109,6 +111,7 @@ Module supports one Svea merchant id per Opencart installation.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
 * Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Card are Deliver, Credit and Cancel order.
 * Set _geo zone_ and _sort order_ according to your preferences.
+* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
 * Set _testmode_ and _status_ to enabled.
 * Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
@@ -120,6 +123,7 @@ Module supports one Svea merchant id per Opencart installation.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
 * Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Direct Bank is Credit order.
 * Set _geo zone_ and _sort order_ according to your preferences.
+* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout. 
 * Set _testmode_ and _status_ to enabled.
 * Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
