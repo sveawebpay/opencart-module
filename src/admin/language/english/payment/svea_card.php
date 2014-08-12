@@ -22,6 +22,7 @@ $_['entry_status_confirmed_text'] = 'Manually confirms payment.';
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sort Order:';
+$_['entry_payment_description']   = 'Description in checkout:';
 $_['entry_merchant_id']  = 'Merchant id';
 $_['entry_testmode']     = 'Testmode';
 $_['entry_sw']           = 'Secret word';

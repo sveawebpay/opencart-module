@@ -22,6 +22,7 @@ $_['entry_status_confirmed_text'] = 'Handmatig bevestigde betaling .';
 $_['entry_geo_zone']     = 'Geo zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Soort order:';
+$_['entry_payment_description']   = 'Beschrijving in de kassa:';
 $_['entry_merchant_id']  = 'Winkelier id';
 $_['entry_testmode']     = 'Testmodus';
 $_['entry_sw']           = 'Geheime woord';

@@ -77,6 +77,11 @@
                 <td><input type="text" name="svea_directbank_sort_order" value="<?php echo $svea_directbank_sort_order; ?>" size="1" /></td>
             </tr>
             <tr>
+                <td><?php echo $entry_payment_description; ?></td>
+                <td><textarea rows="2" cols="30" name="svea_directbank_payment_description"><?php echo $svea_directbank_payment_description; ?></textarea></td>
+            </tr>
+
+            <tr>
                 <td><?php echo $entry_testmode; ?>:</td>
                 <td><select name="svea_directbank_testmode">
                         <option value="1" <?php if($svea_directbank_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>

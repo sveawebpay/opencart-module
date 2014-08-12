@@ -22,6 +22,7 @@ $_['entry_status_confirmed_text'] = 'Godkend betalingen manuelt.';
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsorden:';
+$_['entry_payment_description']   = 'Beskrivelse i kassen:';
 $_['entry_merchant_id']  = 'ButiksID';
 $_['entry_testmode']     = 'Testmode';
 $_['entry_sw']           = 'Hemmeligt ord';

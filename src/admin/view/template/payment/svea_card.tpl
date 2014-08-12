@@ -59,6 +59,11 @@
                     <td><?php echo $entry_sort_order; ?></td>
                     <td><input type="text" name="svea_card_sort_order" value="<?php echo $svea_card_sort_order; ?>" size="1" /></td>
                 </tr>
+                <tr>
+                    <td><?php echo $entry_payment_description; ?></td>
+                    <td><textarea rows="2" cols="30" name="svea_card_payment_description"><?php echo $svea_card_payment_description; ?></textarea></td>
+                </tr>
+
                 <!-- order statuses -->
                  <tr>
                     <td><?php echo $entry_order_status; ?></td>

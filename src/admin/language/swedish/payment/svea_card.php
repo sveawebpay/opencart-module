@@ -23,6 +23,7 @@ $_['entry_status_refunded_text'] = 'Ordern måste vara levererad/inlöst innan d
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';
+$_['entry_payment_description']   = 'Beskrivning i kassan:';
 $_['entry_merchant_id']  = 'Butiks id:';
 $_['entry_testmode']     = 'Testläge:';
 $_['entry_sw']           = 'Hemligt ord:';

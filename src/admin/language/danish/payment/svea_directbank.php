@@ -15,6 +15,7 @@ $_['entry_status_refunded_text'] = 'Ordren skal være leveret/indløst inden den
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsorden:';
+$_['entry_payment_description']   = 'Beskrivelse i kassen:';
 $_['entry_merchant_id']  = 'ButiksID';
 $_['entry_testmode']     = 'Testmode';
 $_['entry_sw']           = 'Hemmeligt ord';

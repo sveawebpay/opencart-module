@@ -7,13 +7,12 @@ class ControllerPaymentsveacard extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/setting');
-
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
 
-            //Remove whitespace  from input
+            //Remove whitespace  from input, outcommented cause do not filter correct
             $inputArray = array();
             foreach($this->request->post as $k => $i){
-                $inputArray[$k] = str_replace(" ","",$i);
+                $inputArray[$k] = $i;//($k == 'svea_card_sw_test' || 'svea_card_sw_prod') ? str_replace(" ","",$i) : $i;
             }
 
             //Save all settings
@@ -40,6 +39,7 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
         $this->data['entry_status']       = $this->language->get('entry_status');
         $this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
+        $this->data['entry_payment_description']   = $this->language->get('entry_payment_description');
 
         $this->data['button_save']        = $this->language->get('button_save');
         $this->data['button_cancel']      = $this->language->get('button_cancel');
@@ -142,6 +142,12 @@ class ControllerPaymentsveacard extends Controller {
                 $this->data['svea_card_sort_order'] = $this->request->post['svea_card_sort_order'];
         } else {
                 $this->data['svea_card_sort_order'] = $this->config->get('svea_card_sort_order');
+        }
+                //payment info
+        if (isset($this->request->post['svea_card_payment_description'])) {
+                $this->data['svea_card_payment_description'] = $this->request->post['svea_card_payment_description'];
+        } else {
+                $this->data['svea_card_payment_description'] = $this->config->get('svea_card_payment_description');
         }
 
         if (isset($this->request->post['svea_card_testmode'])) {

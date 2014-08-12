@@ -15,6 +15,7 @@ $_['entry_status_refunded_text'] = 'Tilaus pitää olla toimitettu/lunastettu en
 $_['entry_geo_zone']     = 'Maa:';
 $_['entry_status']       = 'Tila:';
 $_['entry_sort_order']   = 'Lajittelujärjestys:';
+$_['entry_payment_description']   = 'Kuvaus kassalle:';
 $_['entry_merchant_id']  = 'Kaupan id';
 $_['entry_testmode']     = 'Testitila';
 $_['entry_sw']           = 'Salasana';

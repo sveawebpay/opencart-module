@@ -36,6 +36,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+                $this->data['entry_payment_description']   = $this->language->get('entry_payment_description');
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 		$this->data['tab_general'] = $this->language->get('tab_general');
@@ -129,6 +130,12 @@ class ControllerPaymentsveapartpayment extends Controller {
 			$this->data['svea_partpayment_sort_order'] = $this->request->post['svea_partpayment_sort_order'];
 		} else {
 			$this->data['svea_partpayment_sort_order'] = $this->config->get('svea_partpayment_sort_order');
+		}
+                   //payment info
+		if (isset($this->request->post['svea_partpayment_payment_description'])) {
+			$this->data['svea_partpayment_payment_description'] = $this->request->post['svea_partpayment_payment_description'];
+		} else {
+			$this->data['svea_partpayment_payment_description'] = $this->config->get('svea_partpayment_payment_description');
 		}
                 //auto deliver
                 if (isset($this->request->post['svea_partpayment_auto_deliver'])) {

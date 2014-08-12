@@ -15,6 +15,10 @@ $_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/captured
 $_['entry_status_delivered'] = 'Delivered:';
 $_['entry_status_delivered_text'] = 'Delivers a created order.';
 
+$_['entry_geo_zone']     = 'Geozone:';
+$_['entry_status']       = 'Status:';
+$_['entry_sort_order']   = 'Sortierreihenfolge:';
+$_['entry_payment_description']   = 'Beschreibung in der Kasse:';
 $_['entry_shipping_billing']   = 'Shipping same as billing:';
 $_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
 

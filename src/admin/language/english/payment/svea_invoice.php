@@ -23,7 +23,7 @@ $_['entry_order_status_text'] = 'Orderstatus for created order but not delivered
 $_['entry_geo_zone']          = 'Geo Zone:';
 $_['entry_status']            = 'Status:';
 $_['entry_sort_order']        = 'Sort Order:';
-
+$_['entry_payment_description']   = 'Description in checkout:';
 $_['entry_shipping_billing']   = 'Shipping same as billing:';
 $_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
 
