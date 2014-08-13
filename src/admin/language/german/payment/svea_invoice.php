@@ -22,8 +22,10 @@ $_['entry_status']            = 'Status:';
 $_['entry_sort_order']        = 'Sortierungsordnung:';
 $_['entry_payment_description']   = 'Beschreibung in der Kasse:';
 
-$_['entry_shipping_billing']   = 'Shipping same as billing:';
-$_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
+$_['entry_shipping_billing']   = 'Lieferungsadresse gleich Rechnungsadresse:';
+$_['entry_shipping_billing_text']   = 'Wenn wir die Adresse in der Kasse aufrufen, überschreiben wir immer die Rechnungsadresse.
+									Diese Einstellung überschreibt ebenso die Lieferungsadresse. Wichtig! Setzten Sie die Einstellung auf ja,
+									Wenn in Ihrem Vertrag mit Svea nichts Anderes steht:';
 
 
 $_['entry_username']          = 'Anwendername:';
