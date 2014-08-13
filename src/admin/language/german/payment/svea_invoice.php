@@ -9,13 +9,23 @@ $_['text_svea_invoice']       = '<img src="view/image/payment/german/svea_invoic
 
 // Entry
 $_['entry_order_status']      = 'Orderstatus:';
-$_['entry_order_status_text'] = 'Orderstatus für erstellte aber nichtgelieferte. Lieferung der Rechnung wird in Sveas Admin gemacht.';
+$_['entry_status_order'] = 'Registriert:';
+$_['entry_status_canceled'] = 'Makuliert/ annuliert:';
+$_['entry_status_canceled_text'] = 'Ist möglich, bevor die Bestellung geliefert/ eingelöst ist.';
+$_['entry_status_delivered'] = 'Geliefert:';
+$_['entry_status_delivered_text'] = 'Liefert eine registrierte Bestellung.';
+$_['entry_status_refunded'] = 'Kreditiert:';
+$_['entry_status_refunded_text'] = 'Gilt für gelieferte Bestellungen.';
+
 $_['entry_geo_zone']          = 'Geographische Zone:';
 $_['entry_status']            = 'Status:';
 $_['entry_sort_order']        = 'Sortierungsordnung:';
+$_['entry_payment_description']   = 'Beschreibung in der Kasse:';
 
-$_['entry_shipping_billing']   = 'Shipping same as billing:';
-$_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
+$_['entry_shipping_billing']   = 'Lieferungsadresse gleich Rechnungsadresse:';
+$_['entry_shipping_billing_text']   = 'Wenn wir die Adresse in der Kasse aufrufen, überschreiben wir immer die Rechnungsadresse.
+									Diese Einstellung überschreibt ebenso die Lieferungsadresse. Wichtig! Setzten Sie die Einstellung auf ja,
+									Wenn in Ihrem Vertrag mit Svea nichts Anderes steht:';
 
 
 $_['entry_username']          = 'Anwendername:';

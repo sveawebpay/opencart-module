@@ -4,20 +4,20 @@ class ModelTotalSveafee extends Model {
 
     /**
      * getTotal is triggered to get our contribution to the cart order_total and globals total & taxes
-     * 
+     *
      * @param type $total_data
      * @param type $total
      * @param type $taxes
      * @return type
      */
     public function getTotal(&$total_data, &$total, &$taxes) {
-              
+
         // svea_fee applicable?
         if( ($this->cart->getSubTotal() > 0) && // only checks for lower limit
             isset($this->session->data['payment_method']['code']) && ($this->session->data['payment_method']['code'] == 'svea_invoice') )
-        {            
+        {
                 // get country from session data
-                $this->load->model('localisation/country');	
+                $this->load->model('localisation/country');
                 $country_info = $this->model_localisation_country->getCountry($this->session->data['payment_country_id']);
 
                 // get svea_fee config settings for country
@@ -30,9 +30,9 @@ class ModelTotalSveafee extends Model {
                 if ( $svea_fee_status == false) {
                     return;
                 }
-            
+
             $this->load->language('total/svea_fee');
-                
+
             // add our svea_fee total to the rest of the totals
             $total_data[] = array(
                 'code' => 'svea_fee',
@@ -43,8 +43,8 @@ class ModelTotalSveafee extends Model {
             );
 
             // calculate tax, add tax and fee to globals total, taxes
-            if ($svea_fee_tax_class_id) {
-                
+            if (isset($svea_fee_tax_class_id)) {
+
                 if (floatval(VERSION) >= 1.5)
                 {
                     $tax_rates = $this->tax->getRates($svea_fee_fee, $svea_fee_tax_class_id);
@@ -58,8 +58,8 @@ class ModelTotalSveafee extends Model {
                     }
 
                     $total += $svea_fee_fee;
-                } 
-                else // OpenCart <1.5 
+                }
+                else // OpenCart <1.5
                 {
                     $tax_rates = $this->tax->getRate($svea_fee_tax_class_id);
 

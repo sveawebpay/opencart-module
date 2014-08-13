@@ -9,9 +9,13 @@ $_['text_svea_directbank']  = '<img src="view/image/payment/danish/svea_directba
 
 // Entry
 $_['entry_order_status'] = 'Ordrestatus:';
+$_['entry_status_refunded'] = 'Krediteret:';
+$_['entry_status_refunded_text'] = 'Ordren skal være leveret/indløst inden den krediteres.';
+
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsorden:';
+$_['entry_payment_description']   = 'Beskrivelse i kassen:';
 $_['entry_merchant_id']  = 'ButiksID';
 $_['entry_testmode']     = 'Testmode';
 $_['entry_sw']           = 'Hemmeligt ord';

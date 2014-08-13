@@ -1,10 +1,10 @@
 {
     "module_name": "Opencart",
-    "module_version": "2.5.2",
+    "module_version": "2.6.0",
     "module_shop_version_support": [
         "1.4.9",
         " - ",
-		"1.5.6"
+        "1.5.6"
     ],
     "invoice_paymentplan": {
         "invoice": [
@@ -61,13 +61,13 @@
 				"module_admin"
 			],
 			"deliver_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			],
 			"close_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			],
 			"credit_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			]
 		},
 		"paymentplan": {
@@ -75,26 +75,26 @@
 				"module_admin"
 			],
 			"deliver_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			],
 			"close_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			]
 		},
 	"card": {
 			"deliver_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			],
 			"close_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			],
 			"credit_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			]
 		},
 	"direct": {
 			"credit_order": [
-				"svea_admin"
+				"svea_admin","module_admin"
 			]
 		}
 	}

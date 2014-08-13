@@ -9,9 +9,13 @@ $_['text_svea_directbank']  = '<img src="view/image/payment/german/svea_directba
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
+$_['entry_status_refunded'] = 'Kreditiert:';
+$_['entry_status_refunded_text'] = 'Gilt für gelieferte Bestellungen.';
+
 $_['entry_geo_zone']     = 'Geographische Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sortierungsordnung:';
+$_['entry_payment_description']   = 'Beschreibung in der Kasse:';
 $_['entry_merchant_id']  = 'Händlers ID';
 $_['entry_testmode']     = 'Testmode';
 $_['entry_sw']           = 'eheimnis Wort';

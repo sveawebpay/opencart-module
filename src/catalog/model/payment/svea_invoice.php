@@ -23,7 +23,7 @@ class ModelPaymentsveainvoice extends Model {
             $method_data = array(
                                 'id'         => 'svea_invoice',
                                 'code'         => 'svea_invoice',
-                                'title'      => $this->language->get('text_title'),
+                                'title'      => $this->language->get('text_title') . ' ' . $this->config->get('svea_invoice_payment_description'),
                                 'sort_order' => $this->config->get('svea_invoice_sort_order')
                                 );
         }

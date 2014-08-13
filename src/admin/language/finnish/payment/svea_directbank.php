@@ -9,9 +9,13 @@ $_['text_svea_directbank']  = '<img src="view/image/payment/finnish/svea_directb
 
 // Entry
 $_['entry_order_status'] = 'Tilauksen tila:';
+$_['entry_status_refunded'] = 'Hyvitetty:';
+$_['entry_status_refunded_text'] = 'Tilaus pitää olla toimitettu/lunastettu ennen hyvitystä.';
+
 $_['entry_geo_zone']     = 'Maa:';
 $_['entry_status']       = 'Tila:';
 $_['entry_sort_order']   = 'Lajittelujärjestys:';
+$_['entry_payment_description']   = 'Kuvaus kassalle:';
 $_['entry_merchant_id']  = 'Kaupan id';
 $_['entry_testmode']     = 'Testitila';
 $_['entry_sw']           = 'Salasana';

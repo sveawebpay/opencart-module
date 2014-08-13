@@ -9,12 +9,20 @@ $_['text_svea_invoice']     = '<img src="view/image/payment/swedish/svea_invoice
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
-$_['entry_order_status_text'] = 'Orderstatus för skapad men ej levererad. Leverans av fakturan görs från Sveas admin.';
+$_['entry_status_order'] = 'Skapad:';
+$_['entry_status_canceled'] = 'Makulerad/annulerad:';
+$_['entry_status_canceled_text'] = 'Kan göras innan ordern är levererad/inlöst.';
+$_['entry_status_delivered'] = 'Levererad:';
+$_['entry_status_delivered_text'] = 'Levererar en skapad order.';
+$_['entry_status_refunded'] = 'Krediterad:';
+$_['entry_status_refunded_text'] = 'Ordern måste vara levererad/inlöst innan den krediteras.';
+
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';
-$_['entry_shipping_billing']   = 'Shipping same as billing:';
-$_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
+$_['entry_payment_description']   = 'Beskrivning i kassan:';
+$_['entry_shipping_billing']   = 'Frakt samma som fakturering:';
+$_['entry_shipping_billing_text']   = 'När vi hämtar adress i kassan skriver vi alltid över fakturaadressen. Den här inställningen skriver över även fraktadressen. Viktigt! Inställt på Ja om det inte står något annat i ert Kontrakt med Svea:';
 
 $_['entry_username']     = 'Användarnamn:';
 $_['entry_password']     = 'Lösenord:';

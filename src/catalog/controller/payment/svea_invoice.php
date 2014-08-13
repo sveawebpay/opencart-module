@@ -78,7 +78,6 @@ class ControllerPaymentsveainvoice extends Controller {
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
-
         //Testmode
         if($this->config->get('svea_invoice_testmode_'.$countryCode) !== NULL){
             $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" )
@@ -164,10 +163,10 @@ class ControllerPaymentsveainvoice extends Controller {
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
-            
+
             // set customer reference to stored customer firstname + lastname, from before getaddresses
             $svea = $svea->setCustomerReference($this->session->data['svea_reference']);
-            
+
         }
         else {  // private customer
 
@@ -218,13 +217,13 @@ class ControllerPaymentsveainvoice extends Controller {
             // if set to enforce shipping = billing, fetch billing address
             if($this->config->get('svea_invoice_shipping_billing') == '1') {
                 $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
-            }            
+            }
             $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
 
             $response = array();
 
             //If Auto deliver order is set, DeliverOrder
-            if($this->config->get('svea_invoice_auto_deliver') == 1) {
+            if($this->config->get('svea_invoice_auto_deliver') === '1') {
                 $deliverObj = WebPay::deliverOrder($conf);
                 //Product rows
                 $deliverObj = $this->formatOrderRows($deliverObj, $products,$currencyValue);
@@ -275,7 +274,10 @@ class ControllerPaymentsveainvoice extends Controller {
                 if($deliverObj->accepted == 1){
                     $response = array("success" => true);
                     //update order status for delivered
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_auto_deliver_status_id'));
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea InvoiceId: ".$deliverObj->invoiceId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_invoice_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea InvoiceId: " . $deliverObj->invoiceId . "', date_added = NOW()");
+
+                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
                 }
                 //if not, send error codes
                 else {
@@ -285,9 +287,9 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             //if auto deliver not set, send true to view
             else {
-               $response = array("success" => true);
-               //update order status for created
-               $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'));
+                $response = array("success" => true);
+                //update order status for created
+                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'),'Svea order id '. $svea->sveaOrderId);
             }
 
         // not accepted, send errors to view
@@ -306,9 +308,9 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-        // store customer firstname + lastname in session as svea_reference 
+        // store customer firstname + lastname in session as svea_reference
         $this->session->data['svea_reference'] = $order['payment_firstname'] ." ". $order['payment_lastname'];
-                        
+
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
         $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' )
@@ -336,8 +338,7 @@ class ControllerPaymentsveainvoice extends Controller {
         }
 
         $result = array();
-
-        if (isset($svea->errormessage)) {
+        if ($svea->accepted != TRUE) {
             $result = array("error" => $svea->errormessage);
         }
         else {
@@ -353,7 +354,6 @@ class ControllerPaymentsveainvoice extends Controller {
                                     "addressSelector" => $ci->addressSelector);
             }
         }
-
         echo json_encode($result);
     }
 
@@ -538,10 +538,10 @@ class ControllerPaymentsveainvoice extends Controller {
     private function buildPaymentAddressQuery($svea,$countryCode,$order_comment) {
          $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
          $paymentAddress = array();
-         
+
         if ($svea->customerIdentity->customerType == 'Company'){
-            
-            // for companies, firstName, lastName is not set in GetAddresses response, thus we empty them in the payment address 
+
+            // for companies, firstName, lastName is not set in GetAddresses response, thus we empty them in the payment address
             if( (isset($svea->customerIdentity->firstName) == false) &&
                 (isset($svea->customerIdentity->lastName) == false) &&
                 (isset($svea->customerIdentity->fullName) == true) )
@@ -549,7 +549,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 $paymentAddress["payment_firstname"] = " "; // using "" will cause form validation in admin to scream
                 $paymentAddress["payment_lastname"] = " ";  // using "" will cause form validation in admin to scream
             }
-            
+
             isset($svea->customerIdentity->fullName) ? $paymentAddress["payment_company"] = $svea->customerIdentity->fullName : "";
 
             // in table order, the column payment_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
@@ -564,12 +564,12 @@ class ControllerPaymentsveainvoice extends Controller {
             $paymentAddress["payment_country_id"] = $countryId['country_id'];
             $paymentAddress["payment_country"] = $countryId['country_name'];
             $paymentAddress["payment_method"] = $this->language->get('text_title');
-        } 
-        
+        }
+
         else {  // private customer
 
             isset($svea->customerIdentity->firstName) ? $paymentAddress["payment_firstname"] = $svea->customerIdentity->firstName : " ";
-            isset($svea->customerIdentity->lastName) ? $paymentAddress["payment_lastname"] = $svea->customerIdentity->lastName : " ";                        
+            isset($svea->customerIdentity->lastName) ? $paymentAddress["payment_lastname"] = $svea->customerIdentity->lastName : " ";
 
             // for private individuals, if firstName, lastName is not set in GetAddresses response, we put the entire getAddress LegalName in lastName
             if( (isset($svea->customerIdentity->firstName) == false) &&
@@ -577,11 +577,11 @@ class ControllerPaymentsveainvoice extends Controller {
                 (isset($svea->customerIdentity->fullName) == true) )
             {
                 $paymentAddress["payment_firstname"] = " "; // using "" will cause form validation in admin to scream
-                $paymentAddress["payment_lastname"] = $svea->customerIdentity->fullName;  
+                $paymentAddress["payment_lastname"] = $svea->customerIdentity->fullName;
             }
-            
+
             $paymentAddress["payment_company"] = " ";
-            
+
             isset($svea->customerIdentity->street) ? $paymentAddress["payment_address_1"] = $svea->customerIdentity->street : "";
             isset($svea->customerIdentity->coAddress) ? $paymentAddress["payment_address_2"] = $svea->customerIdentity->coAddress : "";
             isset($svea->customerIdentity->locality) ? $paymentAddress["payment_city"] = $svea->customerIdentity->locality : "";
@@ -590,9 +590,10 @@ class ControllerPaymentsveainvoice extends Controller {
             $paymentAddress["payment_country"] = $countryId['country_name'];
             $paymentAddress["payment_method"] = $this->language->get('text_title');
         }
-        
+
         $paymentAddress["comment"] = $order_comment . "\nSvea order id: ".$svea->sveaOrderId;
-            
+        $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_invoice_order_status_id') . "', notify = '" . 1 . "', comment = 'Order created. Svea order id: " . $svea->sveaOrderId . "', date_added = NOW()");
+
         return $paymentAddress;
     }
 
@@ -602,7 +603,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
         if ($svea->customerIdentity->customerType == 'Company'){
 
-            // for companies, firstName, lastName is not set in GetAddresses response, thus we empty them in the payment address 
+            // for companies, firstName, lastName is not set in GetAddresses response, thus we empty them in the payment address
             if( (isset($svea->customerIdentity->firstName) == false) &&
                 (isset($svea->customerIdentity->lastName) == false) &&
                 (isset($svea->customerIdentity->fullName) == true) )
@@ -620,7 +621,7 @@ class ControllerPaymentsveainvoice extends Controller {
             isset($svea->customerIdentity->zipCode) ? $shippingAddress["shipping_postcode"] = $svea->customerIdentity->zipCode : "";
             $shippingAddress["shipping_country_id"] = $countryId['country_id'];
             $shippingAddress["shipping_country"] = $countryId['country_name'];
-        } 
+        }
         else {  // private customer
 
             isset($svea->customerIdentity->firstName) ? $shippingAddress["shipping_firstname"] = $svea->customerIdentity->firstName : "";
@@ -632,11 +633,11 @@ class ControllerPaymentsveainvoice extends Controller {
                 (isset($svea->customerIdentity->fullName) == true) )
             {
                 $shippingAddress["shipping_firstname"] = " "; // using "" will cause form validation in admin to scream
-                $shippingAddress["shipping_lastname"] = $svea->customerIdentity->fullName; 
-            }            
+                $shippingAddress["shipping_lastname"] = $svea->customerIdentity->fullName;
+            }
 
             $shippingAddress["shipping_company"] = " ";
-            
+
             isset($svea->customerIdentity->street) ? $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street : "";
             isset($svea->customerIdentity->coAddress) ? $shippingAddress["shipping_address_2"] = $svea->customerIdentity->coAddress : "";
             isset($svea->customerIdentity->locality) ? $shippingAddress["shipping_city"] = $svea->customerIdentity->locality : "";

@@ -10,10 +10,16 @@ $_['text_svea_partpayment']   = '<img src="view/image/payment/norwegian/svea_par
 
 // Entry
 $_['entry_order_status'] = 'Ordrestatus:';
-$_['entry_order_status_text'] = 'Ordrestatus opprettet men ikke levert. Leveranse av fakturaen gjøres fra Sveas admin.';
+$_['entry_status_order'] = 'Opprettet:';
+$_['entry_status_canceled'] = 'Makulert/Annullert:';
+$_['entry_status_canceled_text'] = 'Kan gjøres før ordren er godkjent/levert.';
+$_['entry_status_delivered'] = 'Levert:';
+$_['entry_status_delivered_text'] = 'Leverer en skapt ordre.';
+
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sorteringsordning:';
+$_['entry_payment_description']   = 'Beskrivelse i kassen:';
 $_['entry_shipping_billing']   = 'Shipping same as billing:';
 $_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
 

@@ -8,12 +8,17 @@ $_['text_success']       = 'Success: You have modified Svea Part payment module!
 $_['text_svea_partpayment']   = '<img src="view/image/payment/english/svea_partpayment.png" alt="Svea Part payment" title="SVEA Part payment" />';
 
 // Entry
-$_['entry_order_status'] = 'Order Status:';
-$_['entry_order_status_text'] = 'Orderstatus for created order but not delivered. Deliver the invoice from Svea admin.';
+$_['entry_order_status'] = 'Orderstatus:';
+$_['entry_status_order'] = 'Created:';
+$_['entry_status_canceled'] = 'Cancelled/Annulled:';
+$_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/captured.';
+$_['entry_status_delivered'] = 'Delivered:';
+$_['entry_status_delivered_text'] = 'Delivers a created order.';
+
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sort Order:';
-
+$_['entry_payment_description']   = 'Description in checkout:';
 $_['entry_shipping_billing']   = 'Shipping same as billing:';
 $_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
 

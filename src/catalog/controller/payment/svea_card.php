@@ -147,10 +147,11 @@ class ControllerPaymentsveacard extends Controller {
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $this->session->data['order_id'] = $resp->response->clientOrderNumber;
-
         if($resp->response->resultcode != '0'){
-            if ($resp->response->accepted == '1'){
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'));
+            if ($resp->response->accepted == 1){
+                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$resp->response->transactionId);
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$resp->response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_card_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $resp->response->transactionId . "', date_added = NOW()");
 
                 header("Location: index.php?route=checkout/success");
                 flush();

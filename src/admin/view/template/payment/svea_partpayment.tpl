@@ -15,7 +15,7 @@
           <tbody>
             <tr>
                 <td>Version</td>
-                <td>2.5.2</td>
+                <td>2.6.0</td>
             </tr>
             <tr>
               <td><?php echo $entry_geo_zone; ?></td>
@@ -47,16 +47,50 @@
               <td><input type="text" name="svea_partpayment_sort_order" value="<?php echo $svea_partpayment_sort_order; ?>" size="1" /></td>
             </tr>
             <tr>
-              <td><?php echo $entry_order_status; ?><span class="help"><?php echo $entry_order_status_text ?></span></td>
-              <td><select name="svea_partpayment_order_status_id">
-                  <?php foreach ($order_statuses as $order_status) { ?>
-                  <?php if ($order_status['order_status_id'] == $svea_partpayment_order_status_id) { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select></td>
+                <td><?php echo $entry_payment_description; ?></td>
+                <td><textarea rows="2" cols="30" name="svea_partpayment_payment_description"><?php echo $svea_partpayment_payment_description; ?></textarea></td>
+            </tr>
+            <!-- order statuses -->
+            <tr>
+              <td><?php echo $entry_order_status; ?><!--<span class="help"><?php echo $entry_order_status_text ?></span>--></td>
+               <td>
+                    <div><?php echo $entry_status_order; ?></div>
+                    <select name="svea_partpayment_order_status_id">
+                        <?php foreach ($order_statuses as $order_status) { ?>
+                        <?php if ($order_status['order_status_id'] == $svea_partpayment_order_status_id) { ?>
+                        <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                        <?php } else { ?>
+                        <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                        <?php } ?>
+                        <?php } ?>
+                    </select>
+                    <div>
+                        <span><?php echo $entry_status_delivered; ?></span>
+                        <span class="help"><?php echo $entry_status_delivered_text; ?></span>
+                    </div>
+                    <select name="svea_partpayment_deliver_status_id">
+                        <?php foreach ($order_statuses as $deliver_status) { ?>
+                        <?php if ($deliver_status['order_status_id'] == $svea_partpayment_deliver_status_id) { ?>
+                        <option value="<?php echo $deliver_status['order_status_id']; ?>" selected="selected"><?php echo $deliver_status['name']; ?></option>
+                        <?php } else { ?>
+                        <option value="<?php echo $deliver_status['order_status_id']; ?>"><?php echo $deliver_status['name']; ?></option>
+                        <?php } ?>
+                        <?php } ?>
+                    </select>
+                    <div>
+                        <span><?php echo $entry_status_canceled; ?></span>
+                        <span class="help"><?php echo $entry_status_canceled_text; ?></span>
+                    </div>
+                    <select name="svea_partpayment_canceled_status_id">
+                   <?php foreach ($order_statuses as $order_status) {
+                       if ($order_status['order_status_id'] == $svea_partpayment_canceled_status_id) { ?>
+                    <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                        <?php } else { ?>
+                    <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                         <?php } ?>
+                    <?php } ?>
+                    </select>
+                </td>
             </tr>
             <!--shipping billing-->
             <tr>
@@ -77,22 +111,13 @@
                     <?php } ?>
                 </td>
             </tr>
+            <!-- autodeliver -->
             <tr>
                 <td><?php echo $entry_auto_deliver; ?><span class="help"><?php echo $entry_auto_deliver_text ?></span></td>
                 <td>
                     <select name="svea_partpayment_auto_deliver">
                         <option value="0" <?php if($svea_partpayment_auto_deliver == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
                         <option value="1" <?php if($svea_partpayment_auto_deliver == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
-                    </select>
-                    <span class="help"><?php echo $entry_order_status; ?></span>
-                    <select name="svea_partpayment_auto_deliver_status_id">
-                     <?php foreach ($order_statuses as $deliver_status) { ?>
-                        <?php if ($deliver_status['order_status_id'] == $svea_partpayment_auto_deliver_status_id) { ?>
-                        <option value="<?php echo $deliver_status['order_status_id']; ?>" selected="selected"><?php echo $deliver_status['name']; ?></option>
-                        <?php } else { ?>
-                        <option value="<?php echo $deliver_status['order_status_id']; ?>"><?php echo $deliver_status['name']; ?></option>
-                        <?php } ?>
-                    <?php } ?>
                     </select>
                 </td>
             </tr>

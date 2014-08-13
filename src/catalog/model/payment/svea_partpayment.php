@@ -27,12 +27,35 @@ class ModelPaymentsveapartpayment extends Model {
                 $method_data = array(
                                     'id'         => 'svea_partpayment',
                                     'code'       => 'svea_partpayment',
-                                    'title'      => $this->language->get('text_title'),
+                                    'title'      => $this->language->get('text_title') . ' ' . $this->config->get('svea_partpayment_payment_description'),
                                     'sort_order' => $this->config->get('svea_partpayment_sort_order')
                                     );
     	}
 
     return $method_data;
+    }
+
+    public function getPaymentPlanParams($countryCode) {
+        $table_name = DB_PREFIX ."svea_params_table";
+
+        $query = "SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
+                `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
+                `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
+                FROM `".$table_name."`
+                WHERE `timestamp`=(SELECT MAX(timestamp) FROM `".$table_name."` WHERE `countryCode` = '".$countryCode."' )
+                AND `countryCode` = '".$countryCode."'
+                ORDER BY `monthlyAnnuityFactor` ASC";
+        $query = $this->db->query($query);
+
+        if($query->num_rows) {
+            $rows = array();
+            foreach ($query->rows as $row) {
+                $rows[] = (object)$row;
+
+            }
+            $svea['campaignCodes'] = $rows;
+            return (object)$svea;
+        }
     }
 
     public function getProductPriceMode(){

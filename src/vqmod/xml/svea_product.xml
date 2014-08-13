@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
 <id>SveaWebPay Product Price</id>
-<version>2.4.1</version>
+<version>2.6.0</version>
 <vqmver>1.0.8</vqmver>
 <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
     <file name="catalog/controller/product/product.php">
@@ -96,7 +96,7 @@
                                 $viewProduct['text_from'] =  $this->language->get('text_from')." ";
                                 $viewProduct['lowest_price'] = $lowest_price;
                                 $viewProduct['arrow'] = "<img src='admin/view/image/payment/svea_direct/blue_arrow.png'>";
-                                $viewProduct['line'] = "<img width='163' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
+                                $viewProduct['line'] = "<img width='209' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
 
                             }
                             $this->data['svea_widget'] = $viewProduct;
@@ -287,24 +287,26 @@
             <add><![CDATA[
 
 <script type="text/javascript"><!--
-    jQuery(document).ready(function () {
 
-                jQuery("#svea_price_arrow").hover(function (){
-                     jQuery(this).css({"cursor" : "pointer"});
-                });
-                jQuery("#svea_product_price_all").click(function (){
-                     jQuery("#svea_product_price_all").slideUp();
-                });
-                jQuery("#svea_price_arrow").toggle(
-                    function (){
-                         jQuery("#svea_product_price_all").slideDown();
-                         jQuery(this).css({"cursor" : "pointer"});
-                   },
-                    function(){
-                         jQuery("#svea_product_price_all").slideUp();
-                   });
+               jQuery(document).ready(function () {
+                    jQuery("#svea_price_arrow").hover(function (){
+                        console.log("hover");
+                        jQuery(this).css({"cursor" : "pointer"});
+                    });
+                    jQuery("#svea_product_price_all").click(function (){
+                        console.log("click on price");
+                        jQuery("#svea_product_price_all").slideUp();
+                    });
 
-               });
+                    jQuery("#svea_price_arrow").click(
+                        function (){
+                            jQuery("#svea_product_price_all").slideToggle();
+                            jQuery(this).css({"cursor" : "pointer"});
+                            jQuery(".product-info").css({"overflow" : "visible"});
+                        }
+                    );
+
+                });
 
 
 //--></script>

@@ -32,10 +32,18 @@ class ControllerPaymentsveadirectbank extends Controller {
 
        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
-        $svea = WebPay::getPaymentMethods($conf);
-        $this->data['sveaMethods'] = $svea
+        try {
+            $svea = WebPay::getPaymentMethods($conf);
+            $this->data['sveaMethods'] = $svea
             ->setContryCode($order_info['payment_iso_code_2'])
             ->doRequest();
+        } catch (Exception $e) {
+            $this->log->write($e->getMessage());
+            $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+            echo '<div class="attention">Svea '.$this->responseCodes(0,$e->getMessage()).'</div>';
+            exit();
+        }
+
 
         $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
@@ -211,8 +219,10 @@ class ControllerPaymentsveadirectbank extends Controller {
         $this->session->data['order_id'] = $resp->response->clientOrderNumber;
 
         if($resp->response->resultcode != '0'){
-            if ($resp->response->accepted == '1'){
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_directbank_order_status_id'));
+        if ($resp->response->accepted == 1){
+                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_directbank_order_status_id'),'Svea transactionId: '.$resp->response->transactionId);
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$resp->response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_directbank_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $resp->response->transactionId . "', date_added = NOW()");
 
                 header("Location: index.php?route=checkout/success");
                 flush();

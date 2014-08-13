@@ -7,13 +7,12 @@ class ControllerPaymentsveacard extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/setting');
-
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
 
-            //Remove whitespace  from input
+            //Remove whitespace  from input, outcommented cause do not filter correct
             $inputArray = array();
             foreach($this->request->post as $k => $i){
-                $inputArray[$k] = str_replace(" ","",$i);
+                $inputArray[$k] = $i;//($k == 'svea_card_sw_test' || 'svea_card_sw_prod') ? str_replace(" ","",$i) : $i;
             }
 
             //Save all settings
@@ -30,9 +29,17 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['text_all_zones']     = $this->language->get('text_all_zones');
 
         $this->data['entry_order_status'] = $this->language->get('entry_order_status');
+        $this->data['entry_status_order'] = $this->language->get('entry_status_order');
+        $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
+        $this->data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
+        $this->data['entry_status_confirmed'] = $this->language->get('entry_status_confirmed');
+        $this->data['entry_status_confirmed_text'] = $this->language->get('entry_status_confirmed_text');
+        $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
+        $this->data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
         $this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
         $this->data['entry_status']       = $this->language->get('entry_status');
         $this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
+        $this->data['entry_payment_description']   = $this->language->get('entry_payment_description');
 
         $this->data['button_save']        = $this->language->get('button_save');
         $this->data['button_cancel']      = $this->language->get('button_cancel');
@@ -91,15 +98,29 @@ class ControllerPaymentsveacard extends Controller {
 
         $this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
 
+        //statuses
+        $this->load->model('localisation/order_status');
+        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
         if (isset($this->request->post['svea_card_order_status_id'])) {
                 $this->data['svea_card_order_status_id'] = $this->request->post['svea_card_order_status_id'];
         } else {
                 $this->data['svea_card_order_status_id'] = $this->config->get('svea_card_order_status_id');
         }
-
-        $this->load->model('localisation/order_status');
-
-        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        if (isset($this->request->post['svea_card_canceled_status_id'])) {
+            $this->data['svea_card_canceled_status_id'] = $this->request->post['svea_card_canceled_status_id'];
+        } else {
+            $this->data['svea_card_canceled_status_id'] = $this->config->get('svea_card_canceled_status_id');
+        }
+        if (isset($this->request->post['svea_card_deliver_status_id'])) {
+            $this->data['svea_card_deliver_status_id'] = $this->request->post['svea_card_deliver_status_id'];
+        } else {
+            $this->data['svea_card_deliver_status_id'] = $this->config->get('svea_card_deliver_status_id');
+        }
+        if (isset($this->request->post['svea_card_refunded_status_id'])) {
+            $this->data['svea_card_refunded_status_id'] = $this->request->post['svea_card_refunded_status_id'];
+        } else {
+            $this->data['svea_card_refunded_status_id'] = $this->config->get('svea_card_refunded_status_id');
+        }
 
         if (isset($this->request->post['svea_card_geo_zone_id'])) {
                 $this->data['svea_card_geo_zone_id'] = $this->request->post['svea_card_geo_zone_id'];
@@ -121,6 +142,12 @@ class ControllerPaymentsveacard extends Controller {
                 $this->data['svea_card_sort_order'] = $this->request->post['svea_card_sort_order'];
         } else {
                 $this->data['svea_card_sort_order'] = $this->config->get('svea_card_sort_order');
+        }
+                //payment info
+        if (isset($this->request->post['svea_card_payment_description'])) {
+                $this->data['svea_card_payment_description'] = $this->request->post['svea_card_payment_description'];
+        } else {
+                $this->data['svea_card_payment_description'] = $this->config->get('svea_card_payment_description');
         }
 
         if (isset($this->request->post['svea_card_testmode'])) {

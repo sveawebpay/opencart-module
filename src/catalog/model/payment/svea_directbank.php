@@ -23,7 +23,7 @@ class ModelPaymentsveadirectbank extends Model {
         $method_data = array(
                             'id'         => 'svea_directbank',
                             'code'       => 'svea_directbank',
-                            'title'      => $this->language->get('text_title'),
+                            'title'      => $this->language->get('text_title') . ' ' . $this->config->get('svea_directbank_payment_description'),
                             'sort_order' => $this->config->get('svea_directbank_sort_order')
                             );
     	}
