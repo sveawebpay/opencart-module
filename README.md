@@ -1,6 +1,6 @@
 # OpenCart - Svea payment module
 
-##Version 2.6.0
+##Version 2.1
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
@@ -123,7 +123,7 @@ Module supports one Svea merchant id per Opencart installation.
 * Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
 * Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Direct Bank is Credit order.
 * Set _geo zone_ and _sort order_ according to your preferences.
-* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout. 
+* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
 * Set _testmode_ and _status_ to enabled.
 * Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
