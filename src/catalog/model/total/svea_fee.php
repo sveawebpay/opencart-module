@@ -18,13 +18,35 @@ class ModelTotalSveafee extends Model {
         {
                 // get country from session data
                 $this->load->model('localisation/country');
-                $country_info = $this->model_localisation_country->getCountry($this->session->data['payment_country_id']);
+               // $country_info = $this->model_localisation_country->getCountry($this->session->data['payment_country_id']);
+                $country = '';
+                $paymentAddress = array();
+                if($this->customer->isLogged() && isset($this->session->data['payment_address_id'])) {
+                    $this->load->model('account/address');
+                    $paymentAddress
+                        = $this->model_account_address->getAddress(
+                            $this->session->data['payment_address_id']
+                        );
+
+                } elseif (isset($this->session->data['guest'])) {
+                      if (isset($this->session->data['guest']['payment'])
+                            && !empty($this->session->data['guest']['payment'])
+                        ) {
+                            $paymentAddress = $this->session->data['guest']['payment'];
+                        }
+
+                }
+                if (is_array($paymentAddress) && !empty($paymentAddress)) {
+                    $country = $paymentAddress['iso_code_2'];
+                } else {
+                    return;
+                }
 
                 // get svea_fee config settings for country
-                $svea_fee_fee = $this->config->get('svea_fee_fee'."_".$country_info['iso_code_2']);
-                $svea_fee_sort_order = $this->config->get('svea_fee_sort_order'."_".$country_info['iso_code_2']);
-                $svea_fee_tax_class_id = $this->config->get('svea_fee_tax_class'."_".$country_info['iso_code_2']);
-                $svea_fee_status = $this->config->get('svea_fee_status'."_".$country_info['iso_code_2']);
+                $svea_fee_fee = $this->config->get('svea_fee_fee'."_".$country);
+                $svea_fee_sort_order = $this->config->get('svea_fee_sort_order'."_".$country);
+                $svea_fee_tax_class_id = $this->config->get('svea_fee_tax_class'."_".$country);
+                $svea_fee_status = $this->config->get('svea_fee_status'."_".$country);
 
                 // svea_fee disabled?
                 if ( $svea_fee_status == false) {
@@ -36,7 +58,7 @@ class ModelTotalSveafee extends Model {
             // add our svea_fee total to the rest of the totals
             $total_data[] = array(
                 'code' => 'svea_fee',
-                'title' => $this->language->get('text_svea_fee')." (".$country_info['iso_code_2'].")",
+                'title' => $this->language->get('text_svea_fee')." (".$country.")",
                 'text' => $this->currency->format($svea_fee_fee),
                 'value' => $svea_fee_fee,
                 'sort_order' => $svea_fee_sort_order
