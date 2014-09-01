@@ -201,6 +201,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     /**
      * Svea: Create table if does not exists, call Svea API, load with params values for specific countrycode
+     * Called whenever saving payment plan module settings, will update stored campaigns in table svea_params_table.
      */
     private function loadPaymentPlanParams(){
         //Load SVEA includes
@@ -209,30 +210,36 @@ class ControllerPaymentsveapartpayment extends Controller {
         for($i=0;$i<sizeof($countryCode);$i++){
             $username = $this->config->get('svea_partpayment_username_' . $countryCode[$i]);
             $password = $this->config->get('svea_partpayment_password_' . $countryCode[$i]);
-            $cliend_id = $this->config->get('svea_partpayment_clientno_' . $countryCode[$i]);
+            $client_id = $this->config->get('svea_partpayment_clientno_' . $countryCode[$i]);
             //get params if config is set
 
-            if($username != "" && $password != "" && $cliend_id != ""){
-                if ( $this->config->get('svea_partpayment_testmode_' . $countryCode[$i]) !== NULL)
+            if($username != "" && $password != "" && $client_id != ""){
+                if ( $this->config->get('svea_partpayment_testmode_' . $countryCode[$i]) !== NULL){
+                    
                     $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode[$i]) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
                     $svea_params = WebPay::getPaymentPlanParams($conf);
+					
                     try {
-                         $svea_params = $svea_params->setCountryCode($countryCode[$i])
-                            ->doRequest();
-                    } catch (Exception $e) {
-                         $this->log->write($e->getMessage());
+                        $svea_params = $svea_params->setCountryCode($countryCode[$i])
+                            ->doRequest();	
+                    } 
+                    catch (Exception $e) {
+                         $this->log->write("Failed to update PaymentPlanParams" . $e->getMessage());
+                         return; // without updating table.
                     }
-                   if(isset($svea_params->errormessage) == FALSE){
-                       $formatted_params = $this->sveaFormatParams($svea_params);
-                       if($formatted_params !=NULL){
+															
+                    if( isset($svea_params->accepted) && $svea_params->accepted == TRUE ) {					
+                        $formatted_params = $this->sveaFormatParams($svea_params);
+                        
+                        if($formatted_params !=NULL){
                             $this->insertPaymentPlanParams($formatted_params,$countryCode[$i]);
-                       }
+                        }
                     }
+                }
             }
-
         }
-
     }
+    
     /**
      * Create Svea params talbe if not exists
      */

@@ -1,6 +1,6 @@
 # OpenCart - Svea payment module
 
-##Version 2.6.1
+##Version 2.6.2
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
@@ -158,9 +158,10 @@ In the tax class settings, make sure that the Norwegian tax rate applies before 
 * When you change the _Order Status_ to the same status set in module, the action will be sent to Svea admin aswell, meaning you do not have to log in to the Svea admin.
 * Save.
 
-Please note that orders created with earlier versions of the Module version 2.6.0 cannot be administrated from the Opencart order administration interface
-**Important!** The information saved in the Comment field must not be changed for the action to work. You can add information, but not change.
-The actions will only apply on orders created in Module version 2.6.0 or higer.
+Please note that orders created with earlier versions of the Module than 2.6.0 cannot be administrated from the Opencart order administration interface.
+**Important!** The Svea order id information saved in the Comment field must not be changed for the action to work. You may add to the information, but not change or remove it.
+
+The below actions only applies to orders created in Module version 2.6.0 or higher.
 
 Actions available:
 
