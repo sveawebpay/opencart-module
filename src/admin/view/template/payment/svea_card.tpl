@@ -16,7 +16,7 @@
             <tbody>
                 <tr>
                     <td>Version</td>
-                    <td>2.6.1</td>
+                    <td>2.6.2</td>
                 </tr>
                 <tr>
                     <td><?php echo $entry_testmode; ?>:</td>
