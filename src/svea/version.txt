@@ -4,3 +4,7 @@ sveawebpay/php-integration
 
 release/2.1.0
 
+Bugfix done in
+AdminService/svea_soap/Athentication.php
+by Anneli Halld'n 2014-09-25
+
