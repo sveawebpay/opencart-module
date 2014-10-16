@@ -22,14 +22,16 @@ class OpencartSveaConfig implements ConfigurationProvider{
 
     public function getEndPoint($type) {
         $type = strtoupper($type);
-          if($type == "HOSTED"){
-            return   Svea\SveaConfig::SWP_PROD_URL;
+        if($type == "HOSTED"){
+            return Svea\SveaConfig::SWP_PROD_URL;;
         }elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
-             return Svea\SveaConfig::SWP_PROD_WS_URL;
+            return Svea\SveaConfig::SWP_PROD_WS_URL;
         }elseif($type == "HOSTED_ADMIN"){
-             return Svea\SveaConfig::SWP_PROD_HOSTED_ADMIN_URL;
-        }  else {
-           throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN or HOSTED');
+            return Svea\SveaConfig::SWP_PROD_HOSTED_ADMIN_URL;
+        }elseif ($type == "ADMIN") {
+            return Svea\SveaConfig::SWP_PROD_ADMIN_URL;
+        } else {
+            throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN, HOSTED_ADMIN or HOSTED');
         }
     }
 
