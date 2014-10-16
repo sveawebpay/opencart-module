@@ -25,6 +25,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		$this->data['text_all_zones'] = $this->language->get('text_all_zones');
                 //order status
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
+		$this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
                 $this->data['entry_status_order'] = $this->language->get('entry_status_order');
                 $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
                 $this->data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
@@ -215,22 +216,22 @@ class ControllerPaymentsveapartpayment extends Controller {
 
             if($username != "" && $password != "" && $client_id != ""){
                 if ( $this->config->get('svea_partpayment_testmode_' . $countryCode[$i]) !== NULL){
-                    
+
                     $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode[$i]) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
                     $svea_params = WebPay::getPaymentPlanParams($conf);
-					
+
                     try {
                         $svea_params = $svea_params->setCountryCode($countryCode[$i])
-                            ->doRequest();	
-                    } 
+                            ->doRequest();
+                    }
                     catch (Exception $e) {
                          $this->log->write("Failed to update PaymentPlanParams" . $e->getMessage());
                          return; // without updating table.
                     }
-															
-                    if( isset($svea_params->accepted) && $svea_params->accepted == TRUE ) {					
+
+                    if( isset($svea_params->accepted) && $svea_params->accepted == TRUE ) {
                         $formatted_params = $this->sveaFormatParams($svea_params);
-                        
+
                         if($formatted_params !=NULL){
                             $this->insertPaymentPlanParams($formatted_params,$countryCode[$i]);
                         }
@@ -239,7 +240,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             }
         }
     }
-    
+
     /**
      * Create Svea params talbe if not exists
      */
