@@ -10,8 +10,6 @@ require_once SVEA_REQUEST_DIR . '/Includes.php';
  */
 abstract class AdminServiceRequest {
     
-    const ADMIN_SERVICE_TEST = "https://partnerweb.sveaekonomi.se/WebPayAdminService_test/AdminService.svc/backward";
-
     /** @var string $action  the AdminService soap action called by this class */
     protected $action; 
 
@@ -23,7 +21,10 @@ abstract class AdminServiceRequest {
      * @return StdClass  raw response
      */
     public function doRequest() { 
-        $soapClient = new AdminSoap\SoapClient( AdminServiceRequest::ADMIN_SERVICE_TEST );
+        
+        $endpoint = $this->orderBuilder->conf->getEndPoint( \ConfigurationProvider::ADMIN_TYPE );   // get test or prod using child instance data
+        
+        $soapClient = new AdminSoap\SoapClient( $endpoint );
         $soapResponse = $soapClient->doSoapCall($this->action, $this->prepareRequest() );     
         $sveaResponse = new \SveaResponse( $soapResponse, null, null, $this->action );
         return $sveaResponse->getResponse();        
@@ -60,7 +61,7 @@ abstract class AdminServiceRequest {
      * the integration package ConfigurationProvider::INVOICE_TYPE and ::PAYMENTPLAN_TYPE constanst are all caps, whereas the admin service
      * enumeration used in the calls are CamelCase. This function converts the package constants so they work with the admin service.
      */
-    protected static function CamelCaseOrderType( $orderTypeAsConst ) {
+    public static function CamelCaseOrderType( $orderTypeAsConst ) {
         switch( $orderTypeAsConst ) {
             case \ConfigurationProvider::INVOICE_TYPE:
                 return "Invoice";

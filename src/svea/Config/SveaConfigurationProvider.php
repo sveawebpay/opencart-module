@@ -83,16 +83,15 @@ class SveaConfigurationProvider implements \ConfigurationProvider {
     }
 
     /**
-     * @param string $type one of { \ConfigurationProvider::HOSTED_TYPE, ::INVOICE_TYPE, ::PAYMENTPLAN_TYPE }
+     * @param string $type one of { \ConfigurationProvider::HOSTED_TYPE, ::INVOICE_TYPE, ::PAYMENTPLAN_TYPE, ::HOSTED_ADMIN_TYPE, ::ADMIN_TYPE}
      * @return string
      * @throws Exception
      */
     public function getEndPoint($type) {
-        $uType = strtoupper($type);
-        if (array_key_exists($uType,$this->conf['url']) == FALSE) {
+        if (array_key_exists($type,$this->conf['url']) == FALSE) {
             $this->throwInvalidTypeException( $type );
         }
-        return $this->conf['url'][$uType];
+        return $this->conf['url'][$type];
     }
 
     /**
@@ -104,16 +103,15 @@ class SveaConfigurationProvider implements \ConfigurationProvider {
      */
     private function getCredentialsProperty($property, $type, $country)
     {
-        $uType = strtoupper($type);
         $uCountry = strtoupper($country);
         if (array_key_exists($uCountry,$this->conf['credentials']) == FALSE) {
-
             $this->throwInvalidCountryException();
-        } elseif (array_key_exists($uType,$this->conf['credentials'][$uCountry]['auth']) == FALSE) {
+        } 
+        elseif (array_key_exists($type,$this->conf['credentials'][$uCountry]['auth']) == FALSE) {
             $this->throwInvalidTypeException();
         }
 
-        return $this->conf['credentials'][$uCountry]['auth'][$uType][$property];
+        return $this->conf['credentials'][$uCountry]['auth'][$type][$property];
     }
 
     /**
@@ -127,15 +125,6 @@ class SveaConfigurationProvider implements \ConfigurationProvider {
      * @throws InvalidTypeException
      */
     private function throwInvalidTypeException( $invalid_type ) {
-        throw new InvalidTypeException(
-            sprintf(
-                'Invalid service type \"%s\". Accepted values: %s, %s, %s or %s',
-                $invalid_type,
-                \ConfigurationProvider::INVOICE_TYPE,
-                \ConfigurationProvider::PAYMENTPLAN_TYPE,
-                \ConfigurationProvider::HOSTED_TYPE,
-                \ConfigurationProvider::HOSTED_ADMIN_TYPE
-            )
-        );
+        throw new InvalidTypeException( sprintf('Invalid ConfigurationProvider::XXX_TYPE \"%s\".', $invalid_type) );
     }
 }
