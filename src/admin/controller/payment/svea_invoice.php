@@ -24,6 +24,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->data['text_all_zones']     = $this->language->get('text_all_zones');
         //order status
         $this->data['entry_order_status'] = $this->language->get('entry_order_status');
+        $this->data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
         $this->data['entry_status_order'] = $this->language->get('entry_status_order');
         $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
         $this->data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');

@@ -16,8 +16,14 @@ class CreditInvoiceRowsResponse extends AdminServiceResponse {
     /** @var string $orderType  (set iff accepted)  one of [Invoice|PaymentPlan] */
     public $orderType;
     
-    /** @var numeric $creditInvoiceId  (set iff accepted, orderType Invoice)  the $creditInvoiceId for the credit invoice issued with this request */
+    /** @var string $creditInvoiceId  (set iff accepted, orderType Invoice)  the $creditInvoiceId for the credit invoice issued with this request */
     public $creditInvoiceId;
+    
+    /** @var string $clientId (set iff accepted) */
+    public $clientId;
+    
+    /** @var string $orderId (set iff accepted) */
+    public $orderId;
     
     function __construct($message) {
         $this->formatObject($message);  
@@ -30,17 +36,16 @@ class CreditInvoiceRowsResponse extends AdminServiceResponse {
         parent::formatObject($message);
         
         if ($this->accepted == 1) {
-
-            $this->rawCreditInvoiceRowsResponse = $message;
-
             $this->amount = (-1)*$message->OrdersDelivered->DeliverOrderResult->DeliveredAmount;
             $this->orderType = $message->OrdersDelivered->DeliverOrderResult->OrderType;
-            $this->creditInvoiceId = $message->OrdersDelivered->DeliverOrderResult->DeliveryReferenceNumber;
+            $this->creditInvoiceId = $message->OrdersDelivered->DeliverOrderResult->DeliveryReferenceNumber;            
+            $this->clientId = $message->OrdersDelivered->DeliverOrderResult->ClientId;            
+            $this->orderId = $message->OrdersDelivered->DeliverOrderResult->SveaOrderId;            
         }            
     }
 }       
     
-// Invoice:
+// raw response message example:
 // 
 //stdClass Object
 //(

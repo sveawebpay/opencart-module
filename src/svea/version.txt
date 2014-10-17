@@ -1,10 +1,8 @@
-Uptated integrationLib 2014-08-12 to:
+Uptated integrationLib 2014-10-16 to:
 
 sveawebpay/php-integration
 
-release/2.1.0
+release/2.2.3
 
-Bugfix done in
-AdminService/svea_soap/Athentication.php
-by Anneli Halld'n 2014-09-25
+changes in ConfigurationProvider
 

@@ -16,28 +16,14 @@ abstract class HostedRequest {
     /** @var string $method  set by the subclass, defines what webservice is called (including payment) */
     protected $method;
 
-    /** @var string $countryCode */
-    protected $countryCode; 
+    /** @var string $countryCode  used to disambiguate between the various credentials in ConfigurationProvider */
+    public $countryCode; 
         
     /** 
      * @param ConfigurationProvider $config
      */
     function __construct($config) {
         $this->config = $config;
-    }
-    
-    /**
-     * Set the country. Used to disambiguate between the various credentials in
-     * ConfigurationProvider.
-     * 
-     * Required.
-     * 
-     * @param string $countryCode
-     * @return $this
-     */
-    function setCountryCode( $countryCode ) {
-        $this->countryCode = $countryCode;
-        return $this;
     }
     
     /**
@@ -48,11 +34,12 @@ abstract class HostedRequest {
      * @throws ValidationException
      */
     public function validateRequest() {
+
+        // validate subclass request required attributes
         $errors = $this->validateRequestAttributes();
         
-        if (isset($this->countryCode) == FALSE) {                                                        
-            $errors['missing value'] = "countryCode is required. Use function setCountryCode().";
-        }
+        // validate countrycode
+        $errors = $this->validateCountryCode($this, $errors );
         
         if (count($errors) > 0) {
             $exceptionString = "";
@@ -63,6 +50,13 @@ abstract class HostedRequest {
             throw new \Svea\ValidationException($exceptionString);
         }    
     }           
+
+    private function validateCountryCode($self, $errors) {
+        if(isset($this->countryCode) == FALSE ) {
+            $errors['missing value'] = 'CountryCode is required. Use function setCountryCode().';                                    
+        }
+        return $errors;
+    }      
     
     /**
      * returns the request fields to post to service
