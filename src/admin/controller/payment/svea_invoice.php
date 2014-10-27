@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentsveainvoice extends Controller {
-	private $error = array();
-	 //
+    private $error = array();
+
 	public function index() {
         $this->load->language('payment/svea_invoice');
 
@@ -15,8 +15,6 @@ class ControllerPaymentsveainvoice extends Controller {
                 $this->session->data['success'] = $this->language->get('text_success');
 
                 $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
-
-//                $this->redirect(HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token']);
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -109,27 +107,6 @@ class ControllerPaymentsveainvoice extends Controller {
 			'text' => $this->language->get('heading_title'),
 			'href' => $this->url->link('payment/svea_invoice', 'token=' . $this->session->data['token'], 'SSL')
 		);
-
-//  		$this->document->breadcrumbs = array();
-//
-//   		$this->document->breadcrumbs[] = array(
-//       		'href'      => HTTPS_SERVER . 'index.php?route=common/home&token=' . $this->session->data['token'],
-//       		'text'      => $this->language->get('text_home'),
-//      		'separator' => FALSE
-//   		);
-//
-//   		$this->document->breadcrumbs[] = array(
-//       		'href'      => HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'],
-//       		'text'      => $this->language->get('text_payment'),
-//      		'separator' => ' :: '
-//   		);
-//
-//   		$this->document->breadcrumbs[] = array(
-//       		'href'      => HTTPS_SERVER . 'index.php?route=payment/svea_invoice&token=' . $this->session->data['token'],
-//       		'text'      => $this->language->get('heading_title'),
-//      		'separator' => ' :: '
-//   		);
-
 
 		$data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_invoice&token=' . $this->session->data['token'];
 		$data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];

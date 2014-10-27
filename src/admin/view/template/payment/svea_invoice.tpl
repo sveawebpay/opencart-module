@@ -1,9 +1,4 @@
 <?php echo $header; ?><?php echo $column_left; ?>
-
-
-
-
-
 <div id="content">
     <div class="page-header">
       <div class="container-fluid">
@@ -28,12 +23,7 @@
         <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-pencil"></i> </h3>
         </div>
-
-
-
-
-
-<div class="panel-body">
+    <div class="panel-body">
         <!--general settings -->
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveainvoice" class="form-horizontal">
                 <div class="form-group">
@@ -192,6 +182,31 @@
                             </select>
                          </div>
                     </div>
+                    <div class="form-group">
+                        <label for="svea_invoice_product_price" class="col-sm-3 control-label">
+                            <span data-toggle="tooltip" title="<?php echo $entry_product_text; ?>"><?php echo $entry_product; ?></span>
+                        </label>
+                        <div class="col-sm-9">
+                        <div class="col-sm-4">
+                           <?php if ($svea_invoice_product_price) { ?>
+                            <input type="radio" name="svea_invoice_product_price" value="1" checked="checked" />
+                            <?php echo $entry_yes; ?>
+                            <input type="radio" name="svea_invoice_product_price" value="0" />
+                            <?php echo $entry_no; ?>
+                            <?php } else { ?>
+                            <input type="radio" name="svea_invoice_product_price" value="1" />
+                            <?php echo $entry_yes; ?>
+                            <input type="radio" name="svea_invoice_product_price" value="0" checked="checked" />
+                            <?php echo $entry_no; ?>
+                            <?php } ?>
+                         </div>
+                        <div class="col-sm-4">
+                              <?php echo $entry_min_amount; ?>
+                            <input name="svea_invoice_product_price_min" type="text"
+                            value="<?php echo $svea_invoice_product_price_min; ?>" />
+                        </div>
+                    </div>
+                </div>
             <!-- Countrycode specific -->
             <div class="tab-content" id="tab-invoice" >
                 <ul class="nav nav-tabs" id="svea_country">
@@ -237,7 +252,7 @@
                 </div>
             </div>
         </form>
-</div>
+    </div>
     </div><!-- panel-default -->
   </div><!-- container-fluid -->
 <div style="height:100px"></div>
