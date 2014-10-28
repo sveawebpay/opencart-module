@@ -19,8 +19,8 @@ class ControllerPaymentsveacard extends Controller {
                 $this->model_setting_setting->editSetting('svea_card', $inputArray);
 
                 $this->session->data['success'] = $this->language->get('text_success');
-
-                $this->redirect(HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token']);
+                
+                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         $data['heading_title']      = $this->language->get('heading_title');
