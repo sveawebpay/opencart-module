@@ -60,13 +60,6 @@ class ControllerPaymentsveainvoice extends Controller {
         } else {
                 return $this->load->view('default/template/payment/svea_invoice.tpl', $data);
         }
-
-//        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_invoice.tpl')) {
-//            $this->template = $this->config->get('config_template') . '/template/payment/svea_invoice.tpl';
-//        } else {
-//            $this->template = 'default/template/payment/svea_invoice.tpl';
-//        }
-//        $this->render();
     }
 
     private function responseCodes($err,$msg = "") {

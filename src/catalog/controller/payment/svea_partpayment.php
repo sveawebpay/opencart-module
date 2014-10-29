@@ -21,37 +21,45 @@ class ControllerPaymentsveapartpayment extends Controller {
         // populate data array for use in template
         $this->load->language('payment/svea_partpayment');
         $this->load->model('checkout/order');
-        $this->data['button_confirm'] = $this->language->get('button_confirm');
-        $this->data['button_back'] = $this->language->get('button_back');
 
-        $this->data['continue'] = 'index.php?route=checkout/success';
+        $data['text_payment_options'] = $this->language->get('text_payment_options');
+        $data['text_ssn'] = $this->language->get('text_ssn');
+        $data['text_birthdate'] = $this->language->get('text_birthdate');
+        $data['text_initials'] = $this->language->get('text_initials');
+        $data['text_get_address'] = $this->language->get('text_get_address');
+        $data['text_invoice_address'] = $this->language->get('text_invoice_address');
+        $data['text_shipping_address'] = $this->language->get('text_shipping_address');
+        $data['svea_partpayment_shipping_billing'] = $this->config->get('svea_partpayment_shipping_billing');
+
+
+        $data['button_confirm'] = $this->language->get('button_confirm');
+        $data['button_back'] = $this->language->get('button_back');
+
+        $data['continue'] = 'index.php?route=checkout/success';
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
-            $this->data['back'] = 'index.php?route=checkout/payment';
+            $data['back'] = 'index.php?route=checkout/payment';
         } else {
-            $this->data['back'] = 'index.php?rout=checkout/guest_step_2';
+            $data['back'] = 'index.php?rout=checkout/guest_step_2';
         }
 
-        $this->id = 'payment';
+       // $this->id = 'payment';
 
         //Get the country from the order
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $this->data['countryCode'] = $order_info['payment_iso_code_2'];
+        $data['countryCode'] = $order_info['payment_iso_code_2'];
 
-        $this->data['logo'] = "<img src='admin/view/image/payment/" . $this->getLogo($order_info['payment_iso_code_2']) . "/svea_partpayment.png'>";
+        $data['logo'] = "<img src='admin/view/image/payment/" . $this->getLogo($order_info['payment_iso_code_2']) . "/svea_partpayment.png'>";
 
         // we show the available payment plans w/monthly amounts as radiobuttons under the logo
-        $this->data['paymentOptions'] = $this->getPaymentOptions();
-
+        $data['paymentOptions'] = $this->getPaymentOptions();
 
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/svea_partpayment.tpl';
+                return $this->load->view($this->config->get('config_template') . '/template/payment/svea_partpayment.tpl', $data);
         } else {
-            $this->template = 'default/template/payment/svea_partpayment.tpl';
-            $this->data['partpayment_fail'] = $this->language->get('text_partpayment_fail');
+                return $this->load->view('default/template/payment/svea_partpayment.tpl', $data);
         }
-        $this->render();
     }
 
     private function responseCodes($err, $msg = "") {
