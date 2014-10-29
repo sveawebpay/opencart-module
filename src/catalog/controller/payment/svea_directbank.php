@@ -15,12 +15,6 @@ class ControllerPaymentsveadirectbank extends Controller {
         $data['countryCode'] = $order_info['payment_iso_code_2'];
         $this->id = 'payment';
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_directbank.tpl')) {
-                $this->template = $this->config->get('config_template') . '/template/payment/svea_directbank.tpl';
-        } else {
-                $this->template = 'default/template/payment/svea_directbank.tpl';
-        }
-
         $data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_directbank.png'>";
         $data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
 
@@ -47,11 +41,16 @@ class ControllerPaymentsveadirectbank extends Controller {
 
         $data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
-        $this->render();
-
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_directbank.tpl')) {
+                return $this->load->view($this->config->get('config_template') . '/template/payment/svea_directbank.tpl', $data);
+        } else {
+                return $this->load->view('default/template/payment/svea_directbank.tpl', $data);
         }
 
-        public function redirectSvea(){
+
+    }
+
+    public function redirectSvea(){
 
         $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
