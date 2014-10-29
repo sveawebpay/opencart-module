@@ -108,9 +108,8 @@ class ControllerPaymentsveainvoice extends Controller {
 			'href' => $this->url->link('payment/svea_invoice', 'token=' . $this->session->data['token'], 'SSL')
 		);
 
-		$data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_invoice&token=' . $this->session->data['token'];
-		$data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
-
+                $data['action'] = $this->url->link('payment/svea_invoice', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
                 //invoice distribution type
 		if (isset($this->request->post['svea_invoice_distribution_type'])) {
 			$data['svea_invoice_distribution_type'] = $this->request->post['svea_invoice_distribution_type'];

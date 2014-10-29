@@ -104,30 +104,8 @@ class ControllerPaymentsveapartpayment extends Controller {
 			'href' => $this->url->link('payment/svea_partpayment', 'token=' . $this->session->data['token'], 'SSL')
 		);
 
-
-//  		$this->document->breadcrumbs = array();
-//
-//   		$this->document->breadcrumbs[] = array(
-//       		'href'      => HTTPS_SERVER . 'index.php?route=common/home&token=' . $this->session->data['token'],
-//       		'text'      => $this->language->get('text_home'),
-//      		'separator' => FALSE
-//   		);
-//
-//   		$this->document->breadcrumbs[] = array(
-//       		'href'      => HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'],
-//       		'text'      => $this->language->get('text_payment'),
-//      		'separator' => ' :: '
-//   		);
-//
-//   		$this->document->breadcrumbs[] = array(
-//       		'href'      => HTTPS_SERVER . 'index.php?route=payment/svea_partpayment&token=' . $this->session->data['token'],
-//       		'text'      => $this->language->get('heading_title'),
-//      		'separator' => ' :: '
-//   		);
-
-		$data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_partpayment&token=' . $this->session->data['token'];
-
-		$data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
+                $data['action'] = $this->url->link('payment/svea_partpayment', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['svea_partpayment_geo_zone_id'])) {
 			$data['svea_partpayment_geo_zone_id'] = $this->request->post['svea_partpayment_geo_zone_id'];

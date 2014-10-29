@@ -17,7 +17,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         return $country_currencies[$countryCode];
     }
 
-    protected function index() {
+    public function index() {
         // populate data array for use in template
         $this->load->language('payment/svea_partpayment');
         $this->load->model('checkout/order');

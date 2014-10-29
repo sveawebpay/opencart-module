@@ -19,7 +19,7 @@ class ControllerPaymentsveacard extends Controller {
                 $this->model_setting_setting->editSetting('svea_card', $inputArray);
 
                 $this->session->data['success'] = $this->language->get('text_success');
-                
+
                 $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
@@ -91,9 +91,8 @@ class ControllerPaymentsveacard extends Controller {
                 'href' => $this->url->link('payment/svea_card', 'token=' . $this->session->data['token'], 'SSL')
         );
 
-        $data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_card&token=' . $this->session->data['token'];
-
-        $data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
+        $data['action'] = $this->url->link('payment/svea_card', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
         //statuses
         $this->load->model('localisation/order_status');

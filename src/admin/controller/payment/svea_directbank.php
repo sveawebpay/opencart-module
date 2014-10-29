@@ -85,11 +85,9 @@ class ControllerPaymentsveadirectbank extends Controller {
                 'text' => $this->language->get('heading_title'),
                 'href' => $this->url->link('payment/svea_directbank', 'token=' . $this->session->data['token'], 'SSL')
         );
-
-        $data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_directbank&token=' . $this->session->data['token'];
-
-        $data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
-
+        $data['action'] = $this->url->link('payment/svea_directbank', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+	
       //statuses
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();

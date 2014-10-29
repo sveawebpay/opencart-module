@@ -17,35 +17,56 @@ class ControllerPaymentsveainvoice extends Controller {
         return $country_currencies[$countryCode];
     }
 
-    protected function index() {
+    public function index() {
         $this->load->language('payment/svea_invoice');
         $this->load->model('checkout/order');
         //Definitions
-        $this->data['button_confirm'] = $this->language->get('button_confirm');
-        $this->data['button_back'] = $this->language->get('button_back');
+        $data['text_private_or_company'] = $this->language->get("text_private_or_company");
+        $data['text_company'] = $this->language->get("text_company");
+        $data['text_private'] = $this->language->get("text_private");
+        $data['text_ssn'] = $this->language->get("text_ssn");
+        $data['text_vat_no'] = $this->language->get("text_vat_no");
+        $data['text_get_address'] = $this->language->get("text_get_address");
+        $data['text_invoice_address'] = $this->language->get('text_invoice_address');
+        $data['text_shipping_address'] = $this->language->get('text_shipping_address');
+        $data['text_birthdate'] = $this->language->get("text_birthdate");
+        $data['text_initials'] = $this->language->get("text_initials");
+        $data['text_vat_no'] = $this->language->get("text_vat_no");
+        $data['svea_invoice_shipping_billing'] = $this->config->get('svea_invoice_shipping_billing');
 
-        $this->data['continue'] = 'index.php?route=checkout/success';
+
+        $data['button_confirm'] = $this->language->get('button_confirm');
+        $data['button_back'] = $this->language->get('button_back');
+
+        $data['continue'] = 'index.php?route=checkout/success';
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
-            $this->data['back'] = 'index.php?route=checkout/payment';
+            $data['back'] = 'index.php?route=checkout/payment';
         } else {
-            $this->data['back'] = 'index.php?rout=checkout/guest_step_2';
+            $data['back'] = 'index.php?rout=checkout/guest_step_2';
         }
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $this->data['countryCode'] = $order_info['payment_iso_code_2'];
+        $data['countryCode'] = $order_info['payment_iso_code_2'];
 
-        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_invoice.png'>";
+        $data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_invoice.png'>";
 
-        $this->id = 'payment';
+
+//        $this->id = 'payment';
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_invoice.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/svea_invoice.tpl';
+                return $this->load->view($this->config->get('config_template') . '/template/payment/svea_invoice.tpl', $data);
         } else {
-            $this->template = 'default/template/payment/svea_invoice.tpl';
+                return $this->load->view('default/template/payment/svea_invoice.tpl', $data);
         }
-        $this->render();
+
+//        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_invoice.tpl')) {
+//            $this->template = $this->config->get('config_template') . '/template/payment/svea_invoice.tpl';
+//        } else {
+//            $this->template = 'default/template/payment/svea_invoice.tpl';
+//        }
+//        $this->render();
     }
 
     private function responseCodes($err,$msg = "") {

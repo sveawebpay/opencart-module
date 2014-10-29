@@ -1,6 +1,6 @@
 <?php
 class ControllerPaymentsveacard extends Controller {
-    protected function index() {
+    public function index() {
         $this->load->model('checkout/order');
 
     	$this->data['button_confirm'] = $this->language->get('button_confirm');
