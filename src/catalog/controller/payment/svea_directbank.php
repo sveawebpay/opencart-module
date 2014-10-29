@@ -2,17 +2,17 @@
 class ControllerPaymentsveadirectbank extends Controller {
     public function index() {
         $this->load->model('checkout/order');
-    	//$this->data['button_confirm'] = $this->language->get('button_confirm');
-    	$this->data['button_continue'] = $this->language->get('button_continue');
-        $this->data['button_back'] = $this->language->get('button_back');
+    	//$data['button_confirm'] = $this->language->get('button_confirm');
+    	$data['button_continue'] = $this->language->get('button_continue');
+        $data['button_back'] = $this->language->get('button_back');
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
-                $this->data['back'] = 'index.php?route=checkout/payment';
+                $data['back'] = 'index.php?route=checkout/payment';
         } else {
-                $this->data['back'] = 'index.php?rout=checkout/guest_step_2';
+                $data['back'] = 'index.php?rout=checkout/guest_step_2';
         }
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $this->data['countryCode'] = $order_info['payment_iso_code_2'];
+        $data['countryCode'] = $order_info['payment_iso_code_2'];
         $this->id = 'payment';
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_directbank.tpl')) {
@@ -21,8 +21,8 @@ class ControllerPaymentsveadirectbank extends Controller {
                 $this->template = 'default/template/payment/svea_directbank.tpl';
         }
 
-        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_directbank.png'>";
-        $this->data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
+        $data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_directbank.png'>";
+        $data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
 
         /*
          **get my methods, present page
@@ -34,7 +34,7 @@ class ControllerPaymentsveadirectbank extends Controller {
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         try {
             $svea = WebPay::getPaymentMethods($conf);
-            $this->data['sveaMethods'] = $svea
+            $data['sveaMethods'] = $svea
             ->setContryCode($order_info['payment_iso_code_2'])
             ->doRequest();
         } catch (Exception $e) {
@@ -45,7 +45,7 @@ class ControllerPaymentsveadirectbank extends Controller {
         }
 
 
-        $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
+        $data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
         $this->render();
 
@@ -237,7 +237,7 @@ class ControllerPaymentsveadirectbank extends Controller {
 
 
     private function renderFailure($rejection){
-        $this->data['continue'] = 'index.php?route=checkout/cart';
+        $data['continue'] = 'index.php?route=checkout/cart';
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl';
 		} else {
@@ -252,14 +252,14 @@ class ControllerPaymentsveadirectbank extends Controller {
 			'common/header'
 		);
 
-        $this->data['text_message'] = "<br />".  $this->responseCodes($rejection->resultcode, $rejection->errormessage)."<br /><br /><br />";
-        $this->data['heading_title'] = $this->language->get('error_heading');
-        $this->data['footer'] = "";
+        $data['text_message'] = "<br />".  $this->responseCodes($rejection->resultcode, $rejection->errormessage)."<br /><br /><br />";
+        $data['heading_title'] = $this->language->get('error_heading');
+        $data['footer'] = "";
 
-        $this->data['button_continue'] = $this->language->get('button_continue');
-		$this->data['button_back'] = $this->language->get('button_back');
+        $data['button_continue'] = $this->language->get('button_continue');
+		$data['button_back'] = $this->language->get('button_back');
 
-        $this->data['continue'] = 'index.php?route=checkout/cart';
+        $data['continue'] = 'index.php?route=checkout/cart';
         $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
 
