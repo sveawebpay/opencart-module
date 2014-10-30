@@ -209,7 +209,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                 if ($deliverObj->accepted == 1) {
                     $response = array("success" => true);
                     //update order status for delivered
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea contractNumber '.$deliverObj->contractNumber);
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea contractNumber '.$deliverObj->contractNumber);
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea contractNumber: ".$deliverObj->contractNumber."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
                     $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_partpayment_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea contractNumber: " . $deliverObj->contractNumber . "', date_added = NOW()");
                     //I not, send error codes
@@ -220,7 +220,7 @@ class ControllerPaymentsveapartpayment extends Controller {
             } else {
                 $response = array("success" => true);
                 //update order status for created
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'),'Svea order id: '. $svea->sveaOrderId);
+                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'),'Svea order id: '. $svea->sveaOrderId);
             }
 
             //else send errors to view
@@ -384,12 +384,12 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     public function formatAddons() {
         //Get all addons
-        $this->load->model('setting/extension');
+        $this->load->model('extension/extension');
         $total_data = array();
         $total = 0;
         $svea_tax = array();
         $cartTax = $this->cart->getTaxes();
-        $results = $this->model_setting_extension->getExtensions('total');
+        $results = $this->model_extension_extension->getExtensions('total');
         foreach ($results as $result) {
             //if this result is activated
             if ($this->config->get($result['code'] . '_status')) {

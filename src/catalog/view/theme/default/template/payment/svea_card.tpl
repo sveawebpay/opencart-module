@@ -1,4 +1,4 @@
- <div class="content">
+ <div class="container-fluid">
 
             <div><span><?php echo $logo; ?></span></div>
             <div><span><?php echo $cardLogos; ?></span></div>

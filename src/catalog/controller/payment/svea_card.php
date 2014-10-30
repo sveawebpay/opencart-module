@@ -137,7 +137,6 @@ class ControllerPaymentsveacard extends Controller {
         $this->load->model('payment/svea_card');
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
-
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
@@ -148,14 +147,13 @@ class ControllerPaymentsveacard extends Controller {
         $this->session->data['order_id'] = $resp->response->clientOrderNumber;
         if($resp->response->resultcode != '0'){
             if ($resp->response->accepted == 1){
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$resp->response->transactionId);
+                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$resp->response->transactionId);
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$resp->response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_card_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $resp->response->transactionId . "', date_added = NOW()");
 
                 header("Location: index.php?route=checkout/success");
                 flush();
             }else{
-                $this->session->data['error_warning'] = $this->responseCodes($resp->response->resultcode, $resp->response->errormessage);
                 $this->renderFailure($resp->response);
             }
         }else{
@@ -165,29 +163,9 @@ class ControllerPaymentsveacard extends Controller {
     }
 
     private function renderFailure($rejection){
-        $data['continue'] = 'index.php?route=checkout/cart';
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl';
-		} else {
-			$this->template = 'default/template/payment/svea_hostedg_failure.tpl';
-		}
+        $this->session->data['error'] = $this->responseCodes($rejection->resultcode, $rejection->errormessage);
+        $this->response->redirect($this->url->link('checkout/checkout', 'error=' . $this->responseCodes($rejection->resultcode, $rejection->errormessage),'SSL'));
 
-
-		$this->children = array(
-			'common/column_right',
-			'common/footer',
-			'common/column_left',
-			'common/header'
-		);
-        $data['text_message'] = "<br />".  $this->responseCodes($rejection->resultcode, $rejection->errormessage)."<br /><br /><br />";
-        $data['heading_title'] = $this->language->get('error_heading');
-        $data['footer'] = "";
-
-        $data['button_continue'] = $this->language->get('button_continue');
-		$data['button_back'] = $this->language->get('button_back');
-
-        $data['continue'] = 'index.php?route=checkout/cart';
-        $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
 
      private function responseCodes($err,$msg = "") {

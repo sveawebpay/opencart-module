@@ -1,4 +1,4 @@
-<div class="buttons">
+<div class="container-fluid">
         <form id="sveaForm" action="<?php echo $continue; ?>" method="post">
             <div><p><?php echo $logo; ?></p></div>
             <table class="radio">
@@ -14,7 +14,7 @@
                                 <div class="col-sm-9">
                                  <input '.$checked. ' id="svea_'.$sveaM.'" type="radio" value="'.$sveaM.'" name="svea_directbank_payment_method">
                                  <img src="'.$svea_banks_base.$sveaM.'.png" >
-                           
+
                            '
                         ;
                         $i++;

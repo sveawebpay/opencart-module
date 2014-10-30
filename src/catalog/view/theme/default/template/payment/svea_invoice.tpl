@@ -1,4 +1,4 @@
-<div class="content">
+<div class="container-fluid">
     <div><p><?php echo $logo; ?></p></div>
     <?php
     if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE") {

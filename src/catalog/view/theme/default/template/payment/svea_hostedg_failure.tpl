@@ -1,4 +1,6 @@
-<?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
+<!--<?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>-->
+<?php echo $header; ?>
+<?php echo $column_left; ?>
 <div id="content">
   <div class="top">
     <div class="left"></div>
@@ -7,7 +9,7 @@
       <h1><?php echo $heading_title; ?></h1>
     </div>
   </div>
-  
+
   <div class="middle"><?php echo $text_message; ?>
     <div class="buttons">
       <table>

@@ -1,7 +1,7 @@
-<div class="content">
+<div class="container-fluid">
     <div><?php echo $logo; ?></div>
 
-    <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
+    <div class="container-fluid" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
         <?php echo $text_payment_options; ?>:<br />
         <?php
 
@@ -15,12 +15,14 @@
                 printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>",  $paymentOptions['error'] );
             }else{
                 $flag = true;
+                printf("<div class=\"form-group\">");
                 foreach( $paymentOptions as $p )
                 {
-                    printf(   "<div><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>",
+                    printf(   "<div class=\"col-sm-9\"><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>",
                                     $p['campaignCode'], $flag ? 'checked' : '', $p['description'].': '.$p['price_per_month'] );
                     $flag = false;
                 }
+                 printf("</div>");
             }
 
 
