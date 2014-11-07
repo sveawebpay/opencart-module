@@ -214,9 +214,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->response->setOutput($this->load->view('payment/svea_invoice.tpl', $data));
 	}
 
-
-
-	private function validate() {
+        private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/svea_invoice')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}

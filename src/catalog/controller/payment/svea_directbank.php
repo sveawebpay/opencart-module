@@ -174,6 +174,9 @@ class ControllerPaymentsveadirectbank extends Controller {
              echo '<div class="attention">Logged Svea Error</div>';
             exit();
          }
+         //Save order but Void it while order status is unsure
+        $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], 0,'Sent to Svea gateway.');
+
          echo '<html><head>
                 <script type="text/javascript">
                     function doPost(){
@@ -214,22 +217,21 @@ class ControllerPaymentsveadirectbank extends Controller {
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf);
+        $response = $resp->getResponse();
 
-        $this->session->data['order_id'] = $resp->response->clientOrderNumber;
+        if($response->resultcode !== '0'){
+        if ($response->accepted === 1){
+            //sets orderhistory
+            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'],$this->config->get('svea_directbank_order_status_id'),'Svea transactionId: '.$response->transactionId);
+            //adds comments to edit order comment field to use when edit order
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
 
-        if($resp->response->resultcode != '0'){
-        if ($resp->response->accepted == 1){
-                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_directbank_order_status_id'),'Svea transactionId: '.$resp->response->transactionId);
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$resp->response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_directbank_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $resp->response->transactionId . "', date_added = NOW()");
-
-                header("Location: index.php?route=checkout/success");
-                flush();
+            $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
-                $this->renderFailure($resp->response);
+                $this->renderFailure($response);
             }
         }else{
-            $this->renderFailure($resp->response);
+            $this->renderFailure($response);
         }
     }
 
