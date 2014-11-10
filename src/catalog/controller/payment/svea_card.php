@@ -1,33 +1,27 @@
 <?php
 class ControllerPaymentsveacard extends Controller {
-    protected function index() {
+    public function index() {
         $this->load->model('checkout/order');
 
-    	$this->data['button_confirm'] = $this->language->get('button_confirm');
-        $this->data['button_back'] = $this->language->get('button_back');
+    	$data['button_confirm'] = $this->language->get('button_confirm');
+        $data['button_back'] = $this->language->get('button_back');
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
-            $this->data['back'] = 'index.php?route=checkout/payment';
+            $data['back'] = 'index.php?route=checkout/payment';
         } else {
-            $this->data['back'] = 'index.php?rout=checkout/guest_step_2';
+            $data['back'] = 'index.php?rout=checkout/guest_step_2';
         }
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $this->data['countryCode'] = $order_info['payment_iso_code_2'];
+        $data['countryCode'] = $order_info['payment_iso_code_2'];
         $this->id = 'payment';
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/svea_card.tpl';
-        } else {
-            $this->template = 'default/template/payment/svea_card.tpl';
-        }
-
-        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_card.png'>";
-        $this->data['cardLogos'] = "<img src='admin/view/image/payment/svea_direct/KORTCERT.png'>
+        $data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_card.png'>";
+        $data['cardLogos'] = "<img src='admin/view/image/payment/svea_direct/KORTCERT.png'>
                                     <img src='admin/view/image/payment/svea_direct/AMEX.png'>
                                     <img src='admin/view/image/payment/svea_direct/DINERS.png'>
                                     ";
-        $this->data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
+        $data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
 
         $this->load->model('checkout/coupon');
@@ -74,8 +68,8 @@ class ControllerPaymentsveacard extends Controller {
                         ->setDescription($product['model'])
                     );
         }
-
          $addons = $this->formatAddons();
+
          //extra charge addons like shipping and invoice fee
          foreach ($addons as $addon) {
             if($addon['value'] >= 0){
@@ -104,7 +98,8 @@ class ControllerPaymentsveacard extends Controller {
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
-            ->setClientOrderNumber($this->session->data['order_id'])
+           // ->setClientOrderNumber($this->session->data['order_id'])
+            ->setClientOrderNumber($this->session->data['order_id'].  rand(0, 1000000))//use for testing to avoid duplication of order number
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
@@ -118,19 +113,25 @@ class ControllerPaymentsveacard extends Controller {
             exit();
 
         }
-
+         //Save order but Void it while order status is unsure
+        $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], 0,'Sent to Svea gateway.');
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
-        $this->data['form_start_tag'] = $fields['form_start_tag'];
-        $this->data['merchant_id'] = $fields['input_merchantId'];
-        $this->data['input_message'] = $fields['input_message'];
-        $this->data['input_mac'] = $fields['input_mac'];
-        $this->data['input_submit'] = $fields['input_submit'];
-        $this->data['form_end_tag'] = $fields['form_end_tag'];
-        $this->data['submitMessage'] = $this->language->get('button_confirm');
+        $data['form_start_tag'] = $fields['form_start_tag'];
+        $data['merchant_id'] = $fields['input_merchantId'];
+        $data['input_message'] = $fields['input_message'];
+        $data['input_mac'] = $fields['input_mac'];
+        $data['input_submit'] = $fields['input_submit'];
+        $data['form_end_tag'] = $fields['form_end_tag'];
+        $data['submitMessage'] = $this->language->get('button_confirm');
 
-        $this->render();
+//        $this->render();
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {
+                return $this->load->view($this->config->get('config_template') . '/template/payment/svea_card.tpl', $data);
+        } else {
+                return $this->load->view('default/template/payment/svea_card.tpl', $data);
+        }
     }
 
     public function responseSvea(){
@@ -138,57 +139,36 @@ class ControllerPaymentsveacard extends Controller {
         $this->load->model('payment/svea_card');
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
-
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
 
-         //Testmode
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
-        $this->session->data['order_id'] = $resp->response->clientOrderNumber;
-        if($resp->response->resultcode != '0'){
-            if ($resp->response->accepted == 1){
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$resp->response->transactionId);
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$resp->response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_card_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $resp->response->transactionId . "', date_added = NOW()");
+        $response = $resp->getResponse();
+//
+        if($response->resultcode !== '0'){
+            if ($response->accepted === 1){
+                //sets orderhistory
+                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'],$this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId);
+                //adds comments to edit order comment field to use when edit order
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
 
-                header("Location: index.php?route=checkout/success");
-                flush();
+                $this->response->redirect($this->url->link('checkout/success', '','SSL'));
+
             }else{
-                $this->session->data['error_warning'] = $this->responseCodes($resp->response->resultcode, $resp->response->errormessage);
-                $this->renderFailure($resp->response);
+                $this->renderFailure($response);
             }
         }else{
-            $this->renderFailure($resp->response);
+            $this->renderFailure($response);
         }
 
     }
 
     private function renderFailure($rejection){
-        $this->data['continue'] = 'index.php?route=checkout/cart';
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl';
-		} else {
-			$this->template = 'default/template/payment/svea_hostedg_failure.tpl';
-		}
+        $this->session->data['error'] = $this->responseCodes($rejection->resultcode, $rejection->errormessage);
+        $this->response->redirect($this->url->link('checkout/checkout', 'error=' . $this->responseCodes($rejection->resultcode, $rejection->errormessage),'SSL'));
 
-
-		$this->children = array(
-			'common/column_right',
-			'common/footer',
-			'common/column_left',
-			'common/header'
-		);
-        $this->data['text_message'] = "<br />".  $this->responseCodes($rejection->resultcode, $rejection->errormessage)."<br /><br /><br />";
-        $this->data['heading_title'] = $this->language->get('error_heading');
-        $this->data['footer'] = "";
-
-        $this->data['button_continue'] = $this->language->get('button_continue');
-		$this->data['button_back'] = $this->language->get('button_back');
-
-        $this->data['continue'] = 'index.php?route=checkout/cart';
-        $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
 
      private function responseCodes($err,$msg = "") {
@@ -221,12 +201,13 @@ class ControllerPaymentsveacard extends Controller {
 
      public function formatAddons() {
         //Get all addons
-        $this->load->model('setting/extension');
+       $this->load->model('extension/extension');
+
         $total_data = array();
         $total = 0;
         $svea_tax = array();
         $cartTax = $this->cart->getTaxes();
-        $results = $this->model_setting_extension->getExtensions('total');
+        $results = $this->model_extension_extension->getExtensions('total');
         foreach ($results as $result) {
           //if this result is activated
            if($this->config->get($result['code'] . '_status')){
