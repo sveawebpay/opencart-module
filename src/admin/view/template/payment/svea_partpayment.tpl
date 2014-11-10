@@ -28,7 +28,7 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveapartpayment" class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-3 control-label">Version</div>
-                <div class="col-sm-9">3.0.0</div>
+                <div class="col-sm-9">3.0.1</div>
             </div>
             <div class="form-group">
                 <label for="svea_partpayment_geo_zone_id" class="col-sm-3 control-label"><?php echo $entry_geo_zone; ?></label>
