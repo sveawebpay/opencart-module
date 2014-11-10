@@ -1,9 +1,11 @@
 # OpenCart - Svea payment module
 
-##Version 2.6.4
-* Supports OpenCart 1.4.9 or higher
+##Version 3.0.0
+* Supports OpenCart 2.0.0 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
+
+###Important! If you have an Opencart version older than 2.0.0, you need to go to _branches_ -> **Opencart_1.x** and download ZIP.
 
 This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
 
@@ -22,7 +24,10 @@ For release history, see [**github release tags**](https://github.com/sveawebpay
 #Installation instructions
 If you are upgrading from a previous version of the Svea module follow these steps:
 * Uninstall the old module.
-*
+* FTP all the files in the src folder to the root of your directory. The folders _admin_, _catalog_, _svea_ should merge with the existing folders with the same name.
+If you have vqmod installed, the vqmod folder shall merge with that.
+* Install the module from Opencart admin
+* Configure and save.
 
 ##Basic installation example using the Svea Invoice payment method
 

@@ -1,4 +1,4 @@
- <div class="buttons">
+ <div class="container-fluid">
 
             <div><span><?php echo $logo; ?></span></div>
             <div><span><?php echo $cardLogos; ?></span></div>
@@ -12,13 +12,11 @@
 
 
 
-    <div class="right">
-        <?php if(floatval(VERSION) >= 1.5){?>
-        <input id="checkout" class="button" type='submit' name='submit' value='<?php echo $submitMessage ?>' />
-        <?php }else{ ?>
+    <div class="buttons">
+       <div class="pull-right">
+            <input id="checkout" class="btn btn-primary" type='submit' name='submit' value='<?php echo $submitMessage ?>' />
+       </div>
 
-        <a id="checkout" class="button" onclick="document.paymentForm.submit()"><span><?php echo $button_confirm; ?></span></a>
-        <?php }?>
        <?php
             echo $form_end_tag;
         ?>
