@@ -22,7 +22,7 @@
                 <table class="form"><tbody>
                     <tr>
                         <td>Version</td>
-                        <td>3.0.0</td>
+                        <td>3.0.1</td>
                     </tr>
                 </tbody></table>
 

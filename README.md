@@ -1,6 +1,6 @@
 # OpenCart - Svea payment module
 
-##Version 3.0.0
+##Version 3.0.1
 * Supports OpenCart 2.0.0 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
@@ -220,7 +220,7 @@ The response of the payment is then returned to the module via POST or GET (sele
 
 ###When using GET response
 Have in mind that a long response string sent via GET could get cut off in some browsers and especially in some servers due to server limitations.
-Our recommendation to solve this is to check the PHP configuration of the server and set it to accept at LEAST 512 characters.
+Our recommendation to solve this is to check the PHP configuration of the server and set it to accept at LEAST 1024 characters.
 
 ###When using POST response
 As our servers are using SSL certificates and when using POST to get the response from a payment the users browser propmts the user with a question whether to continue or not, if the receiving site does not have a certificate.
