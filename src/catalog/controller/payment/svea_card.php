@@ -98,8 +98,8 @@ class ControllerPaymentsveacard extends Controller {
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
-           // ->setClientOrderNumber($this->session->data['order_id'])
-            ->setClientOrderNumber($this->session->data['order_id'].  rand(0, 1000000))//use for testing to avoid duplication of order number
+            ->setClientOrderNumber($this->session->data['order_id'])
+//            ->setClientOrderNumber($this->session->data['order_id'].  rand(0, 1000000))//use for testing to avoid duplication of order number
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
