@@ -162,7 +162,9 @@ class ControllerPaymentsveadirectbank extends Controller {
               $form = $svea
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
-                ->setClientOrderNumber($this->session->data['order_id'])//remove rand after developing
+                ->setClientOrderNumber($this->session->data['order_id'])
+                //->setClientOrderNumber($this->session->data['order_id'].  rand(0, 1000000))//use for testing to avoid duplication of order number
+
                 ->setOrderDate(date('c'))
                 ->usePaymentMethod($_POST['svea_directbank_payment_method'])
                     ->setCancelUrl($server_url.'index.php?route=payment/svea_directbank/responseSvea')
