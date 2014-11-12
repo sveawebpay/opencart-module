@@ -164,7 +164,7 @@ $('a#checkout').click(function(event) {
                 },
             url: 'index.php?route=payment/svea_partpayment/confirm',
             success: function(data) {
-
+                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); //remove junkchars hex 00-1F and unicode FEFF(BOM - Byte Order Mark)
                 var json = JSON.parse(data);
 
                 if(json.success){
@@ -209,7 +209,7 @@ $('#getPlan').click(function() {
                 ssn: ssnNo},
     		success: function(msg) {
                     var json = JSON.parse(msg);
-
+                      msg = msg.replace(/[\x00-\x1F\uFEFF]/g,''); //remove junkchars hex 00-1F and unicode FEFF(BOM - Byte Order Mark)
                     if(json.addresses.error){
                         $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.addresses.error);
                     }
