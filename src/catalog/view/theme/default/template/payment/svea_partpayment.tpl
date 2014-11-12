@@ -167,6 +167,9 @@ $('a#checkout').click(function(event) {
             url: 'index.php?route=payment/svea_partpayment/confirm',
             success: function(data) {
 
+               // clean response from junk chars
+                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
+
                 var json = JSON.parse(data);
 
                 if(json.success){
@@ -210,6 +213,10 @@ $('#getPlan').click(function() {
             data: {
                 ssn: ssnNo},
     		success: function(msg) {
+
+                 // clean response from junk chars
+                    msg = msg.replace(/[\x00-\x1F\uFEFF]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
+
                     var json = JSON.parse(msg);
 
                     if(json.addresses.error){

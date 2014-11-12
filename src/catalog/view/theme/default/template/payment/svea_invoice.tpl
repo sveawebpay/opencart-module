@@ -198,7 +198,7 @@ $('a#checkout').click(function(event) {
         success: function(data) {
 
                 // clean response from junk chars
-                data = data.replace(/[\x00-\x1F]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
+                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
 
                 // parse response
                 var json = JSON.parse(data);
@@ -251,7 +251,7 @@ $('#getSSN').click(function() {
             success: function(data) {
 
                 // clean response from junk chars
-                data = data.replace(/[\x00-\x1F]/g,'');    //fix for nonprintable chars showing up in front of our response in quickcheckout
+                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); //remove junkchars hex 00-1F and unicode FEFF(BOM - Byte Order Mark)
 
                 // parse response
                 var json = JSON.parse(data);
