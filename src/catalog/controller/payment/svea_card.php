@@ -88,8 +88,19 @@ class ControllerPaymentsveacard extends Controller {
                     ->setArticleNumber($addon['code'])
                     ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
-            //discounts
+            }    //voucher(-)
+            elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
+                $svea = $svea
+                    ->addDiscount(WebPayItem::fixedDiscount()
+                        ->setDiscountId($addon['code'])
+                        ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
+                        ->setVatPercent(0)//no vat when using a voucher
+                        ->setName(isset($addon['title']) ? $addon['title'] : "")
+                        ->setUnit($this->language->get('unit'))
+                        ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                );
             }
+             //discounts
             else {
                 $taxRates = $this->getTaxRatesInOrder($svea);
                 $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
@@ -320,6 +331,7 @@ class ControllerPaymentsveacard extends Controller {
             ;
             $fixedDiscounts[] = $discountA;
         }
+
         return $fixedDiscounts;
     }
     /**

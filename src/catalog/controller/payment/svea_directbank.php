@@ -115,10 +115,22 @@ class ControllerPaymentsveadirectbank extends Controller {
                     ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
             }
+              //voucher(-)
+            elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
+                $svea = $svea
+                    ->addDiscount(WebPayItem::fixedDiscount()
+                        ->setDiscountId($addon['code'])
+                        ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
+                        ->setVatPercent(0)//no vat when using a voucher
+                        ->setName(isset($addon['title']) ? $addon['title'] : "")
+                        ->setUnit($this->language->get('unit'))
+                        ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                );
+            }
             //discounts
             else {
                 $taxRates = $this->getTaxRatesInOrder($svea);
-                $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                $discountRows = $this->splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
                 }
@@ -340,7 +352,7 @@ class ControllerPaymentsveadirectbank extends Controller {
             }
             return $total_data;
     }
-    /**
+     /**
      * TODO replace these with the one in php integration package Helper class in next release
      *
      * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
@@ -350,7 +362,6 @@ class ControllerPaymentsveadirectbank extends Controller {
      * Note: only supports two allowed tax rates for now.
      */
     private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
-
 
         $fixedDiscounts = array();
 
@@ -392,6 +403,7 @@ class ControllerPaymentsveadirectbank extends Controller {
             ;
             $fixedDiscounts[] = $discountA;
         }
+
         return $fixedDiscounts;
     }
     /**
