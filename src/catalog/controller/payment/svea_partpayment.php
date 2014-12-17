@@ -118,8 +118,21 @@ class ControllerPaymentsveapartpayment extends Controller {
                         ->setArticleNumber($addon['code'])
                         ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
+            }
+                 //voucher(-)
+            elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
+                $svea = $svea
+                    ->addDiscount(WebPayItem::fixedDiscount()
+                        ->setDiscountId($addon['code'])
+                        ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
+                        ->setVatPercent(0)//no vat when using a voucher
+                        ->setName(isset($addon['title']) ? $addon['title'] : "")
+                        ->setUnit($this->language->get('unit'))
+                        ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                );
+            }
                 //discounts
-            } else {
+            else {
                 $taxRates = $this->getTaxRatesInOrder($svea);
                 $discountRows = $this->splitMeanToTwoTaxRates(abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates);
                 foreach ($discountRows as $row) {
@@ -445,8 +458,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         return $country;
     }
 
-    /**
-
+     /**
      * TODO replace these with the one in php integration package Helper class in next release
      *
      * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
@@ -455,11 +467,11 @@ class ControllerPaymentsveapartpayment extends Controller {
      *
      * Note: only supports two allowed tax rates for now.
      */
-    private function splitMeanToTwoTaxRates($discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates) {
+    private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
 
         $fixedDiscounts = array();
 
-        if (sizeof($allowedTaxRates) > 1) {
+        if( sizeof( $allowedTaxRates ) > 1 ) {
 
             // m = $discountMeanVat
             // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
@@ -471,17 +483,17 @@ class ControllerPaymentsveapartpayment extends Controller {
             $b = 1 - $a;
 
             $discountA = WebPayItem::fixedDiscount()
-                    ->setAmountExVat(Svea\Helper::bround(($discountAmountExVat * $a), 2))
-                    ->setVatPercent($allowedTaxRates[0])
-                    ->setName(isset($discountName) ? $discountName : "" )
-                    ->setDescription((isset($discountDescription) ? $discountDescription : "") . ' (' . $allowedTaxRates[0] . '%)')
+                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $a),2) )
+                            ->setVatPercent( $allowedTaxRates[0] )
+                            ->setName( isset( $discountName) ? $discountName : "" )
+                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[0]. '%)' )
             ;
 
             $discountB = WebPayItem::fixedDiscount()
-                    ->setAmountExVat(Svea\Helper::bround(($discountAmountExVat * $b), 2))
-                    ->setVatPercent($allowedTaxRates[1])
-                    ->setName(isset($discountName) ? $discountName : "" )
-                    ->setDescription((isset($discountDescription) ? $discountDescription : "") . ' (' . $allowedTaxRates[1] . '%)')
+                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $b),2) )
+                            ->setVatPercent(  $allowedTaxRates[1] )
+                            ->setName( isset( $discountName) ? $discountName : "" )
+                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[1]. '%)' )
             ;
 
             $fixedDiscounts[] = $discountA;
@@ -490,17 +502,16 @@ class ControllerPaymentsveapartpayment extends Controller {
         // single tax rate, so use shop supplied mean as vat rate
         else {
             $discountA = WebPayItem::fixedDiscount()
-                    ->setAmountExVat(Svea\Helper::bround(($discountAmountExVat), 2))
-                    ->setVatPercent($allowedTaxRates[0])
-                    ->setName(isset($discountName) ? $discountName : "" )
-                    ->setDescription((isset($discountDescription) ? $discountDescription : ""))
+                ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat),2) )
+                ->setVatPercent( $allowedTaxRates[0] )
+                ->setName( isset( $discountName) ? $discountName : "" )
+                ->setDescription( (isset( $discountDescription) ? $discountDescription : "") )
             ;
-
             $fixedDiscounts[] = $discountA;
         }
+
         return $fixedDiscounts;
     }
-
     /**
      * TODO replace these with the one in php integration package Helper class in next release
      *

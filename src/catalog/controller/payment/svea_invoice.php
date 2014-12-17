@@ -112,7 +112,7 @@ class ControllerPaymentsveainvoice extends Controller {
 
             if($addon['value'] >= 0){
                 $svea = $svea
-                    ->addOrderRow(Item::orderRow()
+                    ->addOrderRow(WebPayItem::orderRow()
                     ->setQuantity(1)
                     ->setAmountExVat(floatval($addon['value'] * $currencyValue))
                     ->setVatPercent(intval($addon['tax_rate']))
@@ -121,11 +121,23 @@ class ControllerPaymentsveainvoice extends Controller {
                     ->setArticleNumber($addon['code'])
                     ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
+
+            //voucher(-)
+            } elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
+                $svea = $svea
+                    ->addDiscount(WebPayItem::fixedDiscount()
+                        ->setDiscountId($addon['code'])
+                        ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
+                        ->setVatPercent(0)//no vat when using a voucher
+                        ->setName(isset($addon['title']) ? $addon['title'] : "")
+                        ->setUnit($this->language->get('unit'))
+                        ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                );
             }
-            //discounts
+            //discounts (-)
             else {
                 $taxRates = $this->getTaxRatesInOrder($svea);
-                $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                $discountRows = $this->splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
                 }
@@ -247,7 +259,7 @@ class ControllerPaymentsveainvoice extends Controller {
                     //discounts
                     else {
                         $taxRates = $this->getTaxRatesInOrder($deliverObj);
-                        $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                        $discountRows = $this->splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                         foreach($discountRows as $row) {
                             $deliverObj = $deliverObj->addDiscount( $row );
                         }
