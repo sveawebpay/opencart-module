@@ -28,7 +28,7 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveadirectbank" class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-3 control-label">Version</div>
-                <div class="col-sm-9">3.0.3</div>
+                <div class="col-sm-9">3.0.4</div>
             </div>
               <div class="form-group">
                     <label for="svea_directbank_testmode" class="col-sm-3 control-label"><?php echo $entry_testmode; ?></label>
