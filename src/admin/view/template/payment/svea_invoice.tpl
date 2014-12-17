@@ -17,7 +17,7 @@
                 <tbody>
                     <tr>
                         <td>Version</td>
-                        <td>2.6.6</td>
+                        <td>2.6.7</td>
                     </tr>
                     <tr>
                         <td><?php echo $entry_geo_zone; ?></td>
