@@ -214,6 +214,16 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->response->setOutput($this->load->view('payment/svea_invoice.tpl', $data));
 	}
 
+        public function install() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_invoice', array('svea_invoice_status'=>1));
+	}
+
+	public function uninstall() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_invoice', array('svea_invoice_status'=>0));
+	}
+
         private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/svea_invoice')) {
 			$this->error['warning'] = $this->language->get('error_permission');

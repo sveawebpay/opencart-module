@@ -87,7 +87,7 @@ class ControllerPaymentsveadirectbank extends Controller {
         );
         $data['action'] = $this->url->link('payment/svea_directbank', 'token=' . $this->session->data['token'], 'SSL');
         $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
-	
+
       //statuses
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
@@ -141,6 +141,16 @@ class ControllerPaymentsveadirectbank extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('payment/svea_directbank.tpl', $data));
+	}
+
+          public function install() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_directbank', array('svea_directbank_status'=>1));
+	}
+
+	public function uninstall() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_directbank', array('svea_directbank_status'=>0));
 	}
 
 	private function validate() {

@@ -159,6 +159,16 @@ class ControllerPaymentsveacard extends Controller {
         $this->response->setOutput($this->load->view('payment/svea_card.tpl', $data));
     }
 
+        public function install() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_card', array('svea_card_status'=>1));
+	}
+
+	public function uninstall() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_card', array('svea_card_status'=>0));
+	}
+
 	private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/svea_card')) {
 			$this->error['warning'] = $this->language->get('error_permission');

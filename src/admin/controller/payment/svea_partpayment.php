@@ -268,7 +268,15 @@ class ControllerPaymentsveapartpayment extends Controller {
             )   ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
             ';
         $this->db->query($q);
+
+         $this->load->model('setting/setting');
+        $this->model_setting_setting->editSetting('svea_partpayment', array('svea_partpayment_status'=>1));
     }
+
+	public function uninstall() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_partpayment', array('svea_partpayment_status'=>0));
+	}
 
       protected function sveaFormatParams($response){
             $result = array();
