@@ -1,6 +1,7 @@
 <?php
 class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array();
+        protected $svea_version = '2.6.7';
 
 	public function index() {
 		$this->load->language('payment/svea_partpayment');
@@ -18,6 +19,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     $this->session->data['success'] = $this->language->get('text_success');
                     $this->redirect(HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token']);
 		}
+                $data['svea_version'] = $this->getSveaVersion();
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
@@ -264,7 +266,24 @@ class ControllerPaymentsveapartpayment extends Controller {
             )   ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
             ';
         $this->db->query($q);
+
     }
+
+    protected function getSveaVersion(){
+            $update_url = "https://github.com/sveawebpay/opencart-module/archive/Opencart_1.x.zip";
+            $docs_url = "https://github.com/sveawebpay/opencart-module/tree/Opencart_1.x";
+            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/Opencart_1.x/docs/info.json";
+            $json = file_get_contents($url);
+            $data = json_decode($json);
+            if($data->module_version == $this->svea_version){
+                return "You have the latest ". $this->svea_version . " version.";
+            }else{
+             return $this->svea_version . '<br />
+                There is a new version available.<br />
+                <a href="'.$docs_url.'" title="Go to release notes on github">View version details</a> or <br />
+                <a title="Download zip" href="'.$update_url.'"><img width="67" src="view/image/svea_download.png"></a>';
+            }
+        }
 
       protected function sveaFormatParams($response){
             $result = array();

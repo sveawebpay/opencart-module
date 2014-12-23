@@ -1,8 +1,10 @@
 <?php
 class ControllerPaymentsveainvoice extends Controller {
-	private $error = array();
-	 //
-	public function index() {
+
+    private $error = array();
+    protected $svea_version = '2.6.7';
+
+    public function index() {
         $this->load->language('payment/svea_invoice');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -18,6 +20,7 @@ class ControllerPaymentsveainvoice extends Controller {
         }
 
         $this->data['heading_title'] = $this->language->get('heading_title');
+        $this->data['svea_version'] = $this->getSveaVersion();
 
         $this->data['text_enabled']       = $this->language->get('text_enabled');
         $this->data['text_disabled']      = $this->language->get('text_disabled');
@@ -222,9 +225,23 @@ class ControllerPaymentsveainvoice extends Controller {
         $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
 	}
 
+        protected function getSveaVersion(){
+            $update_url = "https://github.com/sveawebpay/opencart-module/archive/Opencart_1.x.zip";
+            $docs_url = "https://github.com/sveawebpay/opencart-module/tree/Opencart_1.x";
+            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/Opencart_1.x/docs/info.json";
+            $json = file_get_contents($url);
+            $data = json_decode($json);
+            if($data->module_version == $this->svea_version){
+                return "You have the latest ". $this->svea_version . " version.";
+            }else{
+             return $this->svea_version . '<br />
+                There is a new version available.<br />
+                <a href="'.$docs_url.'" title="Go to release notes on github">View version details</a> or <br />
+                <a title="Download zip" href="'.$update_url.'"><img width="67" src="view/image/svea_download.png"></a>';
+            }
+        }
 
-
-	private function validate() {
+        private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/svea_invoice')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}

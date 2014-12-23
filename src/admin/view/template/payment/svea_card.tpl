@@ -16,7 +16,7 @@
             <tbody>
                 <tr>
                     <td>Version</td>
-                    <td>2.6.7</td>
+                    <td><?php echo $svea_version; ?></td>
                 </tr>
                 <tr>
                     <td><?php echo $entry_testmode; ?>:</td>
