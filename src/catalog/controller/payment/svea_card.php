@@ -105,17 +105,19 @@ class ControllerPaymentsveacard extends Controller {
         }
 
         $server_url = $this->setServerURL();
-
+        $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
+        $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
-            ->setClientOrderNumber($this->session->data['order_id'])
-//            ->setClientOrderNumber($this->session->data['order_id'].  rand(0, 1000000))//use for testing to avoid duplication of order number
+//            ->setClientOrderNumber($this->session->data['order_id'])
+            ->setClientOrderNumber($this->session->data['order_id'].  rand(0, 1000000))//use for testing to avoid duplication of order number
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
             ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-            ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+            ->setCallbackUrl($callbackUrl)
+            ->setReturnUrl($returnUrl)
             ->setCardPageLanguage(strtolower($order['language_code']))
             ->getPaymentForm();
         }  catch (Exception $e){
@@ -146,6 +148,9 @@ class ControllerPaymentsveacard extends Controller {
     }
 
     public function responseSvea(){
+        $destination = "svea_error_log.txt";
+        error_log(' responseSvea ', 3, $destination);
+
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
         $this->load->language('payment/svea_card');
@@ -174,6 +179,11 @@ class ControllerPaymentsveacard extends Controller {
             $this->renderFailure($response);
         }
 
+    }
+
+    public function callbackSvea(){
+        $destination = "svea_error_log.txt";
+        error_log(' callBackSvea ', 3, $destination);
     }
 
     private function renderFailure($rejection){
