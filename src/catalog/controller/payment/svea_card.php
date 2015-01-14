@@ -104,14 +104,14 @@ class ControllerPaymentsveacard extends Controller {
             }
         }
 
-        $server_url = $this->setServerURL();
+        $server_url = $this->setServerURL();//
         $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
         $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
-//            ->setClientOrderNumber($this->session->data['order_id'])
-            ->setClientOrderNumber($this->session->data['order_id'].  rand(0, 1000000))//use for testing to avoid duplication of order number
+            ->setClientOrderNumber($this->session->data['order_id'])
+//            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it doesent match order_id
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
@@ -146,14 +146,12 @@ class ControllerPaymentsveacard extends Controller {
                 return $this->load->view('default/template/payment/svea_card.tpl', $data);
         }
     }
-
+    /**
+     * This redirects the customer depending on ok or not from Svea
+     */
     public function responseSvea(){
-        $destination = "svea_error_log.txt";
-        error_log(' responseSvea ', 3, $destination);
-
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
-        $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -162,16 +160,9 @@ class ControllerPaymentsveacard extends Controller {
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();
-//
         if($response->resultcode !== '0'){
             if ($response->accepted === 1){
-                //sets orderhistory
-                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'],$this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId);
-                //adds comments to edit order comment field to use when edit order
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
-
             }else{
                 $this->renderFailure($response);
             }
@@ -180,10 +171,30 @@ class ControllerPaymentsveacard extends Controller {
         }
 
     }
-
+    /**
+     * Update order history with status
+     */
     public function callbackSvea(){
-        $destination = "svea_error_log.txt";
-        error_log(' callBackSvea ', 3, $destination);
+        $this->load->model('checkout/order');
+        $this->load->model('payment/svea_card');
+        $this->load->language('payment/svea_card');
+        include(DIR_APPLICATION.'../svea/Includes.php');
+
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
+        $response = $resp->getResponse();
+            if ($response->accepted === 1){
+                 //sets orderhistory
+                $this->model_checkout_order->addOrderHistory($response->clientOrderNumber,$this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId);
+                //adds comments to edit order comment field to use when edit order
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$response->clientOrderNumber . "'");
+
+            }else{
+                $error = $this->responseCodes($response->resultcode, $response->errormessage);
+                $this->model_checkout_order->addOrderHistory($response->clientOrderNumber,10,$error);
+                //adds comments to edit order comment field to use when edit order
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
+            }
     }
 
     private function renderFailure($rejection){
