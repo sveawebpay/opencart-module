@@ -111,25 +111,28 @@ class ControllerPaymentsveacard extends Controller {
         }
 
         $server_url = $this->setServerURL();
+        $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
+        $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
 
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
-            ->setClientOrderNumber($this->session->data['order_id'])
+              ->setClientOrderNumber($this->session->data['order_id'])
+//            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it doesent match order_id
+
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
-            ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
-            ->setReturnUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+            ->setCancelUrl($returnUrl)
+            ->setCallbackUrl($callbackUrl)
+            ->setReturnUrl($returnUrl)
             ->setCardPageLanguage(strtolower($order['language_code']))
             ->getPaymentForm();
         }  catch (Exception $e){
             $this->log->write($e->getMessage());
             echo '<div class="attention">Logged Svea Error</div>';
             exit();
-
         }
-
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
@@ -158,12 +161,8 @@ class ControllerPaymentsveacard extends Controller {
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $this->session->data['order_id'] = $resp->response->clientOrderNumber;
-        if($resp->response->resultcode != '0'){
-            if ($resp->response->accepted == 1){
-                $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$resp->response->transactionId);
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$resp->response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_card_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $resp->response->transactionId . "', date_added = NOW()");
-
+        if($resp->response->resultcode !== '0'){
+            if ($resp->response->accepted === 1){
                 header("Location: index.php?route=checkout/success");
                 flush();
             }else{
@@ -175,6 +174,32 @@ class ControllerPaymentsveacard extends Controller {
         }
 
     }
+
+     /**
+     * Update order history with status
+     */
+    public function callbackSvea(){
+        $this->load->model('checkout/order');
+        $this->load->model('payment/svea_card');
+        $this->load->language('payment/svea_card');
+        include(DIR_APPLICATION.'../svea/Includes.php');
+
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
+        $response = $resp->getResponse();
+            if ($response->accepted === 1){
+                $this->model_checkout_order->confirm($response->clientOrderNumber, $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId);
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_card_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $response->transactionId . "', date_added = NOW()");
+
+            }else{
+                $error = $this->responseCodes($response->resultcode, $response->errormessage);
+                $this->model_checkout_order->confirm($response->clientOrderNumber, 10,$error);
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error."' WHERE order_id = '" . $response->clientOrderNumber . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . $response->clientOrderNumber . "', order_status_id = '" . 10 . "', notify = '" . 0 . "', comment = 'Payment failed. " . $error . "', date_added = NOW()");
+            }
+    }
+
 
     private function renderFailure($rejection){
         $this->data['continue'] = 'index.php?route=checkout/cart';
