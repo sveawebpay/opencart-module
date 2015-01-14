@@ -1,6 +1,7 @@
 <?php
 class ControllerPaymentsveacard extends Controller {
     private $error = array();
+    protected $svea_version = '3.0.5';
 
     public function index() {
         $this->load->language('payment/svea_card');
@@ -23,6 +24,7 @@ class ControllerPaymentsveacard extends Controller {
                 $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
+        $data['svea_version'] = $this->getSveaVersion();
         $data['heading_title']      = $this->language->get('heading_title');
         $data['text_enabled']       = $this->language->get('text_enabled');
         $data['text_disabled']      = $this->language->get('text_disabled');
@@ -158,6 +160,35 @@ class ControllerPaymentsveacard extends Controller {
 
         $this->response->setOutput($this->load->view('payment/svea_card.tpl', $data));
     }
+
+        public function install() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_card', array('svea_card_status'=>1));
+	}
+
+	public function uninstall() {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('svea_card', array('svea_card_status'=>0));
+	}
+
+         protected function getSveaVersion(){
+            $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
+            $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
+            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
+            $json = file_get_contents($url);
+            $data = json_decode($json);
+
+            if($data->module_version == $this->svea_version){
+                return "You have the latest ". $this->svea_version . " version.";
+            }else{
+             return $this->svea_version . '<br />
+                There is a new version available.<br />
+                <a href="'.$docs_url.'" title="Go to release notes on github">View version details</a> or <br />
+                <a title="Download zip" href="'.$update_url.'"><img width="67" src="view/image/download.png"></a>';
+
+            }
+
+        }
 
 	private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/svea_card')) {
