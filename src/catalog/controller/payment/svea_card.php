@@ -104,7 +104,7 @@ class ControllerPaymentsveacard extends Controller {
             }
         }
 
-        $server_url = $this->setServerURL();//
+        $server_url = $this->setServerURL();
         $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
         $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
         $form = $svea
@@ -115,7 +115,7 @@ class ControllerPaymentsveacard extends Controller {
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
-            ->setCancelUrl($server_url.'index.php?route=payment/svea_card/responseSvea')
+            ->setCancelUrl($returnUrl)
             ->setCallbackUrl($callbackUrl)
             ->setReturnUrl($returnUrl)
             ->setCardPageLanguage(strtolower($order['language_code']))
