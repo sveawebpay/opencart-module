@@ -2,21 +2,25 @@
 <modification>
 <id>SveaWebPay Product Price</id>
 <version>2.6.8</version>
-<vqmver>1.0.8</vqmver>
+<vqmver>2.4.1</vqmver>
 <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
     <file name="catalog/controller/product/product.php">
        <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
         <operation name="svea controller load data to view">
             <search position="before"><![CDATA[  if ((float)$product_info['special']) { ]]></search>
             <add><![CDATA[
-                                       $this->load->model('localisation/country');
+
+                                           $this->load->model('localisation/country');
                         $this->load->model('payment/svea_partpayment');
                         $this->load->model('payment/svea_invoice');
+                        $this->load->language('payment/svea_invoice');
+                        $this->load->language('payment/svea_partpayment');
                         $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
                         $svea_show_paymentplan =  $this->model_payment_svea_partpayment->getProductPriceMode();
                         $svea_show_invoice =  $this->model_payment_svea_invoice->getProductPriceMode();
                         $svea_show_invoice_min =  $this->model_payment_svea_invoice->getProductPriceModeMin();
                         $viewProduct = null;
+                        $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
                         if($svea_show_paymentplan === '1' || $svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DE"){
                             $currency_decimals = $_SESSION['currency'] == 'EUR' ? 1 : 0;
                             $price_list = array();
@@ -26,7 +30,7 @@
                             $symbolLeft = $this->currency->getSymbolLeft($_SESSION['currency']);
                             //paymentplan
                             if($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "NL"){
-                                $this->load->language('payment/svea_partpayment');
+
                                 $q ="SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
                                     `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
                                     `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
@@ -37,7 +41,7 @@
 
                                 $query = $this->db->query($q);
                                 $campaigns = $query->rows;
-                                $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
+                                $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($calculate_price, $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
                                 if(sizeof($priceList)){//&& admin settings for product display is set to yes
                                     $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_paymentplan').'</h4>';
 
@@ -64,12 +68,12 @@
                                 }
                             }
                             //invoice
-                            if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $product_info['price'] >= $svea_show_invoice_min){
-                                  $this->load->language('payment/svea_invoice');
+                            if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $calculate_price >= $svea_show_invoice_min){
+
                                 $lowest_to_pay = $this->svea_get_invoice_lowest($svea_country['iso_code_2']);
                                 $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_invoice').'</h4>';
                                 //Based on condition to pay 3% of amount or 100
-                                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * 0.03 < $lowest_to_pay ? $lowest_to_pay : $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * 0.03;
+                                $price = $this->tax->calculate($calculate_price, $product_info['tax_class_id'], $this->config->get('config_tax')) * 0.03 < $lowest_to_pay ? $lowest_to_pay : $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * 0.03;
                                 $prices[] = $price;
                                 $price_list[] = '<div class="svea_product_price_item" style="display:block; margin: 5px 10px 10px 10px">'.
                                                     "<div style='float:left;'>".
@@ -87,6 +91,7 @@
                             }
 
                             //lowest price
+                            $lowest_price = 0;
                             if(sizeof($prices) > 0){
                                 $lowest_price = $symbolLeft.round(min($prices)).$symbolRight;
                             }
@@ -203,7 +208,7 @@
         ]]> </search>
                 <add><![CDATA[
                         <?php
-                    if (isset($svea_widget)) { ?>
+                    if (count($svea_widget) > 0) { ?>
 
                      <div id="svea_price_box"
                                 style=" width: auto;
