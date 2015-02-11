@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
 <id>SveaWebPay Product Price</id>
-<<<<<<< HEAD
 <version>3.0.5</version>
-<vqmver>1.0.8</vqmver>
-=======
-<version>2.6.8</version>
-<vqmver>2.4.1</vqmver>
->>>>>>> 4f250e8... use specialprice on campaign if exists
+<vqmver>2.5.0</vqmver>
 <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
     <file name="catalog/controller/product/product.php">
        <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
@@ -15,7 +10,7 @@
             <search position="before"><![CDATA[  $data['options'] = array(); ]]></search>
             <add><![CDATA[
 
-                        $this->load->model('localisation/country');
+                         $this->load->model('localisation/country');
                         $this->load->model('payment/svea_partpayment');
                         $this->load->model('payment/svea_invoice');
                         $this->load->language('payment/svea_invoice');
@@ -47,7 +42,9 @@
 
                                 $query = $this->db->query($q);
                                 $campaigns = $query->rows;
-                                $priceList = $this->sveaPaymentPlanParamsHelper($this->tax->calculate($calculate_price, $product_info['tax_class_id'], $this->config->get('config_tax')),$campaigns);
+                                $price = floatval($this->tax->calculate($this->currency->format($calculate_price, $_SESSION['currency'],false,false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
+                                $priceList = $this->sveaPaymentPlanParamsHelper($price,$campaigns);
+
                                 if(sizeof($priceList)){//&& admin settings for product display is set to yes
                                     $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_paymentplan').'</h4>';
 
@@ -120,7 +117,7 @@
             <search position="before"><![CDATA[  public function write() { ]]></search>
             <add><![CDATA[
 
-                                private function svea_get_invoice_lowest($svea_country_code) {
+         private function svea_get_invoice_lowest($svea_country_code) {
                         switch ($svea_country_code) {
                             case "SE":
                                 return 100;
@@ -155,17 +152,17 @@
                     private function sveaPaymentPlanParamsHelper($price,$params){
                         $values = array();
                                 if (!empty($params)) {
-                        foreach ($params->campaignCodes as $key => $value) {
-                              if ($price >= $value->fromAmount && $price <= $value->toAmount) {
+                        foreach ($params as $key => $value) {
+                              if ($price >= $value['fromAmount'] && $price <= $value['toAmount']) {
                                 $pair = array();
-                                $pair['pricePerMonth'] = $price * $value->monthlyAnnuityFactor + $value->notificationFee;
+                                $pair['pricePerMonth'] = $price * $value['monthlyAnnuityFactor'] + $value['notificationFee'];
 
                                 foreach ($value as $key => $val) {
-                                    if ($key == "campaignCode") {
+                                    if ($key == 'campaignCode') {
                                         $pair[$key] = $val;
                                     }
 
-                                if($key == "description"){
+                                if($key == 'description'){
                                     $pair[$key] = $val;
                                 }
 
