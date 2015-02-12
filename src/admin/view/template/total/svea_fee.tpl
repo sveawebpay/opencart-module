@@ -3,7 +3,7 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
-        <button type="submit" form="form-klarna-fee" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <button type="submit" onclick="$('#form').submit();" form="form-svea_fee" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
         <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
@@ -25,20 +25,19 @@
         </div>
             <!--<div class="buttons"><a onclick="$('#form').submit();" class="button"><span><?php echo $button_save; ?></span></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a></div>-->
        <div class="panel-body">
-            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form"  class="form-horizontal">
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-svea_fee" class="form-horizontal">
                 <!-- common to all countries -->
                <div class="form-group">
                     <label class="col-sm-3 control-label">Version</label>
                     <div class="col-sm-9"><?php echo $svea_version; ?></div>
                 </div>
-
                 <!-- Countrycode specific -->
-                 <div class="tab-content" id="tab-invoice" >
-                <ul class="nav nav-tabs" id="svea_country">
-                    <?php foreach ($credentials as $code) { ?>
-                    <li><a href="#tab-<?php echo $code['lang'] ?>" data-toggle="tab"><?php echo $code['lang']; ?></a></li>
-                    <?php } ?>
-                </ul>
+                <div class="tab-content" id="tab-invoice" >
+                    <ul class="nav nav-tabs" id="svea_country">
+                        <?php foreach ($credentials as $code) { ?>
+                        <li><a href="#tab-<?php echo $code['lang'] ?>" data-toggle="tab"><?php echo $code['lang']; ?></a></li>
+                        <?php } ?>
+                    </ul>
                 <div class="tab-content">
                 <?php foreach($credentials as $code){ ?>
                 <div class="tab-pane" id="tab-<?php echo $code['lang']; ?>">
@@ -79,7 +78,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="svea_invoice_sort_order" class="col-sm-3 control-label"><?php echo $entry_sort_order; ?></label>
+                        <label for="svea_fee_sort_order_<?php echo $code['lang']; ?>" class="col-sm-3 control-label"><?php echo $entry_sort_order; ?></label>
                         <div class="col-sm-9">
                            <input type="text" name="svea_fee_sort_order_<?php echo $code['lang']; ?>" value="<?php echo $code['svea_fee_sort_order']; ?>" size="1" />
                         </div>

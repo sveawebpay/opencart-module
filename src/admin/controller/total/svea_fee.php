@@ -22,11 +22,8 @@ class ControllerTotalSveaFee extends Controller {
                                 ? true : false;
             // stores config settings to db
             $this->model_setting_setting->editSetting('svea_fee', array_merge($this->request->post, array('svea_fee_status' => $svea_fee_status)));
-
-
             $this->session->data['success'] = $this->language->get('text_success');
-
-            $this->redirect($this->getLink('extension/total'));
+            $this->response->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         $data['svea_version'] = $this->getSveaVersion();
