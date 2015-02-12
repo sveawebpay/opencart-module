@@ -2,7 +2,7 @@
 <modification>
 <id>SveaWebPay Product Price</id>
 <version>3.0.5</version>
-<vqmver>1.0.8</vqmver>
+<vqmver>2.5.0</vqmver>
 <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
     <file name="catalog/controller/api/order.php">
        <!--inserted ... order.php -->
