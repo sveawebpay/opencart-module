@@ -19,7 +19,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     $this->session->data['success'] = $this->language->get('text_success');
                     $this->redirect(HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token']);
 		}
-                $data['svea_version'] = $this->getSveaVersion();
+                $this->data['svea_version'] = $this->getSveaVersion();
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
