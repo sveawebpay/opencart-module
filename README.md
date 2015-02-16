@@ -1,6 +1,6 @@
 # OpenCart - Svea payment module
 
-##Version 3.0.6
+##Version 3.0.7
 * Supports OpenCart 2.0.0 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
@@ -109,6 +109,13 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 displaying the minimum payment plan amount to pay each month.
 Only applies in Sweden, Norway, Finland and Denmark.
 Please contact your Svea account manager if you have further questions. Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
+
+ ##### Updating available payment plan campaigns
+NOTE: To avoid excessive traffic to Svea and speed up checkout delays, the modules stores the various payment plans/campaigns locally. This means that you have to manually update the module with the current campaigns after any changes has been made in Svea back office:
+
+ * In OpenCart admin panel, browse to _extensions -> payments_.
+ * Locate _Svea part payment_ in the list, and select _edit_.
+ * The module will automatically update the available campaigns when you select to _save_ the payment method. There is no additional confirmation.
 
 #### Svea Card Payment
 Module supports one Svea merchant id per Opencart installation.
