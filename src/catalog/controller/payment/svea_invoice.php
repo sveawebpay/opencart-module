@@ -394,8 +394,8 @@ class ControllerPaymentsveainvoice extends Controller {
                 ->setVatPercent(intval($taxPercent))
                 ->setName($product['name'])
                 ->setUnit($this->language->get('unit'))
-                ->setArticleNumber($product['product_id'])
-                ->setDescription($product['model'])
+                ->setArticleNumber($product['model'])
+//                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
             );
         }
         return $svea;
