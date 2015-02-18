@@ -183,7 +183,7 @@ $('a#checkout').click(function(event) {
     var company = $("#svea_invoice_company").val();
 
     $.ajax({
-        type: 'GET',
+        type: 'post',
         data: {
             ssn: ssnNo,
             company: company,
@@ -195,14 +195,7 @@ $('a#checkout').click(function(event) {
             vatno: vatNo
         },
         url: 'index.php?route=payment/svea_invoice/confirm',
-        success: function(data) {
-
-                // clean response from junk chars
-                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
-
-                // parse response
-                var json = JSON.parse(data);
-
+        success: function(json) {
                 if(json.success){
                     location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
                 }
@@ -242,20 +235,13 @@ $('#getSSN').click(function() {
     }
     else{
     	$.ajax({
-            type: 'GET',
+            type: 'post',
             url: 'index.php?route=payment/svea_invoice/getAddress',
             data: {
                 ssn: ssnNo,
                 company: company
             },
-            success: function(data) {
-
-                // clean response from junk chars
-                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); //remove junkchars hex 00-1F and unicode FEFF(BOM - Byte Order Mark)
-
-                // parse response
-                var json = JSON.parse(data);
-
+            success: function(json) {
                 //on error
                 if (json.error){
 

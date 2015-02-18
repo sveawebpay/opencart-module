@@ -99,14 +99,15 @@ class ControllerPaymentsveainvoice extends Controller {
         }
         else {
             $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
+
         }
 
         $svea = WebPay::createOrder($conf);
 
         //Check if company or private
-        $company = ($_GET['company'] == 'true') ? true : false;
+        $company = ($this->request->post['company'] == 'true') ? true : false;
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
@@ -179,14 +180,14 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setIpAddress($order['ip'])
                          ->setPhoneNumber($order['telephone']);
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-                $item = $item->setVatNumber(isset($_GET['vatno']) ? $_GET['vatno'] : $_GET['ssn'] );
+                $item = $item->setVatNumber(isset($this->request->post['vatno']) ? $this->request->post['vatno'] : $this->request->post['ssn'] );
             }
             else{
-                $item = $item->setNationalIdNumber($_GET['ssn']);
+                $item = $item->setNationalIdNumber($this->request->post['ssn']);
             }
             //only for SE, NO, DK where getAddress has been performed
             if($order["payment_iso_code_2"] == "SE" || $order["payment_iso_code_2"] == "NO" || $order["payment_iso_code_2"] == "DK") {
-                $item = $item->setAddressSelector($_GET['addSel']);
+                $item = $item->setAddressSelector($this->request->post['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
 
@@ -196,7 +197,7 @@ class ControllerPaymentsveainvoice extends Controller {
         }
         else {  // private customer
 
-            $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
+            $ssn = (isset($this->request->post['ssn'])) ? $this->request->post['ssn'] : 0;
 
             $item = Item::individualCustomer();
             //send customer filled address to svea. Svea will use address from getAddress for the invoice.
@@ -212,10 +213,10 @@ class ControllerPaymentsveainvoice extends Controller {
                 ->setPhoneNumber($order['telephone']);
 
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
-                $item = $item->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);
+                $item = $item->setBirthDate($this->request->post['birthYear'], $this->request->post['birthMonth'], $this->request->post['birthDay']);
             }
             if($order["payment_iso_code_2"] == "NL"){
-                $item = $item->setInitials($_GET['initials']);
+                $item = $item->setInitials($this->request->post['initials']);
             }
             $svea = $svea->addCustomerDetails($item);
         }
@@ -232,8 +233,9 @@ class ControllerPaymentsveainvoice extends Controller {
         catch (Exception $e){
             $this->log->write($e->getMessage());
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
+
         }
 
         //If CreateOrder accepted redirect to thankyou page
@@ -292,8 +294,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 catch (Exception $e) {
                     $this->log->write($e->getMessage());
                     $response = array("error" => $this->responseCodes(0,$e->getMessage()));
-                    echo json_encode($response);
-                    exit();
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($response));
+
                 }
 
                 //if DeliverOrder returns true, send true to view
@@ -321,8 +324,8 @@ class ControllerPaymentsveainvoice extends Controller {
         }  else {
             $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
         }
-
-        echo json_encode($response);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($response));
     }
 
     public function getAddress() {
@@ -345,11 +348,11 @@ class ControllerPaymentsveainvoice extends Controller {
             ->setOrderTypeInvoice()
             ->setCountryCode($countryCode);
 
-        if($_GET['company'] == 'true') {
-            $svea = $svea->setCompany($_GET['ssn']);
+        if($this->request->post['company'] == 'true') {
+            $svea = $svea->setCompany($this->request->post['ssn']);
         }
         else {
-            $svea = $svea->setIndividual($_GET['ssn']);
+            $svea = $svea->setIndividual($this->request->post['ssn']);
         }
 
         try{
@@ -358,8 +361,8 @@ class ControllerPaymentsveainvoice extends Controller {
         catch (Exception $e){
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             $this->log->write($e->getMessage());
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
         }
 
         $result = array();
@@ -374,12 +377,13 @@ class ControllerPaymentsveainvoice extends Controller {
                 $result[] = array(  "fullName"  => $name,
                                     "street"    => $ci->street,
                                     "address_2" => $ci->coAddress,
-                                    "zipCode"  => $ci->zipCode,
+                                    "zipCode"  =>  $ci->zipCode,
                                     "locality"  => $ci->locality,
                                     "addressSelector" => $ci->addressSelector);
             }
         }
-        echo json_encode($result);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($result));
     }
 
     private function formatOrderRows($svea,$products,$currencyValue){
