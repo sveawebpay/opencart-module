@@ -95,8 +95,9 @@ class ControllerPaymentsveapartpayment extends Controller {
             $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
         } else {
             $response = array("error" => $this->responseCodes(40001, "The country is not supported for this paymentmethod"));
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
+
         }
 
         $svea = WebPay::createOrder($conf);
@@ -186,8 +187,9 @@ class ControllerPaymentsveapartpayment extends Controller {
         } catch (Exception $e) {
             $this->log->write($e->getMessage());
             $response = array("error" => $this->responseCodes(0, $e->getMessage()));
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
+
         }
 
 
@@ -214,8 +216,9 @@ class ControllerPaymentsveapartpayment extends Controller {
                 } catch (Exception $e) {
                     $this->log->write($e->getMessage());
                     $response = array("error" => $this->responseCodes(0, $e->getMessage()));
-                    echo json_encode($response);
-                    exit();
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($response));
+
                 }
 
                 //If DeliverOrder returns true, send true to veiw
@@ -239,7 +242,9 @@ class ControllerPaymentsveapartpayment extends Controller {
         } else {
             $response = array("error" => $this->responseCodes($svea->resultcode, $svea->errormessage));
         }
-        echo json_encode($response);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($response));
+
     }
 
     private function getAddress($ssn) {
@@ -342,7 +347,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $paymentOptions = $this->getPaymentOptions();
 
         if ($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO") {    // getAddresses() turned off for Norway oct'13
-            $addresses = $this->getAddress($_GET['ssn']);
+            $addresses = $this->getAddress($this->request->post['ssn']);
         } elseif ($countryCode != "SE" && $countryCode != "NO" && $countryCode != "DK" && $countryCode != "FI" && $countryCode != "NL" && $countryCode != "DE") {
             $addresses = array("error" => $this->responseCodes(40001, "The country is not supported for this paymentmethod"));
         } else {
@@ -350,7 +355,9 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
         $result = array("addresses" => $addresses, "paymentOptions" => $paymentOptions);
 
-        echo json_encode($result);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($result));
+
     }
 
     private function ShowErrorMessage($response = null) {

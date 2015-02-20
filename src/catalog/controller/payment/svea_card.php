@@ -160,10 +160,21 @@ class ControllerPaymentsveacard extends Controller {
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();
+        $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
             if ($response->accepted === 1){
+                   //sets orderhistory
+                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId,TRUE);
+                //adds comments to edit order comment field to use when edit order
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$response->clientOrderNumber . "'");
+
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
+                $error = $this->responseCodes($response->resultcode, $response->errormessage);
+                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE);
+                //adds comments to edit order comment field to use when edit order
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
+
                 $this->renderFailure($response);
             }
         }else{
@@ -183,15 +194,16 @@ class ControllerPaymentsveacard extends Controller {
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
         $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
+        $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
             if ($response->accepted === 1){
                  //sets orderhistory
-                $this->model_checkout_order->addOrderHistory($response->clientOrderNumber,$this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId);
+                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId,FALSE);
                 //adds comments to edit order comment field to use when edit order
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$response->clientOrderNumber . "'");
 
             }else{
                 $error = $this->responseCodes($response->resultcode, $response->errormessage);
-                $this->model_checkout_order->addOrderHistory($response->clientOrderNumber,10,$error);
+                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,false);
                 //adds comments to edit order comment field to use when edit order
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
             }

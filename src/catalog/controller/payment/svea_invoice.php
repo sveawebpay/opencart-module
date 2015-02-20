@@ -99,8 +99,9 @@ class ControllerPaymentsveainvoice extends Controller {
         }
         else {
             $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
+
         }
 
         $svea = WebPay::createOrder($conf);
@@ -232,8 +233,9 @@ class ControllerPaymentsveainvoice extends Controller {
         catch (Exception $e){
             $this->log->write($e->getMessage());
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
+
         }
 
         //If CreateOrder accepted redirect to thankyou page
@@ -292,8 +294,9 @@ class ControllerPaymentsveainvoice extends Controller {
                 catch (Exception $e) {
                     $this->log->write($e->getMessage());
                     $response = array("error" => $this->responseCodes(0,$e->getMessage()));
-                    echo json_encode($response);
-                    exit();
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($response));
+
                 }
 
                 //if DeliverOrder returns true, send true to view
@@ -322,7 +325,9 @@ class ControllerPaymentsveainvoice extends Controller {
             $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
         }
 
-        echo json_encode($response);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($response));
     }
 
     public function getAddress() {
@@ -345,11 +350,11 @@ class ControllerPaymentsveainvoice extends Controller {
             ->setOrderTypeInvoice()
             ->setCountryCode($countryCode);
 
-        if($_GET['company'] == 'true') {
-            $svea = $svea->setCompany($_GET['ssn']);
+        if($this->request->post['company'] == 'true') {
+            $svea = $svea->setCompany($this->request->post['ssn']);
         }
         else {
-            $svea = $svea->setIndividual($_GET['ssn']);
+            $svea = $svea->setIndividual($this->request->post['ssn']);
         }
 
         try{
@@ -358,8 +363,8 @@ class ControllerPaymentsveainvoice extends Controller {
         catch (Exception $e){
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             $this->log->write($e->getMessage());
-            echo json_encode($response);
-            exit();
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
         }
 
         $result = array();
@@ -374,12 +379,13 @@ class ControllerPaymentsveainvoice extends Controller {
                 $result[] = array(  "fullName"  => $name,
                                     "street"    => $ci->street,
                                     "address_2" => $ci->coAddress,
-                                    "zipCode"  => $ci->zipCode,
+                                    "zipCode"  =>  $ci->zipCode,
                                     "locality"  => $ci->locality,
                                     "addressSelector" => $ci->addressSelector);
             }
         }
-        echo json_encode($result);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($result));
     }
 
     private function formatOrderRows($svea,$products,$currencyValue){

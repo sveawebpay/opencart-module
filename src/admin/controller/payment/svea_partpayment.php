@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array();
-        protected $svea_version = '3.0.7';
+        protected $svea_version = '3.0.8';
 
 	public function index() {
 		$this->load->language('payment/svea_partpayment');
