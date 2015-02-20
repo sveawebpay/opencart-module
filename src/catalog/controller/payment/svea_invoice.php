@@ -107,7 +107,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $svea = WebPay::createOrder($conf);
 
         //Check if company or private
-        $company = ($this->request->post['company'] == 'true') ? true : false;
+        $company = ($_GET['company'] == 'true') ? true : false;
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
@@ -180,14 +180,14 @@ class ControllerPaymentsveainvoice extends Controller {
                          ->setIpAddress($order['ip'])
                          ->setPhoneNumber($order['telephone']);
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-                $item = $item->setVatNumber(isset($this->request->post['vatno']) ? $this->request->post['vatno'] : $this->request->post['ssn'] );
+                $item = $item->setVatNumber(isset($_GET['vatno']) ? $_GET['vatno'] : $_GET['ssn'] );
             }
             else{
-                $item = $item->setNationalIdNumber($this->request->post['ssn']);
+                $item = $item->setNationalIdNumber($_GET['ssn']);
             }
             //only for SE, NO, DK where getAddress has been performed
             if($order["payment_iso_code_2"] == "SE" || $order["payment_iso_code_2"] == "NO" || $order["payment_iso_code_2"] == "DK") {
-                $item = $item->setAddressSelector($this->request->post['addSel']);
+                $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
 
@@ -197,7 +197,7 @@ class ControllerPaymentsveainvoice extends Controller {
         }
         else {  // private customer
 
-            $ssn = (isset($this->request->post['ssn'])) ? $this->request->post['ssn'] : 0;
+            $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
             $item = Item::individualCustomer();
             //send customer filled address to svea. Svea will use address from getAddress for the invoice.
@@ -213,10 +213,10 @@ class ControllerPaymentsveainvoice extends Controller {
                 ->setPhoneNumber($order['telephone']);
 
             if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL"){
-                $item = $item->setBirthDate($this->request->post['birthYear'], $this->request->post['birthMonth'], $this->request->post['birthDay']);
+                $item = $item->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);
             }
             if($order["payment_iso_code_2"] == "NL"){
-                $item = $item->setInitials($this->request->post['initials']);
+                $item = $item->setInitials($_GET['initials']);
             }
             $svea = $svea->addCustomerDetails($item);
         }
@@ -324,6 +324,8 @@ class ControllerPaymentsveainvoice extends Controller {
         }  else {
             $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
         }
+
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($response));
     }
