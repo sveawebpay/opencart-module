@@ -156,7 +156,8 @@ $('a#checkout').click(function(event) {
     var birthYear = $("#birthYear").val();
 
     $.ajax({
-            type: 'GET',
+            type: 'get',
+            dataType: 'json',
             data: { ssn: ssnNo,
                     paySel: paymentSelector,
                     initials: Initials,
@@ -167,16 +168,12 @@ $('a#checkout').click(function(event) {
             url: 'index.php?route=payment/svea_partpayment/confirm',
             success: function(data) {
 
-               // clean response from junk chars
-                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
 
-                var json = JSON.parse(data);
-
-                if(json.success){
+                if(data.success){
                     location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
                 }
                 else{
-                    $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.error);
+                    $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+data.error);
 
                     // remove runningCheckout so that we can retry the payment
                     $('#sveaLoading').remove();
@@ -208,30 +205,26 @@ $('#getPlan').click(function() {
     }
     else{
     	$.ajax({
-            type: 'GET',
+            type: 'post',
+            dataType: 'json',
             url: 'index.php?route=payment/svea_partpayment/getAddressAndPaymentOptions',
             data: {
                 ssn: ssnNo},
-    		success: function(msg) {
+    		success: function(data) {
 
-                 // clean response from junk chars
-                    msg = msg.replace(/[\x00-\x1F\uFEFF]/g,''); // fix for nonprintable chars showing up in front of our response in quickcheckout
-
-                    var json = JSON.parse(msg);
-
-                    if(json.addresses.error){
-                        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.addresses.error);
+                    if(data.addresses.error){
+                        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+data.addresses.error);
                     }
-                    else if(json.paymentOptions.error){
-                        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+json.paymentOptions.error);
+                    else if(data.paymentOptions.error){
+                        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+data.paymentOptions.error);
                     }
                     else{
 
-                        if (json.addresses.length > 0){
-                            $("#svea_partpayment_address").empty().append('<strong>'+json.addresses[0].fullName+'</strong><br>'+json.addresses[0].street+'<br>'+json.addresses[0].zipCode+' '+json.addresses[0].locality);
+                        if (data.addresses.length > 0){
+                            $("#svea_partpayment_address").empty().append('<strong>'+data.addresses[0].fullName+'</strong><br>'+data.addresses[0].street+'<br>'+data.addresses[0].zipCode+' '+data.addresses[0].locality);
                             $("#svea_partpayment_tr").show();
                         }
-                        //$.each(json.paymentOptions,function(key,value){
+                        //$.each(data.paymentOptions,function(key,value){
                         //    $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.price_per_month+')</option>');
                         //});
                         //$("#svea_partpaymentalt_tr").show();
