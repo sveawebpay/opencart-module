@@ -335,7 +335,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $paymentOptions = $this->getPaymentOptions();
 
         if ($countryCode == "SE" || $countryCode == "DK") { //|| $countryCode == "NO") {    // getAddresses() turned off for Norway oct'13
-            $addresses = $this->getAddress($_GET['ssn']);
+            $addresses = $this->getAddress($this->request->post['ssn']);
         } elseif ($countryCode != "SE" && $countryCode != "NO" && $countryCode != "DK" && $countryCode != "FI" && $countryCode != "NL" && $countryCode != "DE") {
             $addresses = array("error" => $this->responseCodes(40001, "The country is not supported for this paymentmethod"));
         } else {

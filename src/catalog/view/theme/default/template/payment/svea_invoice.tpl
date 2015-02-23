@@ -184,7 +184,8 @@ $('a#checkout').click(function(event) {
     var company = $("#svea_invoice_company").val();
 
     $.ajax({
-        type: 'GET',
+        type: 'get',
+        dataType: 'json',
         data: {
             ssn: ssnNo,
             company: company,
@@ -198,17 +199,11 @@ $('a#checkout').click(function(event) {
         url: 'index.php?route=payment/svea_invoice/confirm',
         success: function(data) {
 
-                // clean response from junk chars
-               data = data.replace(/[\x00-\x1F\uFEFF]/g,''); //remove junkchars hex 00-1F and unicode FEFF(BOM - Byte Order Mark)
-
-                // parse response
-                var json = JSON.parse(data);
-
-                if(json.success){
+                if(data.success){
                     location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
                 }
                 else{
-                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
+                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+data.error);
 
                     // remove runningCheckout so that we can retry the payment
                     $('#sveaLoading').remove();
@@ -243,7 +238,8 @@ $('#getSSN').click(function() {
     }
     else{
     	$.ajax({
-            type: 'GET',
+            type: 'post',
+            dataType: 'json',
             url: 'index.php?route=payment/svea_invoice/getAddress',
             data: {
                 ssn: ssnNo,
@@ -251,22 +247,16 @@ $('#getSSN').click(function() {
             },
             success: function(data) {
 
-                // clean response from junk chars
-                data = data.replace(/[\x00-\x1F\uFEFF]/g,''); //remove junkchars hex 00-1F and unicode FEFF(BOM - Byte Order Mark)
-
-                // parse response
-                var json = JSON.parse(data);
-
                 //on error
-                if (json.error){
+                if (data.error){
 
-                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+json.error);
+                    $("#svea_invoice_err").empty().addClass("attention").show().append('<br>'+data.error);
 
                 }
                 else{
                     if (company == "true"){
                         $("#SveaAddressDiv").empty();
-                        $.each(json,function(key,value){
+                        $.each(data,function(key,value){
                             $("#svea_invoice_address").append('<option value="'+value.addressSelector+'">'+value.fullName+' '+value.street+' '+value.zipCode+' '+value.locality+'</option>');
                        });
 
@@ -275,7 +265,7 @@ $('#getSSN').click(function() {
                     }else{
                         $("#svea_invoice_address_div").hide();
                         $("#SveaAddressDiv").remove();
-                        $("#svea_invoice_div").append('<div id="SveaAddressDiv"><strong>'+json[0].fullName+'</strong><br> '+json[0].street+' <br>'+json[0].zipCode+' '+json[0].locality+'</div>');
+                        $("#svea_invoice_div").append('<div id="SveaAddressDiv"><strong>'+data[0].fullName+'</strong><br> '+data[0].street+' <br>'+data[0].zipCode+' '+data[0].locality+'</div>');
                     }
 
                     $("#svea_invoice_div").show();
