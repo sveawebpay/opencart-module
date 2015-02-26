@@ -262,17 +262,11 @@ class ControllerPaymentsveadirectbank extends Controller {
         $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
+           if ($response->accepted === 1){
+                $this->model_checkout_order->confirm($clean_clientOrderNumber, $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . $clean_clientOrderNumber . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . $clean_clientOrderNumber. "', order_status_id = '" . (int)$this->config->get('svea_card_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $response->transactionId . "', date_added = NOW()");
 
-            if ($response->accepted === 1){
-                $this->model_checkout_order->confirm($clean_clientOrderNumber, $this->config->get('svea_directbank_order_status_id'),'Svea transactionId: '.$response->transactionId,false);
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_directbank_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $response->transactionId . "', date_added = NOW()");
-
-            }else{
-                $error = $this->responseCodes($response->resultcode, $response->errormessage);
-                $this->model_checkout_order->confirm($clean_clientOrderNumber, 10,$error,false);
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error."' WHERE order_id = '" . $response->clientOrderNumber . "'");
-                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . $response->clientOrderNumber . "', order_status_id = '" . 10 . "', notify = '" . 0 . "', comment = 'Payment failed. " . $error . "', date_added = NOW()");
             }
     }
 
