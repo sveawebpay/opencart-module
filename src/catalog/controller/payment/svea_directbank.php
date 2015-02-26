@@ -247,7 +247,8 @@ class ControllerPaymentsveadirectbank extends Controller {
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
                 $error = $this->responseCodes($response->resultcode, $response->errormessage);
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE); //status 10 equals failed
+//                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE); //status 10 equals failed
+                  $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,$error,FALSE);//void it. Won't show upp in order history, but won't cause trouble
                 //adds comments to edit order comment field to use when edit order
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
 
@@ -279,7 +280,8 @@ class ControllerPaymentsveadirectbank extends Controller {
 
             }else{
                 $error = $this->responseCodes($response->resultcode, $response->errormessage);
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE); //status 10 equals failed
+//                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE); //status 10 equals failed
+                  $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,$error,FALSE);//void it. Won't show upp in order history, but won't cause trouble
                 //adds comments to edit order comment field to use when edit order
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
             }
