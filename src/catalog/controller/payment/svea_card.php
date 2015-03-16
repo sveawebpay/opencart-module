@@ -102,8 +102,8 @@ class ControllerPaymentsveacard extends Controller {
             }
              //discounts
             else {
-                $taxRates = $this->getTaxRatesInOrder($svea);
-                $discountRows = $this->splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                $taxRates = Svea\Helper::getTaxRatesInOrder($svea);
+                $discountRows = Svea\Helper::splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
                 }
@@ -303,84 +303,6 @@ class ControllerPaymentsveacard extends Controller {
             return $total_data;
     }
 
-    /**
-     * TODO replace these with the one in php integration package Helper class in next release
-     *
-     * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
-     * returns an array of FixedDiscount objects representing the discount split
-     * over the allowed Tax Rates, defined using AmountExVat & VatPercent.
-     *
-     * Note: only supports two allowed tax rates for now.
-     */
-    private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
-
-        $fixedDiscounts = array();
-
-        if( sizeof( $allowedTaxRates ) > 1 ) {
-
-            // m = $discountMeanVat
-            // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
-            // m = a r0 + b r1 => m = a r0 + (1-a) r1 => m = (r0-r1) a + r1 => a = (m-r1)/(r0-r1)
-            // d = $discountAmountExVat;
-            // d = d (a+b) => 1 = a+b => b = 1-a
-
-            $a = ($discountMeanVat - $allowedTaxRates[1]) / ( $allowedTaxRates[0] - $allowedTaxRates[1] );
-            $b = 1 - $a;
-
-            $discountA = WebPayItem::fixedDiscount()
-                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $a),2) )
-                            ->setVatPercent( $allowedTaxRates[0] )
-                            ->setName( isset( $discountName) ? $discountName : "" )
-                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[0]. '%)' )
-            ;
-
-            $discountB = WebPayItem::fixedDiscount()
-                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $b),2) )
-                            ->setVatPercent(  $allowedTaxRates[1] )
-                            ->setName( isset( $discountName) ? $discountName : "" )
-                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[1]. '%)' )
-            ;
-
-            $fixedDiscounts[] = $discountA;
-            $fixedDiscounts[] = $discountB;
-        }
-        // single tax rate, so use shop supplied mean as vat rate
-        else {
-            $discountA = WebPayItem::fixedDiscount()
-                ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat),2) )
-                ->setVatPercent( $allowedTaxRates[0] )
-                ->setName( isset( $discountName) ? $discountName : "" )
-                ->setDescription( (isset( $discountDescription) ? $discountDescription : "") )
-            ;
-            $fixedDiscounts[] = $discountA;
-        }
-
-        return $fixedDiscounts;
-    }
-    /**
-     * TODO replace these with the one in php integration package Helper class in next release
-     *
-     * Takes a createOrderBuilder object, iterates over its orderRows, and
-     * returns an array containing the distinct taxrates present in the order
-     */
-    private function getTaxRatesInOrder($order) {
-        $taxRates = array();
-
-        foreach( $order->orderRows as $orderRow ) {
-
-            if( isset($orderRow->vatPercent) ) {
-                $seenRate = $orderRow->vatPercent; //count
-            }
-            elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
-                $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
-            }
-
-            if(isset($seenRate)) {
-                isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
-            }
-        }
-        return array_keys($taxRates);   //we want the keys
-    }
 
     /**
      * Gets the current server name, adds the path from the server url settings (for installs below server root)

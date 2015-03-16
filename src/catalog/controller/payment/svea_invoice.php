@@ -136,8 +136,8 @@ class ControllerPaymentsveainvoice extends Controller {
             }
             //discounts (-)
             else {
-                $taxRates = $this->getTaxRatesInOrder($svea);
-                $discountRows = $this->splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                $taxRates = Svea\Helper::getTaxRatesInOrder($svea);
+                $discountRows = Svea\Helper::splitMeanToTwoTaxRates((abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates);
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
                 }
@@ -258,8 +258,8 @@ class ControllerPaymentsveainvoice extends Controller {
                     }
                     //discounts
                     else {
-                        $taxRates = $this->getTaxRatesInOrder($deliverObj);
-                        $discountRows = $this->splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                        $taxRates = Svea\Helper::getTaxRatesInOrder($deliverObj);
+                        $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                         foreach($discountRows as $row) {
                             $deliverObj = $deliverObj->addDiscount( $row );
                         }
@@ -375,29 +375,32 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //Product rows
         foreach ($products as $product) {
-            $productPriceExVat = $product['price'] * $currencyValue;
-            $taxPercent = 0;
+          $item = Item::orderRow()
+                ->setQuantity($product['quantity'])
+                ->setName($product['name'])
+                ->setUnit($this->language->get('unit'))
+                ->setArticleNumber($product['model']);
+//                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
+
+
             //Get the tax, difference in version 1.4.x
             if (floatval(VERSION) >= 1.5) {
                 $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
                 $taxPercent = 0;
+                $taxAmount = 0;
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
+                    $taxAmount = $value['amount'];
                 }
-            }
-            else {
+                $item = $item->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
+                        ->setVatPercent(intval($taxPercent));//set amount inc vat is used for precision
+            } else {
                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
+                $item = $item->setAmountExVat($product['price'] * $currencyValue)
+                        ->setVatPercent(intval($taxPercent));
             }
-            $svea = $svea
-                ->addOrderRow(Item::orderRow()
-                ->setQuantity($product['quantity'])
-                ->setAmountExVat(floatval($productPriceExVat))
-                ->setVatPercent(intval($taxPercent))
-                ->setName($product['name'])
-                ->setUnit($this->language->get('unit'))
-                ->setArticleNumber($product['model'])
-//                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
-            );
+
+             $svea = $svea->addOrderRow($item);
         }
         return $svea;
     }
@@ -468,198 +471,7 @@ class ControllerPaymentsveainvoice extends Controller {
         return $country;
     }
 
-    /**
-     * TODO replace these with the one in php integration package Helper class in next release
-     *
-     * Takes a total discount value ex. vat, a mean tax rate & an array of allowed tax rates.
-     * returns an array of FixedDiscount objects representing the discount split
-     * over the allowed Tax Rates, defined using AmountExVat & VatPercent.
-     *
-     * Note: only supports two allowed tax rates for now.
-     */
-    private function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
 
-        $fixedDiscounts = array();
 
-        if( sizeof( $allowedTaxRates ) > 1 ) {
-
-            // m = $discountMeanVat
-            // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
-            // m = a r0 + b r1 => m = a r0 + (1-a) r1 => m = (r0-r1) a + r1 => a = (m-r1)/(r0-r1)
-            // d = $discountAmountExVat;
-            // d = d (a+b) => 1 = a+b => b = 1-a
-
-            $a = ($discountMeanVat - $allowedTaxRates[1]) / ( $allowedTaxRates[0] - $allowedTaxRates[1] );
-            $b = 1 - $a;
-
-            $discountA = WebPayItem::fixedDiscount()
-                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $a),2) )
-                            ->setVatPercent( $allowedTaxRates[0] )
-                            ->setName( isset( $discountName) ? $discountName : "" )
-                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[0]. '%)' )
-            ;
-
-            $discountB = WebPayItem::fixedDiscount()
-                            ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat * $b),2) )
-                            ->setVatPercent(  $allowedTaxRates[1] )
-                            ->setName( isset( $discountName) ? $discountName : "" )
-                            ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[1]. '%)' )
-            ;
-
-            $fixedDiscounts[] = $discountA;
-            $fixedDiscounts[] = $discountB;
-        }
-        // single tax rate, so use shop supplied mean as vat rate
-        else {
-            $discountA = WebPayItem::fixedDiscount()
-                ->setAmountExVat( Svea\Helper::bround(($discountAmountExVat),2) )
-                ->setVatPercent( $allowedTaxRates[0] )
-                ->setName( isset( $discountName) ? $discountName : "" )
-                ->setDescription( (isset( $discountDescription) ? $discountDescription : "") )
-            ;
-            $fixedDiscounts[] = $discountA;
-        }
-
-        return $fixedDiscounts;
-    }
-    /**
-     * TODO replace these with the one in php integration package Helper class in next release
-     *
-     * Takes a createOrderBuilder object, iterates over its orderRows, and
-     * returns an array containing the distinct taxrates present in the order
-     */
-    private function getTaxRatesInOrder($order) {
-        $taxRates = array();
-
-        foreach( $order->orderRows as $orderRow ) {
-
-            if( isset($orderRow->vatPercent) ) {
-                $seenRate = $orderRow->vatPercent; //count
-            }
-            elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
-                $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
-            }
-
-            if(isset($seenRate)) {
-                isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
-            }
-        }
-        return array_keys($taxRates);   //we want the keys
-    }
-
-    // update order billingaddress
-    private function buildPaymentAddressQuery($svea,$countryCode,$order_comment) {
-         $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
-         $paymentAddress = array();
-
-        if ($svea->customerIdentity->customerType == 'Company'){
-
-            // for companies, firstName, lastName is not set in GetAddresses response, thus we empty them in the payment address
-            if( (isset($svea->customerIdentity->firstName) == false) &&
-                (isset($svea->customerIdentity->lastName) == false) &&
-                (isset($svea->customerIdentity->fullName) == true) )
-            {
-                $paymentAddress["payment_firstname"] = " "; // using "" will cause form validation in admin to scream
-                $paymentAddress["payment_lastname"] = " ";  // using "" will cause form validation in admin to scream
-            }
-
-            isset($svea->customerIdentity->fullName) ? $paymentAddress["payment_company"] = $svea->customerIdentity->fullName : "";
-
-            // in table order, the column payment_company_id (set by updateAddressField() below) doesn't exist in OpenCart < 1.5.3, see issue WEB-200
-            if( floatval(substr(VERSION,0,3)) > 1.5 || ( floatval(substr(VERSION,0,3)) == 1.5 && intval( substr(VERSION,4)) >= 3 ) ) { // oc 1.5.3+
-                isset($svea->customerIdentity->nationalIdNumber) ? $paymentAddress["payment_company_id"] = $svea->customerIdentity->nationalIdNumber : "";
-            }
-
-            isset($svea->customerIdentity->street) ? $paymentAddress["payment_address_1"] = $svea->customerIdentity->street : "";
-            isset($svea->customerIdentity->coAddress) ? $paymentAddress["payment_address_2"] = $svea->customerIdentity->coAddress : "";
-            isset($svea->customerIdentity->locality) ? $paymentAddress["payment_city"] = $svea->customerIdentity->locality : "";
-            isset($svea->customerIdentity->zipCode) ? $paymentAddress["payment_postcode"] = $svea->customerIdentity->zipCode : "";
-            $paymentAddress["payment_country_id"] = $countryId['country_id'];
-            $paymentAddress["payment_country"] = $countryId['country_name'];
-            $paymentAddress["payment_method"] = $this->language->get('text_title');
-        }
-
-        else {  // private customer
-
-            isset($svea->customerIdentity->firstName) ? $paymentAddress["payment_firstname"] = $svea->customerIdentity->firstName : " ";
-            isset($svea->customerIdentity->lastName) ? $paymentAddress["payment_lastname"] = $svea->customerIdentity->lastName : " ";
-
-            // for private individuals, if firstName, lastName is not set in GetAddresses response, we put the entire getAddress LegalName in lastName
-            if( (isset($svea->customerIdentity->firstName) == false) &&
-                (isset($svea->customerIdentity->lastName) == false) &&
-                (isset($svea->customerIdentity->fullName) == true) )
-            {
-                $paymentAddress["payment_firstname"] = " "; // using "" will cause form validation in admin to scream
-                $paymentAddress["payment_lastname"] = $svea->customerIdentity->fullName;
-            }
-
-            $paymentAddress["payment_company"] = " ";
-
-            isset($svea->customerIdentity->street) ? $paymentAddress["payment_address_1"] = $svea->customerIdentity->street : "";
-            isset($svea->customerIdentity->coAddress) ? $paymentAddress["payment_address_2"] = $svea->customerIdentity->coAddress : "";
-            isset($svea->customerIdentity->locality) ? $paymentAddress["payment_city"] = $svea->customerIdentity->locality : "";
-            isset($svea->customerIdentity->zipCode) ? $paymentAddress["payment_postcode"] = $svea->customerIdentity->zipCode : "";
-            $paymentAddress["payment_country_id"] = $countryId['country_id'];
-            $paymentAddress["payment_country"] = $countryId['country_name'];
-            $paymentAddress["payment_method"] = $this->language->get('text_title');
-        }
-
-        $paymentAddress["comment"] = $order_comment . "\nSvea order id: ".$svea->sveaOrderId;
-        $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_invoice_order_status_id') . "', notify = '" . 1 . "', comment = 'Order created. Svea order id: " . $svea->sveaOrderId . "', date_added = NOW()");
-
-        return $paymentAddress;
-    }
-
-    // update shipping address
-    private function buildShippingAddressQuery($svea,$shippingAddress,$countryCode) {
-        $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
-
-        if ($svea->customerIdentity->customerType == 'Company'){
-
-            // for companies, firstName, lastName is not set in GetAddresses response, thus we empty them in the payment address
-            if( (isset($svea->customerIdentity->firstName) == false) &&
-                (isset($svea->customerIdentity->lastName) == false) &&
-                (isset($svea->customerIdentity->fullName) == true) )
-            {
-                $shippingAddress["shipping_firstname"] = " "; // using "" will cause form validation in admin to scream
-                $shippingAddress["shipping_lastname"] = " ";  // using "" will cause form validation in admin to scream
-            }
-            isset($svea->customerIdentity->fullName) ? $shippingAddress["shipping_company"] = $svea->customerIdentity->fullName : "";
-
-            // (in table order, the column shipping_company_id doesn't exist in any version of OpenCart)
-
-            isset($svea->customerIdentity->street) ? $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street : "";
-            isset($svea->customerIdentity->coAddress) ? $shippingAddress["shipping_address_2"] = $svea->customerIdentity->coAddress : "";
-            isset($svea->customerIdentity->locality) ? $shippingAddress["shipping_city"] = $svea->customerIdentity->locality : "";
-            isset($svea->customerIdentity->zipCode) ? $shippingAddress["shipping_postcode"] = $svea->customerIdentity->zipCode : "";
-            $shippingAddress["shipping_country_id"] = $countryId['country_id'];
-            $shippingAddress["shipping_country"] = $countryId['country_name'];
-        }
-        else {  // private customer
-
-            isset($svea->customerIdentity->firstName) ? $shippingAddress["shipping_firstname"] = $svea->customerIdentity->firstName : "";
-            isset($svea->customerIdentity->lastName) ? $shippingAddress["shipping_lastname"] = $svea->customerIdentity->lastName : "";
-
-            // for private individuals, if firstName, lastName is not set in GetAddresses response, we put the entire getAddress LegalName in lastName
-            if( (isset($svea->customerIdentity->firstName) == false) &&
-                (isset($svea->customerIdentity->lastName) == false) &&
-                (isset($svea->customerIdentity->fullName) == true) )
-            {
-                $shippingAddress["shipping_firstname"] = " "; // using "" will cause form validation in admin to scream
-                $shippingAddress["shipping_lastname"] = $svea->customerIdentity->fullName;
-            }
-
-            $shippingAddress["shipping_company"] = " ";
-
-            isset($svea->customerIdentity->street) ? $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street : "";
-            isset($svea->customerIdentity->coAddress) ? $shippingAddress["shipping_address_2"] = $svea->customerIdentity->coAddress : "";
-            isset($svea->customerIdentity->locality) ? $shippingAddress["shipping_city"] = $svea->customerIdentity->locality : "";
-            isset($svea->customerIdentity->zipCode) ? $shippingAddress["shipping_postcode"] = $svea->customerIdentity->zipCode : "";
-            $shippingAddress["shipping_country_id"] = $countryId['country_id'];
-            $shippingAddress["shipping_country"] = $countryId['country_name'];
-        }
-
-        return $shippingAddress;
-    }
 }
 ?>
