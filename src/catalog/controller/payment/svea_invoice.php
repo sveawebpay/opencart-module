@@ -110,16 +110,6 @@ class ControllerPaymentsveainvoice extends Controller {
         //extra charge addons like shipping and invoice fee
 
         foreach ($addons as $addon) {
- //print_r($addon);
- //        Array
-//(
-//    [code] => shipping
-//    [title] => Fast fraktkostnad
-//    [text] => 4,00kr
-//    [value] => 4.00
-//    [sort_order] => 30
-//    [tax_rate] => 25
-//)
 
             if($addon['value'] >= 0){
                 $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
@@ -257,10 +247,11 @@ class ControllerPaymentsveainvoice extends Controller {
                 //extra charge addons like shipping and invoice fee
                 foreach ($addons as $addon) {
                     if($addon['value'] >= 0) {
+                        $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
                         $deliverObj = $deliverObj
                             ->addOrderRow(Item::orderRow()
                             ->setQuantity(1)
-                            ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                            ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
                             ->setVatPercent(intval($addon['tax_rate']))
                             ->setName(isset($addon['title']) ? $addon['title'] : "")
                             ->setUnit($this->language->get('unit'))
