@@ -51,8 +51,29 @@ class ControllerPaymentsveacard extends Controller {
          }
        //Product rows
         $products = $this->cart->getProducts();
-         //Products
-        $svea = $this->formatOrderRows($svea,$products,$currencyValue);
+        foreach($products as $product){
+           $productPriceExVat  = $product['price'] * $currencyValue;
+           $taxPercent = 0;
+            //Get the tax, difference in version 1.4.x
+            if(floatval(VERSION) >= 1.5){
+                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                foreach ($tax as $key => $value) {
+                    $taxPercent = $value['rate'];
+                }
+            }  else {
+                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
+            }
+            $svea = $svea
+                    ->addOrderRow(Item::orderRow()
+                        ->setQuantity($product['quantity'])
+                        ->setAmountExVat(floatval($productPriceExVat))
+                        ->setVatPercent(intval($taxPercent))
+                        ->setName($product['name'])
+                        ->setUnit($this->language->get('unit'))
+                        ->setArticleNumber($product['model'])
+    //                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
+                    );
+        }
 
          $addons = $this->formatAddons();
          //extra charge addons like shipping and invoice fee
@@ -230,41 +251,6 @@ class ControllerPaymentsveacard extends Controller {
         }
 
         return $country;
-    }
-
-      private function formatOrderRows($svea,$products,$currencyValue){
-        $this->load->language('payment/svea_invoice');
-
-        //Product rows
-        foreach ($products as $product) {
-          $item = Item::orderRow()
-                ->setQuantity($product['quantity'])
-                ->setName($product['name'])
-                ->setUnit($this->language->get('unit'))
-                ->setArticleNumber($product['model']);
-//                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
-
-
-            //Get the tax, difference in version 1.4.x
-            if (floatval(VERSION) >= 1.5) {
-                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
-                $taxPercent = 0;
-                $taxAmount = 0;
-                foreach ($tax as $key => $value) {
-                    $taxPercent = $value['rate'];
-                    $taxAmount = $value['amount'];
-                }
-                $item = $item->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
-                        ->setVatPercent(intval($taxPercent));//set amount inc vat is used for precision
-            } else {
-                $taxPercent = $this->tax->getRate($product['tax_class_id']);
-                $item = $item->setAmountExVat($product['price'] * $currencyValue)
-                        ->setVatPercent(intval($taxPercent));
-            }
-
-             $svea = $svea->addOrderRow($item);
-        }
-        return $svea;
     }
 
      public function formatAddons() {

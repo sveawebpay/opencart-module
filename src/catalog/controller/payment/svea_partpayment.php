@@ -108,10 +108,11 @@ class ControllerPaymentsveapartpayment extends Controller {
         //extra charge addons like shipping and invoice fee
         foreach ($addons as $addon) {
             if ($addon['value'] >= 0) {
+                $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
                 $svea = $svea
                         ->addOrderRow(Item::orderRow()
                         ->setQuantity(1)
-                        ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                        ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
                         ->setVatPercent(intval($addon['tax_rate']))
                         ->setName(isset($addon['title']) ? $addon['title'] : "")
                         ->setUnit($this->language->get('unit'))
@@ -458,6 +459,44 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
 
         return $country;
+    }
+
+    //update order billingaddress
+     private function buildPaymentAddressQuery($svea,$countryCode,$order_comment) {
+         $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
+         $paymentAddress = array();
+
+        if ($svea->customerIdentity->customerType == 'Company'){
+                // no companies for partpayment
+        }
+        else {  // private customer
+
+            isset($svea->customerIdentity->firstName) ? $paymentAddress["payment_firstname"] = $svea->customerIdentity->firstName : " ";
+            isset($svea->customerIdentity->lastName) ? $paymentAddress["payment_lastname"] = $svea->customerIdentity->lastName : " ";
+
+            // for private individuals, if firstName, lastName is not set in GetAddresses response, we put the entire getAddress LegalName in lastName
+            if( (isset($svea->customerIdentity->firstName) == false) &&
+                (isset($svea->customerIdentity->lastName) == false) &&
+                (isset($svea->customerIdentity->fullName) == true) )
+            {
+                $paymentAddress["payment_firstname"] = " "; // using "" will cause form validation in admin to scream
+                $paymentAddress["payment_lastname"] = $svea->customerIdentity->fullName;
+            }
+
+            $paymentAddress["payment_company"] = " ";
+
+            isset($svea->customerIdentity->street) ? $paymentAddress["payment_address_1"] = $svea->customerIdentity->street : "";
+            isset($svea->customerIdentity->coAddress) ? $paymentAddress["payment_address_2"] = $svea->customerIdentity->coAddress : "";
+            isset($svea->customerIdentity->locality) ? $paymentAddress["payment_city"] = $svea->customerIdentity->locality : "";
+            isset($svea->customerIdentity->zipCode) ? $paymentAddress["payment_postcode"] = $svea->customerIdentity->zipCode : "";
+            $paymentAddress["payment_country_id"] = $countryId['country_id'];
+            $paymentAddress["payment_country"] = $countryId['country_name'];
+            $paymentAddress["payment_method"] = $this->language->get('text_title');
+        }
+
+        $paymentAddress["comment"] = $order_comment . "\nSvea order id: ".$svea->sveaOrderId;
+
+        return $paymentAddress;
     }
 
     // update shipping address
