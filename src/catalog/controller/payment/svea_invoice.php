@@ -393,29 +393,24 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //Product rows
         foreach ($products as $product) {
-            $productPriceExVat = $product['price'] * $currencyValue;
-            $taxPercent = 0;
-            //Get the tax, difference in version 1.4.x
-            if (floatval(VERSION) >= 1.5) {
-                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
-                $taxPercent = 0;
-                foreach ($tax as $key => $value) {
-                    $taxPercent = $value['rate'];
-                }
-            }
-            else {
-                $taxPercent = $this->tax->getRate($product['tax_class_id']);
-            }
-            $svea = $svea
-                ->addOrderRow(Item::orderRow()
+              $item = Item::orderRow()
                 ->setQuantity($product['quantity'])
-                ->setAmountExVat(floatval($productPriceExVat))
-                ->setVatPercent(intval($taxPercent))
                 ->setName($product['name'])
                 ->setUnit($this->language->get('unit'))
-                ->setArticleNumber($product['model'])
+                ->setArticleNumber($product['model']);
 //                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
-            );
+
+            $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+            $taxPercent = 0;
+            $taxAmount = 0;
+            foreach ($tax as $key => $value) {
+                $taxPercent = $value['rate'];
+                $taxAmount = $value['amount'];
+            }
+            $item = $item->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
+                        ->setVatPercent(intval($taxPercent));//set amount inc vat is used for precision
+
+          $svea = $svea->addOrderRow($item);
         }
         return $svea;
     }
