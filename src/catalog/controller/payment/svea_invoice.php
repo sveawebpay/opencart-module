@@ -126,10 +126,11 @@ class ControllerPaymentsveainvoice extends Controller {
         foreach ($addons as $addon) {
 
             if($addon['value'] >= 0){
+                $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
                 $svea = $svea
                     ->addOrderRow(WebPayItem::orderRow()
                     ->setQuantity(1)
-                    ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                    ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
                     ->setVatPercent(intval($addon['tax_rate']))
                     ->setName(isset($addon['title']) ? $addon['title'] : "")
                     ->setUnit($this->language->get('unit'))
@@ -260,24 +261,37 @@ class ControllerPaymentsveainvoice extends Controller {
 
                 //extra charge addons like shipping and invoice fee
                 foreach ($addons as $addon) {
-                    if($addon['value'] >= 0) {
+                    if($addon['value'] >= 0){
+                        $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
                         $deliverObj = $deliverObj
-                            ->addOrderRow(Item::orderRow()
+                            ->addOrderRow(WebPayItem::orderRow()
                             ->setQuantity(1)
-                            ->setAmountExVat(floatval($addon['value'] * $currencyValue))
+                            ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
                             ->setVatPercent(intval($addon['tax_rate']))
                             ->setName(isset($addon['title']) ? $addon['title'] : "")
                             ->setUnit($this->language->get('unit'))
                             ->setArticleNumber($addon['code'])
                             ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                         );
-                    }
-                    //discounts
-                    else {
-                        $taxRates = $this->getTaxRatesInOrder($deliverObj);
-                        $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
-                        foreach($discountRows as $row) {
-                            $deliverObj = $deliverObj->addDiscount( $row );
+
+                        //voucher(-)
+                        } elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
+                            $deliverObj = $deliverObj
+                                ->addDiscount(WebPayItem::fixedDiscount()
+                                    ->setDiscountId($addon['code'])
+                                    ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
+                                    ->setVatPercent(0)//no vat when using a voucher
+                                    ->setName(isset($addon['title']) ? $addon['title'] : "")
+                                    ->setUnit($this->language->get('unit'))
+                                    ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                            );
+                        }
+                        //discounts (-)
+                        else {
+                            $taxRates = $this->getTaxRatesInOrder($deliverObj);
+                            $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                            foreach($discountRows as $row) {
+                                $deliverObj = $deliverObj->addDiscount( $row );
                         }
                     }
                 }
