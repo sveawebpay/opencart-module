@@ -177,7 +177,7 @@ class ControllerPaymentsveadirectbank extends Controller {
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
                 ->setClientOrderNumber($this->session->data['order_id'])
-//            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it doesent match order_id
+//            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it does not match order_id
 
                 ->setOrderDate(date('c'))
                 ->usePaymentMethod($_POST['svea_directbank_payment_method'])
