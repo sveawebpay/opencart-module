@@ -106,13 +106,13 @@ class ControllerPaymentsveacard extends Controller {
 
         $server_url = $this->setServerURL();
         $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
-//        $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
-        $callbackUrl = 'http://194.14.250.189:8080/modulerDev/Opencart/2/index.php?route=payment/svea_card/callbackSvea';
+        $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
+        // $callbackUrl = 'http://194.14.250.189:8080/modulerDev/Opencart/2/index.php?route=payment/svea_card/callbackSvea'; //svea test
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
             ->setClientOrderNumber('annelitest'.$this->session->data['order_id'])
-//            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it doesent match order_id
+//            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it does not match order_id
             ->setOrderDate(date('c'));
         try{
             $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
