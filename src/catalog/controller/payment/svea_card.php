@@ -111,7 +111,7 @@ class ControllerPaymentsveacard extends Controller {
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
-            ->setClientOrderNumber('annelitest'.$this->session->data['order_id'])
+            ->setClientOrderNumber($this->session->data['order_id'])
 //            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it does not match order_id
             ->setOrderDate(date('c'));
         try{
@@ -162,7 +162,6 @@ class ControllerPaymentsveacard extends Controller {
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
-        $clean_clientOrderNumber = str_replace('annelitest', '',$clean_clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
             if ($response->accepted === 1){
                    //sets orderhistory
