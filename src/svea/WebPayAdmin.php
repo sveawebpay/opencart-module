@@ -36,7 +36,7 @@ The WebPay and WebPayAdmin entrypoint methods are built as a fluent API so you c
 The Svea WebPay PHP integration package is developed and tested using NetBeans IDE 7.3.1 with the phpunit 3.7.24 plugin.
  *
  * @api
- * @version 2.2.3
+ * @version 2.2.4
  * @package WebPay
  *
  * @author Anneli Halld'n, Daniel Brolund, Kristian Grossman-Madsen for Svea WebPay
@@ -44,23 +44,25 @@ The Svea WebPay PHP integration package is developed and tested using NetBeans I
 class WebPayAdmin {
 
     /**
-     * The WebPayAdmin::queryOrder() entrypoint method is used to cancel an order with Svea, 
-     * that has not yet been delivered (invoice, payment plan) or been confirmed (card).
+     * The WebPayAdmin::cancelOrder() entrypoint method is used to cancel an order with Svea,
+     * that has not yet been delivered (invoice, payment plan) or confirmed (card).
      * 
-     * Supports Invoice, Payment Plan and Card orders. For Direct Bank orders, use
-     * WebPayAdmin::creditOrder() instead.
-     *
-     *      $request = WebPay::cancelOrder($config)
-     *          ->setOrderId($orderId)          // required, use SveaOrderId recieved with createOrder response
-     *          ->setCountryCode("SE")          // required, use same country code as in createOrder request
-     *          ->cancelInvoiceOrder()          // select request class, use same order type as in createOrder request
-     *              ->doRequest()               // and perform the request, returns CloseOrderResult 
+     * Supports Invoice, Payment Plan and Card orders. For Direct Bank orders, use WebPayAdmin::creditOrderRows() instead.
+     *  
+     * Get an instance using the WebPayAdmin::cancelOrder entrypoint, then provide more information about the order and send 
+     * the request using the CancelOrderBuilder methods:
      * 
-     *          //->cancelPaymentPlanOrder()->doRequest()   // returns CloseOrderResult 
-     *          //->cancelCardOrder()->doRequest()          // returns AnnulTransactionResponse           
-     *      ; 
-     *     
-     * The final doRequest() returns either a CloseOrderResult or an AnnulTransactionResponse
+     * ...
+     *     $request = WebPayAdmin->cancelOrder($config)
+     *          ->setOrderId()		// required, use SveaOrderId recieved with createOrder response
+     *          ->setTransactionId()	// optional, card or direct bank only, alias for setOrderId 
+     *          ->setCountryCode()	// required, use same country code as in createOrder request      
+     *     ;
+     *     // then select the corresponding request class and send request
+     *     $response = $request->cancelInvoiceOrder()->doRequest();	// returns CloseOrderResponse
+     *     $response = $request->cancelPaymentPlanOrder()->doRequest();	// returns CloseOrderResponse
+     *     $response = $request->cancelCardOrder()->doRequest();	// returns AnnulTransactionResponse
+     * ...
      * 
      * @see \Svea\CancelOrderBuilder \Svea\CancelOrderBuilder
      * @see \Svea\WebService\CloseOrderResult Svea\WebService\CloseOrderResult
@@ -81,22 +83,22 @@ class WebPayAdmin {
      * Note that for invoice and payment plan orders, the order rows name and description is merged
      * into the description field in the query response.
      * 
-     * Get an query builder instance using the WebPayAdmin::queryOrder entrypoint, then provide 
-     * more information about the order and send the request using the queryOrderBuilder methods: 
+     * Get an instance using the WebPayAdmin::queryOrder entrypoint, then provide more information 
+     * about the order and send the request using the QueryOrderBuilder methods: 
      *  
+     * ...
      *      $request = WebPay::queryOrder($config)
-     *          ->setOrderId()          // required
-     *          ->setCountryCode()      // required      
-     *          ->queryInvoiceOrder()   // select request class and
-     *              ->doRequest()       // perform the request, returns GetOrdersResponse
-     *          
-     *          //->queryPaymentPlanOrder()->doRequest() // returns GetOrdersResponse
-     *          //->queryCardOrder()->doRequest()        // returns QueryTransactionResponse
-     *          //->queryDirectBankOrder()->doRequest()  // returns QueryTransactionResponse
+     *          ->setOrderId()          // required, use SveaOrderId recieved with createOrder response
+     *          ->setTransactionId()    // optional, card or direct bank only, alias for setOrderId 
+     *          ->setCountryCode()      // required, use same country code as in createOrder request     
      *      ;
+     *      // then select the corresponding request class and send request
+     *      $response = $request->queryInvoiceOrder()->doRequest();     // returns GetOrdersResponse
+     *      $response = $request->queryPaymentPlanOrder()->doRequest(); // returns GetOrdersResponse
+     *      $response = $request->queryCardOrder()->doRequest();        // returns QueryTransactionResponse
+     *      $response = $request->queryDirectBankOrder()->doRequest();  // returns QueryTransactionResponse    
+     * ...
      * 
-     * The final doRequest() returns either a GetOrdersResponse or an QueryTransactionResponse.
-     *
      * @see \Svea\QueryOrderBuilder \Svea\QueryOrderBuilder
      * @see \Svea\AdminService\GetOrdersResponse \Svea\AdminService\GetOrdersResponse
      * @see \Svea\HostedService\QueryTransactionResponse \Svea\HostedService\QueryTransactionResponse
@@ -114,23 +116,34 @@ class WebPayAdmin {
      * The WebPayAdmin::cancelOrderRows entrypoint method is used to cancel rows in an order before it has been delivered.
      * Supports Invoice, Payment Plan and Card orders. (Direct Bank orders are not supported, see CreditOrderRows instead.)
      * 
-     * Get an order builder instance using the WebPayAdmin::cancelOrderRows entrypoint,
-     * then provide more information about the transaction and send the request using
-     * the cancelOrderRowsBuilder methods:
-     *
-     *      ->setOrderId()           // required
-     *      ->setCountryCode()       // required
-     *      ->setRowToCancel()       // required, index of one of the original order row you wish to cancel
-     *      ->setRowsToCancel()      // optional
-     *      ->addNumberedOrderRow()  // card only, one or more, required with setRow(s)ToCancel
-     *      ->addNumberedOrderRows() // card only, optional
-     *
-     * Finish by selecting the correct ordertype and perform the request:
-     *      ->cancelInvoiceOrderRows() // or cancelPaymentPlanOrderRows() or cancelCardOrderRows()
-     *          ->doRequest()
-     *
-     * The final doRequest() returns either a CancelOrderRowsResponse or a LowerTransactionResponse.
-     *
+     * For Invoice and Payment Plan orders, the order row status is updated at Svea following each successful request.
+     * 
+     * For card orders, the request can only be sent once, and if all original order rows are cancelled, the order then receives status ANNULLED at Svea.
+     * 
+     * Get an instance using the WebPayAdmin::queryOrder entrypoint, then provide more information about the order and 
+     * send the request using the queryOrderBuilder methods:
+     * 
+     * Use setRowToCancel() or setRowsToCancel() to specify the order row(s) to cancel. The order row indexes should correspond to those returned by 
+     * i.e. WebPayAdmin::queryOrder();
+     * 
+     * For card orders, use addNumberedOrderRow() or addNumberedOrderRows() to pass in a copy of the original order rows. The original order rows can 
+     * be retrieved using WebPayAdmin::queryOrder(); the numberedOrderRows attribute contains the serverside order rows w/indexes. Note that if a card 
+     * order has been modified (i.e. rows cancelled or credited) after the initial order creation, the returned order rows will not be accurate.
+     * 
+     *  ...
+     *      $request = WebPayAdmin::cancelOrderRows($config)
+     *          ->setOrderId()          		// required
+     *          ->setTransactionId()	   		// optional, card only, alias for setOrderId 
+     *          ->setCountryCode()      		// required    	
+     *          ->setRowToCancel()	   		// required, index of original order rows you wish to cancel 
+     *          ->addNumberedOrderRow()			// required for card orders, should match original row indexes 
+     *      ;
+     *      // then select the corresponding request class and send request
+     *      $response = $request->deliverInvoiceOrderRows()->doRequest();       // returns CancelOrderRowsResponse
+     *      $response = $request->deliverPaymentPlanOrderRows()->doRequest();   // returns CancelOrderRowsResponse
+     *      $response = $request->deliverCardOrderRows()->doRequest();          // returns LowerTransactionResponse
+     * ...
+     * 
      * @see \Svea\CancelOrderRowsBuilder \Svea\CancelOrderRowsBuilder
      * @see \Svea\AdminService\CancelOrderRowsResponse \Svea\AdminService\CancelOrderRowsResponse
      * @see \Svea\HostedService\LowerTransactionResponse \Svea\HostedService\LowerTransactionResponse
@@ -146,35 +159,49 @@ class WebPayAdmin {
 
     /**
      * The WebPayAdmin::creditOrderRows entrypoint method is used to credit rows in an order after it has been delivered.
-     * Supports Invoice, Card and Direct Bank orders. (To credit a Payment Plan order, contact Svea customer service.)
+     * Supports invoice, card and direct bank orders. (To credit a payment plan order, please contact Svea customer service.)
      * 
-     * Get an order builder instance using the WebPayAdmin::creditOrderRows entrypoint,
-     * then provide more information about the transaction and send the request using
-     * the creditOrderRowsBuilder methods:
+     * If you wish to credit an amount not present in the original order, use addCreditOrderRow() or addCreditOrderRows() 
+     * and supply a new order row for the amount to credit. This is the recommended way to credit a card or direct bank order.
      * 
-     * ->setInvoiceId()                 (invoice only, required)
-     * ->setInvoiceDistributionType()   (invoice only, required)
-     * ->setOrderId()                   (card and direct bank only, required)
-     * ->setCountryCode()               (required)
-     * ->addCreditOrderRow()            (optional, use if you want to specify a new credit row, i.e. for amounts not present in the original order)
-     * ->addCreditOrderRows()           (optional)
-     * ->setRowToCredit()               (optional, index of one of the original order row you wish to credit)
-     * ->setRowsToCredit()              (optional)
-     * ->addNumberedOrderRow()          (card and direct bank only, required with setRow(s)ToCredit)
-     * ->addNumberedOrderRows()         (card and direct bank only, optional)
-     *  
-     * Finish by instantiating the request type and perform the request:
-     * ->creditInvoiceOrderRows() // creditCardOrderRows() or creditDirectBankOrderRows()
-     *   ->doRequest()
-     *  
-     * The final doRequest() returns either a CreditOrderRowsResponse or a CreditTransactionResponse.
-     *
+     * If you wish to credit an invoice order row in full, you can specify the index of the order row to credit using setRowToCredit(). 
+     * The corresponding order row at Svea will then be credited. (For card or direct bank orders you need to first query and then 
+     * supply the corresponding numbered order rows using the addNumberedOrderRows() method.)
+     * 
+     * Following the request Svea will issue a credit invoice including the original order rows specified using setRowToCredit(), 
+     * as well as any new credit order rows specified using addCreditOrderRow(). For card or direct bank orders, the order row amount
+     * will be credited to the customer. 
+     * 
+     * Note: when using addCreditOrderRows, you may only use WebPayItem::orderRow with price specified as amountExVat and vatPercent.
+     * 
+     * Get an order builder instance using the WebPayAdmin::creditOrderRows entrypoint, then provide more information about the 
+     * transaction and send the request using the creditOrderRowsBuilder methods:
+     * 
+     * ...
+     *     $request = WebPay::creditOrder($config)
+     *         ->setInvoiceId()                // invoice only, required
+     *         ->setInvoiceDistributionType()  // invoice only, required
+     *         ->setOrderId()                  // card and direct bank only, required
+     *         ->setCountryCode()              // required
+     *         ->addCreditOrderRow()           // optional, use to specify a new credit row, i.e. for amounts not present in the original order
+     *         ->addCreditOrderRows()          // optional
+     *         ->setRowToCredit()              // optional, index of one of the original order row you wish to credit
+     *         ->setRowsToCredit()             // optional
+     *         ->addNumberedOrderRow()         // card and direct bank only, required with setRowToCredit()
+     *         ->addNumberedOrderRows()        // card and direct bank only, optional
+     *     ;
+     *     // then select the corresponding request class and send request
+     *     $response = $request->creditInvoiceOrderRows()->doRequest();    // returns CreditInvoiceRowsResponse
+     *     $response = $request->creditCardOrderRows()->doRequest();       // returns CreditTransactionResponse
+     *     $response = $request->creditDirectBankOrderRows()->doRequest(); // returns CreditTransactionResponse
+     * ...
+     * 
      * @param ConfigurationProvider $config
      * @return Svea\CreditOrderRowsBuilder
      * @throws ValidationException
      *
      * @see \Svea\CreditOrderRowsBuilder \Svea\CreditOrderRowsBuilder
-     * @see \Svea\AdminService\CreditOrderRowsResponse \Svea\AdminService\CreditOrderRowsResponse
+     * @see \Svea\AdminService\CreditInvoiceRowsResponse \Svea\AdminService\CreditInvoiceRowsResponse
      * @see \Svea\HostedService\CreditTransactionResponse \Svea\HostedService\CreditTransactionResponse
      *
      * @author Kristian Grossman-Madsen for Svea WebPay
@@ -185,8 +212,7 @@ class WebPayAdmin {
     }
 
     /**
-     * Add order rows to an order. Supports Invoice and Payment Plan orders.
-     * (Card and Direct Bank orders are not supported.)
+     * Add order rows to an order. 
      *
      * Provide information about the new order rows and send the request using
      * addOrderRowsBuilder methods:
@@ -215,22 +241,38 @@ class WebPayAdmin {
     }
 
     /**
-     * Update order rows in a non-delivered invoice or payment plan order.
-     * (Card and Direct Bank orders are not supported.)
+     * The WebPayAdmin::updateOrderRows() method is used to update individual order rows in non-delivered invoice and 
+     * payment plan orders. Supports invoice and payment plan orders.
      *
-     * Provide information about the updated order rows and send the request using
-     * updateOrderRowsBuilder methods:
-     *
-     * ->setOrderId()
-     * ->setCountryCode()
-     * ->updateOrderRow() (one or more)
-     * ->updateOrderRows() (optional)
-     *
-     * Finish by selecting the correct ordertype and perform the request:
-     * ->updateInvoiceOrderRows() | updatePaymentPlanOrderRows()
-     *   ->doRequest()
-     *
-     * The final doRequest() returns an UpdateOrderRowsResponse
+     * The order row status of the order is updated at Svea to reflect the updated order rows. If the updated rows' 
+     * order total amount exceeds the original order total amount, an error is returned by the service.
+     * 
+     * Get an order builder instance using the WebPayAdmin::updateOrderRows() entrypoint, then provide more information 
+     * about the transaction and send the request using the UpdateOrderRowsBuilder methods:   
+     * 
+     * Use setCountryCode() to specify the country code matching the original create order request.
+     * 
+     * Use updateOrderRow() with a new WebPayItem::numberedOrderRow() object to pass in the updated order row. Use the
+     * NumberedOrderRowBuilder member functions to specifiy the updated order row contents. Notably, the setRowNumber() 
+     * method specifies which original order row contents is to be replaced, in full, by the NumberedOrderRow contents. 
+     * 
+     * Then use either updateInvoiceOrderRows() or updatePaymentPlanOrderRows() to get a request object, which ever 
+     * matches the payment method used in the original order.
+     * 
+     * Calling doRequest() on the request object will send the request to Svea and return UpdateOrderRowsResponse.
+     * 
+     * ...
+     *     $request = WebPayAdmin.updateOrderRows($config)
+     *         ->setOrderId()               // required
+     *         ->setCountryCode()           // required
+     *         ->updateOrderRow()           // required, NumberedOrderRowBuilder w/RowNumber attribute matching row index of original order row
+     *     ;
+     *     // then select the corresponding request class and send request
+     *     $response = $request->updateInvoiceOrderRows()->doRequest();     // returns UpdateOrderRowsResponse
+     *     $response = $request->updatePaymentPlanOrderRows()->doRequest(); // returns UpdateOrderRowsResponse
+     * ...
+     * 
+     * @author Kristian Grossman-Madsen
      *
      * @see \Svea\UpdateOrderRowsBuilder \Svea\UpdateOrderRowsBuilder
      * @see \Svea\AdminService\UpdateOrderRowsResponse \Svea\AdminService\UpdateOrderRowsResponse
@@ -245,29 +287,43 @@ class WebPayAdmin {
     }
 
     /**
-     * The WebPayAdmin::deliverOrderRows entrypoint method is used to deliver individual order rows.
-     * Supports invoice and card orders. (To partially deliver PaymentPlan or Direct Bank orders, please contact Svea.)
+     * The WebPayAdmin::deliverOrderRows entrypoint method is used to deliver individual order rows. Supports invoice and card orders. 
+     * (To partially deliver PaymentPlan or Direct Bank orders, please contact Svea.)
      * 
-     * Get an order builder instance using the WebPayAdmin::deliverOrderRows entrypoint,
-     * then provide more information about the transaction and send the request using
-     * the deliverOrderRowsBuilder methods:
-     *
-     * ->setOrderId()           (invoice, card only, required)
-     * ->setCountryCode()       (invoice only, required)
-     * ->setRowToDeliver()      (required, index of one of the original order row you wish to cancel)
-     * ->setRowsToDeliver()     (optional)
-     * ->addNumberedOrderRow()  (card only, one or more, required with setRow(s)ToDeliver)
-     * ->addNumberedOrderRows() (card only, optional)
+     * For Invoice orders, the order row status is updated at Svea following each successful request.
      * 
-     * Finish by selecting the correct ordertype and perform the request:
-     * ->deliverInvoiceOrderRows() // or ->deliverCardOrderRows()
-     *   ->doRequest()
-     *
-     * The final doRequest() returns a DeliverOrderRowsResponse or ConfirmTransactionResponse
-     *
+     * For card orders, an order can only be delivered once, and any non-delivered order rows will be cancelled (i.e. the order amount 
+     * will be lowered by the sum of the non-delivered order rows). A delivered card order has status CONFIRMED at Svea.
+     * 
+     * Get an order builder instance using the WebPayAdmin::deliverOrderRows() entrypoint, then provide more information about the 
+     * transaction and send the request using the DeliverOrderRowsBuilder methods:
+     * 
+     * Use setRowToDeliver() or setRowsToDeliver() to specify the order row(s) to deliver. The order row indexes should correspond to 
+     * those returned by i.e. WebPayAdmin::queryOrder();
+     * 
+     * For card orders, use addNumberedOrderRow() or addNumberedOrderRows() to pass in a copy of the original order rows. The original 
+     * order rows can be retrieved using WebPayAdmin::queryOrder(); the numberedOrderRows attribute contains the serverside order rows 
+     * w/indexes. Note that if a card order has been modified (i.e. rows cancelled or credited) after the initial order creation, the 
+     * returned order rows will not be accurate.
+
+     *  ...
+     *      $request = WebPayAdmin::deliverOrderRows($config)
+     *          ->setOrderId()          		// required
+     *          ->setTransactionId()	   		// optional, card only, alias for setOrderId 
+     *          ->setCountryCode()      		// required    	
+     *          ->setInvoiceDistributionType()          // required, invoice only
+     *          ->setRowToDeliver()	   		// required, index of original order rows you wish to cancel 
+     *          ->addNumberedOrderRow()			// required for card orders, should match original row indexes 
+     *      ;
+     *      // then select the corresponding request class and send request
+     *      $response = $request->deliverInvoiceOrderRows()->doRequest();       // returns DeliverOrderRowsResponse
+     *      $response = $request->deliverPaymentPlanOrderRows()->doRequest();   // returns DeliverOrderRowsResponse
+     *      $response = $request->deliverCardOrderRows()->doRequest();          // returns ConfirmTransactionResponse
+     * ...
+     * 
      * @see \Svea\DeliverOrderRowsBuilder \Svea\DeliverOrderRowsBuilder
-     * @see \Svea\HostedService\ConfirmTransactionResponse \Svea\HostedService\ConfirmTransactionResponse
      * @see \Svea\AdminService\DeliverOrderRowsResponse \Svea\AdminService\DeliverOrderRowsResponse
+     * @see \Svea\HostedService\ConfirmTransactionResponse \Svea\HostedService\ConfirmTransactionResponse
      *
      * @param ConfigurationProvider $config  instance implementing ConfigurationProvider
      * @return Svea\DeliverOrderRowsBuilder

@@ -4,21 +4,20 @@ namespace Svea\AdminService;
 require_once SVEA_REQUEST_DIR . '/Includes.php';
 
 /**
- * Admin Service DeliverOrdersRequest class
- * 
+ * Handles Admin Webservice GetOrdersRequest
  * @author Kristian Grossman-Madsen
  */
 class GetOrdersRequest extends AdminServiceRequest {
     
-    /** @var GetOrdersBuilder $orderBuilder */
+    /** @var QueryOrderBuilder $orderBuilder */
     public $orderBuilder;
 
     /**
-     * @param getOrdersBuilder $orderBuilder
+     * @param QueryOrderBuilder $builder
      */
-    public function __construct($getOrdersBuilder) {
+    public function __construct($builder) {
         $this->action = "GetOrders";
-        $this->orderBuilder = $getOrdersBuilder;
+        $this->orderBuilder = $builder;
     }
 
     /**
@@ -32,12 +31,12 @@ class GetOrdersRequest extends AdminServiceRequest {
         $soapRequest = array();
         $soapRequest = new AdminSoap\GetOrdersRequest( 
             new AdminSoap\Authentication( 
-                $this->orderBuilder->conf->getUsername( /*strtoupper*/($this->orderBuilder->orderType), $this->orderBuilder->countryCode ), 
-                $this->orderBuilder->conf->getPassword( /*strtoupper*/($this->orderBuilder->orderType), $this->orderBuilder->countryCode ) 
+                $this->orderBuilder->conf->getUsername( ($this->orderBuilder->orderType), $this->orderBuilder->countryCode ), 
+                $this->orderBuilder->conf->getPassword( ($this->orderBuilder->orderType), $this->orderBuilder->countryCode ) 
             ),
             new AdminSoap\OrdersToRetrieve(
                 new AdminSoap\GetOrderInformation(
-                    $this->orderBuilder->conf->getClientNumber( /*strtoupper*/($this->orderBuilder->orderType), $this->orderBuilder->countryCode ),
+                    $this->orderBuilder->conf->getClientNumber( ($this->orderBuilder->orderType), $this->orderBuilder->countryCode ),
                     $this->orderBuilder->orderId
                 )
             )

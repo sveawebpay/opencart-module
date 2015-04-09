@@ -3,14 +3,13 @@ namespace Svea;
 
 /**
  * Class IndividualCustomer, a customer information container for private individuals.
- * 
+ *
  * The IndividualCustomer attributes are used by the invoice and payment plan payment methods
  * to identify the customer. Which attributes are required varies according to country.
- * 
+ *
  * (For card and direct bank orders, adding customer information to the order is optional.)
- * 
- * $order->
- *     addCustomerDetails(
+ *
+ *     $order->addCustomerDetails(
  *         WebPayItem::individualCustomer()
  *             ->setNationalIdNumber(194605092222) // required for individual customers in SE, NO, DK, FI
  *             ->setInitials("SB")                 // required for individual customers in NL
@@ -25,37 +24,41 @@ namespace Svea;
  *             ->setPhoneNumber(999999)            // optional
  *     )
  * ;
- * 
+ *
  * @author anne-hal, Kristian Grossman-Madsen
  */
 class IndividualCustomer {
-    
+
     /** @var string $ssn */
-    public $ssn;     
+    public $ssn;
     /** @var string $initials */
-    public $initials; 
+    public $initials;
     /** @var string $birthDate  numeric string on the format yyyymmdd */
-    public $birthDate;       
+    public $birthDate;
     /** @var string $email */
     public $email;
     /** @var int $phonenumber */
     public $phonenumber;
     /** @var string $ipAddress */
-    public $ipAddress;  
+    public $ipAddress;
     /** @var string $firstname */
-    public $firstname;    
-    /** @var string $lastname */
-    public $lastname;  
+    public $firstname;
+    /** @var string $lastname */ 
+    public $lastname;
     /** @var string $street */
-    public $street;    
+    public $street;
     /** @var int $housenumber */
-    public $housenumber;  
+    public $housenumber;
     /** @var string $coAddress */
-    public $coAddress;  
+    public $coAddress;
     /** @var string $zipCode */
-    public $zipCode;     
+    public $zipCode;
     /** @var string $locality */
-    public $locality;    
+    public $locality;
+
+    // set in GetOrdersResponse
+    public $fullName;               // compounded fullName, may be set by CreateOrder for i.e. orders where identify customer via ssn   
+    public $streetAddress;          // compounds street + housenumber,fullName, may be set by CreateOrder for i.e. orders where identify customer via ssn
     
     /**
      * Required for private customers in SE, NO, DK, FI
@@ -76,7 +79,7 @@ class IndividualCustomer {
         $this->initials = $initialsAsString;
         return $this;
     }
-    
+
     /**
      * Required for private customers in NL and DE
      * @param string $yyyy or $yyyymmdd
@@ -86,23 +89,23 @@ class IndividualCustomer {
      */
     public function setBirthDate($yyyy, $mm = null, $dd = null) {
         if( $mm == null && $dd == null ) { // poor man's overloading
-            $yyyymmdd = $yyyy; 
+            $yyyymmdd = $yyyy;
             if( strlen($yyyymmdd) != 8 ) {
                 throw new \InvalidArgumentException;
             }
             else {
                 $yyyy = substr($yyyymmdd,0,4);
                 $mm = substr($yyyymmdd,4,2);
-                $dd = substr($yyyymmdd,6,2);             
+                $dd = substr($yyyymmdd,6,2);
             }
-        }        
-        if ($mm < 10) {$mm = "0".$mm; }
-        if ($dd < 10) {$dd = "0".$dd; }
+        }
+        if ($mm < 10) {$mm = "0".intval($mm); }
+        if ($dd < 10) {$dd = "0".intval($dd); }
 
         $this->birthDate = $yyyy . $mm . $dd;
         return $this;
     }
-    
+
     /**
      * Optional but desirable
      * @param string $emailAsString
@@ -112,7 +115,7 @@ class IndividualCustomer {
         $this->email = $emailAsString;
         return $this;
     }
-    
+
      /**
      * Optional
      * @param int $phoneNumberAsInt
@@ -122,7 +125,7 @@ class IndividualCustomer {
         $this->phonenumber = $phoneNumberAsInt;
         return $this;
     }
-    
+
     /**
      * Optional but desirable
      * @param string $ipAddressAsString
@@ -131,33 +134,47 @@ class IndividualCustomer {
     public function setIpAddress($ipAddressAsString) {
         $this->ipAddress = $ipAddressAsString;
         return $this;
-    }  
+    }
 
     /**
-     * Required for private Customers in NL and DE
-     * @param string $firstnameAsString
-     * @param string $lastnameAsString
+     * Required to set firstName and lastName for private Customers in NL and DE
+     * @param string $firstnameAsString, or $fullNameAsString iff sole argument
+     * @param string $lastnameAsString, or omitted if setting fullName
      * @return $this
      */
-    public function setName($firstnameAsString, $lastnameAsString) {
-        $this->firstname = $firstnameAsString;
-        $this->lastname = $lastnameAsString;
+    public function setName($firstnameAsString, $lastnameAsString = null) { // = null is poor man's overloading
+        // only one name given, assume fullName;
+        if( $lastnameAsString == null) {
+            $fullNameAsString = $firstnameAsString;
+            $this->name = $fullNameAsString;
+        }
+        // two names given, assume firstName and lastName
+        else {        
+            $this->firstname = $firstnameAsString;
+            $this->lastname = $lastnameAsString;
+        }
         return $this;
-    }  
-
+    }
+    
     /**
-     * Required in NL and DE
-     * For other countries, you may ommit this, or let either of street and/or housenumber be empty
-     * 
-     * @param string $streetAsString
-     * @param int $houseNumberAsInt  -- optional
+     * Required to set street and houseNumber in NL and DE
+     * @param string $streetAsString, or $streetAddressAsString iff sole argument
+     * @param int $houseNumberAsInt, or omitted if setting streetAddress
      * @return $this
      */
     public function setStreetAddress($streetAsString, $houseNumberAsInt = null) { // = null is poor man's overloading
-        $this->street = $streetAsString;
-        $this->housenumber = $houseNumberAsInt;
+        // only one name given, assume streetName;
+        if( $houseNumberAsInt == null) {
+            $streetAddressAsString = $streetAsString;
+            $this->streetAddress = $streetAddressAsString;
+            $this->street = $streetAsString;    // preserve old behaviour if only street given (assume contains compounded street + housenumber)
+        }
+        else {
+            $this->street = $streetAsString;
+            $this->housenumber = $houseNumberAsInt;
+        }
         return $this;
-    }      
+    }
 
     /**
      * Optional in NL and DE
@@ -167,8 +184,8 @@ class IndividualCustomer {
     public function setCoAddress($coAddressAsString) {
         $this->coAddress = $coAddressAsString;
         return $this;
-    }      
-    
+    }
+
     /**
      * Requuired in NL and DE
      * @param string $zipCodeAsString
@@ -177,8 +194,8 @@ class IndividualCustomer {
     public function setZipCode($zipCodeAsString) {
         $this->zipCode = $zipCodeAsString;
         return $this;
-    }       
-        
+    }
+
     /**
      * Required in NL and DE
      * @param string $cityAsString
@@ -187,5 +204,5 @@ class IndividualCustomer {
     public function setLocality($cityAsString) {
         $this->locality = $cityAsString;
         return $this;
-    }   
+    }
 }
