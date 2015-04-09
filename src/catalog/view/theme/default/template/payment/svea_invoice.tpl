@@ -138,6 +138,13 @@ $("#svea_invoice_company").change(function(){
             $('#getSSN').show();
         //$('#svea_invoice_div').show();
        // $('#svea_invoice_div').show();
+
+        //if norway hide confirm
+         <?php
+        if( $countryCode == "NO"){ ?>
+            $("a#checkout").hide();
+        <?php } ?>
+
     } else {
         $('#sveaVatNoCont').hide();
         $('#sveaBirthDateCont').show();
