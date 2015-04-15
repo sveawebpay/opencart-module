@@ -36,7 +36,7 @@
         if( $countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI")
         { ?>
             <?php echo $this->language->get('text_ssn') ?>:
-            <input type="text" id="ssn" name="ssn" /><br /><br />
+            <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span><br /><br />
         <?php
         }
         elseif( $countryCode == "NL" || $countryCode == "DE" )
@@ -153,6 +153,13 @@ $('a#checkout').click(function(event) {
     var birthMonth = $("#birthMonth").val();
     var birthYear = $("#birthYear").val();
 
+    //validate empty field
+    if(ssnNo == ''){
+        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>*Required');
+        $('#sveaLoading').remove();
+        runningCheckout = false;
+        return false;
+    }
     $.ajax({
             type: 'get',
             dataType: 'json',
