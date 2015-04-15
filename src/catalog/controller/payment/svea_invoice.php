@@ -236,7 +236,6 @@ class ControllerPaymentsveainvoice extends Controller {
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($response));
-
         }
 
         //If CreateOrder accepted redirect to thankyou page
