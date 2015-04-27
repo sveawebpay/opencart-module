@@ -22,7 +22,12 @@ class ControllerPaymentsveacard extends Controller {
             $this->template = 'default/template/payment/svea_card.tpl';
         }
 
-        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_card.png'>";
+        if($this->data['countryCode'] == "NO" || $this->data['countryCode'] == "DK" || $this->data['countryCode'] == "NL"){
+            $logoImg = "http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png";
+        } else {
+            $logoImg = "http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png";
+        }
+        $this->data['logo'] = "<img src='$logoImg' alt='Svea Ekonomi'>";
         $this->data['cardLogos'] = "<img src='admin/view/image/payment/svea_direct/KORTCERT.png'>
                                     <img src='admin/view/image/payment/svea_direct/AMEX.png'>
                                     <img src='admin/view/image/payment/svea_direct/DINERS.png'>

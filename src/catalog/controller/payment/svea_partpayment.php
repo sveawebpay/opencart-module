@@ -37,8 +37,12 @@ class ControllerPaymentsveapartpayment extends Controller {
         //Get the country from the order
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['countryCode'] = $order_info['payment_iso_code_2'];
-
-        $this->data['logo'] = "<img src='admin/view/image/payment/" . $this->getLogo($order_info['payment_iso_code_2']) . "/svea_partpayment.png'>";
+        if($this->data['countryCode'] == "NO" || $this->data['countryCode'] == "DK" || $this->data['countryCode'] == "NL"){
+            $logoImg = "http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png";
+        } else {
+            $logoImg = "http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png";
+        }
+        $this->data['logo'] = "<img src='$logoImg' alt='Svea Ekonomi'>";
 
         // we show the available payment plans w/monthly amounts as radiobuttons under the logo
         $this->data['paymentOptions'] = $this->getPaymentOptions();

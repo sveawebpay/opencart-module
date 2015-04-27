@@ -20,8 +20,12 @@ class ControllerPaymentsveadirectbank extends Controller {
         } else {
                 $this->template = 'default/template/payment/svea_directbank.tpl';
         }
-
-        $this->data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_directbank.png'>";
+        if($this->data['countryCode'] == "NO" || $this->data['countryCode'] == "DK" || $this->data['countryCode'] == "NL"){
+            $logoImg = "http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png";
+        } else {
+            $logoImg = "http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png";
+        }
+        $this->data['logo'] = "<img src='$logoImg' alt='Svea Ekonomi'>";
         $this->data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
 
         /*
