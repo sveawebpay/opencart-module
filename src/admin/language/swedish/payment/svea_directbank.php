@@ -5,7 +5,7 @@ $_['heading_title']      = 'Svea Direktbanksbetalning';
 // Text
 $_['text_payment']       = 'Betalning';
 $_['text_success']       = 'Modifiering av Sveas Kortbetalningsmodul lyckades!';
-$_['text_svea_directbank']  = '<img src="view/image/payment/swedish/svea_directbank.png" alt="Svea Direktbetalning" title="SVEA Direktbetalning" />';
+$_['text_svea_directbank']  = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png" alt="Svea Ekonomi" title="Svea Ekonomi" />';
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';

@@ -5,7 +5,7 @@ $_['heading_title']           = 'Svea Factuur';
 // Text
 $_['text_payment']            = 'Betaling';
 $_['text_success']            = 'Success: U heeft de module Svea Factuur gewijzigd!';
-$_['text_svea_invoice']       = '<img src="view/image/payment/dutch/svea_invoice.png" alt="Svea Invoice" title="SVEA Invoice" />';
+$_['text_svea_invoice']       = '<img src="http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png" alt="Svea Finans" title="Svea Finans" />';
 
 
 // Entry
