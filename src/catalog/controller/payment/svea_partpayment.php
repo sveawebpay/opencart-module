@@ -446,28 +446,6 @@ class ControllerPaymentsveapartpayment extends Controller {
         return $total_data;
     }
 
-    private function getLogo($countryCode) {
-
-        switch ($countryCode) {
-            case "SE": $country = "swedish";
-                break;
-            case "NO": $country = "norwegian";
-                break;
-            case "DK": $country = "danish";
-                break;
-            case "FI": $country = "finnish";
-                break;
-            case "NL": $country = "dutch";
-                break;
-            case "DE": $country = "german";
-                break;
-            default: $country = "english";
-                break;
-        }
-
-        return $country;
-    }
-
     /**
      * TODO replace these with the one in php integration package Helper class in next release
      *
