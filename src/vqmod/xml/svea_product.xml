@@ -102,7 +102,7 @@
                                 $viewProduct['lowest_price'] = $lowest_price;
                                 $viewProduct['arrow'] = "<img src='admin/view/image/payment/svea_direct/blue_arrow.png'>";
                                 $viewProduct['line'] = "<img width='209' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
-
+                                $viewProduct['widget_background'] = ($svea_country['iso_code_2'] == "NO" || $svea_country['iso_code_2'] == "DK" || $svea_country['iso_code_2'] == "NL") ? "svea_finans_background" : "svea_background";
                             }
                             $this->data['svea_widget'] = $viewProduct;
 
@@ -117,7 +117,7 @@
                 private function svea_get_invoice_lowest($svea_country_code) {
                         switch ($svea_country_code) {
                             case "SE":
-                                return 100;
+                                return 50;
                                 break;
                             case "NO":
                                 return 100;
@@ -226,7 +226,7 @@
                                     ">
                                         <img width="170"
                                             style="position:absolute;
-                                                  z-index:1;" src='admin/view/image/payment/svea_direct/svea_background.png'/>
+                                                  z-index:1;" src="admin/view/image/payment/svea_direct/<?php echo $svea_widget['widget_background']; ?>.png" />
                                 </div>
                                 <div id="svea_price_arrow">
                                     <div id="svea_arrow" style="
@@ -234,7 +234,7 @@
                                                 position:absolute;
                                                 z-index:2;
                                                 left: -2px;
-                                                top:26px;
+                                                top:21px;
                                                margin: 7px -10px 3px 17px;
                                                "><?php echo $svea_widget['arrow']; ?>
                                     </div>
