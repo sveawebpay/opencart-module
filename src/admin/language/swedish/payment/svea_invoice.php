@@ -5,7 +5,7 @@ $_['heading_title']      = 'Svea Faktura';
 // Text
 $_['text_payment']       = 'Betalning';
 $_['text_success']       = 'Modifiering av Sveas Kortbetalningsmodul lyckades!';
-$_['text_svea_invoice']     = '<img src="view/image/payment/swedish/svea_invoice.png" alt="Svea Faktura" title="Svea Faktura" />';
+$_['text_svea_invoice']     = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png" alt="Svea Ekonomi" title="Svea Ekonomi" />';
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';

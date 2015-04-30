@@ -16,11 +16,19 @@ class ControllerPaymentsveacard extends Controller {
         $data['countryCode'] = $order_info['payment_iso_code_2'];
         $this->id = 'payment';
 
-        $data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_card.png'>";
-        $data['cardLogos'] = "<img src='admin/view/image/payment/svea_direct/KORTCERT.png'>
-                                    <img src='admin/view/image/payment/svea_direct/AMEX.png'>
-                                    <img src='admin/view/image/payment/svea_direct/DINERS.png'>
-                                    ";
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {
+            $this->template = $this->config->get('config_template') . '/template/payment/svea_card.tpl';
+        } else {
+            $this->template = 'default/template/payment/svea_card.tpl';
+        }
+
+        $data['logo'] = "";
+        $data['cardLogos']  = "<img src='admin/view/image/payment/svea_direct/MASTERCARD.png'>
+                                        <img src='admin/view/image/payment/svea_direct/VISA.png'>
+                                        <img src='admin/view/image/payment/svea_direct/AMEX.png'>
+                                        <img src='admin/view/image/payment/svea_direct/DINERS.png'>
+                                        ";
         $data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
 

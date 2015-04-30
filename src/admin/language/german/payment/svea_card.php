@@ -5,7 +5,7 @@ $_['heading_title']      = 'Svea Kartenzahlung';
 // Text
 $_['text_payment']       = 'Zahlung';
 $_['text_success']       = 'Modifizierung von Sveas Kartenzahlungsmodul ist erfolgreich!';
-$_['text_svea_card']     = '<img src="view/image/payment/german/svea_card.png" alt="Svea Card payment" title="SVEA Card payment" />';
+$_['text_svea_card']     = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png" alt="Svea Ekonomi" title="Svea Ekonomi" />';
 
 // Entry
 $_['entry_order_status'] = 'Orderstatus:';
