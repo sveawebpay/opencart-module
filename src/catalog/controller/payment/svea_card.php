@@ -23,16 +23,12 @@ class ControllerPaymentsveacard extends Controller {
             $this->template = 'default/template/payment/svea_card.tpl';
         }
 
-        if($data['countryCode'] == "NO" || $data['countryCode'] == "DK" || $data['countryCode'] == "NL"){
-            $logoImg = "http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png";
-        } else {
-            $logoImg = "http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png";
-        }
-        $data['logo'] = "<img src='$logoImg' alt='Svea Ekonomi'>";
-        $data['cardLogos'] = "<img src='admin/view/image/payment/svea_direct/KORTCERT.png'>
-                                    <img src='admin/view/image/payment/svea_direct/AMEX.png'>
-                                    <img src='admin/view/image/payment/svea_direct/DINERS.png'>
-                                    ";
+        $data['logo'] = "";
+        $data['cardLogos']  = "<img src='admin/view/image/payment/svea_direct/MASTERCARD.png'>
+                                        <img src='admin/view/image/payment/svea_direct/VISA.png'>
+                                        <img src='admin/view/image/payment/svea_direct/AMEX.png'>
+                                        <img src='admin/view/image/payment/svea_direct/DINERS.png'>
+                                        ";
         $data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
 
