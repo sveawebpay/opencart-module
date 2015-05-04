@@ -30,6 +30,7 @@ $_['response_27001'] = "Det går ej att leverera order för en pdf saknas. Konta
 $_['response_27002'] = "Det går ej att delleverera en delbetalning";
 $_['response_27003'] = "Det går ej att kombinera CampaignCode med en fast summa.";
 $_['response_27004'] = "Det går ej att hitta en passande kampanjkod för den angivna summan";
+$_['response_no_campaign_on_amount'] = "Det går ej att hitta en passande kampanjkod för den angivna summan";
 
 $_['response_30000'] = "Kreditupplysningen avslogs";
 $_['response_30001'] = "Kunden är blockerad eller har uppvisat udda köpbeteende.";
