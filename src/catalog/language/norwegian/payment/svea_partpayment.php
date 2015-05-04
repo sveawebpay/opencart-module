@@ -30,6 +30,7 @@ $_['response_27000'] = "Den medfølgende kampanjekode beløpets kombinasjon sams
 	$_['response_27002'] = "Kan ikke delvis levere en betalingsplan";
 	$_['response_27003'] = "Kan ikke blande en kampanjekode med ett fast månedlig beløp.";
 	$_['response_27004'] = "Kan ikke finne en passende kampanjekode for det månedlige beløpet";
+	$_['response_no_campaign_on_amount'] = "Kan ikke finne en passende kampanjekode for beløpet";
 
 $_['response_30000'] = "Kreditt rapporten ble avvist";
 	$_['response_30001'] = "Kunden er blokkert eller har utvist uvanlig oppførsel";

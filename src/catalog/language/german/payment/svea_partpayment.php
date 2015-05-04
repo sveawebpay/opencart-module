@@ -28,6 +28,7 @@ $_['response_27001'] = "Auftrag kann nicht geliefert werden seit angegebene Pdf 
 $_['response_27002'] = "Die Zahlungsmethode kann nicht teilweise geliefert werden";
 $_['response_27003'] = "Kampagnekode kann nicht mit fixierte monatlichen Betrag gemischt werden.";
 $_['response_27004'] = "Keiner geeignete Kampagnekode für den monatlichen Betrag gefunden";
+$_['response_no_campaign_on_amount'] = "Kein passende Kampagnen-Code für den Betrag";
 
 $_['response_30000'] = "Die Bonitätsprüfung ist abgelehnt";
 $_['response_30001'] = "Die Kunde ist blockiert oder zeigt ungewöhnliche Verhalten";
