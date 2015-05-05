@@ -30,7 +30,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $data['text_invoice_address'] = $this->language->get('text_invoice_address');
         $data['text_shipping_address'] = $this->language->get('text_shipping_address');
         $data['svea_partpayment_shipping_billing'] = $this->config->get('svea_partpayment_shipping_billing');
-
+        $data['response_no_campaign_on_amount'] = $this->language->get('response_no_campaign_on_amount');
 
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['button_back'] = $this->language->get('button_back');

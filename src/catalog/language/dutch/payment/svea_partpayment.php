@@ -28,6 +28,7 @@ $_['response_27001'] = "Er kan geen factuur gecreëerd worden, aangezien de gesp
 $_['response_27002'] = "De factuur kan niet opgesplitst worden voor deelbetaling";
 $_['response_27003'] = "Er kan geen campagnecode samengevoegd worden met een vast maandelijks bedrag.";
 $_['response_27004'] = "Kan geen geschikte campagnecode vinden voor het maandelijkse bedrag";
+$_['response_no_campaign_on_amount'] = "Kan geen geschikte actie code vinden voor de bepaalde bedrag";
 
 $_['response_30000'] = "Het kredietrapport is afgewezen";
 $_['response_30001'] = "De klant is geblokkeerd of heeft vreemd/ ongewoon gedrag vertoond";

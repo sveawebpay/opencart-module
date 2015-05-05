@@ -7,7 +7,7 @@
 
         if( empty( $paymentOptions ) )     // catch error fetching payment plans
         {
-            printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", "error rendering campaigns" );
+            printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", $response_no_campaign_on_amount);
         }
         else    // present payment plans
         {
