@@ -29,6 +29,7 @@ $_['response_27001'] = "Tilausta ei voi toimittaa, koska määritelty pdf lomake
 $_['response_27002'] = "Osamaksusuunnitelmalle ei voi suorittaa osatoimitusta";
 $_['response_27003'] = "Kampanjakoodia ei voi yhdistää kiinteään kuukausierään.";
 $_['response_27004'] = "Sopivaa kampanjakoodia ei löydy kuukausierälle";
+$_['response_no_campaign_on_amount'] = "Sopivaa kampanjakoodia ei löydy annetulle summalle";
 
 $_['response_30000'] = "Luotto hylätty";
 $_['response_30001'] = "Asiakas on estetty tai on esittänyt outoa tai epätavallista käyttäytymistä";

@@ -28,6 +28,7 @@ $_['response_27001'] = "Can not deliver order since the specified pdf template i
 $_['response_27002'] = "Can not partial deliver a PaymentPlan";
 $_['response_27003'] = "Can not mix CampaignCode with a fixed Monthly Amount.";
 $_['response_27004'] = "Can not find a suitable CampaignCode for the Monthly Amount";
+$_['response_no_campaign_on_amount'] = "Can not find a suitable CampaignCode for the given amount";
 
 $_['response_30000'] = "The credit report was rejected";
 $_['response_30001'] = "The customer is blocked or has shown strange or unusual behavior";

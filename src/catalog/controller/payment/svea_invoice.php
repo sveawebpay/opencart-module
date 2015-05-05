@@ -48,10 +48,14 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
         $data['countryCode'] = $order_info['payment_iso_code_2'];
-
-        $data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_invoice.png'>";
-
+        if($data['countryCode'] == "NO" || $data['countryCode'] == "DK" || $data['countryCode'] == "NL"){
+            $logoImg = "http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png";
+        } else {
+            $logoImg = "http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png";
+        }
+        $data['logo'] = "<img src='$logoImg' alt='Svea Ekonomi'>";
 
 //        $this->id = 'payment';
 
@@ -236,7 +240,6 @@ class ControllerPaymentsveainvoice extends Controller {
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($response));
-
         }
 
         //If CreateOrder accepted redirect to thankyou page
@@ -482,18 +485,6 @@ class ControllerPaymentsveainvoice extends Controller {
         return $total_data;
     }
 
-    private function getLogo($countryCode){
-        switch ($countryCode){
-            case "SE": $country = "swedish";    break;
-            case "NO": $country = "norwegian";  break;
-            case "DK": $country = "danish";     break;
-            case "FI": $country = "finnish";    break;
-            case "NL": $country = "dutch";      break;
-            case "DE": $country = "german";     break;
-            default:   $country = "english";    break;
-        }
-        return $country;
-    }
 
     /**
      * TODO replace these with the one in php integration package Helper class in next release

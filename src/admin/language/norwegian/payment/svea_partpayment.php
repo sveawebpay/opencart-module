@@ -6,7 +6,7 @@ $_['heading_title']      = 'Svea Delbetaling';
 $_['text_payment']       = 'Betaling';
 $_['text_success']       = 'Modifisering av Sveas Kortbetalingsmodul var velykket!';
 
-$_['text_svea_partpayment']   = '<img src="view/image/payment/norwegian/svea_partpayment.png" alt="Svea Part payment" title="SVEA Part payment" />';
+$_['text_svea_partpayment']   = '<img src="http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png " alt="Svea Finans" title="Svea Finans" />';
 
 // Entry
 $_['entry_order_status'] = 'Ordrestatus:';

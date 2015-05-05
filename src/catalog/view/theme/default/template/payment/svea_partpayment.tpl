@@ -7,7 +7,7 @@
 
         if( empty( $paymentOptions ) )     // catch error fetching payment plans
         {
-            printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", "error rendering campaigns" );
+            printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", $response_no_campaign_on_amount);
         }
         else    // present payment plans
         {
@@ -37,8 +37,8 @@
         <?php // get SSN
         if( $countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI")
         { ?>
-            <?php echo $text_ssn; ?>:
-            <input type="text" id="ssn" name="ssn" /><br /><br />
+             <?php echo $text_ssn; ?>:
+            <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span><br /><br />
         <?php
         }
         elseif( $countryCode == "NL" || $countryCode == "DE" )
@@ -155,6 +155,13 @@ $('a#checkout').click(function(event) {
     var birthMonth = $("#birthMonth").val();
     var birthYear = $("#birthYear").val();
 
+    //validate empty field
+    if(ssnNo == ''){
+        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>*Required');
+        $('#sveaLoading').remove();
+        runningCheckout = false;
+        return false;
+    }
     $.ajax({
             type: 'get',
             dataType: 'json',

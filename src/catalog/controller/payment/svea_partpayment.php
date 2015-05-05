@@ -30,7 +30,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         $data['text_invoice_address'] = $this->language->get('text_invoice_address');
         $data['text_shipping_address'] = $this->language->get('text_shipping_address');
         $data['svea_partpayment_shipping_billing'] = $this->config->get('svea_partpayment_shipping_billing');
-
+        $data['response_no_campaign_on_amount'] = $this->language->get('response_no_campaign_on_amount');
 
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['button_back'] = $this->language->get('button_back');
@@ -47,9 +47,14 @@ class ControllerPaymentsveapartpayment extends Controller {
 
         //Get the country from the order
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $data['countryCode'] = $order_info['payment_iso_code_2'];
 
-        $data['logo'] = "<img src='admin/view/image/payment/" . $this->getLogo($order_info['payment_iso_code_2']) . "/svea_partpayment.png'>";
+        $data['countryCode'] = $order_info['payment_iso_code_2'];
+        if($data['countryCode'] == "NO" || $data['countryCode'] == "DK" || $data['countryCode'] == "NL"){
+            $logoImg = "http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png";
+        } else {
+            $logoImg = "http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png";
+        }
+        $data['logo'] = "<img src='$logoImg' alt='Svea Ekonomi'>";
 
         // we show the available payment plans w/monthly amounts as radiobuttons under the logo
         $data['paymentOptions'] = $this->getPaymentOptions();
@@ -444,28 +449,6 @@ class ControllerPaymentsveapartpayment extends Controller {
             }
         }
         return $total_data;
-    }
-
-    private function getLogo($countryCode) {
-
-        switch ($countryCode) {
-            case "SE": $country = "swedish";
-                break;
-            case "NO": $country = "norwegian";
-                break;
-            case "DK": $country = "danish";
-                break;
-            case "FI": $country = "finnish";
-                break;
-            case "NL": $country = "dutch";
-                break;
-            case "DE": $country = "german";
-                break;
-            default: $country = "english";
-                break;
-        }
-
-        return $country;
     }
 
     /**

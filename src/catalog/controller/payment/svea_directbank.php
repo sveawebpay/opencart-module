@@ -15,8 +15,16 @@ class ControllerPaymentsveadirectbank extends Controller {
         $data['countryCode'] = $order_info['payment_iso_code_2'];
         $this->id = 'payment';
 
-        $data['logo'] = "<img src='admin/view/image/payment/".$this->getLogo($order_info['payment_iso_code_2'])."/svea_directbank.png'>";
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_directbank.tpl')) {
+                $this->template = $this->config->get('config_template') . '/template/payment/svea_directbank.tpl';
+        } else {
+                $this->template = 'default/template/payment/svea_directbank.tpl';
+        }
+
+        $data['logo'] = "";
         $data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
+
 
         /*
          **get my methods, present page

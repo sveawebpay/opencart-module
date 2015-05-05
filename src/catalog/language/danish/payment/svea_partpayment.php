@@ -29,6 +29,7 @@ $_['response_27001'] = 'Kan ikke levere ordre, da den udspecificerede pdf-skabel
 $_['response_27002'] = 'Kan ikke levere Betalingsplan delvist';
 $_['response_27003'] = 'Kampagnekode kan ikke benyttes sammen med fast Månedlig Betaling.';
 $_['response_27004'] = 'Kan ikke finde en egnet Kampagnekode for den Månedlige Betaling';
+$_['response_no_campaign_on_amount'] = "Kan ikke finde en egnet Kampagnekode for for den angivne sum";
 	
 $_['response_30000'] = 'Kreditrapporten blev afvist';
 $_['response_30001'] = 'Kunden er spærret eller har udvist mærkelig eller usædvanlig adfærd';

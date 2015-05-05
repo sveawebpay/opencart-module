@@ -156,6 +156,7 @@ $("#svea_invoice_company").change(function(){
          <?php
         if( $countryCode == "NO"){ ?>
             $("#getSSN").hide();
+            $("a#checkout").show();
             $("#svea_invoice_div").hide();
         <?php }else{ ?>
             $('#getSSN').show();
@@ -188,6 +189,13 @@ $('a#checkout').click(function(event) {
     var birthYear = $("#birthYear").val();
     var vatNo = $('#vatno').val();
     var company = $("#svea_invoice_company").val();
+    //validate empty field
+    if(ssnNo == ''){
+        $("#svea_invoice_err").empty().addClass("attention").show().append('<br>*Required');
+        $('#sveaLoading').remove();
+        runningCheckout = false;
+        return false;
+    }
 
     $.ajax({
         type: 'get',
