@@ -258,56 +258,6 @@ class ControllerPaymentsveacard extends SveaCommon {
         return $country;
     }
 
-     public function addTaxRateToAddons() {
-        //Get all addons
-        $this->load->model('setting/extension');
-        $total_data = array();
-        $total = 0;
-        $svea_tax = array();
-        $cartTax = $this->cart->getTaxes();
-        $results = $this->model_setting_extension->getExtensions('total');
-        foreach ($results as $result) {
-          //if this result is activated
-           if($this->config->get($result['code'] . '_status')){
-               $amount = 0;
-               $taxes = array();
-               foreach ($cartTax as $key => $value) {
-                   $taxes[$key] = 0;
-               }
-               $this->load->model('total/' . $result['code']);
-
-               $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-
-               foreach ($taxes as $tax_id => $value) {
-                   $amount += $value;
-               }
-
-               $svea_tax[$result['code']] = $amount;
-           }
-
-        }
-        foreach ($total_data as $key => $value) {
-
-            if (isset($svea_tax[$value['code']])) {
-                if ($svea_tax[$value['code']]) {
-                    $total_data[$key]['tax_rate'] = (int)round( $svea_tax[$value['code']] / $value['value'] * 100 ); // round and cast, or may get i.e. 24.9999, which shows up as 25f in debugger & written to screen, but converts to 24i
-                } else {
-                    $total_data[$key]['tax_rate'] = 0;
-                }
-            } else {
-                $total_data[$key]['tax_rate'] = '0';
-            }
-        }
-          $ignoredTotals = 'sub_total, total, taxes';
-           $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
-            foreach ($total_data as $key => $orderTotal) {
-                if (in_array($orderTotal['code'], $ignoredOrderTotals)) {
-                    unset($total_data[$key]);
-                }
-            }
-            return $total_data;
-    }
-
     /**
      * Gets the current server name, adds the path from the server url settings (for installs below server root)
      * this aims to accommodate sites that rewrite the server name dynamically on i.e. user language change
