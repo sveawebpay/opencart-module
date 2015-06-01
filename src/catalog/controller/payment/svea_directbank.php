@@ -1,6 +1,8 @@
 <?php
-class ControllerPaymentsveadirectbank extends Controller {
-	protected function index() {
+include_once(dirname(__FILE__).'/svea_common.php');
+
+class ControllerPaymentsveadirectbank extends SveaCommon {
+    public function index() {
         $this->load->model('checkout/order');
     	//$this->data['button_confirm'] = $this->language->get('button_confirm');
     	$this->data['button_continue'] = $this->language->get('button_continue');

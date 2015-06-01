@@ -1,6 +1,7 @@
 <?php
+include_once(dirname(__FILE__).'/svea_common.php');
 
-class ControllerPaymentsveainvoice extends Controller {
+class ControllerPaymentsveainvoice extends SveaCommon {
 
     /**
      * Returns the currency used for an invoice country.
@@ -421,6 +422,7 @@ class ControllerPaymentsveainvoice extends Controller {
     }
 
     public function addTaxRateToAddons() {
+        
         //Get all addons
         $this->load->model('extension/extension');
         $total_data = array();
