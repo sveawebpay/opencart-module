@@ -1,5 +1,7 @@
 <?php
-class ControllerPaymentsveacard extends Controller {
+include_once(dirname(__FILE__).'/svea_common.php');
+
+class ControllerPaymentsveacard extends SveaCommon {
     public function index() {
         $this->load->model('checkout/order');
 
