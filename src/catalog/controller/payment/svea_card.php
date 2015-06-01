@@ -76,7 +76,7 @@ class ControllerPaymentsveacard extends Controller {
 //                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
                     );
         }
-         $addons = $this->formatAddons();
+         $addons = $this->addTaxRateToAddons();
 
          //extra charge addons like shipping and invoice fee
          foreach ($addons as $addon) {
@@ -256,7 +256,7 @@ class ControllerPaymentsveacard extends Controller {
         return $country;
     }
 
-     public function formatAddons() {
+     public function addTaxRateToAddons() {
         //Get all addons
        $this->load->model('extension/extension');
 

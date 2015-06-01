@@ -108,7 +108,7 @@ class ControllerPaymentsveadirectbank extends Controller {
                     );
         }
 
-         $addons = $this->formatAddons();
+         $addons = $this->addTaxRateToAddons();
          //extra charge addons like shipping and invoice fee
          foreach ($addons as $addon) {
             if($addon['value'] >= 0){
@@ -320,7 +320,7 @@ class ControllerPaymentsveadirectbank extends Controller {
         return $country;
     }
 
-     public function formatAddons() {
+     public function addTaxRateToAddons() {
         //Get all addons
       $this->load->model('extension/extension');
         $total_data = array();

@@ -125,7 +125,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);
         
         //extra charge addons like shipping and invoice fee        
-        $addons = $this->formatAddons();
+        $addons = $this->addTaxRateToAddons();
 
         foreach ($addons as $addon) {
 
@@ -423,7 +423,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 ->setName($product['name'])
                 ->setUnit($this->language->get('unit'))
                 ->setArticleNumber($product['model']);
-//                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
+//                ->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
 
             $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
             $taxPercent = 0;
@@ -440,7 +440,7 @@ class ControllerPaymentsveainvoice extends Controller {
         return $svea;
     }
 
-    public function formatAddons() {
+    public function addTaxRateToAddons() {
         //Get all addons
         $this->load->model('extension/extension');
         $total_data = array();
@@ -450,7 +450,6 @@ class ControllerPaymentsveainvoice extends Controller {
         $cartTax = $this->cart->getTaxes();
 
         $extensions = $this->model_extension_extension->getExtensions('total');
-$this->log->write($extensions);
         foreach ($extensions as $extension) {
             
             //if this result is activated
@@ -473,9 +472,6 @@ $this->log->write($extensions);
             }
         }        
         
-//$this->log->write($cartTax);
-//$this->log->write($svea_tax);
-
         foreach ($total_data as $key => $value) {
             if (isset($svea_tax[$value['code']])) {
                 if ($svea_tax[$value['code']]) {
@@ -489,7 +485,6 @@ $this->log->write($extensions);
             }
         }
 
-$this->log->write($total_data);
         // for any order totals that are sorted below taxes, set the extension tax rate to zero
         $tax_sort_order = $this->config->get('tax_sort_order');
         foreach ($total_data as $key => $value) {
@@ -506,11 +501,8 @@ $this->log->write($total_data);
                 unset($total_data[$key]);
             }
         }
-$this->log->write($total_data);
-
         return $total_data;
     }
-
 
     /**
      * TODO replace these with the one in php integration package Helper class in next release
