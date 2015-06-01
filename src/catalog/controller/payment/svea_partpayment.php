@@ -149,7 +149,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
             }
                 //discounts
             else {
-                $taxRates = $this->getTaxRatesInOrder($svea);
+                $taxRates = Svea\Helper::getTaxRatesInOrder($svea);
                 $discountRows = Svea\Helper::splitMeanToTwoTaxRates(abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates);
                 foreach ($discountRows as $row) {
                     $svea = $svea->addDiscount($row);
@@ -450,30 +450,6 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
             }
         }
         return $total_data;
-    }
-
-    /**
-     * TODO replace these with the one in php integration package Helper class in next release
-     *
-     * Takes a createOrderBuilder object, iterates over its orderRows, and
-     * returns an array containing the distinct taxrates present in the order
-     */
-    private function getTaxRatesInOrder($order) {
-        $taxRates = array();
-
-        foreach ($order->orderRows as $orderRow) {
-
-            if (isset($orderRow->vatPercent)) {
-                $seenRate = $orderRow->vatPercent; //count
-            } elseif (isset($orderRow->amountIncVat) && isset($orderRow->amountExVat)) {
-                $seenRate = Svea\Helper::bround((($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat), 2) * 100;
-            }
-
-            if (isset($seenRate)) {
-                isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] = 1;   // increase count of seen rate
-            }
-        }
-        return array_keys($taxRates);   //we want the keys
     }
 
      //update order billingaddress
