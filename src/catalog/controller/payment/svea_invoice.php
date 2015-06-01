@@ -110,7 +110,7 @@ class ControllerPaymentsveainvoice extends Controller {
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);
         
         //extra charge addons like shipping and invoice fee        
-        $addons = $this->formatAddons();
+        $addons = $this->addTaxRateToAddons();
 
         foreach ($addons as $addon) {
 
@@ -395,7 +395,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 ->setName($product['name'])
                 ->setUnit($this->language->get('unit'))
                 ->setArticleNumber($product['model']);
-//                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
+//                ->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
 
 
             //Get the tax, difference in version 1.4.x
@@ -420,7 +420,7 @@ class ControllerPaymentsveainvoice extends Controller {
         return $svea;
     }
 
-    public function formatAddons() {
+    public function addTaxRateToAddons() {
         //Get all addons
         $this->load->model('extension/extension');
         $total_data = array();
@@ -481,13 +481,36 @@ class ControllerPaymentsveainvoice extends Controller {
                 unset($total_data[$key]);
             }
         }
-
         return $total_data;
     }
 
+    /**
+     * TODO replace these with the one in php integration package Helper class in next release
+     *
+     * Takes a createOrderBuilder object, iterates over its orderRows, and
+     * returns an array containing the distinct taxrates present in the order
+     */
+    private function getTaxRatesInOrder($order) {
+        $taxRates = array();
 
-  //update order billingaddress
-     private function buildPaymentAddressQuery($svea,$countryCode,$order_comment) {
+        foreach( $order->orderRows as $orderRow ) {
+
+            if( isset($orderRow->vatPercent) ) {
+                $seenRate = $orderRow->vatPercent; //count
+            }
+            elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
+                $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
+            }
+
+            if(isset($seenRate)) {
+                isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
+            }
+        }
+        return array_keys($taxRates);   //we want the keys
+    }
+
+    // update order billingaddress
+    private function buildPaymentAddressQuery($svea,$countryCode,$order_comment) {
          $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
          $paymentAddress = array();
 

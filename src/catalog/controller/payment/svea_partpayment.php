@@ -108,7 +108,7 @@ class ControllerPaymentsveapartpayment extends Controller {
         //products
         $svea = $this->formatOrderRows($svea, $products, $currencyValue);
         //get all addons
-        $addons = $this->formatAddons();
+        $addons = $this->addTaxRateToAddons();
         //extra charge addons like shipping and invoice fee
         foreach ($addons as $addon) {
             if ($addon['value'] >= 0) {
@@ -394,7 +394,8 @@ class ControllerPaymentsveapartpayment extends Controller {
         }
         return $svea;
     }
-    public function formatAddons() {
+
+    public function addTaxRateToAddons() {
         //Get all addons
         $this->load->model('setting/extension');
         $total_data = array();
