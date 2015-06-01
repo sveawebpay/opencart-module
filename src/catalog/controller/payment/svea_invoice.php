@@ -123,10 +123,10 @@ class ControllerPaymentsveainvoice extends Controller {
 
         //Products
         $svea = $this->formatOrderRows($svea,$products,$currencyValue);
-        //get all addons
+        
+        //extra charge addons like shipping and invoice fee        
         $addons = $this->formatAddons();
 
-        //extra charge addons like shipping and invoice fee
         foreach ($addons as $addon) {
 
             if($addon['value'] >= 0){
@@ -155,9 +155,17 @@ class ControllerPaymentsveainvoice extends Controller {
                 );
             }
             //discounts (-)
-            else {
-                $taxRates = $this->getTaxRatesInOrder($svea);
-                $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+            else {             
+                $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
+
+                $discountRows = Svea\Helper::splitMeanAcrossTaxRates( 
+                        ((abs($addon['value']) * $currencyValue) + abs($vat)),
+                        $addon['tax_rate'], 
+                        $addon['title'], 
+                        array_key_exists('text', $addon) ? $addon['text'] : "", 
+                        $this->getTaxRatesInOrder($svea),
+                        false ) // discount rows will use amountIncVat
+                ;
                 foreach($discountRows as $row) {
                     $svea = $svea->addDiscount( $row );
                 }
@@ -434,32 +442,39 @@ class ControllerPaymentsveainvoice extends Controller {
 
     public function formatAddons() {
         //Get all addons
-       $this->load->model('extension/extension');
+        $this->load->model('extension/extension');
         $total_data = array();
-        $total = 0;
+        
+        $total = 0;        
         $svea_tax = array();
         $cartTax = $this->cart->getTaxes();
 
-        $results = $this->model_extension_extension->getExtensions('total');
-        foreach ($results as $result) {
-           //if this result is activated
-            if($this->config->get($result['code'] . '_status')){
+        $extensions = $this->model_extension_extension->getExtensions('total');
+$this->log->write($extensions);
+        foreach ($extensions as $extension) {
+            
+            //if this result is activated
+            if($this->config->get($extension['code'] . '_status')){
                 $amount = 0;
                 $taxes = array();
+
                 foreach ($cartTax as $key => $value) {
                     $taxes[$key] = 0;
                 }
-                $this->load->model('total/' . $result['code']);
+                $this->load->model('total/' . $extension['code']);
 
-                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                $this->{'model_total_' . $extension['code']}->getTotal($total_data, $total, $taxes);
 
                 foreach ($taxes as $tax_id => $value) {
                     $amount += $value;
                 }
 
-                $svea_tax[$result['code']] = $amount;
+                $svea_tax[$extension['code']] = $amount;
             }
-        }
+        }        
+        
+//$this->log->write($cartTax);
+//$this->log->write($svea_tax);
 
         foreach ($total_data as $key => $value) {
             if (isset($svea_tax[$value['code']])) {
@@ -474,6 +489,16 @@ class ControllerPaymentsveainvoice extends Controller {
             }
         }
 
+$this->log->write($total_data);
+        // for any order totals that are sorted below taxes, set the extension tax rate to zero
+        $tax_sort_order = $this->config->get('tax_sort_order');
+        foreach ($total_data as $key => $value) {
+            if( $total_data[$key]['sort_order'] > $tax_sort_order ) {
+                $total_data[$key]['tax_rate'] = 0; 
+            }
+        }
+
+        // remove order totals that won't be added as rows to createOrder
         $ignoredTotals = 'sub_total, total, taxes';
         $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
         foreach ($total_data as $key => $orderTotal) {
@@ -481,6 +506,7 @@ class ControllerPaymentsveainvoice extends Controller {
                 unset($total_data[$key]);
             }
         }
+$this->log->write($total_data);
 
         return $total_data;
     }
