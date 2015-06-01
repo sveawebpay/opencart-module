@@ -308,7 +308,6 @@ class ControllerPaymentsveacard extends SveaCommon {
             return $total_data;
     }
 
-
     /**
      * Gets the current server name, adds the path from the server url settings (for installs below server root)
      * this aims to accommodate sites that rewrite the server name dynamically on i.e. user language change

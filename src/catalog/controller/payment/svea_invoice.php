@@ -149,7 +149,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
                         $addon['tax_rate'], 
                         $addon['title'], 
                         array_key_exists('text', $addon) ? $addon['text'] : "", 
-                        $this->getTaxRatesInOrder($svea),
+                        Svea\Helper::getTaxRatesInOrder($svea),
                         false ) // discount rows will use amountIncVat
                 ;
                 foreach($discountRows as $row) {
@@ -271,13 +271,25 @@ class ControllerPaymentsveainvoice extends SveaCommon {
                             ->setArticleNumber($addon['code'])
                             ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                         );
-                    }
-                    //discounts
-                    else {
-                        $taxRates = Svea\Helper::getTaxRatesInOrder($deliverObj);
-                        $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
-                        foreach($discountRows as $row) {
-                            $deliverObj = $deliverObj->addDiscount( $row );
+
+                        //voucher(-)
+                        } elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
+                            $deliverObj = $deliverObj
+                                ->addDiscount(WebPayItem::fixedDiscount()
+                                    ->setDiscountId($addon['code'])
+                                    ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
+                                    ->setVatPercent(0)//no vat when using a voucher
+                                    ->setName(isset($addon['title']) ? $addon['title'] : "")
+                                    ->setUnit($this->language->get('unit'))
+                                    ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                            );
+                        }
+                        //discounts (-)
+                        else {
+                            $taxRates = Svea\Helper::getTaxRatesInOrder($deliverObj);
+                            $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                            foreach($discountRows as $row) {
+                                $deliverObj = $deliverObj->addDiscount( $row );
                         }
                     }
                 }
@@ -484,31 +496,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
             }
         }
         return $total_data;
-    }
-
-    /**
-     * TODO replace these with the one in php integration package Helper class in next release
-     *
-     * Takes a createOrderBuilder object, iterates over its orderRows, and
-     * returns an array containing the distinct taxrates present in the order
-     */
-    private function getTaxRatesInOrder($order) {
-        $taxRates = array();
-
-        foreach( $order->orderRows as $orderRow ) {
-
-            if( isset($orderRow->vatPercent) ) {
-                $seenRate = $orderRow->vatPercent; //count
-            }
-            elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
-                $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
-            }
-
-            if(isset($seenRate)) {
-                isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
-            }
-        }
-        return array_keys($taxRates);   //we want the keys
     }
 
     // update order billingaddress

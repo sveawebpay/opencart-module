@@ -467,7 +467,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         return $country;
     }
 
-    //update order billingaddress
+     //update order billingaddress
      private function buildPaymentAddressQuery($svea,$countryCode,$order_comment) {
          $countryId = $this->model_payment_svea_invoice->getCountryIdFromCountryCode(strtoupper($countryCode));
          $paymentAddress = array();
