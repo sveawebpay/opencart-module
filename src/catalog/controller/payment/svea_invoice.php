@@ -96,9 +96,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         $svea = WebPay::createOrder($conf);
 
-        //Check if company or private
-        $company = ($_GET['company'] == 'true') ? true : false;
-
         // Get the products in the cart
         $products = $this->cart->getProducts();
 
@@ -109,7 +106,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         //Products
         $this->load->language('payment/svea_invoice');
-        $svea = $this->addOrderRowsToSveaOrder($svea, $products, $currencyValue);
+        $svea = $this->addOrderRowsToWebServiceOrder($svea, $products, $currencyValue);
         
         //extra charge addons like shipping and invoice fee        
         $addons = $this->addTaxRateToAddons();
@@ -124,6 +121,8 @@ class ControllerPaymentsveainvoice extends SveaCommon {
             $addressArr[2] =  "";
         }
 
+        $company = ($_GET['company'] == 'true') ? true : false;        
+        
         if ($company == TRUE){  // company customer
 
             $item = Item::companyCustomer();
@@ -211,7 +210,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
             if($this->config->get('svea_invoice_auto_deliver') === '1') {
                 $deliverObj = WebPay::deliverOrder($conf);
                 //Product rows
-                $deliverObj = $this->addOrderRowsToSveaOrder($deliverObj, $products,$currencyValue);
+                $deliverObj = $this->addOrderRowsToWebServiceOrder($deliverObj, $products,$currencyValue);
 
                 // no need to do formatAddons again
 
