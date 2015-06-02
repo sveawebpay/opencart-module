@@ -1,5 +1,7 @@
 <?php
-class ControllerPaymentsveacard extends Controller {
+include_once(dirname(__FILE__).'/svea_common.php');
+
+class ControllerPaymentsveacard extends SveaCommon {
     public function index() {
         $this->load->model('checkout/order');
 
@@ -31,7 +33,6 @@ class ControllerPaymentsveacard extends Controller {
                                         ";
         $data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
-
         $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
@@ -39,103 +40,50 @@ class ControllerPaymentsveacard extends Controller {
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        //Testmode
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
         $svea = WebPay::createOrder($conf);
-          //Get order information
+        
+        //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $currencyValue = 1.00000000;
-        if (floatval(VERSION) >= 1.5) {
-             $currencyValue = $order['currency_value'];
-         }else{
-             $currencyValue = $order['value'];
-         }
-       //Product rows
+        $currencyValue = (floatval(VERSION) >= 1.5) ? $order['currency_value'] : $order['value'];
+
+        //Product rows
         $products = $this->cart->getProducts();
-        foreach($products as $product){
-           $productPriceExVat  = $product['price'] * $currencyValue;
-           $taxPercent = 0;
-            //Get the tax, difference in version 1.4.x
-            if(floatval(VERSION) >= 1.5){
-                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
-                foreach ($tax as $key => $value) {
-                    $taxPercent = $value['rate'];
-                }
-            }  else {
-                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
-            }
-            $svea = $svea
-                    ->addOrderRow(Item::orderRow()
-                        ->setQuantity($product['quantity'])
-                        ->setAmountExVat(floatval($productPriceExVat))
-                        ->setVatPercent(intval($taxPercent))
-                        ->setName($product['name'])
-                        ->setUnit($this->language->get('unit'))
-                        ->setArticleNumber($product['model'])
-//                ->setDescription($product['model'])//should be used for $product['option'] wich is array, but to risky because limit is String(40)
-                    );
-        }
-         $addons = $this->formatAddons();
-
-         //extra charge addons like shipping and invoice fee
-         foreach ($addons as $addon) {
-            if($addon['value'] >= 0){
-                $svea = $svea->addOrderRow(Item::orderRow()
-                    ->setQuantity(1)
-                    ->setAmountExVat(floatval($addon['value'] * $currencyValue))
-                    ->setVatPercent(intval($addon['tax_rate']))
-                    ->setName(isset($addon['title']) ? $addon['title'] : "")
-                    ->setUnit($this->language->get('unit'))
-                    ->setArticleNumber($addon['code'])
-                    ->setDescription(isset($addon['text']) ? $addon['text'] : "")
-                );
-            }    //voucher(-)
-            elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
-                $svea = $svea
-                    ->addDiscount(WebPayItem::fixedDiscount()
-                        ->setDiscountId($addon['code'])
-                        ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
-                        ->setVatPercent(0)//no vat when using a voucher
-                        ->setName(isset($addon['title']) ? $addon['title'] : "")
-                        ->setUnit($this->language->get('unit'))
-                        ->setDescription(isset($addon['text']) ? $addon['text'] : "")
-                );
-            }
-             //discounts
-            else {
-                $taxRates = $this->getTaxRatesInOrder($svea);
-                $discountRows = Svea\Helper::splitMeanToTwoTaxRates( abs($addon['value']), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
-                foreach($discountRows as $row) {
-                    $svea = $svea->addDiscount( $row );
-                }
-            }
-        }
-
+        $svea = $this->addOrderRowsToHostedServiceOrder($svea, $products, $currencyValue);
+                
+        $addons = $this->addTaxRateToAddons();
+        $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
+         
         $server_url = $this->setServerURL();
         $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
         $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
         // $callbackUrl = 'http://194.14.250.189:8080/modulerDev/Opencart/2/index.php?route=payment/svea_card/callbackSvea'; //svea test
+        
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
             ->setClientOrderNumber($this->session->data['order_id'])
-//            ->setClientOrderNumber($this->session->data['order_id'].rand(0, 1000))//use for testing to avoid duplication of order number. Warning - callback will fail if it does not match order_id
-            ->setOrderDate(date('c'));
-        try{
-            $form =  $form->usePaymentMethod(PaymentMethod::KORTCERT)
-            ->setCancelUrl($returnUrl)
-            ->setCallbackUrl($callbackUrl)
-            ->setReturnUrl($returnUrl)
-            ->setCardPageLanguage(strtolower($order['language_code']))
-            ->getPaymentForm();
-        }  catch (Exception $e){
+            ->setOrderDate(date('c'))
+        ;        
+        try {
+            $form =  $form
+                ->usePaymentMethod(PaymentMethod::KORTCERT)
+                    ->setCancelUrl($returnUrl)
+                    ->setCallbackUrl($callbackUrl)
+                    ->setReturnUrl($returnUrl)
+                    ->setCardPageLanguage(strtolower($order['language_code']))
+                    ->getPaymentForm()
+            ;
+        }  
+        catch (Exception $e) {
             $this->log->write($e->getMessage());
             echo '<div class="attention">Logged Svea Error</div>';
             exit();
 
         }
-         //Save order but Void it while order status is unsure
+        
+        //Save order but Void it while order status is unsure
         $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], 0,'Sent to Svea gateway.');
 
         //print form with hidden buttons
@@ -148,7 +96,7 @@ class ControllerPaymentsveacard extends Controller {
         $data['form_end_tag'] = $fields['form_end_tag'];
         $data['submitMessage'] = $this->language->get('button_confirm');
 
-//        $this->render();
+        //$this->render();
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {
                 return $this->load->view($this->config->get('config_template') . '/template/payment/svea_card.tpl', $data);
         } else {
@@ -254,82 +202,6 @@ class ControllerPaymentsveacard extends Controller {
         }
 
         return $country;
-    }
-
-     public function formatAddons() {
-        //Get all addons
-       $this->load->model('extension/extension');
-
-        $total_data = array();
-        $total = 0;
-        $svea_tax = array();
-        $cartTax = $this->cart->getTaxes();
-        $results = $this->model_extension_extension->getExtensions('total');
-        foreach ($results as $result) {
-          //if this result is activated
-           if($this->config->get($result['code'] . '_status')){
-               $amount = 0;
-               $taxes = array();
-               foreach ($cartTax as $key => $value) {
-                   $taxes[$key] = 0;
-               }
-               $this->load->model('total/' . $result['code']);
-
-               $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-
-               foreach ($taxes as $tax_id => $value) {
-                   $amount += $value;
-               }
-
-               $svea_tax[$result['code']] = $amount;
-           }
-
-        }
-        foreach ($total_data as $key => $value) {
-
-            if (isset($svea_tax[$value['code']])) {
-                if ($svea_tax[$value['code']]) {
-                    $total_data[$key]['tax_rate'] = (int)round( $svea_tax[$value['code']] / $value['value'] * 100 ); // round and cast, or may get i.e. 24.9999, which shows up as 25f in debugger & written to screen, but converts to 24i
-                } else {
-                    $total_data[$key]['tax_rate'] = 0;
-                }
-            } else {
-                $total_data[$key]['tax_rate'] = '0';
-            }
-        }
-          $ignoredTotals = 'sub_total, total, taxes';
-           $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
-            foreach ($total_data as $key => $orderTotal) {
-                if (in_array($orderTotal['code'], $ignoredOrderTotals)) {
-                    unset($total_data[$key]);
-                }
-            }
-            return $total_data;
-    }
-
-    /**
-     * TODO replace these with the one in php integration package Helper class in next release
-     *
-     * Takes a createOrderBuilder object, iterates over its orderRows, and
-     * returns an array containing the distinct taxrates present in the order
-     */
-    private function getTaxRatesInOrder($order) {
-        $taxRates = array();
-
-        foreach( $order->orderRows as $orderRow ) {
-
-            if( isset($orderRow->vatPercent) ) {
-                $seenRate = $orderRow->vatPercent; //count
-            }
-            elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
-                $seenRate = Svea\Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
-            }
-
-            if(isset($seenRate)) {
-                isset($taxRates[$seenRate]) ? $taxRates[$seenRate] +=1 : $taxRates[$seenRate] =1;   // increase count of seen rate
-            }
-        }
-        return array_keys($taxRates);   //we want the keys
     }
 
     /**
