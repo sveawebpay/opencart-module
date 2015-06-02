@@ -1,16 +1,51 @@
 <?php
 class SveaCommon extends Controller {
 
-    function addOrderRowsToSveaOrder($svea,$products,$currencyValue){
+    function addOrderRowsToHostedServiceOrder($svea,$products,$currencyValue) {
 
-        foreach ($products as $product) {
-              $item = Item::orderRow()
+        foreach($products as $product){
+            $item = WebPayItem::orderRow()
                 ->setQuantity($product['quantity'])
                 ->setName($product['name'])
                 ->setUnit($this->language->get('unit'))
-                ->setArticleNumber($product['model']);
+                ->setArticleNumber($product['model'])
                 //->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
+            ;
 
+            $productPriceExVat  = $product['price'] * $currencyValue;
+            $taxPercent = 0;
+            if(floatval(VERSION) >= 1.5){   //Get the tax, difference in version 1.4.x
+                $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+                foreach ($tax as $key => $value) {
+                    $taxPercent = $value['rate'];
+                }
+            } 
+            else {
+                $taxPercent = $this->tax->getRate($product['tax_class_id']);
+            }
+
+            $item = $item
+                ->setAmountExVat(floatval($productPriceExVat))
+                ->setVatPercent(intval($taxPercent))
+            ;
+
+            $svea = $svea->addOrderRow( $item );
+        }
+
+        return $svea;
+    }    
+    
+    function addOrderRowsToWebServiceOrder($svea,$products,$currencyValue){
+
+        foreach ($products as $product) {
+            $item = WebPayItem::orderRow()
+                ->setQuantity($product['quantity'])
+                ->setName($product['name'])
+                ->setUnit($this->language->get('unit'))
+                ->setArticleNumber($product['model'])
+                //->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
+            ;
+            
             $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
             $taxPercent = 0;
             $taxAmount = 0;
@@ -18,9 +53,12 @@ class SveaCommon extends Controller {
                 $taxPercent = $value['rate'];
                 $taxAmount = $value['amount'];
             }
-            $item = $item->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
-                        ->setVatPercent(intval($taxPercent));//set amount inc vat is used for precision
-
+            
+            $item = $item
+                ->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
+                ->setVatPercent(intval($taxPercent))
+            ;
+            
             $svea = $svea->addOrderRow($item);
         }
         return $svea;

@@ -115,19 +115,21 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
 
         //Products
         $this->load->language('payment/svea_partpayment');        
-        $svea = $this->addOrderRowsToSveaOrder($svea, $products, $currencyValue);
+        $svea = $this->addOrderRowsToWebServiceOrder($svea, $products, $currencyValue);
 
         //extra charge addons like shipping and invoice fee        
         $addons = $this->addTaxRateToAddons();
 
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
 
-         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-           $addressArr = Svea\Helper::splitStreetAddress( $order['payment_address_1'] );
+        //Seperates the street from the housenumber according to testcases for NL and DE
+        if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
+            $addressArr = Svea\Helper::splitStreetAddress( $order['payment_address_1'] );
         }  else {
             $addressArr[1] =  $order['payment_address_1'];
             $addressArr[2] =  "";
         }
+        
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
@@ -147,6 +149,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         }
 
         $svea = $svea->addCustomerDetails($item);
+        
         try {
             $svea = $svea
                     ->setCountryCode($countryCode)
