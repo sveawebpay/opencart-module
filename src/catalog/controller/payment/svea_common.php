@@ -117,14 +117,16 @@ class SveaCommon extends Controller {
     function addTaxRateToAddons() {
         
         //Get all addons
-        $this->load->model('extension/extension');
         $total_data = array();
         
         $total = 0;        
         $svea_tax = array();
         $cartTax = $this->cart->getTaxes();
 
+        $this->load->model('setting/extension');  // 1.x
         $extensions = $this->model_setting_extension->getExtensions('total'); // 1.x      
+
+        //$this->load->model('extension/extension');  // 2.x
         //$extensions = $this->model_extension_extension->getExtensions('total'); // 2.x
         foreach ($extensions as $extension) {
             
