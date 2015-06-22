@@ -9,29 +9,10 @@ namespace Svea;
 class Helper {
 
     /**
-     * taken from http://boonedocks.net/code/bround-bsd.inc.phps,
-     * licensed under the bsd license
+     * w/PHP_ROUND_HALF_EVEN instead
      */
-
     static function bround($dVal,$iDec=0) {
-        // banker's style rounding or round-half-even
-        // (round down when even number is left of 5, otherwise round up)
-        // $dVal is value to round
-        // $iDec specifies number of decimal places to retain
-        static $dFuzz=0.00001; // to deal with floating-point precision loss
-        $iRoundup=0; // amount to round up by
-
-        $iSign=($dVal!=0.0) ? intval($dVal/abs($dVal)) : 1;
-        $dVal=abs($dVal);
-
-        // get decimal digit in question and amount to right of it as a fraction
-        $dWorking=$dVal*pow(10.0,$iDec+1)-floor($dVal*pow(10.0,$iDec))*10.0;
-        $iEvenOddDigit=floor($dVal*pow(10.0,$iDec))-floor($dVal*pow(10.0,$iDec-1))*10.0;
-
-        if (abs($dWorking-5.0)<$dFuzz) $iRoundup=($iEvenOddDigit & 1) ? 1 : 0;
-        else $iRoundup=($dWorking>5.0) ? 1 : 0;
-
-        return $iSign*((floor($dVal*pow(10.0,$iDec))+$iRoundup)/pow(10.0,$iDec));
+        return round($dVal,$iDec,PHP_ROUND_HALF_EVEN);
     }
 
     /**
@@ -40,6 +21,8 @@ class Helper {
      * over the allowed Tax Rates, defined using AmountExVat & VatPercent.
      *
      * Note: only supports two allowed tax rates for now.
+     * 
+     * @deprecated -- use Helper::splitMeanAcrossTaxRates() instead
      */
     static function splitMeanToTwoTaxRates( $discountAmountExVat, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates ) {
 
@@ -105,7 +88,7 @@ class Helper {
                 $seenRate = $orderRow->vatPercent; //count
             }
             elseif( isset($orderRow->amountIncVat) && isset($orderRow->amountExVat) ) {
-                $seenRate = Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat) ,2) *100;
+                $seenRate = Helper::bround( (($orderRow->amountIncVat - $orderRow->amountExVat) / $orderRow->amountExVat),2) *100;
             }
 
             if(isset($seenRate)) {
@@ -125,17 +108,162 @@ class Helper {
      * @return string -- array with the entire streetaddress in position 0, the streetname in position 1 and housenumber in position 2 
      */
     static function splitStreetAddress($address){
-        //Seperates the street from the housenumber according to testcases
-        $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:[\s,]*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*(?:\s*[0-9]*)?[^\s])?(?:\s)*$/";       
-        
+        //Separates the street from the housenumber according to testcases, handles unicode combined code points
+        $pattern = 
+                "/^".                       // start of string
+                "(?:\s)*".                  // non-matching group, consumes any leading whitespace
+                "(\X*?)?".                  // streetname group, lazy match of any graphemes
+                "(?:[\s,])+".               // non-matching group, 1+ separating whitespace or comma
+                "(\pN+\X*?)?".              // housenumber group, something staring with 1+ number, followed w/lazy match of any graphemes
+                "(?:\s)*".                  // non-matching group, consumes any trailing whitespace
+                "$/u"                       // end of string, use unicode
+        ;       
         preg_match($pattern, $address, $addressArr);
         
         // fallback if no match w/regexp
-        if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; }  //fix for addresses w/o housenumber
-        if( !array_key_exists( 1, $addressArr ) ) { $addressArr[1] = $address; }    //fixes for no match at all, return complete input in streetname
+        if( !array_key_exists( 2, $addressArr ) ) { $addressArr[2] = ""; }          //fix for addresses w/o housenumber
+        if( !array_key_exists( 1, $addressArr ) ) { $addressArr[1] = $address; }    //fix for no match, return entire input as streetname
         if( !array_key_exists( 0, $addressArr ) ) { $addressArr[0] = $address; }    
 
         return $addressArr;
+    }        
+    
+    /**
+     * Parses the src/docs/info.json file and returns associative array containing Svea integration package (library) name, version et al.
+     * array contains keys "library_name" and "library_version"
+     */
+    static function getSveaLibraryProperties() { 
+        if (!defined('SVEA_REQUEST_DIR')) {
+            define('SVEA_REQUEST_DIR', dirname(__FILE__));
+        }
+        $info_json = file_get_contents(SVEA_REQUEST_DIR . "/docs/info.json");
+        $library_properties = json_decode($info_json, true);
+        return $library_properties;
     }
 
+    /**
+     * Checks ConfigurationProvider for getIntegrationXX() methods, and returns associative array containing Svea integration platform, version et al.
+     * array contains keys "integration_platform", "integration_version", "integration_company"
+     * @param ConfigurationProvider $config
+     */
+    static function getSveaIntegrationProperties( $config ) { 
+        $integrationPlatform = 
+            method_exists($config, "getIntegrationPlatform") ? $config->getIntegrationPlatform() : "Integration platform not available";
+        $integrationCompany = 
+            method_exists($config, "getIntegrationCompany") ? $config->getIntegrationCompany() : "Integration company not available";
+        $integrationVersion = 
+            method_exists($config, "getIntegrationVersion") ? $config->getIntegrationVersion() : "Integration version not available";
+          
+        $integration_properties = array( 
+            "integration_platform" => $integrationPlatform,
+            "integration_version" => $integrationVersion,
+            "integration_company" => $integrationCompany 
+        );
+        return $integration_properties;
+    }    
+    
+    /**
+     * Given a ConfigurationProvider, return a json string containing the Svea integration package (library) 
+     * and integration (from config) name, version et al. Used by HostedService requests.
+     * @param ConfigurationProvider $config
+     * @return string in json format
+     */
+    static function getLibraryAndPlatformPropertiesAsJson( $config ) {
+        
+        $libraryProperties = \Svea\Helper::getSveaLibraryProperties();
+        $libraryName = $libraryProperties['library_name'];
+        $libraryVersion =  $libraryProperties['library_version'];
+        
+        $integrationProperties = \Svea\Helper::getSveaIntegrationProperties($config);
+        $integrationPlatform = $integrationProperties['integration_platform'];
+        $integrationCompany = $integrationProperties['integration_company'];
+        $integrationVersion = $integrationProperties['integration_version'];        
+                         
+        $properties_json =  '{' . 
+                            '"X-Svea-Library-Name": "' . $libraryName . '", ' . 
+                            '"X-Svea-Library-Version": "' . $libraryVersion . '", ' .              
+                            '"X-Svea-Integration-Platform": "' . $integrationPlatform . '", ' .              
+                            '"X-Svea-Integration-Company": "' . $integrationCompany . '", ' .              
+                            '"X-Svea-Integration-Version": "' . $integrationVersion . '"' .
+                            '}'
+        ;           
+
+        return $properties_json;
+    }  
+    
+    /**
+     * From a given total discount value, mean tax rate & an array of tax rates, 
+     * this functions returns an array of FixedDiscount objects representing the
+     * discount split across the given tax rates. The FixedDiscount rows are set
+     * using setAmountIncVat & setVatPercent.
+     *
+     * Note: this function is limited to one or two given tax rates at most. For
+     * a mean tax rate of zero, a single discount row is returned.
+     */
+    static function splitMeanAcrossTaxRates( $discountAmount, $discountMeanVat, $discountName, $discountDescription, $allowedTaxRates, $amountExVatFlag=true ) {
+
+        $fixedDiscounts = array();
+
+        if( $discountMeanVat > 0 ) {
+
+            if( sizeof( $allowedTaxRates ) == 2) {
+
+                // m = $discountMeanVat
+                // r0 = allowedTaxRates[0]; r1 = allowedTaxRates[1]
+                // m = a r0 + b r1 => m = a r0 + (1-a) r1 => m = (r0-r1) a + r1 => a = (m-r1)/(r0-r1)
+                // d = $discountAmountExVat;
+                // d = d (a+b) => 1 = a+b => b = 1-a
+
+                $a = ($discountMeanVat - $allowedTaxRates[1]) / ( $allowedTaxRates[0] - $allowedTaxRates[1] );
+                $b = 1 - $a;
+
+                $discountAAmount = $discountAmount * $a * 
+                    ($amountExVatFlag ? (1+($allowedTaxRates[0]/100.00)) : (1+($allowedTaxRates[0]/100.00))/(1+($discountMeanVat/100.00)));
+                $discountA = \WebPayItem::fixedDiscount()
+                                ->setAmountIncVat( Helper::bround($discountAAmount,2) )
+                                ->setVatPercent( $allowedTaxRates[0] )
+                                ->setName( isset( $discountName) ? $discountName : "" )
+                                ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[0]. '%)' )
+                ;
+
+                $discountBAmount = $discountAmount * $b * 
+                    ($amountExVatFlag ? (1+($allowedTaxRates[1]/100.00)) : (1+($allowedTaxRates[1]/100.00))/(1+($discountMeanVat/100.00)));           
+                $discountB = \WebPayItem::fixedDiscount()
+                                ->setAmountIncVat( Helper::bround($discountBAmount,2) )
+                                ->setVatPercent(  $allowedTaxRates[1] )
+                                ->setName( isset( $discountName) ? $discountName : "" )
+                                ->setDescription( (isset( $discountDescription) ? $discountDescription : "") . ' (' .$allowedTaxRates[1]. '%)' )
+                ;
+
+                $fixedDiscounts[] = $discountA;
+                $fixedDiscounts[] = $discountB;
+            }
+
+            elseif( sizeof( $allowedTaxRates ) == 1) {                
+                $discountIncVat = $discountAmount * ($amountExVatFlag ? (1+($discountMeanVat/100.00)) : 1.0 ); // get amount inc vat if needed
+
+                $discountA = \WebPayItem::fixedDiscount()
+                    ->setAmountIncVat( Helper::bround( ($discountIncVat),2) )
+                    ->setVatPercent( $allowedTaxRates[0] )
+                    ->setName( isset( $discountName) ? $discountName : "" )
+                    ->setDescription( (isset( $discountDescription) ? $discountDescription : "") )
+                ;
+                $fixedDiscounts[] = $discountA;
+            }
+        }
+        
+        // discountMeanVat <= 0;
+        else {
+            $discount = \WebPayItem::fixedDiscount()
+                ->setAmountIncVat( Helper::bround( ($discountAmount),2) )
+                ->setVatPercent( 0.0 )
+                ->setName( isset( $discountName) ? $discountName : "" )
+                ->setDescription( (isset( $discountDescription) ? $discountDescription : "") )
+            ;
+            $fixedDiscounts[] = $discount;                               
+        }
+        
+        return $fixedDiscounts;
+    }       
+    
 }

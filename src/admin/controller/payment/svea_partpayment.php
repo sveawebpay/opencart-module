@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array();
-        protected $svea_version = '2.6.16';
+        protected $svea_version = '2.6.18';
 
 	public function index() {
 		$this->load->language('payment/svea_partpayment');
@@ -13,7 +13,7 @@ class ControllerPaymentsveapartpayment extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
 
                     $this->model_setting_setting->editSetting('svea_partpayment', $this->request->post);
-                      //load latest PaymentPlan params from Svea api on save
+                    //get latest PaymentPlan params from Svea when saving settings
                     $this->loadPaymentPlanParams();
 
                     $this->session->data['success'] = $this->language->get('text_success');
@@ -211,16 +211,27 @@ class ControllerPaymentsveapartpayment extends Controller {
         include(DIR_APPLICATION . '../svea/Includes.php');
         $countryCode = array("SE","NO","FI","DK","NL","DE");
         for($i=0;$i<sizeof($countryCode);$i++){
-            $username = $this->config->get('svea_partpayment_username_' . $countryCode[$i]);
-            $password = $this->config->get('svea_partpayment_password_' . $countryCode[$i]);
-            $client_id = $this->config->get('svea_partpayment_clientno_' . $countryCode[$i]);
+
+            // we need to use the database config settings directly, as $this->config may contain old data that we just edited
+            $settings = $this->model_setting_setting->getSetting('svea_partpayment');
+
+            $username = $settings['svea_partpayment_username_' . $countryCode[$i]]; 
+            $password = $settings['svea_partpayment_password_' . $countryCode[$i]]; 
+            $client_id = $settings['svea_partpayment_clientno_' . $countryCode[$i]];
+            $testmode = $settings['svea_partpayment_testmode_' . $countryCode[$i]];
+          
             //get params if config is set
-
-            if($username != "" && $password != "" && $client_id != ""){
-                if ( $this->config->get('svea_partpayment_testmode_' . $countryCode[$i]) !== NULL){
-
-                    $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode[$i]) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
-                    $svea_params = WebPay::getPaymentPlanParams($conf);
+            if($username != "" && $password != "" && $client_id != ""){                
+               
+                if ( $testmode !== NULL){                    
+                    $conf = ($testmode == "1") ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+                    
+                    // need to update $this->config with username et al from $settings
+                    $conf->config->set('svea_partpayment_username_' . $countryCode[$i], $username);
+                    $conf->config->set('svea_partpayment_password_' . $countryCode[$i], $password);
+                    $conf->config->set('svea_partpayment_clientno_' . $countryCode[$i], $client_id);    
+                                
+                    $svea_params = WebPay::getPaymentPlanParams($conf);     
 
                     try {
                         $svea_params = $svea_params->setCountryCode($countryCode[$i])
@@ -329,39 +340,44 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     protected function insertPaymentPlanParams($params,$countryCode) {
 
-            foreach ($params as $param) {
-                //$query = $db->getQuery(true);
-                $q = "INSERT INTO `" . DB_PREFIX ."svea_params_table`
-                        (   `campaignCode` ,
-                            `description`,
-                            `paymentPlanType`,
-                            `contractLengthInMonths`,
-                            `monthlyAnnuityFactor`,
-                            `initialFee`,
-                            `notificationFee`,
-                            `interestRatePercent`,
-                            `numberOfInterestFreeMonths`,
-                            `numberOfPaymentFreeMonths`,
-                            `fromAmount`,
-                            `toAmount`,
-                            `timestamp`,
-                            `countryCode`)
-                            VALUES(";
-                foreach ($param as $key => $value)
-                    $q .= "'".$value."',";
+        $error_flag = false;
 
-                $q .= time().",";
-                $q .= "'".$countryCode."'";
-                $q .= ")";
-                try{
-                    $this->db->query($q);
-                }catch (Exception $e) {
-                    $this->log->write($e->getMessage());
-                }
+        foreach ($params as $param) {
+            //$query = $db->getQuery(true);
+            $q = "INSERT INTO `" . DB_PREFIX ."svea_params_table`
+                    (   `campaignCode` ,
+                        `description`,
+                        `paymentPlanType`,
+                        `contractLengthInMonths`,
+                        `monthlyAnnuityFactor`,
+                        `initialFee`,
+                        `notificationFee`,
+                        `interestRatePercent`,
+                        `numberOfInterestFreeMonths`,
+                        `numberOfPaymentFreeMonths`,
+                        `fromAmount`,
+                        `toAmount`,
+                        `timestamp`,
+                        `countryCode`)
+                        VALUES(";
+            foreach ($param as $key => $value)
+                $q .= "'".$value."',";
 
+            $q .= time().",";
+            $q .= "'".$countryCode."'";
+            $q .= ")";
+            try {
+                $this->db->query($q);
             }
+            catch (Exception $e) {
+                $this->log->write("Failed to update PaymentPlanParams ".$e->getMessage());
+                $error_flag = true;
+            }
+        }
 
-
+        if( $error_flag == false) {
+            $this->log->write("Successfully updated PaymentPlanParams");
+        }
     }
 }
 ?>
