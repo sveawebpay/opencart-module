@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array();
-        protected $svea_version = '3.0.14';
+        protected $svea_version = '3.0.15';
 
 	public function index() {
 		$this->load->language('payment/svea_partpayment');
@@ -208,23 +208,23 @@ class ControllerPaymentsveapartpayment extends Controller {
             // we need to use the database config settings directly, as $this->config may contain old data that we just edited
             $settings = $this->model_setting_setting->getSetting('svea_partpayment');
 
-            $username = $settings['svea_partpayment_username_' . $countryCode[$i]]; 
-            $password = $settings['svea_partpayment_password_' . $countryCode[$i]]; 
+            $username = $settings['svea_partpayment_username_' . $countryCode[$i]];
+            $password = $settings['svea_partpayment_password_' . $countryCode[$i]];
             $client_id = $settings['svea_partpayment_clientno_' . $countryCode[$i]];
             $testmode = $settings['svea_partpayment_testmode_' . $countryCode[$i]];
-          
+
             //get params if config is set
-            if($username != "" && $password != "" && $client_id != ""){                
-               
-                if ( $testmode !== NULL){                    
+            if($username != "" && $password != "" && $client_id != ""){
+
+                if ( $testmode !== NULL){
                     $conf = ($testmode == "1") ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
-                    
+
                     // need to update $this->config with username et al from $settings
                     $conf->config->set('svea_partpayment_username_' . $countryCode[$i], $username);
                     $conf->config->set('svea_partpayment_password_' . $countryCode[$i], $password);
-                    $conf->config->set('svea_partpayment_clientno_' . $countryCode[$i], $client_id);    
-                                
-                    $svea_params = WebPay::getPaymentPlanParams($conf);     
+                    $conf->config->set('svea_partpayment_clientno_' . $countryCode[$i], $client_id);
+
+                    $svea_params = WebPay::getPaymentPlanParams($conf);
 
                     try {
                         $svea_params = $svea_params->setCountryCode($countryCode[$i])

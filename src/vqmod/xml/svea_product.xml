@@ -106,9 +106,9 @@
                                 $viewProduct['line'] = "<img width='321' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
                                 $viewProduct['widget_background'] = ($svea_country['iso_code_2'] == "NO" || $svea_country['iso_code_2'] == "DK" || $svea_country['iso_code_2'] == "NL") ? "svea_finans_background" : "svea_background";
                             }
-                            $data['svea_widget'] = $viewProduct;
 
                         }
+                 $data['svea_widget'] = $viewProduct;
 
        ]]></add>
         </operation>

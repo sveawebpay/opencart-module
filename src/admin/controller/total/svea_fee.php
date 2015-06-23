@@ -1,7 +1,7 @@
 <?php
 class ControllerTotalSveaFee extends Controller {
     private $error = array();
-    protected $svea_version = '3.0.14';
+    protected $svea_version = '3.0.15';
 
     public function index() {
         $this->load->language('total/svea_fee');
