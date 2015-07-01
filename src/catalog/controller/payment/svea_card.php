@@ -42,7 +42,7 @@ class ControllerPaymentsveacard extends SveaCommon {
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
 
         $svea = WebPay::createOrder($conf);
-        
+
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $currencyValue = (floatval(VERSION) >= 1.5) ? $order['currency_value'] : $order['value'];
@@ -50,21 +50,21 @@ class ControllerPaymentsveacard extends SveaCommon {
         //Product rows
         $products = $this->cart->getProducts();
         $svea = $this->addOrderRowsToHostedServiceOrder($svea, $products, $currencyValue);
-                
+
         $addons = $this->addTaxRateToAddons();
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
-         
+
         $server_url = $this->setServerURL();
         $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
         $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
         // $callbackUrl = 'http://194.14.250.189:8080/modulerDev/Opencart/2/index.php?route=payment/svea_card/callbackSvea'; //svea test
-        
+
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
             ->setClientOrderNumber($this->session->data['order_id'])
             ->setOrderDate(date('c'))
-        ;        
+        ;
         try {
             $form =  $form
                 ->usePaymentMethod(PaymentMethod::KORTCERT)
@@ -74,7 +74,7 @@ class ControllerPaymentsveacard extends SveaCommon {
                     ->setCardPageLanguage(strtolower($order['language_code']))
                     ->getPaymentForm()
             ;
-        }  
+        }
         catch (Exception $e) {
             $this->log->write($e->getMessage());
             echo '<div class="attention">Logged Svea Error</div>';
@@ -87,32 +87,17 @@ class ControllerPaymentsveacard extends SveaCommon {
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
-        
-        // 2.x uses $this->data[...] instead of $data[...]
-        //$this->data['form_start_tag'] = $fields['form_start_tag'];
-        //$this->data['merchant_id'] = $fields['input_merchantId'];
-        //$this->data['input_message'] = $fields['input_message'];
-        //$this->data['input_mac'] = $fields['input_mac'];
-        //$this->data['input_submit'] = $fields['input_submit'];
-        //$this->data['form_end_tag'] = $fields['form_end_tag'];
-        //$this->data['submitMessage'] = $this->language->get('button_confirm');
-        
-        $data['form_start_tag'] = $fields['form_start_tag']; 
-        $data['merchant_id'] = $fields['input_merchantId'];
-        $data['input_message'] = $fields['input_message'];
-        $data['input_mac'] = $fields['input_mac'];
-        $data['input_submit'] = $fields['input_submit'];
-        $data['form_end_tag'] = $fields['form_end_tag'];
-        $data['submitMessage'] = $this->language->get('button_confirm');
 
-        $this->render(); // 1.x
-        
-        // 1.x below
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_card.tpl')) {    // 1.x
-                return $this->load->view($this->config->get('config_template') . '/template/payment/svea_card.tpl', $data);
-        } else {
-                return $this->load->view('default/template/payment/svea_card.tpl', $data);
-        }
+        $this->data['form_start_tag'] = $fields['form_start_tag'];
+        $this->data['merchant_id'] = $fields['input_merchantId'];
+        $this->data['input_message'] = $fields['input_message'];
+        $this->data['input_mac'] = $fields['input_mac'];
+        $this->data['input_submit'] = $fields['input_submit'];
+        $this->data['form_end_tag'] = $fields['form_end_tag'];
+        $this->data['submitMessage'] = $this->language->get('button_confirm');
+
+        $this->render();
+
     }
 
     public function responseSvea(){
