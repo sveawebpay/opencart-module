@@ -310,7 +310,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         //Testmode
         $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' )
                 ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
-                $this->session->data['svea_reference'] = $order['payment_firstname'] ." ". $order['payment_lastname'];
 
         $svea = WebPay::getAddresses($conf)
             ->setOrderTypeInvoice()
