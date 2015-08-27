@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentsveadirectbank extends Controller {
 	private $error = array();
-        protected $svea_version = '2.6.20';
+        protected $svea_version = '2.6.21';
 
 	public function index() {
 		$this->load->language('payment/svea_directbank');
