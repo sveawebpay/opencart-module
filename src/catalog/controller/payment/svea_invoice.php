@@ -120,12 +120,12 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         //Products
         $this->load->language('payment/svea_invoice');
         $svea = $this->addOrderRowsToWebServiceOrder($svea, $products, $currencyValue);
-        
-        //extra charge addons like shipping and invoice fee        
+
+        //extra charge addons like shipping and invoice fee
         $addons = $this->addTaxRateToAddons();
 
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
-      
+
         //Seperates the street from the housenumber according to testcases for NL and DE
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
             $addressArr = Svea\Helper::splitStreetAddress( $order['payment_address_1'] );
@@ -134,8 +134,8 @@ class ControllerPaymentsveainvoice extends SveaCommon {
             $addressArr[2] =  "";
         }
 
-        $company = ($_GET['company'] == 'true') ? true : false;        
-        
+        $company = ($_GET['company'] == 'true') ? true : false;
+
         if ($company == TRUE){  // company customer
 
             $item = Item::companyCustomer();
@@ -318,10 +318,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-
-        // store customer firstname + lastname in session as svea_reference
-        $this->session->data['svea_reference'] = $order['payment_firstname'] ." ". $order['payment_lastname'];
-
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
         $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' )
@@ -333,6 +329,16 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         if($this->request->post['company'] == 'true') {
             $svea = $svea->setCompany($this->request->post['ssn']);
+            if(strlen(  $order['payment_firstname'] ." ". $order['payment_lastname']) > 32) {
+                $response = array("error" => 'The payment address firstname and lastname is too long to be used as customer reference.
+                                               Please edit payment address and try again.');//TODO: if to keep, replace with translation
+                $this->log->write('The billing address name is too long to be used as customer reference.');
+                echo json_encode($response);
+                exit();
+            } else {
+                // store customer firstname + lastname in session as svea_reference
+                $this->session->data['svea_reference'] = $order['payment_firstname'] ." ". $order['payment_lastname'];
+            }
         }
         else {
             $svea = $svea->setIndividual($this->request->post['ssn']);
