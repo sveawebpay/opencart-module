@@ -57,7 +57,6 @@ class ControllerPaymentsveacard extends SveaCommon {
         $server_url = $this->setServerURL();
         $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
         $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
-        // $callbackUrl = 'http://194.14.250.189:8080/modulerDev/Opencart/2/index.php?route=payment/svea_card/callbackSvea'; //svea test
 
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
