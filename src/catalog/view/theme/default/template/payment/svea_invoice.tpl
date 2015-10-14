@@ -2,7 +2,8 @@
     <div><p><?php echo $logo; ?></p></div>
     <?php
     if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE") {
-        echo $text_private_or_company; ?>:
+        ?>
+        <br />
         <select id="svea_invoice_company" name="svea_invoice_company">
             <option value="true"><?php echo $text_company; ?></option>
             <option value="false" selected="selected"><?php echo $text_private; ?></option>
@@ -10,8 +11,9 @@
 
         <?php
         if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-            <span id="svea_private_text"><?php echo $text_ssn; ?></span>
-            <span id="svea_business_text" style="display:none;"><?php echo $text_vat_no; ?></span>:
+        <label for="ssn" id="svea_private_text"><?php echo $text_ssn; ?></label>
+            <label for="ssn" id="svea_business_text" style="display:none;"><?php echo $text_vat_no; ?>:</label>
+            <br />
             <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span>
         <?php
         } ?>
@@ -98,6 +100,10 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $coun
     <?php
     } ?>
 </div>
+<div class="container-fluid" id="svea_customerreference_div" style="display:none;">
+    <label for="customerreference">translate me</label><br />
+    <input type="text" id="customerreference" name="customerreference" />
+</div>
 <div class="buttons">
     <div class="pull-right">
         <a id="checkout" class="btn btn-primary"><span><?php echo $button_confirm; ?></span></a>
@@ -133,6 +139,7 @@ $("#svea_invoice_company").change(function(){
 
         $('#svea_private_text').hide();
         $('#svea_business_text').show();
+        $('#svea_customerreference_div').show();
 
         //if norway show get address
             $('#getSSN').show();
@@ -151,6 +158,7 @@ $("#svea_invoice_company").change(function(){
 
         $('#svea_private_text').show();
         $('#svea_business_text').hide();
+        $('#svea_customerreference_div').show();
 
          //if norway hide get address
          <?php
