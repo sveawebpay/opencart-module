@@ -20,7 +20,6 @@
 
     <?php
     }?>
-    <div id="svea_invoice_err" style="color:red; margin-bottom:10px"></div>
 </div>
 
 <?php
@@ -102,8 +101,9 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $coun
 </div>
 <div class="container-fluid" id="svea_customerreference_div" style="display:none;">
     <label for="customerreference">translate me</label><br />
-    <input type="text" id="customerreference" name="customerreference" />
+    <input type="text" id="customerreference" name="customerreference" size="32" maxlength="32" />
 </div>
+<div id="svea_invoice_err" style="color:red; margin-bottom:10px"></div>
 <div class="buttons">
     <div class="pull-right">
         <a id="checkout" class="btn btn-primary"><span><?php echo $button_confirm; ?></span></a>
@@ -197,6 +197,7 @@ $('a#checkout').click(function(event) {
     var birthYear = $("#birthYear").val();
     var vatNo = $('#vatno').val();
     var company = $("#svea_invoice_company").val();
+    var customerreference = $("#customerreference").val();
     //validate empty field
     if(ssnNo == ''){
         $("#svea_invoice_err").empty().addClass("attention").show().append('<br>*Required');
@@ -216,7 +217,8 @@ $('a#checkout').click(function(event) {
             birthDay: birthDay,
             birthMonth: birthMonth,
             birthYear: birthYear,
-            vatno: vatNo
+            vatno: vatNo,
+            customerreference: customerreference
         },
         url: 'index.php?route=payment/svea_invoice/confirm',
         success: function(data) {

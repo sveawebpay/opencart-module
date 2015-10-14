@@ -133,7 +133,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
             $addressArr[1] =  $order['payment_address_1'];
             $addressArr[2] =  "";
         }
-
         $company = ($_GET['company'] == 'true') ? true : false;
 
         if ($company == TRUE){  // company customer
@@ -159,9 +158,10 @@ class ControllerPaymentsveainvoice extends SveaCommon {
                 $item = $item->setAddressSelector($_GET['addSel']);
             }
             $svea = $svea->addCustomerDetails($item);
+            if(isset( $_GET['customerreference']) ) {
+                  $svea = $svea->setCustomerReference($_GET['customerreference']);
+            }
 
-            // set customer reference to stored customer firstname + lastname, from before getaddresses
-            $svea = $svea->setCustomerReference($this->session->data['svea_reference']);
 
         }
         else {  // private customer
@@ -329,16 +329,9 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         if($this->request->post['company'] == 'true') {
             $svea = $svea->setCompany($this->request->post['ssn']);
-            if(strlen(  $order['payment_firstname'] ." ". $order['payment_lastname']) > 32) {
-                $response = array("error" => 'The payment address firstname and lastname is too long to be used as customer reference.
-                                               Please edit payment address and try again.');//TODO: if to keep, replace with translation
-                $this->log->write('The billing address name is too long to be used as customer reference.');
-                echo json_encode($response);
-                exit();
-            } else {
-                // store customer firstname + lastname in session as svea_reference
-                $this->session->data['svea_reference'] = $order['payment_firstname'] ." ". $order['payment_lastname'];
-            }
+//            if( isset($_GET['customerreference']) && strlen($_GET['customerreference']) <= 32) {
+//                $this->session->data['svea_reference'] = $_GET['customerreference'];
+//            }
         }
         else {
             $svea = $svea->setIndividual($this->request->post['ssn']);
