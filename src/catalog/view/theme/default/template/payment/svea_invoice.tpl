@@ -20,6 +20,10 @@
 
     <?php
     }?>
+    <div id="svea_customerreference_div" style="display:none;">
+    <label for="customerreference">translate me</label><br />
+    <input type="text" id="customerreference" name="customerreference" size="32" maxlength="32" />
+</div>
 </div>
 
 <?php
@@ -99,10 +103,6 @@ if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "FI" || $coun
     <?php
     } ?>
 </div>
-<div class="container-fluid" id="svea_customerreference_div" style="display:none;">
-    <label for="customerreference">translate me</label><br />
-    <input type="text" id="customerreference" name="customerreference" size="32" maxlength="32" />
-</div>
 <div id="svea_invoice_err" style="color:red; margin-bottom:10px"></div>
 <div class="buttons">
     <div class="pull-right">
@@ -158,7 +158,7 @@ $("#svea_invoice_company").change(function(){
 
         $('#svea_private_text').show();
         $('#svea_business_text').hide();
-        $('#svea_customerreference_div').show();
+        $('#svea_customerreference_div').hide();
 
          //if norway hide get address
          <?php
