@@ -13,6 +13,8 @@ $_['text_birthdate']          = 'Födelsedatum';
 $_['text_vat_no']             = 'Org. nr.';
 $_['text_initials']           = 'Initialer';
 $_['text_product_invoice'] 		= 'Lägsta belopp att betala';
+$_['text_customerreference']	= 'Er referens';
+
 
 //Error responses
 $_['response_20000'] = "Ordern är stängd.";

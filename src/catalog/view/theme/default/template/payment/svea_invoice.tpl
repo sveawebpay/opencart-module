@@ -11,19 +11,18 @@
 
         <?php
         if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-        <label for="ssn" id="svea_private_text"><?php echo $text_ssn; ?></label>
+            <label for="ssn" id="svea_private_text"><?php echo $text_ssn; ?>:</label>
             <label for="ssn" id="svea_business_text" style="display:none;"><?php echo $text_vat_no; ?>:</label>
             <br />
             <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span>
         <?php
         } ?>
-
     <?php
     }?>
     <div id="svea_customerreference_div" style="display:none;">
-    <label for="customerreference">translate me</label><br />
-    <input type="text" id="customerreference" name="customerreference" size="32" maxlength="32" />
-</div>
+        <label for="customerreference"><?php echo $text_customerreference; ?>:</label><br />
+        <input type="text" id="customerreference" name="customerreference" size="32" maxlength="32" />
+    </div>
 </div>
 
 <?php

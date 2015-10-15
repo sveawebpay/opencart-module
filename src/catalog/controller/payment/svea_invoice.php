@@ -33,7 +33,9 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         $data['text_birthdate'] = $this->language->get("text_birthdate");
         $data['text_initials'] = $this->language->get("text_initials");
         $data['text_vat_no'] = $this->language->get("text_vat_no");
+        $data['text_customerreference'] = $this->language->get('text_customerreference');
         $data['svea_invoice_shipping_billing'] = $this->config->get('svea_invoice_shipping_billing');
+
 
 
         $data['button_confirm'] = $this->language->get('button_confirm');
