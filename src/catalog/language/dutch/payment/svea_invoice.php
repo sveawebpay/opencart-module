@@ -13,6 +13,7 @@ $_['text_birthdate']          = 'Geboortedatum';
 $_['text_vat_no']             = 'BTW nr';
 $_['text_initials']           = 'Initialen';
 $_['text_product_invoice'] 		= 'Laagst te betalen bedrag';
+$_['text_customerreference']	= 'Uw referentie';
 
 //Error responses
 $_['response_20000'] = "De order is gesloten";

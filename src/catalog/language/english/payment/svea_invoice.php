@@ -13,6 +13,7 @@ $_['text_birthdate']          = 'Birth date';
 $_['text_vat_no']             = 'VAT no';
 $_['text_initials']           = 'Initials';
 $_['text_product_invoice'] 		= 'Minimum amount to pay';
+$_['text_customerreference']	= 'Your reference';
 
 //Error responses
 $_['response_20000'] = "Order closed";

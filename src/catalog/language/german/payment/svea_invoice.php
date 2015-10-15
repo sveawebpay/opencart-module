@@ -13,6 +13,7 @@ $_['text_birthdate']          = 'Geburtsdatum';
 $_['text_vat_no']             = 'MwSt';
 $_['text_initials']           = 'Initialen';
 $_['text_product_invoice'] 		= 'Mindestbetrag zu zahlen';
+$_['text_customerreference']	= 'Ihre Referenz';
 
 //Error responses
 $_['response_20000'] = "Auftrag geschlossen";

@@ -11,8 +11,8 @@
 
         <?php
         if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI"){ ?>
-            <label for="ssn" id="svea_private_text"><?php echo $this->language->get("text_ssn")?></label>
-           <label for="ssn" id="svea_business_text" style="display:none;"><?php echo $this->language->get("text_vat_no")?></label>
+            <label for="ssn" id="svea_private_text"><?php echo $this->language->get("text_ssn")?>:</label>
+           <label for="ssn" id="svea_business_text" style="display:none;"><?php echo $this->language->get("text_vat_no")?>:</label>
            <br />
            <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span>
         <?php
@@ -21,7 +21,7 @@
     <?php
     }?>
     <div class="container-fluid" id="svea_customerreference_div" style="display:none;">
-        <label for="customerreference">translate me</label><br />
+        <label for="customerreference"><?php echo $this->language->get("text_customerreference")?>:</label><br />
         <input type="text" id="customerreference" name="customerreference" size="32" maxlength="32" />
     </div>
 </div>
