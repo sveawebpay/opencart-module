@@ -200,6 +200,111 @@ class ControllerPaymentsveainvoice extends SveaCommon {
                 ->setOrderDate(date('c'))
                 ->useInvoicePayment()
                 ->doRequest();
+
+            //If CreateOrder accepted redirect to thankyou page
+            if ($svea->accepted == 1) {
+                $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
+
+                // if set to enforce shipping = billing, fetch billing address
+                if($this->config->get('svea_invoice_shipping_billing') == '1') {
+                    $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
+                }
+                $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
+
+                $response = array();
+
+                //If Auto deliver order is set, DeliverOrder
+                if($this->config->get('svea_invoice_auto_deliver') === '1') {
+                    $deliverObj = WebPay::deliverOrder($conf);
+                    //Product rows
+                    $deliverObj = $this->addOrderRowsToWebServiceOrder($deliverObj, $products,$currencyValue);
+
+                    // no need to do formatAddons again
+
+                    //extra charge addons like shipping and invoice fee
+                    foreach ($addons as $addon) {
+                        if($addon['value'] >= 0){
+                            $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
+                            $deliverObj = $deliverObj
+                                ->addOrderRow(WebPayItem::orderRow()
+                                ->setQuantity(1)
+                                ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
+                                ->setVatPercent(intval($addon['tax_rate']))
+                                ->setName(isset($addon['title']) ? $addon['title'] : "")
+                                ->setUnit($this->language->get('unit'))
+                                ->setArticleNumber($addon['code'])
+                                ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                            );
+
+                            //voucher(-)
+                            } elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
+                                $deliverObj = $deliverObj
+                                    ->addDiscount(WebPayItem::fixedDiscount()
+                                        ->setDiscountId($addon['code'])
+                                        ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
+                                        ->setVatPercent(0)//no vat when using a voucher
+                                        ->setName(isset($addon['title']) ? $addon['title'] : "")
+                                        ->setUnit($this->language->get('unit'))
+                                        ->setDescription(isset($addon['text']) ? $addon['text'] : "")
+                                );
+                            }
+                            //discounts (-)
+                            else {
+                                $taxRates = Svea\Helper::getTaxRatesInOrder($deliverObj);
+                                $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                                foreach($discountRows as $row) {
+                                    $deliverObj = $deliverObj->addDiscount( $row );
+                            }
+                        }
+                    }
+
+                    // try to do deliverOrder request
+                    try {
+                        $deliverObj = $deliverObj
+                            ->setCountryCode($countryCode)
+                            ->setOrderId($svea->sveaOrderId)    // match doRequest orderId
+                            ->setInvoiceDistributionType($this->config->get('svea_invoice_distribution_type'))
+                            ->deliverInvoiceOrder()
+                            ->doRequest();
+
+                        //if DeliverOrder returns true, send true to view
+                        if($deliverObj->accepted == 1){
+                            $response = array("success" => true);
+                            //update order status for delivered
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea InvoiceId: ".$deliverObj->invoiceId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
+                        }
+                        //if not, send error codes
+                        else {
+                            $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
+                        }
+                     }
+                    catch (Exception $e) {
+                        $this->log->write($e->getMessage());
+                        $response = array("error" => $this->responseCodes(0,$e->getMessage()));
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($response));
+
+                    }
+
+                }
+                //if auto deliver not set, send true to view
+                else {
+                    $response = array("success" => true);
+                    //update order status for created
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'),'Svea order id '. $svea->sveaOrderId);
+                }
+
+            // not accepted, send errors to view
+            }  else {
+                $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
+            }
+
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
+
         }
         catch (Exception $e){
             $this->log->write($e->getMessage());
@@ -207,110 +312,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($response));
         }
-
-        //If CreateOrder accepted redirect to thankyou page
-        if ($svea->accepted == 1) {
-            $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
-
-            // if set to enforce shipping = billing, fetch billing address
-            if($this->config->get('svea_invoice_shipping_billing') == '1') {
-                $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
-            }
-            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
-
-            $response = array();
-
-            //If Auto deliver order is set, DeliverOrder
-            if($this->config->get('svea_invoice_auto_deliver') === '1') {
-                $deliverObj = WebPay::deliverOrder($conf);
-                //Product rows
-                $deliverObj = $this->addOrderRowsToWebServiceOrder($deliverObj, $products,$currencyValue);
-
-                // no need to do formatAddons again
-
-                //extra charge addons like shipping and invoice fee
-                foreach ($addons as $addon) {
-                    if($addon['value'] >= 0){
-                        $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
-                        $deliverObj = $deliverObj
-                            ->addOrderRow(WebPayItem::orderRow()
-                            ->setQuantity(1)
-                            ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
-                            ->setVatPercent(intval($addon['tax_rate']))
-                            ->setName(isset($addon['title']) ? $addon['title'] : "")
-                            ->setUnit($this->language->get('unit'))
-                            ->setArticleNumber($addon['code'])
-                            ->setDescription(isset($addon['text']) ? $addon['text'] : "")
-                        );
-
-                        //voucher(-)
-                        } elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
-                            $deliverObj = $deliverObj
-                                ->addDiscount(WebPayItem::fixedDiscount()
-                                    ->setDiscountId($addon['code'])
-                                    ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
-                                    ->setVatPercent(0)//no vat when using a voucher
-                                    ->setName(isset($addon['title']) ? $addon['title'] : "")
-                                    ->setUnit($this->language->get('unit'))
-                                    ->setDescription(isset($addon['text']) ? $addon['text'] : "")
-                            );
-                        }
-                        //discounts (-)
-                        else {
-                            $taxRates = Svea\Helper::getTaxRatesInOrder($deliverObj);
-                            $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
-                            foreach($discountRows as $row) {
-                                $deliverObj = $deliverObj->addDiscount( $row );
-                        }
-                    }
-                }
-
-                // try to do deliverOrder request
-                try {
-                    $deliverObj = $deliverObj
-                        ->setCountryCode($countryCode)
-                        ->setOrderId($svea->sveaOrderId)    // match doRequest orderId
-                        ->setInvoiceDistributionType($this->config->get('svea_invoice_distribution_type'))
-                        ->deliverInvoiceOrder()
-                        ->doRequest();
-                }
-                catch (Exception $e) {
-                    $this->log->write($e->getMessage());
-                    $response = array("error" => $this->responseCodes(0,$e->getMessage()));
-                    $this->response->addHeader('Content-Type: application/json');
-                    $this->response->setOutput(json_encode($response));
-
-                }
-
-                //if DeliverOrder returns true, send true to view
-                if($deliverObj->accepted == 1){
-                    $response = array("success" => true);
-                    //update order status for delivered
-                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea InvoiceId: ".$deliverObj->invoiceId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
-                }
-                //if not, send error codes
-                else {
-                    $response = array("error" => $this->responseCodes($deliverObj->resultcode,$deliverObj->errormessage));
-                }
-
-            }
-            //if auto deliver not set, send true to view
-            else {
-                $response = array("success" => true);
-                //update order status for created
-                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_invoice_order_status_id'),'Svea order id '. $svea->sveaOrderId);
-            }
-
-        // not accepted, send errors to view
-        }  else {
-            $response = array("error" => $this->responseCodes($svea->resultcode,$svea->errormessage));
-        }
-
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($response));
     }
 
     public function getAddress() {
