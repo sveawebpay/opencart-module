@@ -221,6 +221,7 @@ $('a#checkout').click(function(event) {
         },
         url: 'index.php?route=payment/svea_invoice/confirm',
         success: function(data) {
+            console.log(data);
                 if(data.success){
                     location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
                 }

@@ -114,10 +114,10 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         $currencyValue = $currency_info['value'];
 
         //Products
-        $this->load->language('payment/svea_partpayment');        
+        $this->load->language('payment/svea_partpayment');
         $svea = $this->addOrderRowsToWebServiceOrder($svea, $products, $currencyValue);
 
-        //extra charge addons like shipping and invoice fee        
+        //extra charge addons like shipping and invoice fee
         $addons = $this->addTaxRateToAddons();
 
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
@@ -129,7 +129,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
             $addressArr[1] =  $order['payment_address_1'];
             $addressArr[2] =  "";
         }
-        
+
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
         $item = Item::individualCustomer();
@@ -149,7 +149,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         }
 
         $svea = $svea->addCustomerDetails($item);
-        
+
         try {
             $svea = $svea
                     ->setCountryCode($countryCode)
@@ -158,6 +158,59 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
                     ->setOrderDate(date('c'))
                     ->usePaymentPlanPayment($_GET["paySel"])
                     ->doRequest();
+
+            //If response accepted redirect to thankyou page
+            if ($svea->accepted == 1) {
+
+                 $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
+
+                if($this->config->get('svea_partpayment_shipping_billing') == '1')
+                    $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
+
+                $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
+                //If Auto deliver order is set, DeliverOrder
+
+                if ($this->config->get('svea_partpayment_auto_deliver') === '1') {
+                    $deliverObj = WebPay::deliverOrder($conf);
+                    //Product rows
+                    try {
+                        $deliverObj = $deliverObj
+                                ->setCountryCode($countryCode)
+                                ->setOrderId($svea->sveaOrderId)
+                                ->deliverPaymentPlanOrder()
+                                ->doRequest();
+
+                        //If DeliverOrder returns true, send true to veiw
+                        if ($deliverObj->accepted == 1) {
+                            $response = array("success" => true);
+                            //update order status for delivered
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea contractNumber '.$deliverObj->contractNumber);
+                            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_partpayment_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea contractNumber: " . $deliverObj->contractNumber . "', date_added = NOW()");
+                            //I not, send error codes
+                        } else {
+                            $response = array("error" => $this->responseCodes($deliverObj->resultcode, $deliverObj->errormessage));
+                        }
+                    //if auto deliver not set, send true to view
+                    } catch (Exception $e) {
+                        $this->log->write($e->getMessage());
+                        $response = array("error" => $this->responseCodes(0, $e->getMessage()));
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($response));
+
+                    }
+
+                } else {
+                    $response = array("success" => true);
+                    //update order status for created
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'),'Svea order id: '. $svea->sveaOrderId);
+                }
+
+                //else send errors to view
+            } else {
+                $response = array("error" => $this->responseCodes($svea->resultcode, $svea->errormessage));
+            }
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($response));
         } catch (Exception $e) {
             $this->log->write($e->getMessage());
             $response = array("error" => $this->responseCodes(0, $e->getMessage()));
@@ -165,60 +218,6 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
             $this->response->setOutput(json_encode($response));
 
         }
-
-
-        //If response accepted redirect to thankyou page
-        if ($svea->accepted == 1) {
-
-             $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
-
-            if($this->config->get('svea_partpayment_shipping_billing') == '1')
-                $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
-
-            $this->model_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
-            //If Auto deliver order is set, DeliverOrder
-
-            if ($this->config->get('svea_partpayment_auto_deliver') === '1') {
-                $deliverObj = WebPay::deliverOrder($conf);
-                //Product rows
-                try {
-                    $deliverObj = $deliverObj
-                            ->setCountryCode($countryCode)
-                            ->setOrderId($svea->sveaOrderId)
-                            ->deliverPaymentPlanOrder()
-                            ->doRequest();
-                } catch (Exception $e) {
-                    $this->log->write($e->getMessage());
-                    $response = array("error" => $this->responseCodes(0, $e->getMessage()));
-                    $this->response->addHeader('Content-Type: application/json');
-                    $this->response->setOutput(json_encode($response));
-
-                }
-
-                //If DeliverOrder returns true, send true to veiw
-                if ($deliverObj->accepted == 1) {
-                    $response = array("success" => true);
-                    //update order status for delivered
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea contractNumber '.$deliverObj->contractNumber);
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_partpayment_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea contractNumber: " . $deliverObj->contractNumber . "', date_added = NOW()");
-                    //I not, send error codes
-                } else {
-                    $response = array("error" => $this->responseCodes($deliverObj->resultcode, $deliverObj->errormessage));
-                }
-                //if auto deliver not set, send true to view
-            } else {
-                $response = array("success" => true);
-                //update order status for created
-                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'),'Svea order id: '. $svea->sveaOrderId);
-            }
-
-            //else send errors to view
-        } else {
-            $response = array("error" => $this->responseCodes($svea->resultcode, $svea->errormessage));
-        }
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($response));
-
     }
 
     private function getAddress($ssn) {
