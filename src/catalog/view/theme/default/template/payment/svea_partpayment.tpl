@@ -77,12 +77,15 @@
             }
             $birthYear = "<select name='birthYear' id='birthYear'>$years</select>";
 
-            if($countryCode == "NL"){ ?>
+            if($countryCode == "NL" || $countryCode == "DE"){ ?>
                 <span id="sveaBirthDateCont">
-                    <?php echo $this->language->get('text_birthdate')?>:
+                    <?php echo $this->language->get('text_birthdate'); ?>:
                     <?php echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
-                    <?php echo $this->language->get('text_initials') ?>:
-                    <input type="text" id="initials" name="initials" />
+                    <?php   if($countryCode == "NL"){
+                            echo $this->language->get('text_initials');
+                            ?>:
+                        <input type="text" id="initials" name="initials" />
+                    <?php } ?>
                </span>
             <?php
             } ?>

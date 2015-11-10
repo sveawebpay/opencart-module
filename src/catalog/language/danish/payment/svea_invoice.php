@@ -13,6 +13,7 @@ $_['text_birthdate']          = 'Fødselsdato';
 $_['text_vat_no']             = 'CVR-nummer';
 $_['text_initials']           = 'Initialer';
 $_['text_product_invoice'] 		= 'Mindste beløb til at betale';
+$_['text_customerreference']	= 'Din reference';
 
 //Error responses
 $_['response_20000'] = 'Ordre lukket';

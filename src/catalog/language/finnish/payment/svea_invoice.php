@@ -13,6 +13,7 @@ $_['text_birthdate']          = 'Syntymäaika';
 $_['text_vat_no']             = 'ALV';
 $_['text_initials']           = 'Tunnukset';
 $_['text_product_invoice'] 		= 'Vähintään maksettava';
+$_['text_customerreference']	= 'Viitteenne';
 
 //Error responses
 $_['response_20000'] = "Tilaus suljettu";
