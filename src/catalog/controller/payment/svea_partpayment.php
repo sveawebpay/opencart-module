@@ -143,9 +143,10 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
                 ->setPhoneNumber($order['telephone']);
 
         if ($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-
-            $item = $item->setInitials($_GET['initials'])
-                    ->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);
+            if($order["payment_iso_code_2"] == "NL") {
+                $item = $item->setInitials($_GET['initials']);
+            }
+             $item = $item->setBirthDate($_GET['birthYear'], $_GET['birthMonth'], $_GET['birthDay']);
         }
 
         $svea = $svea->addCustomerDetails($item);
