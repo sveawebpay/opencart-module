@@ -81,6 +81,18 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
         }
         return $this->config->get('svea_'.$lowertype.'_clientno_' . $country);
     }
+
+    public function getIntegrationCompany() {
+
+    }
+
+    public function getIntegrationPlatform() {
+
+    }
+
+    public function getIntegrationVersion() {
+
+    }
 }
 
 ?>
