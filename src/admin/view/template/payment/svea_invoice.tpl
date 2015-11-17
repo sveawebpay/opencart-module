@@ -17,7 +17,8 @@
                 <tbody>
                     <tr>
                         <td>Version</td>
-                        <td><?php echo $svea_version; ?></td>
+                        <td><?php echo $svea_version_text; ?></td>
+                <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_invoice_version" id="svea_version" />
                     </tr>
                     <tr>
                         <td><?php echo $entry_geo_zone; ?></td>
