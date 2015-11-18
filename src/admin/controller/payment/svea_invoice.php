@@ -18,7 +18,8 @@ class ControllerPaymentsveainvoice extends Controller {
                 $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
-        $data['svea_version'] = $this->getSveaVersion();
+        $data['svea_version_text'] = $this->getSveaVersion();
+        $data['svea_version'] = $this->svea_version;
 
         $data['heading_title'] = $this->language->get('heading_title');
 

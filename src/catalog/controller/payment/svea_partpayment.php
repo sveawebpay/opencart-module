@@ -95,7 +95,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
         if ($this->config->get('svea_partpayment_testmode_' . $countryCode) !== NULL) {
-            $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+            $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode) == "1" ? new OpencartSveaConfigTest($this->config, 'svea_partpayment') : new OpencartSveaConfig($this->config, 'svea_partpayment');
         } else {
             $response = array("error" => $this->responseCodes(40001, "The country is not supported for this paymentmethod"));
             $this->response->addHeader('Content-Type: application/json');
@@ -231,7 +231,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
-        $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode) == "1" ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+        $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode) == "1" ? new OpencartSveaConfigTest($this->config,'svea_partpayment') : new OpencartSveaConfig($this->config,'svea_partpayment');
 
         $svea = WebPay::getAddresses($conf)
                 ->setOrderTypePaymentPlan()
