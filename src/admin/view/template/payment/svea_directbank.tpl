@@ -15,7 +15,8 @@
         <tbody>
             <tr>
                 <td>Version</td>
-                <td><?php echo $svea_version; ?></td>
+                <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
+                <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_directbank_version" id="svea_directbank_version" />
             </tr>
             <tr>
                 <td><?php echo $entry_geo_zone; ?></td>

@@ -16,7 +16,8 @@
             <tbody>
                 <tr>
                     <td>Version</td>
-                    <td><?php echo $svea_version; ?></td>
+                    <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
+                    <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_card_version" id="svea_card_version" />
                 </tr>
                 <tr>
                     <td><?php echo $entry_testmode; ?>:</td>
