@@ -31,8 +31,8 @@ class ControllerPaymentsveadirectbank extends Controller {
 		$this->data['text_enabled']       = $this->language->get('text_enabled');
 		$this->data['text_disabled']      = $this->language->get('text_disabled');
 		$this->data['text_all_zones']     = $this->language->get('text_all_zones');
-                $data['svea_version_text'] = $this->getSveaVersion();
-                $data['svea_version'] = $this->svea_version;
+                $this->data['svea_version_text'] = $this->getSveaVersion();
+                $this->data['svea_version'] = $this->svea_version;
 
 
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');

@@ -46,8 +46,8 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['button_cancel']      = $this->language->get('button_cancel');
 
         $this->data['tab_general']        = $this->language->get('tab_general');
-        $data['svea_version_text'] = $this->getSveaVersion();
-        $data['svea_version'] = $this->svea_version;
+        $this->data['svea_version_text'] = $this->getSveaVersion();
+        $this->data['svea_version'] = $this->svea_version;
         //Credentials
         $this->data['entry_test']        = $this->language->get('entry_test');
         $this->data['entry_prod']       = $this->language->get('entry_prod');
