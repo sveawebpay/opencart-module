@@ -28,7 +28,8 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveapartpayment" class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-3 control-label">Version</div>
-                <div class="col-sm-9"><?php echo $svea_version; ?></div>
+                <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
+                <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_partpayment_version" id="svea_partpayment_version" />
             </div>
             <div class="form-group">
                 <label for="svea_partpayment_geo_zone_id" class="col-sm-3 control-label"><?php echo $entry_geo_zone; ?></label>

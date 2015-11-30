@@ -40,10 +40,10 @@ class ControllerPaymentsveacard extends SveaCommon {
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
 
         $svea = WebPay::createOrder($conf);
-        
+
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $currencyValue = (floatval(VERSION) >= 1.5) ? $order['currency_value'] : $order['value'];
@@ -51,21 +51,21 @@ class ControllerPaymentsveacard extends SveaCommon {
         //Product rows
         $products = $this->cart->getProducts();
         $svea = $this->addOrderRowsToHostedServiceOrder($svea, $products, $currencyValue);
-                
+
         $addons = $this->addTaxRateToAddons();
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
-         
+
         $server_url = $this->setServerURL();
         $returnUrl = $server_url.'index.php?route=payment/svea_card/responseSvea';
         $callbackUrl = $server_url.'index.php?route=payment/svea_card/callbackSvea';
         // $callbackUrl = 'http://194.14.250.189:8080/modulerDev/Opencart/2/index.php?route=payment/svea_card/callbackSvea'; //svea test
-        
+
         $form = $svea
             ->setCountryCode($order['payment_iso_code_2'])
             ->setCurrency($this->session->data['currency'])
             ->setClientOrderNumber($this->session->data['order_id'])
             ->setOrderDate(date('c'))
-        ;        
+        ;
         try {
             $form =  $form
                 ->usePaymentMethod(PaymentMethod::KORTCERT)
@@ -75,14 +75,14 @@ class ControllerPaymentsveacard extends SveaCommon {
                     ->setCardPageLanguage(strtolower($order['language_code']))
                     ->getPaymentForm()
             ;
-        }  
+        }
         catch (Exception $e) {
             $this->log->write($e->getMessage());
             echo '<div class="attention">Logged Svea Error</div>';
             exit();
 
         }
-        
+
         //Save order but Void it while order status is unsure
         $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], 0,'Sent to Svea gateway.');
 
@@ -114,7 +114,7 @@ class ControllerPaymentsveacard extends SveaCommon {
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
 
-        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
@@ -149,7 +149,7 @@ class ControllerPaymentsveacard extends SveaCommon {
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
         $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number

@@ -1,6 +1,7 @@
-Updated integrationLib 2015-06-02 to:
+Updated integrationLib 2015-11-30 to:
 
 sveawebpay/php-integration
 
-release/2.2.21
+release/2.2.25
 
+Remember to activate integration functions in Config/ConfigurationProvider.php on update
