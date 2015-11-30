@@ -2,7 +2,7 @@
 class ControllerPaymentsveainvoice extends Controller {
 
     private $error = array();
-    protected $svea_version = '2.7.0';
+    protected $svea_version = '2.7.1';
 
     public function index() {
         $this->load->language('payment/svea_invoice');
@@ -20,7 +20,8 @@ class ControllerPaymentsveainvoice extends Controller {
         }
 
         $this->data['heading_title'] = $this->language->get('heading_title');
-        $this->data['svea_version'] = $this->getSveaVersion();
+        $this->data['svea_version_text'] = $this->getSveaVersion();
+        $this->data['svea_version'] = $this->svea_version;
 
         $this->data['text_enabled']       = $this->language->get('text_enabled');
         $this->data['text_disabled']      = $this->language->get('text_disabled');

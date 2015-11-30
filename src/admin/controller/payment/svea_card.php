@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentsveacard extends Controller {
     private $error = array();
-    protected $svea_version = '2.7.0';
+    protected $svea_version = '2.7.1';
 
     public function index() {
         $this->load->language('payment/svea_card');
@@ -46,7 +46,8 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['button_cancel']      = $this->language->get('button_cancel');
 
         $this->data['tab_general']        = $this->language->get('tab_general');
-        $this->data['svea_version']         = $this->getSveaVersion();
+        $this->data['svea_version_text'] = $this->getSveaVersion();
+        $this->data['svea_version'] = $this->svea_version;
         //Credentials
         $this->data['entry_test']        = $this->language->get('entry_test');
         $this->data['entry_prod']       = $this->language->get('entry_prod');

@@ -15,9 +15,11 @@ require_once "$root/../Includes.php";
 class OpencartSveaConfigTest implements ConfigurationProvider{
 
     public $config;
+    public $payment_method;
 
-    public function __construct($config) {
+    public function __construct($config, $payment_method = NULL) {
         $this->config = $config;
+        $this->payment_method = $payment_method;
     }
 
         public function getEndPoint($type) {
@@ -80,6 +82,18 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
             return $this->config->get('svea_partpayment_clientno_' . $country);
         }
         return $this->config->get('svea_'.$lowertype.'_clientno_' . $country);
+    }
+
+    public function getIntegrationCompany() {
+          return "Svea Ekonomi : Opencart 1.x module";
+    }
+
+    public function getIntegrationPlatform() {
+        return 'Opencart '. VERSION;
+    }
+
+    public function getIntegrationVersion() {
+         return $this->config->get($this->payment_method . '_version');
     }
 }
 

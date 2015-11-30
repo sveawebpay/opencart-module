@@ -86,7 +86,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         //Testmode
         if($this->config->get('svea_invoice_testmode_'.$countryCode) !== NULL){
             $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == "1" )
-                    ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+                    ? new OpencartSveaConfigTest($this->config,'svea_invoice') : new OpencartSveaConfig($this->config,'svea_invoice');
         }
         else {
             $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
@@ -309,7 +309,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
         $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' )
-                ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+                ? new OpencartSveaConfigTest($this->config,'svea_invoice') : new OpencartSveaConfig($this->config,'svea_invoice');
 
         $svea = WebPay::getAddresses($conf)
             ->setOrderTypeInvoice()

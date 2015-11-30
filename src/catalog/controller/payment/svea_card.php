@@ -39,7 +39,7 @@ class ControllerPaymentsveacard extends SveaCommon {
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
 
         $svea = WebPay::createOrder($conf);
 
@@ -110,7 +110,7 @@ class ControllerPaymentsveacard extends SveaCommon {
         $countryCode = $order_info['payment_iso_code_2'];
 
         //Testmode
-        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
         $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
@@ -138,7 +138,7 @@ class ControllerPaymentsveacard extends SveaCommon {
         $this->load->language('payment/svea_card');
         include(DIR_APPLICATION.'../svea/Includes.php');
 
-        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config)) : new OpencartSveaConfig($this->config);
+        $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
         $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
