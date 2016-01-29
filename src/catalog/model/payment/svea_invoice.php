@@ -61,6 +61,10 @@ class ModelPaymentsveainvoice extends Model {
         public function getProductPriceMode(){
              return $this->config->get('svea_invoice_product_price');
         }
+        /**
+         * Deprecated. Not in use.
+         * @return type
+         */
         public function getProductPriceModeMin(){
              return $this->config->get('svea_invoice_product_price_min');
         }

@@ -201,11 +201,6 @@
                             <?php echo $entry_no; ?>
                             <?php } ?>
                          </div>
-                        <div class="col-sm-4">
-                              <?php echo $entry_min_amount; ?>
-                            <input name="svea_invoice_product_price_min" type="text"
-                            value="<?php echo $svea_invoice_product_price_min; ?>" />
-                        </div>
                     </div>
                 </div>
             <!-- Countrycode specific -->

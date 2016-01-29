@@ -133,14 +133,6 @@ class ControllerPaymentsveainvoice extends Controller {
 		} else {
 			$data['svea_invoice_product_price'] = $this->config->get('svea_invoice_product_price');
 		}
-                 //min amount to show price on product
-		if (isset($this->request->post['svea_invoice_product_price_min'])) {
-			$data['svea_invoice_product_price_min'] = $this->request->post['svea_invoice_product_price_min'];
-		} else {
-			$data['svea_invoice_product_price_min'] = $this->config->get('svea_invoice_product_price_min');
-		}
-
-
                 //geozone
 		if (isset($this->request->post['svea_invoice_geo_zone_id'])) {
 			$data['svea_invoice_geo_zone_id'] = $this->request->post['svea_invoice_geo_zone_id'];
