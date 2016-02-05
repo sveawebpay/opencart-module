@@ -82,10 +82,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_partpayment');
-        $this->load->model('checkout/coupon');
         $this->load->model('account/address');
-
-        floatval(VERSION) >= 1.5 ? $this->load->model('checkout/voucher') : $this->load->model('checkout/extension');
 
         //Load SVEA includes
         include(DIR_APPLICATION . '../svea/Includes.php');
