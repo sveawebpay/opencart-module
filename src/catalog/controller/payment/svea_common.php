@@ -65,7 +65,24 @@ class SveaCommon extends Controller {
     }
 
     function addAddonRowsToSveaOrder( $svea, $addons, $currencyValue ) {
-
+        //purchased vouchers
+        $vouchers = $this->db->query(
+        "SELECT `code`, `description`, `amount`
+        FROM `" . DB_PREFIX . "order_voucher`
+        WHERE `order_id` = " . (int)$this->session->data['order_id']);
+        if ($vouchers->num_rows >= 1) {
+            foreach ($vouchers->rows as $voucher) {
+                $svea = $svea
+                    ->addOrderRow(WebPayItem::orderRow()
+                    ->setQuantity(1)
+                    ->setAmountIncVat(floatval($voucher['amount']))
+                    ->setVatPercent(0)//no vat when buying a voucher
+                    ->setUnit($this->language->get('unit'))
+                    ->setArticleNumber($voucher['code'])
+                    ->setDescription($voucher['description'])
+                );
+            }
+        }
         foreach ($addons as $addon) {
             if($addon['value'] >= 0) {
                 $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
@@ -80,8 +97,7 @@ class SveaCommon extends Controller {
                     ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
             }
-
-            //voucher(-)
+            //used voucher(-)
             elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
                 $svea = $svea
                     ->addDiscount(WebPayItem::fixedDiscount()
@@ -110,6 +126,7 @@ class SveaCommon extends Controller {
                 }
             }
          }
+
 
          return $svea;
     }
