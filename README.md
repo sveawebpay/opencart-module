@@ -101,7 +101,7 @@ For the other Svea payment methods (payment plan, card payment and direct bank p
 * Set _geo zone_ and _sort order_ according to your preferences.
 * Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
 * Set _testmode_ and _status_ to enabled.
-* Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Payment Plan are Deliver and Cancel order.
+* Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Payment Plan are Deliver, Credit and Cancel order.
 * _Shipping same as billing_ determines whether to use the svea billing address for both shipping and billing. It will ignore if customer tries to change the shipping address. Should be set to _yes_ if your contract with Svea does not tell otherwise.
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing, make sure to use the supplied test account credentials.
 * The field _min. amount_ must match the corresponding setting in Svea admin.
