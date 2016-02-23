@@ -14,6 +14,8 @@ $_['entry_status_canceled'] = 'Cancelled/Annulled:';
 $_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/captured.';
 $_['entry_status_delivered'] = 'Delivered:';
 $_['entry_status_delivered_text'] = 'Delivers a created order.';
+$_['entry_status_refunded'] = 'Credited:';
+$_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
 
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
