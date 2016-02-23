@@ -34,6 +34,8 @@ class ControllerPaymentsveapartpayment extends Controller {
                 $this->data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
                 $this->data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
                 $this->data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
+                $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
+                $this->data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
 
 		$this->data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
 		$this->data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
@@ -177,6 +179,12 @@ class ControllerPaymentsveapartpayment extends Controller {
 		} else {
 			$this->data['svea_partpayment_deliver_status_id'] = $this->config->get('svea_partpayment_deliver_status_id');
 		}
+                if (isset($this->request->post['svea_partpayment_refunded_status_id'])) {
+                    $this->data['svea_partpayment_refunded_status_id'] = $this->request->post['svea_partpayment_refunded_status_id'];
+                } else {
+                    $this->data['svea_partpayment_refunded_status_id'] = $this->config->get('svea_partpayment_refunded_status_id');
+                }
+
 
 		$this->template = 'payment/svea_partpayment.tpl';
 		$this->children = array(

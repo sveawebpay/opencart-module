@@ -91,6 +91,19 @@
                          <?php } ?>
                     <?php } ?>
                     </select>
+                    <div>
+                        <span><?php echo $entry_status_refunded; ?></span>
+                        <span class="help"><?php echo $entry_status_refunded_text; ?></span>
+                    </div>
+                    <select name="svea_partpayment_refunded_status_id">
+                        <?php foreach ($order_statuses as $order_status) {
+                            if ($order_status['order_status_id'] == $svea_partpayment_refunded_status_id) { ?>
+                         <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                             <?php } else { ?>
+                         <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                              <?php } ?>
+                         <?php } ?>
+                    </select>
                 </td>
             </tr>
             <!--shipping billing-->
