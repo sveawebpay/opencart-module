@@ -2,7 +2,7 @@
 class ControllerPaymentsveainvoice extends Controller {
 
     private $error = array();
-    protected $svea_version = '2.7.1';
+    protected $svea_version = '2.7.2';
 
     public function index() {
         $this->load->language('payment/svea_invoice');
@@ -138,13 +138,6 @@ class ControllerPaymentsveainvoice extends Controller {
 		} else {
 			$this->data['svea_invoice_product_price'] = $this->config->get('svea_invoice_product_price');
 		}
-                 //min amount to show price on product
-		if (isset($this->request->post['svea_invoice_product_price_min'])) {
-			$this->data['svea_invoice_product_price_min'] = $this->request->post['svea_invoice_product_price_min'];
-		} else {
-			$this->data['svea_invoice_product_price_min'] = $this->config->get('svea_invoice_product_price_min');
-		}
-
 
                 //geozone
 		if (isset($this->request->post['svea_invoice_geo_zone_id'])) {

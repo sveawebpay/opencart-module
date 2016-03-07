@@ -14,6 +14,8 @@ $_['entry_status_canceled'] = 'Aflyst/Annulleret:';
 $_['entry_status_canceled_text'] = 'Kan tilføres på ordren inden levering/indløst.';
 $_['entry_status_delivered'] = 'Leveret:';
 $_['entry_status_delivered_text'] = 'Leverer en oprettet ordre.';
+$_['entry_status_refunded'] = 'Krediteret:';
+$_['entry_status_refunded_text'] = 'Ordren skal være leveret/indløst inden den krediteres.';
 
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';

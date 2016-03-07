@@ -14,6 +14,8 @@ $_['entry_status_canceled'] = 'Makuliert/ annuliert:';
 $_['entry_status_canceled_text'] = 'Ist möglich, bevor die Bestellung geliefert/ eingelöst ist.';
 $_['entry_status_delivered'] = 'Geliefert:';
 $_['entry_status_delivered_text'] = 'Liefert eine registrierte Bestellung.';
+$_['entry_status_refunded'] = 'Kreditiert:';
+$_['entry_status_refunded_text'] = 'Gilt für gelieferte Bestellungen.';
 
 $_['entry_geo_zone']     = 'Geozone:';
 $_['entry_status']       = 'Status:';

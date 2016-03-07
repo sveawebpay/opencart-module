@@ -19,7 +19,7 @@ class SveaCommon extends Controller {
                 foreach ($tax as $key => $value) {
                     $taxPercent = $value['rate'];
                 }
-            } 
+            }
             else {
                 $taxPercent = $this->tax->getRate($product['tax_class_id']);
             }
@@ -33,8 +33,8 @@ class SveaCommon extends Controller {
         }
 
         return $svea;
-    }    
-    
+    }
+
     function addOrderRowsToWebServiceOrder($svea,$products,$currencyValue){
 
         foreach ($products as $product) {
@@ -45,7 +45,7 @@ class SveaCommon extends Controller {
                 ->setArticleNumber($product['model'])
                 //->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
             ;
-            
+
             $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
             $taxPercent = 0;
             $taxAmount = 0;
@@ -53,20 +53,37 @@ class SveaCommon extends Controller {
                 $taxPercent = $value['rate'];
                 $taxAmount = $value['amount'];
             }
-            
+
             $item = $item
                 ->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
                 ->setVatPercent(intval($taxPercent))
             ;
-            
+
             $svea = $svea->addOrderRow($item);
         }
         return $svea;
-    }    
-    
+    }
+
     function addAddonRowsToSveaOrder( $svea, $addons, $currencyValue ) {
-    
-        foreach ($addons as $addon) {            
+     //purchased vouchers
+        $vouchers = $this->db->query(
+        "SELECT `code`, `description`, `amount`
+        FROM `" . DB_PREFIX . "order_voucher`
+        WHERE `order_id` = " . (int)$this->session->data['order_id']);
+        if (sizeof($vouchers->rows) >= 1) {
+            foreach ($vouchers->rows as $voucher) {
+                $svea = $svea
+                    ->addOrderRow(WebPayItem::orderRow()
+                    ->setQuantity(1)
+                    ->setAmountIncVat(floatval($voucher['amount']))
+                    ->setVatPercent(0)//no vat when buying a voucher
+                    ->setUnit($this->language->get('unit'))
+                    ->setArticleNumber($voucher['code'])
+                    ->setDescription($voucher['description'])
+                );
+            }
+        }
+        foreach ($addons as $addon) {
             if($addon['value'] >= 0) {
                 $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
                 $svea = $svea
@@ -80,7 +97,7 @@ class SveaCommon extends Controller {
                     ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                 );
             }
-            
+
             //voucher(-)
             elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
                 $svea = $svea
@@ -94,14 +111,14 @@ class SveaCommon extends Controller {
                 );
             }
             //discounts (-)
-            else {             
+            else {
                 $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
 
-                $discountRows = Svea\Helper::splitMeanAcrossTaxRates( 
+                $discountRows = Svea\Helper::splitMeanAcrossTaxRates(
                         ((abs($addon['value']) * $currencyValue) + abs($vat)),
-                        $addon['tax_rate'], 
-                        $addon['title'], 
-                        array_key_exists('text', $addon) ? $addon['text'] : "", 
+                        $addon['tax_rate'],
+                        $addon['title'],
+                        array_key_exists('text', $addon) ? $addon['text'] : "",
                         Svea\Helper::getTaxRatesInOrder($svea),
                         false ) // discount rows will use amountIncVat
                 ;
@@ -109,27 +126,27 @@ class SveaCommon extends Controller {
                     $svea = $svea->addDiscount( $row );
                 }
             }
-         }  
-         
+         }
+
          return $svea;
     }
-    
+
     function addTaxRateToAddons() {
-        
+
         //Get all addons
         $total_data = array();
-        
-        $total = 0;        
+
+        $total = 0;
         $svea_tax = array();
         $cartTax = $this->cart->getTaxes();
 
         $this->load->model('setting/extension');  // 1.x
-        $extensions = $this->model_setting_extension->getExtensions('total'); // 1.x      
+        $extensions = $this->model_setting_extension->getExtensions('total'); // 1.x
 
         //$this->load->model('extension/extension');  // 2.x
         //$extensions = $this->model_extension_extension->getExtensions('total'); // 2.x
         foreach ($extensions as $extension) {
-            
+
             //if this result is activated
             if($this->config->get($extension['code'] . '_status')){
                 $amount = 0;
@@ -148,8 +165,8 @@ class SveaCommon extends Controller {
 
                 $svea_tax[$extension['code']] = $amount;
             }
-        }        
-        
+        }
+
         foreach ($total_data as $key => $value) {
             if (isset($svea_tax[$value['code']])) {
                 if ($svea_tax[$value['code']]) {
@@ -167,7 +184,7 @@ class SveaCommon extends Controller {
         $tax_sort_order = $this->config->get('tax_sort_order');
         foreach ($total_data as $key => $value) {
             if( $total_data[$key]['sort_order'] > $tax_sort_order ) {
-                $total_data[$key]['tax_rate'] = 0; 
+                $total_data[$key]['tax_rate'] = 0;
             }
         }
 
@@ -181,6 +198,6 @@ class SveaCommon extends Controller {
         }
         return $total_data;
     }
-    
+
 }
 ?>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
 <id>SveaWebPay Product Price</id>
-<version>2.7.1</version>
+<version>2.7.2</version>
 <vqmver>1.0.8</vqmver>
 <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
     <file name="admin/model/sale/order.php">
@@ -10,7 +10,7 @@
             <search position="after"><![CDATA[ public function editOrder($order_id, $data) { ]]></search>
             <add><![CDATA[
 
-  if($this->request->server['REQUEST_METHOD'] == 'POST'){
+              if($this->request->server['REQUEST_METHOD'] == 'POST'){
                     //only do something if status is changed and payment is of svea type
                     if($this->request->post['payment_code'] == 'svea_invoice'
                         || $this->request->post['payment_code'] == 'svea_partpayment'
@@ -32,9 +32,10 @@
                                     ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
                         }
                         //get svea order id
-                        $svea_order_id_exists = strpos($this->request->post['comment'], 'Svea',0);
+                        $svea_order_id_exists = strpos($this->request->post['comment'], 'Svea order id',0);
                         if( $svea_order_id_exists !== false ){
                               preg_match_all('/\d+/', $this->request->post['comment'], $svea_order_id);
+
                             //Cancel
                             //if this action is cancel as configured in module,
                             //and it´s not directbank,
@@ -141,14 +142,15 @@
                             //and it is not PaymentPlan
                             //and if status wasn't already credit
                             } elseif ($this->config->get($this->request->post['payment_code'].'_refunded_status_id') == $this->request->post['order_status_id']
-                                && $order['order_status_id'] != $this->request->post['order_status_id']
-                                && $this->request->post['payment_code'] != 'svea_partpayment') {
+                                && $order['order_status_id'] != $this->request->post['order_status_id']) {
                                 $svea_query = WebPayAdmin::queryOrder($conf)
                                                 ->setOrderId($svea_order_id[0][0])
                                                 ->setCountryCode($order['payment_iso_code_2']);
                                 if($this->request->post['payment_code'] == 'svea_invoice'){
                                     $svea_query = $svea_query->queryInvoiceOrder();
-                                }  else if ($this->request->post['payment_code'] == 'svea_directbank') {
+                                } elseif ($this->request->post['payment_code'] == 'svea_partpayment') {
+                                     $svea_query = $svea_query->queryPaymentPlanOrder();
+                                }  elseif ($this->request->post['payment_code'] == 'svea_directbank') {
                                     $svea_query = $svea_query->queryDirectBankOrder();
                                 } else {
                                     $svea_query = $svea_query->queryCardOrder();
@@ -169,18 +171,31 @@
                                     }
                                     //get svea invoice id
                                     $invoiceId = array();
+                                    $contractNumber = array();
                                     $transactionId = array();
-                                    $svea_order_info = explode('|', $this->request->post['comment']);
-                                    foreach ($svea_order_info as $info) {
+                                    //get comment from order_history
+                                    $svea_order_history_comment = $this->db->query("SELECT comment FROM " . DB_PREFIX . "order_history WHERE order_id = " . (int)$this->request->get['order_id']);
+                                    if($svea_order_history_comment->num_rows < 1) {
+                                        $svea_order_info = explode('|', $this->request->post['comment']); //deprecated, because gets it from the editable comment field
+                                    }else {
+                                        $svea_order_info = $svea_order_history_comment->rows;
+                                    }
+                                    foreach ($svea_order_info as $comment) {
+                                        $info = $svea_order_history_comment->num_rows < 1 ? $comment : $comment['comment'];
+
                                         $svea_invoice_id_exists = strpos($info, 'Svea invoiceId',0);
+                                        $svea_contract_number_exists = strpos($info, 'Svea contractNumber',0);
                                         $svea_transaction_id_exists = strpos($info, 'Svea transactionId',0);
                                         if( $svea_invoice_id_exists !== false ){
                                             preg_match_all('/\d+/', $info, $invoiceId);
+                                        } elseif ($svea_contract_number_exists !== false) {
+                                             preg_match_all('/\d+/', $info, $contractNumber);
                                         }  elseif ($svea_transaction_id_exists !== false) {
                                             preg_match_all('/\d+/', $info, $transactionId);
                                         }
                                     }
-                                    if(sizeof($invoiceId) <= 0 && sizeof($transactionId) <= 0){
+
+                                    if(sizeof($invoiceId) <= 0 && sizeof($transactionId) <= 0 && sizeof($contractNumber) <= 0){
                                         $this->error['warning'] = 'Svea error: Order was not credited. Transaction or order id not found in comment field. Order must first be delivered/shipped.';
                                         $this->request->post['order_status_id'] = $order['order_status_id'];
 
@@ -196,7 +211,11 @@
                                                     ->setInvoiceDistributionType( $this->config->get($this->request->post['payment_code'].'_distribution_type') )
                                                      ->creditInvoiceOrderRows();
 
-                                        }  else if ($this->request->post['payment_code'] == 'svea_directbank') {
+                                        } elseif ($this->request->post['payment_code'] == 'svea_partpayment') {
+                                             $svea = $svea
+                                                    ->setContractNumber($contractNumber[0][0])
+                                                        ->creditPaymentPlanOrderRows();
+                                        } elseif ($this->request->post['payment_code'] == 'svea_directbank') {
                                              $svea = $svea
                                                     ->setOrderId($transactionId[0][0])
                                                         ->creditDirectBankOrderRows();
@@ -221,6 +240,10 @@
                                                 $history['comment'] = 'Order credited at Svea. Svea creditInvoiceId: ' . $svea->creditInvoiceId;
                                                 $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
                                                 $this->request->post['comment'] = $this->request->post['comment'] . ' | Order credited at Svea.';
+                                            } elseif (isset($svea->orderType) && $svea->orderType == 'PaymentPlan'){
+                                                $history['comment'] = 'Payment plan rows canelled at Svea. ';
+                                                $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
+                                                $this->request->post['comment'] = $this->request->post['comment'] . ' | Payment plan rows canelled at Svea. ';
                                             } else{
                                                 $history['comment'] = 'Order credited at Svea.';
                                                 $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $history);
@@ -242,7 +265,6 @@
                         }
                     }
                 }
-
 
        ]]></add>
         </operation>
