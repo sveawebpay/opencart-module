@@ -82,10 +82,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_partpayment');
-        $this->load->model('checkout/coupon');
         $this->load->model('account/address');
-
-        floatval(VERSION) >= 1.5 ? $this->load->model('checkout/voucher') : $this->load->model('checkout/extension');
 
         //Load SVEA includes
         include(DIR_APPLICATION . '../svea/Includes.php');
@@ -185,10 +182,10 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
                         if ($deliverObj->accepted == 1) {
                             $response = array("success" => true);
                             //update order status for delivered
+                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea contractNumber: ".$deliverObj->contractNumber."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
+
                             $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea contractNumber '.$deliverObj->contractNumber);
-                            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$this->session->data['order_id'] . "', order_status_id = '" . (int)$this->config->get('svea_partpayment_deliver_status_id') . "', notify = '" . 1 . "', comment = 'Order delivered. Svea contractNumber: " . $deliverObj->contractNumber . "', date_added = NOW()");
-                            //I not, send error codes
-                        } else {
+                         } else {
                             $response = array("error" => $this->responseCodes($deliverObj->resultcode, $deliverObj->errormessage));
                         }
                     //if auto deliver not set, send true to view

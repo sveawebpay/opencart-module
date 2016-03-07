@@ -62,7 +62,6 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
 
     public function redirectSvea(){
 
-        $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
         $this->load->model('localisation/currency');

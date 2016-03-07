@@ -125,6 +125,22 @@
                     </select>
                  </div>
             </div>
+               <div class="form-group">
+                    <label for="svea_partpayment_refunded_status_id" class="col-sm-3 control-label">
+                        <span data-toggle="tooltip" title="<?php echo $entry_status_refunded_text; ?>"><?php echo $entry_status_refunded; ?></span>
+                    </label>
+                     <div class="col-sm-9">
+                        <select name="svea_partpayment_refunded_status_id">
+                            <?php foreach ($order_statuses as $order_status) {
+                                if ($order_status['order_status_id'] == $svea_partpayment_refunded_status_id) { ?>
+                             <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                                 <?php } else { ?>
+                             <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                  <?php } ?>
+                             <?php } ?>
+                        </select>
+                     </div>
+                </div>
                 <!--shipping billing-->
                 <div class="form-group">
                     <label for="svea_partpayment_shipping_billing" class="col-sm-3 control-label">

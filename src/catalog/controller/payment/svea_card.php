@@ -33,7 +33,6 @@ class ControllerPaymentsveacard extends SveaCommon {
                                         ";
         $data['continue'] = 'index.php?route=payment/svea_card/redirectSvea';
 
-        $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
         $this->load->model('localisation/currency');
