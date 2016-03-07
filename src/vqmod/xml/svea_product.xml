@@ -21,13 +21,13 @@
                         $viewProduct = null;
                         $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
                         if($svea_show_paymentplan === '1' || $svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DE"){
-                            $currency_decimals = $_SESSION['currency'] == 'EUR' ? 1 : 0;
+                            $currency_decimals =  $this->currency->getCode() == 'EUR' ? 1 : 0;
                             $price_list = array();
                             $prices = array();
 
-                            $symbolRight = $this->currency->getSymbolRight($_SESSION['currency']);
-                            $symbolLeft = $this->currency->getSymbolLeft($_SESSION['currency']);
-                            $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price, $_SESSION['currency'],false,false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
+                            $symbolRight = $this->currency->getSymbolRight( $this->currency->getCode());
+                            $symbolLeft = $this->currency->getSymbolLeft( $this->currency->getCode());
+                            $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price,  $this->currency->getCode(),false,false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
 
                             //paymentplan
                             if($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "NL"){
@@ -71,7 +71,7 @@
                                 }
                             }
                             //invoice
-                            $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']), $_SESSION['currency'],false,false );
+                            $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']),  $this->currency->getCode(),false,false );
                             if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $currency_converted_price >= $lowest_to_pay){
 
                                 $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_invoice').'</h4>';

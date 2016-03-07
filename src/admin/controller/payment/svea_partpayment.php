@@ -34,6 +34,8 @@ class ControllerPaymentsveapartpayment extends Controller {
                 $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
                 $data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
                 $data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
+                $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
+                $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
 
 		$data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
 		$data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
@@ -169,10 +171,15 @@ class ControllerPaymentsveapartpayment extends Controller {
                     $data['svea_partpayment_canceled_status_id'] = $this->config->get('svea_partpayment_canceled_status_id');
                 }
                 if (isset($this->request->post['svea_partpayment_deliver_status_id'])) {
-			$data['svea_partpayment_deliver_status_id'] = $this->request->post['svea_partpayment_deliver_status_id'];
+                    $data['svea_partpayment_deliver_status_id'] = $this->request->post['svea_partpayment_deliver_status_id'];
 		} else {
-			$data['svea_partpayment_deliver_status_id'] = $this->config->get('svea_partpayment_deliver_status_id');
+                    $data['svea_partpayment_deliver_status_id'] = $this->config->get('svea_partpayment_deliver_status_id');
 		}
+                 if (isset($this->request->post['svea_invoice_refunded_status_id'])) {
+                    $data['svea_partpayment_refunded_status_id'] = $this->request->post['svea_partpayment_refunded_status_id'];
+                } else {
+                    $data['svea_partpayment_refunded_status_id'] = $this->config->get('svea_partpayment_refunded_status_id');
+                }
 
                 $data['header'] = $this->load->controller('common/header');
                 $data['column_left'] = $this->load->controller('common/column_left');
