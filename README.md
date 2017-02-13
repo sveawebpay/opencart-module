@@ -1,146 +1,109 @@
-# OpenCart - Svea payment module
+# Index <a name="index"></a>
 
-##Version 3.1.4
-* Supports OpenCart 2.0.0 through 2.1.0.2 (for later versions see [opencart2-2-module](https://github.com/sveawebpay/opencart2-2-module/))
+* [I. Information](#i-information)
+* [1. Installation](#i1)
+    * [1.1 General](#i1-1)
+    * [1.2 Checkout](#i1-2)
+    * [1.3 Payment modules](#i1-3)
+* [2. OpenCart configuration](#i2)
+    * [2.1 Currency](#i2-1)
+    * [2.2 Geo zones](#i2-2)
+    * [2.3 Tax rates](#i2-3)
+    * [2.4 Tax classes](#i2-4)
+    * [2.5 Additional requirements](#i2-5)
+* [3. Svea module configuration](#i3)
+    * [3.1 Svea invoice fee](#i3-1)
+    * [3.2 Checkout](#i3-2)
+    * [3.3 Svea Invoice](#i3-3)
+    * [3.4 Svea Payment plan](#i3-4)
+    * [3.5 Svea Card payment](#i3-5)
+    * [3.6 Svea Direct payment](#i3-6)
+* [4. Miscellaneous](#i4)
+    * [4.1 Administrating orders](#i4-1)
+    * [4.2 Troubleshooting and recommendations](#i4-2)
+    * [4.3 Product Price Widget](#i4-3)
+    * [4.4 Important information](#i4-4)
+
+# I. Information
+
+## OpenCart 2.2 - Svea checkout and payment modules
+
+### Version 4.0.0
+* Supports OpenCart 2.2.0 and higher (older versions can be accessed here [opencart-module](https://github.com/sveawebpay/opencart-module))
 * Requires PHP 5.3 or higher (namespace support)
-* Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
+* Features _Product Price Widget_ and admin functions requires [vQmod](https://github.com/vqmod) to be installed in your Opencart installation
+* Features Sveas new iFrame checkout page (currently only available for Sweden)
+* Features Svea Checkout with invoices, payment plans, card and direct bank payments that only works in Sweden currently
+* Features Payment modules for invoices, payment plans, card and direct bank payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany.
+* Features integrated admin functionality that corresponds with Sveas servers, current functions are delivering, confirming, canceling and crediting orders
 
-###Important! If you have an Opencart version older than 2.0.0, you need to go to _branches_ -> **Opencart_1.x** and download ZIP.
+This module is tested with a clean installation of [OpenCart 2.2](http://www.opencart.com/index.php?route=download/download) with [vQmod](https://github.com/vqmod) and it uses the latest Svea [php-integration](https://github.com/sveawebpay/php-integration) package.
 
-This module supports Svea invoice and payment plan payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany, as well as creditcard and direct bank payments from all countries.
+If you are experiencing technical issues with this module, or if you have a feature suggestion, please submit an issue on the GitHub issue list.
 
-The module has been tested with OpenCart and any pre-installed checkout, coupon, voucher and shipping modules, including the Svea invoice fee module. The module has been updated to make use of the latest payment systems at Svea, and builds upon the included Svea php integration package.
+For release history, see [**github release tags**](https://github.com/sveawebpay/opencart2-2-module/releases)
 
-**New!** The module integrates the Opencart admin functions with svea admin. Functions such as deliver, confirm, cancel and credit orders will execute corresponding action in svea admin.
+# 1. Installation <a name="i1"></a>
+Before installing, we recommend that you set up a test environment and make a backup of your existing site, database and settings.
 
-**NOTE**: If you are upgrading from the previous version 1.x of this module, please contact Svea support before installing the module, your account settings may require updating.
+The following examples assumes that you have already downloaded and installed OpenCart, if you are upgrading from a previous version of the module disable the module from the OpenCart admin before installing.
 
-As always, we strongly recommend that you have a test environment set up, and make a backup of your existing site, database and settings before upgrading.
+## 1.1 General <a name="i1-1"></a>
+* Download the latest version of the module from repository
+* Extract the contents of the folder "src/" into your OpenCart root directory, the folders _admin_, _catalog_, _svea_ should merge with the existing folders
+* If you are going to use Svea Checkout see [1.2 Checkout](#i1-2) otherwise follow [1.3 Payment modules](#i1-3)
 
-If you experience technical issues with this module, or if you have feature suggestions, please submit an issue on the Github issue list.
+## 1.2 Checkout <a name="i1-2"></a>
+* Login to the admin page
+* Navigate to the Extensions/Payments page and find Svea Checkout
+* Install Svea Checkout
+![Svea Checkout Payments](docs/image/CheckoutPayments.png "Svea Checkout Payments")
+* Navigate to the Extensions/Modules page and find Svea Checkout
+* Install Svea Checkout
+![Svea Checkout Modules](docs/image/CheckoutModules.png "Svea Checkout Modules")
+* Proceed to [2. OpenCart configuration](#i2)
 
-For release history, see [**github release tags**](https://github.com/sveawebpay/opencart-module/releases)
+## 1.3 Payment modules <a name="i1-3"></a>
+* Login to the admin page
+* Navigate to the Extensions/Payments page
+* Install all the modules that you are going to use
+![Svea payment modules] (docs/image/ModulesPayments.png "Svea payment modules")
+* Proceed to [2. OpenCart configuration](#i2)
 
-#Installation instructions
-If you are upgrading from a previous version of the Svea module follow these steps:
-* Uninstall the old module.
-* FTP all the files in the src folder to the root of your directory. The folders _admin_, _catalog_, _svea_ should merge with the existing folders with the same name.
-If you have vqmod installed, the vqmod folder shall merge with that.
-* Install the module from Opencart admin
-* Configure and save.
+# 2. OpenCart configuration <a name="i2"></a>
 
-##Basic installation example using the Svea Invoice payment method
+These steps contain general setup information regarding OpenCart, if you already have settings for currencies, geo zones, tax classes and tax rates you can proceed to section [2.5 Additional requirements](#i2-5).
 
-The following example assumes that you have already downloaded and installed
-OpenCart as described in the [OpenCart documentation](http://docs.opencart.com/display/opencart/Installation#Installation-InstallingOpenCart).
+## 2.1 Currency <a name="i2-1"></a>
+* Navigate to System/Localisation/Currencies
+* Click the plus sign in the top-right corner to add a new currency
+* Fill in the [**ISO-code**](https://en.wikipedia.org/wiki/ISO_4217) e.g. "SEK" for Swedish Krona
+* Fill out the rest of fields and click save in the top-right corner
+![Currency setup](docs/image/Currencies.png "Currency setup")
+* Add as many currencies as you want
+* Press refresh currency values in the top-right corner
 
-This guide covers how to install the SveaWebPay OpenCart module and various payment methods in your OpenCart shop, as well as the various localisation settings you need to make to
-ensure that the module works properly.
+## 2.2 Geo zones <a name="i2-2"></a>
+* Navigate to System/Localisation/Geo Zones
+* Click the plus sign in the top-right corner to add a new geo zone
+* Fill out the fields and add a country
+* By not selecting any zone in the table(like in the example below) you will select all zones within the chosen country
+* Save
+![Geo zones](docs/image/Geo zones.png "Geo zones")
 
-### Install the OpenCart SveaWebPay module files
+## 2.3 Tax rates <a name="i2-3"></a>
+* Navigate to System/Localisation/Taxes/Tax Rates
+* Click the plus sign in the top-right corner to add a new tax rate
+* Fill out the fields and select the geo zone you created in the previous step and save
+![Tax rates](docs/image/Tax rates.png "Tax rates")
 
-* Download or clone the contents of [this repository from github](https://github.com/sveawebpay/opencart-module), and unzip to a local folder.
-* If you are upgrading from a previous version of the Svea module, uninstall the old module.
-* Copy the contents of the src folder to your OpenCart root folder.
-* Make sure to merge the files and folders from the module with the ones in your OpenCart installation (no files should be overwritten).
+## 2.4 Tax classes <a name="i2-4"></a>
+* Navigate to System/Localisation/Taxes/Tax Classes
+* Click the plus sign in the top-right corner to add a new tax rate
+* Fill out the fields and add the tax rate you created in the previous step and save
+![Tax classes](docs/image/Tax classes.png "Tax classes")
 
-### Configure the payment module(s) in the OpenCart admin panel
-In this example we'll first configure the Svea invoice payment method, instructions for other payment methods follow below.
-
-![Svea payment modules] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Modules.PNG "Svea payment modules")
-
-#### Svea invoice configuration
-The various Svea payment modules are located under Extensions/Payments in the OpenCart administration interface.
-
-* Log in to your OpenCart admin panel.
-* Browse to _extensions -> payments_ where the various Svea payment methods should appear in the list.
-* Click the _install_ link of the payment method you want to install. For now, select install the Svea Invoice payment method.
-* Then select _edit_ next to the now installed payment method. You will now see a view with various payment method settings.
-* Set _geo zone_ and _sort order_ according to your preferences.
-* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
-* Set the fields _status_ and _testmode_ to _enabled_.
-* Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for invoice are Deliver, Credit and Cancel order.
-* _Shipping same as billing_ determines whether to use the svea billing address for both shipping and billing. It will ignore if customer tries to change the shipping address. Should be set to _yes_ if your contract with Svea does not tell otherwise.
-* __Auto deliver order_ will set the orderstatus to shipped when customer confirms purchase.
-* Show _Product_ _Price_ _Widget_: If set to true, the Svea Product Price Widget will be shown on product pages,
-displaying the minimum invoice amount to pay. Note: Only applicable if Svea buys the invoices, and for private customers.
-Only applies in Sweden, Norway, Finland and the Netherlands.
-
-Widget will be displayed if the product price equals or exceeds the amount given.
-If not set, the _Product_ _Price_ _Widget_ will be displayed regardless of product price.
-Please contact your Svea account manager if you have further questions.
-Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
-
-* Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing purposes, make sure to use the supplied test account credentials. Note that there are separate settings for each country in which you have an agreement with Svea to accept invoice payments, each country has its own unique client no and credentials.
-* Finally, remember to _save_ your settings.
-
-![Invoice payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Invoice.PNG "Invoice settings")
-
-#### Next we set up the Svea invoice fee (used by Svea Invoice payment method )
-The Svea invoice fee has its own module, which is located under Extensions/Order Totals in the OpenCart administration interface.
-
-* Browse to _extensions -> order totals_.
-* Locate _Svea invoice fee_ in the list, choose _install_ and then _edit_:
-* For each country which you accept invoice payments from, selected the corresponding tab an fill in the fields:
-* Set the _status_ field to _enabled_ to add the invoice fee to invoice orders from this country.
-* Set the _fee_ to the amount you want to charge. The fee is always specified in the store default Currency. It will be converted into the customer currency on order.
-* Set the corresponding _tax class_ which should apply to the Svea invoice fee. Note that you must specify a _tax class_ or the invoice fee will show up in the order total display, but it will not be included in the order total.
-* Finally, the _sort order_ field should be set to apply before taxes (i.e. to a lower value than Order Totals/Taxes).
-
-![Invoice fee additional settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/InvoiceFee.PNG "Invoice fee additional settings")
-
-See also "Localisation and additional OpenCart configuration requirements" below.
-
-### Other payment methods
-For the other Svea payment methods (payment plan, card payment and direct bank payment), see below.
-
-#### Svea payment plan configuration
-
-* In OpenCart admin panel, browse to _extensions -> payments_.
-* Locate _Svea part payment_ in the list, choose _install_ and then _edit_:
-* Set _geo zone_ and _sort order_ according to your preferences.
-* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
-* Set _testmode_ and _status_ to enabled.
-* Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Payment Plan are Deliver, Credit and Cancel order.
-* _Shipping same as billing_ determines whether to use the svea billing address for both shipping and billing. It will ignore if customer tries to change the shipping address. Should be set to _yes_ if your contract with Svea does not tell otherwise.
-* Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing, make sure to use the supplied test account credentials.
-* The field _min. amount_ must match the corresponding setting in Svea admin.
-* Show _Product_ _Price_ _Widget_: If set to true, the Svea Product Price Widget will be shown on product pages,
-displaying the minimum payment plan amount to pay each month.
-Only applies in Sweden, Norway, Finland and Denmark.
-Please contact your Svea account manager if you have further questions. Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
-
- ##### Updating available payment plan campaigns
-NOTE: To avoid excessive traffic to Svea and speed up checkout delays, the modules stores the various payment plans/campaigns locally. This means that you have to manually update the module with the current campaigns after any changes has been made in Svea back office:
-
- * In OpenCart admin panel, browse to _extensions -> payments_.
- * Locate _Svea part payment_ in the list, and select _edit_.
- * The module will automatically update the available campaigns when you select to _save_ the payment method. There is no additional confirmation.
-
-#### Svea Card Payment
-Module supports one Svea merchant id per Opencart installation.
-* In OpenCart admin panel, browse to _extensions -> payments_.
-* Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
-* Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Card are Deliver, Credit and Cancel order.
-* Set _geo zone_ and _sort order_ according to your preferences.
-* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
-* Set _testmode_ and _status_ to enabled.
-* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
-
-![Card payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/CardPayment.PNG "Invoice fee additional settings")
-
-#### Svea Direct Payment
-Module supports one Svea merchant id per Opencart installation.
-* In OpenCart admin panel, browse to _extensions -> payments_.
-* Locate _Svea card payment_ in the list, choose _install_ and then _edit_:
-* Set _order status_ with the orderstatuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the orderstatus, an request will be sent to Svea. The actions available for Direct Bank is Credit order.
-* Set _geo zone_ and _sort order_ according to your preferences.
-* Add additional _Description in checkout_. Will be added right after the payment name in step 5 in checkout.
-* Set _testmode_ and _status_ to enabled.
-* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
-
-##Additional OpenCart configuration requirements
-
+## 2.5 Additional requirements <a name="i2-5"></a>
 ### Specifying prices
 * The product prices must be given in the default currency if multiple currencies are used.
 * Also, prices must be given excluding any taxes.
@@ -162,41 +125,103 @@ This is done by specifying a tax class containing two different tax rates, one f
 
 In the tax class settings, make sure that the Norwegian tax rate applies before the Swedish tax rate, i.e. has a higher priority than the Swedish tax rate, and that all tax rate selections are based on the customer Payment Address. The same procedure applies be used for products and i.e. the Svea invoice fee.
 
-### Svea order administration actions
+# 3. Svea module configuration <a name="i3"></a>
+After configuring the invoice fee in [3.1](#i3-1) go to either [3.2](#i3-2) Checkout or [3.3](#i3-3) Svea Invoice depending on which one you installed above.
 
-## Administrating orders
-* Set the _order statuses_ in module settings.
+## 3.1 Svea Invoice Fee <a name="i3-1"></a>
+* Navigate to Extensions/Order Totals in your OpenCart admin
+* Find _Svea Invoice Fee_ in the list and install it
+* For each country which you will accept invoice payments from, select the corresponding tab and fill all the fields
+* Set the _status_ field to _enabled_
+* Set the _fee_ for each country that you are going to accept invoices from(the amount is excluding VAT)
+* Select the _tax class_ you created earlier in section [2.4](#i2-4)
+* Select a value for the _sort order_ e.g. 4 or 5, preferably a value lower than the sort order for taxes otherwise there will be no tax on the invoice fee
+![Svea invoice fee](docs/image/Svea invoice fee.png "Svea invoice fee")
+
+## 3.2 Checkout  <a name="i3-2"></a>
+* Navigate to Extensions/Modules and press edit on Svea Checkout
+* First select the Authorization tab and fill out your credentials that you received from Svea after signing an agreement with us
+![Checkout authorization](docs/image/Checkout authorization.png "Checkout authorization")
+* Go back to the General tab
+* Set _Status_ to _Enabled_
+* Set _Test mode_ to _Enabled_ as you will be needing to do tests before we will allow you to use our production environment
+* Set _Show default checkout option_ to _Enabled_
+* Set _Pending_ to _Pending_
+* Set _Failed_ to _Failed_
+* Set _Canceled/Annulled_ to _Canceled_
+* Set _Credited_ to _Credited_
+
+Congratulations! You have now configured all the required settings for the checkout and can now proceed with testing! You don't have to read anything else from section 3 as it's only if you're not using the checkout.
+![Checkout general](docs/image/Checkout authorization.png "Checkout general")
+
+## 3.3 Svea Invoice <a name="i3-3"></a>
+* Navigate to Extensions/Payments
+* Find Svea Invoice in the list and press Edit
+* Set the _geo zone_ and _sort order_ to your preferences
+* Set _Status_ to Enabled
+* Add a description if you want that for the payment method that's shown to the customer
+* Set the order statuses with the order statuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the order status, an request will be sent to Svea. The actions available for invoices are Deliver, Credit and Cancel order
+* Set _Shipping same as billing_ to _yes_ unless your contract with Svea says otherwise
+* Set _Auto deliver order_ to _Disabled_
+* Set Invoice distribution type to either _Post_ if you want the invoices to go by post or _Email_ if you wish for the invoices to get delivered by _Email_
+* Fill out the information for each country that you have a client number for
+* Set _test mode_ to _Enabled_ since you will need to do test purchases before you can use the production environment
+* Svea Invoice should now be properly configured
+
+![Svea Invoice](docs/image/SveaInvoice1.png "Svea Invoice")
+
+## 3.4 Svea Payment plan  <a name="i3-4"></a>
+* Navigate to Extensions/Payments
+* Find Svea payment plan and press Edit
+* Set the order statuses with the order statuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the order status, an request will be sent to Svea. The actions available for Payment Plan are Deliver, Credit and Cancel order
+* Set the _min. amount_ to the lowest value that's needed for a campaign to be shown(usually 500)
+* Set _test mode_ to _Enabled_ since you will need to do test purchases before you can use the production environment
+* Svea Part payment should now be properly configured
+
+![Svea Payment plan](docs/image/SveaPaymentplan.png "Svea Payment plan")
+
+## 3.5 Svea Card payment <a name="i3-5"></a>
+Our module supports one Svea merchant id per Opencart installation
+* Navigate to Extensions/Payments
+* Locate Svea card payment in the list, and then press Edit
+* Set _geo zone_ and _sort order_ according to your preferences
+* Set the order statuses with the order statuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the order status, an request will be sent to Svea. The actions available for Card are Deliver, Credit and Cancel order
+* Set _test mode_ and _status_ to enabled since you will need to do test purchases before you can use the production environment
+* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials
+
+![Svea Card payment](docs/image/SveaCardpayment.png "Svea Card payment")
+
+## 3.6 Svea Direct payment <a name="i3-6"></a>
+Our module supports one Svea merchant id per Opencart installation.
+* Navigate to Extensions/Payments
+* Locate Svea Direct payment, and then press Edit
+* Set _geo zone_ and _sort order_ according to your preferences
+* Set the order statuses with the order statuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the order status, an request will be sent to Svea. The actions available for Direct Bank is Credit order
+* Set _testmode_ and _status_ to enabled since you will need to do test purchases before you can use the production environment (only applies to Nordea, because there is no test environment for the other banks)
+* Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
+
+![Svea Direct payment](docs/image/SveaDirectpayment.png "Svea direct payment")
+
+# 4. Miscellaneous <a name="i4"></a>
+
+## 4.1 Administrating orders <a name="i4-1"></a>
+**Important!** The Svea order id information saved in the Comment field must not be changed for the action to work. You may add to the information, but not change or remove it.
+
 * Go to Sales -> Orders -> Edit order -> Totals tab
 * When you change the _Order Status_ to the same status set in module, the action will be sent to Svea admin aswell, meaning you do not have to log in to the Svea admin.
 * Save.
-
-Please note that orders created with earlier versions of the Module than 2.6.0 cannot be administrated from the Opencart order administration interface.
-**Important!** The Svea order id information saved in the Comment field must not be changed for the action to work. You may add to the information, but not change or remove it.
-
-The below actions only applies to orders created in Module version 2.6.0 or higher.
 
 Actions available:
 
 | Method        | Deliver order | Cancel order  |   Credit order    | Auto Deliver order  |
 |---------------|:-------------:|:-------------:|:-----------------:|:-------------------:|
 | Invoice       |   *           |   *           |   *               |   *                 |
-| Paymentplan   |   *           |   *           |                   |   *                 |
+| Payment plan  |   *           |   *           |                   |   *                 |
 | Card          |   *           |   *           |   *               |                     |
 | Direct bank   |               |               |   *               |                     |
 
-##Auto deliver option
-
-Set up to auto deliver the order. If not set this can be done from Sveas admin panel.
-
-* Browse to _extensions -> payments -> Svea payment method_ (applies only to the Invoice or Payment plan payment methods)
-* Set _auto deliver_ to _enabled_
-* Set the _order status_
-* If you have an agreement with Svea to deliver the invoice as email, you can also set the _distribution type -> Email_
-
-
-##Troubleshooting and recommendations
-
-Always check that you have set up your settings correctly before posting issues or contacting Svea support. Specifically, the following settings must all be in place for the payment module to work correctly:
+## 4.2 Troubleshooting and recommendations <a name="i4-2"></a>
+Always check that your settings are properly configured before posting issues or contacting our support, go through these steps first:
 
 ### Check your Svea customer credentials
 
@@ -212,7 +237,7 @@ Always check that you have set up your settings correctly before posting issues 
 ### Specific payment method problems FAQ
 
 #### The invoice fee shows doesn't seem to be included in the OpenCart order total, though it is present in the Svea invoice?
-Ensure that you have specified a valid tax class for the country in question in the svea invoice fee module.
+Ensure that you have specified a valid tax class for the country in question in the Svea invoice fee module.
 
 #### My card or direct payments don't go through after reinstalling my shop?
 Check that you don't attempt to reuse order numbers, they need to be unique. I.e. in the call to
@@ -221,7 +246,23 @@ Check that you don't attempt to reuse order numbers, they need to be unique. I.e
 
 the order number "33" can't have been used in a previous order.
 
-##Important info
+#### My payment plan method is not displaying any campaigns, what can I do?
+First make sure that you have a cart filled with items of a value that fits in one of the campaigns, if that doesn't solve it follow these steps:
+*Navigate to Extensions/Payments
+*Find Svea payment plan and press Edit
+*Scroll down to the bottom find the _Min. amount_ box
+Is the amount too high? In that case, lower it and press Save
+
+Pressing save will send a request to our servers which will update all your campaigns.
+
+## 4.3 Product Price Widget <a name="i4-3"></a>
+
+If you set "Show Product Price Widget" to yes in your module options a widget will be displaying the minimum invoice amount to pay on the product page. Note: Only applicable if Svea buys the invoices, and for private customers.
+Only applies in Sweden, Norway, Finland and the Netherlands.
+Note! Requires [vQmod](https://github.com/vqmod)
+
+## 4.4 Important information <a name="i4-4"></a>
+
 The request made from the card and direct payment modules to Sveas systems is made through a redirected form.
 The response of the payment is then returned to the module via POST or GET (selectable in the corresponding Svea admin interface).
 
@@ -230,9 +271,5 @@ Have in mind that a long response string sent via GET could get cut off in some 
 Our recommendation to solve this is to check the PHP configuration of the server and set it to accept at LEAST 1024 characters.
 
 ###When using POST response
-As our servers are using SSL certificates and when using POST to get the response from a payment the users browser propmts the user with a question whether to continue or not, if the receiving site does not have a certificate.
-Would the customer then click cancel, the process does not continue.  This does not occur if your server holds a certicifate. To solve this we recommend that you purchase a SSL certificate from your provider.
-
-We can recommend the following certificate providers:
-* InfraSec:  infrasec.se
-* VeriSign : verisign.com
+As our servers are using SSL-certificates and when using POST to get the response from a payment the users browser prompts the user with a question whether to continue or not, if the receiving site does not have a certificate.
+Would the customer then click cancel, the process does not continue.  This does not occur if your server holds a certificate. To solve this we recommend that you purchase a SSL-certificate from your provider.

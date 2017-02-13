@@ -1,5 +1,5 @@
 <?php
-class ModelPaymentsveadirectbank extends Model {
+class ModelPaymentSveaDirectBank extends Model {
     public function getMethod($address,$total) {
         $this->load->language('payment/svea_directbank');
         //$this->data['svea_username'] = $this->config->get('svea_username');

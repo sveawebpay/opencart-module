@@ -1,5 +1,5 @@
 <?php
-class ModelPaymentsveapartpayment extends Model {
+class ModelPaymentSveaPartPayment extends Model {
     public function getMethod($address,$total) {
         $this->load->language('payment/svea_partpayment');
         $countryCode = $address['iso_code_2'];

@@ -14,12 +14,12 @@ class ControllerTotalSveaFee extends Controller {
 
             // if fee enabled in any country, set it as enabled in the order_total listing
             $svea_fee_status = ($this->request->post['svea_fee_status_SE'] ||
-                                $this->request->post['svea_fee_status_NO'] ||
-                                $this->request->post['svea_fee_status_DK'] ||
-                                $this->request->post['svea_fee_status_FI'] ||
-                                $this->request->post['svea_fee_status_NL'] ||
-                                $this->request->post['svea_fee_status_DE'] )
-                                ? true : false;
+                $this->request->post['svea_fee_status_NO'] ||
+                $this->request->post['svea_fee_status_DK'] ||
+                $this->request->post['svea_fee_status_FI'] ||
+                $this->request->post['svea_fee_status_NL'] ||
+                $this->request->post['svea_fee_status_DE'] )
+                ? true : false;
             // stores config settings to db
             $this->model_setting_setting->editSetting('svea_fee', array_merge($this->request->post, array('svea_fee_status' => $svea_fee_status)));
             $this->session->data['success'] = $this->language->get('text_success');
@@ -94,6 +94,13 @@ class ControllerTotalSveaFee extends Controller {
 
         $data['credentials'] = $cred;
 
+        /*Sort order*/
+        if (isset($this->request->post['svea_fee_sort_order'])) {
+            $data['svea_fee_sort_order'] = $this->request->post['svea_fee_sort_order'];
+        } else {
+            $data['svea_fee_sort_order'] = $this->config->get('svea_fee_sort_order');
+        }
+
         // pass any virtuemart error to template
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -153,24 +160,24 @@ class ControllerTotalSveaFee extends Controller {
         }
     }
 
-     protected function getSveaVersion(){
-            $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
-            $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
-            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
-            $json = file_get_contents($url);
-            $data = json_decode($json);
+    protected function getSveaVersion(){
+        $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
+        $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
+        $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
+        $json = file_get_contents($url);
+        $data = json_decode($json);
 
-            if($data->module_version == $this->svea_version){
-                return "You have the latest ". $this->svea_version . " version.";
-            }else{
-             return $this->svea_version . '<br />
+        if($data->module_version == $this->svea_version){
+            return "You have the latest ". $this->svea_version . " version.";
+        }else{
+            return $this->svea_version . '<br />
                 There is a new version available.<br />
                 <a href="'.$docs_url.'" title="Go to release notes on github">View version details</a> or <br />
                 <a title="Download zip" href="'.$update_url.'"><img width="67" src="view/image/download.png"></a>';
 
-            }
-
         }
+
+    }
 
     //The link function not avaliable in 1.4.x, therefore we need to implement the older way of setting links
     private function getLink($link) {
