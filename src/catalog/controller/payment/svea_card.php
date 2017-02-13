@@ -1,5 +1,7 @@
 <?php
+
 include_once(dirname(__FILE__).'/svea_common.php');
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerPaymentsveacard extends SveaCommon {
     public function index() {
@@ -37,11 +39,10 @@ class ControllerPaymentsveacard extends SveaCommon {
         $this->load->model('payment/svea_card');
         $this->load->model('localisation/currency');
         $this->load->language('payment/svea_card');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
 
-        $svea = WebPay::createOrder($conf);
+        $svea = \Svea\WebPay\WebPay::createOrder($conf);
 
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -67,7 +68,7 @@ class ControllerPaymentsveacard extends SveaCommon {
         ;
         try {
             $form =  $form
-                ->usePaymentMethod(PaymentMethod::KORTCERT)
+                ->usePaymentMethod(\Svea\WebPay\Constant\PaymentMethod::SVEACARDPAY)
                     ->setCancelUrl($returnUrl)
                     ->setCallbackUrl($callbackUrl)
                     ->setReturnUrl($returnUrl)
@@ -108,13 +109,12 @@ class ControllerPaymentsveacard extends SveaCommon {
     public function responseSvea(){
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
-        include(DIR_APPLICATION.'../svea/Includes.php');
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
 
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
-        $resp = new SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
+        $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
@@ -146,10 +146,9 @@ class ControllerPaymentsveacard extends SveaCommon {
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_card');
         $this->load->language('payment/svea_card');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
-        $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
+        $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         $clean_clientOrderNumber = str_replace('annelitest', '',$clean_clientOrderNumber);//bugfix for gateway concatinating ".err" on number
@@ -171,7 +170,7 @@ class ControllerPaymentsveacard extends SveaCommon {
 
     private function renderFailure($rejection){
         $this->session->data['error'] = $this->responseCodes($rejection->resultcode, $rejection->errormessage);
-        $this->response->redirect($this->url->link('checkout/checkout', 'error=' . $this->responseCodes($rejection->resultcode, $rejection->errormessage),'SSL'));
+        $this->response->redirect($this->url->link('checkout/checkout/index', 'error=' . $this->responseCodes($rejection->resultcode, $rejection->errormessage),'SSL'));
 
     }
 

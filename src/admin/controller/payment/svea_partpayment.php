@@ -1,4 +1,7 @@
 <?php
+
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
+
 class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array();
         protected $svea_version = '3.1.4';
@@ -208,8 +211,6 @@ class ControllerPaymentsveapartpayment extends Controller {
      * Called whenever saving payment plan module settings, will update stored campaigns in table svea_params_table.
      */
     private function loadPaymentPlanParams(){
-        //Load SVEA includes
-        include(DIR_APPLICATION . '../svea/Includes.php');
         $countryCode = array("SE","NO","FI","DK","NL","DE");
         for($i=0;$i<sizeof($countryCode);$i++){
 
@@ -232,7 +233,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     $conf->config->set('svea_partpayment_password_' . $countryCode[$i], $password);
                     $conf->config->set('svea_partpayment_clientno_' . $countryCode[$i], $client_id);
 
-                    $svea_params = WebPay::getPaymentPlanParams($conf);
+                    $svea_params = \Svea\WebPay\WebPay::getPaymentPlanParams($conf);
 
                     try {
                         $svea_params = $svea_params->setCountryCode($countryCode[$i])

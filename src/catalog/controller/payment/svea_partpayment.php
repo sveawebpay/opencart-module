@@ -1,5 +1,7 @@
 <?php
+
 include_once(dirname(__FILE__).'/svea_common.php');
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerPaymentsveapartpayment extends SveaCommon {
 
@@ -84,8 +86,6 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         $this->load->model('payment/svea_partpayment');
         $this->load->model('account/address');
 
-        //Load SVEA includes
-        include(DIR_APPLICATION . '../svea/Includes.php');
         $response = array();
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -100,7 +100,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
 
         }
 
-        $svea = WebPay::createOrder($conf);
+        $svea = \Svea\WebPay\WebPay::createOrder($conf);
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
@@ -121,7 +121,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
 
         //Seperates the street from the housenumber according to testcases for NL and DE
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-            $addressArr = Svea\Helper::splitStreetAddress( $order['payment_address_1'] );
+            $addressArr = \Svea\WebPay\Helper\Helper::splitStreetAddress( $order['payment_address_1'] );
         }  else {
             $addressArr[1] =  $order['payment_address_1'];
             $addressArr[2] =  "";
@@ -129,7 +129,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
 
         $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
-        $item = Item::individualCustomer();
+        $item = \Svea\WebPay\BuildOrder\RowBuilders\Item::individualCustomer();
         $item = $item->setNationalIdNumber($ssn)
                 ->setEmail($order['email'])
                 ->setName($order['payment_firstname'], $order['payment_lastname'])
@@ -169,7 +169,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
                 //If Auto deliver order is set, DeliverOrder
 
                 if ($this->config->get('svea_partpayment_auto_deliver') === '1') {
-                    $deliverObj = WebPay::deliverOrder($conf);
+                    $deliverObj = \Svea\WebPay\WebPay::deliverOrder($conf);
                     //Product rows
                     try {
                         $deliverObj = $deliverObj
@@ -219,9 +219,6 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
     }
 
     private function getAddress($ssn) {
-
-        include(DIR_APPLICATION . '../svea/Includes.php');
-
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/order');
 
@@ -230,7 +227,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
         //Testmode
         $conf = $this->config->get('svea_partpayment_testmode_' . $countryCode) == "1" ? new OpencartSveaConfigTest($this->config,'svea_partpayment') : new OpencartSveaConfig($this->config,'svea_partpayment');
 
-        $svea = WebPay::getAddresses($conf)
+        $svea = \Svea\WebPay\WebPay::getAddresses($conf)
                 ->setOrderTypePaymentPlan()
                 ->setCountryCode($countryCode);
 
@@ -269,7 +266,6 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
      */
 
     private function getPaymentOptions() {
-        include(DIR_APPLICATION . '../svea/Includes.php');
         $this->load->language('payment/svea_partpayment');
         $this->load->model('payment/svea_partpayment');
         $this->load->model('checkout/order');
@@ -301,7 +297,7 @@ class ControllerPaymentsveapartpayment extends SveaCommon {
                 }
             }
             $formattedPrice = round($this->currency->format(($order['total']), '', false, false), 2);
-            $campaigns = WebPay::paymentPlanPricePerMonth($formattedPrice, $svea);
+            $campaigns = \Svea\WebPay\WebPay::paymentPlanPricePerMonth($formattedPrice, $svea);
             foreach ($campaigns->values as $cc)
                 $result[] = array("campaignCode" => $cc['campaignCode'],
                     "description" => $cc['description'],

@@ -1,5 +1,7 @@
 <?php
+
 include_once(dirname(__FILE__).'/svea_common.php');
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerPaymentsveainvoice extends SveaCommon {
 
@@ -87,9 +89,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         $this->load->model('payment/svea_invoice');
         $this->load->model('account/address');
 
-        //Load SVEA includes
-        include(DIR_APPLICATION.'../svea/Includes.php');
-
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
@@ -105,7 +104,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         }
 
-        $svea = WebPay::createOrder($conf);
+        $svea = \Svea\WebPay\WebPay::createOrder($conf);
 
         // Get the products in the cart
         $products = $this->cart->getProducts();
@@ -126,7 +125,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         //Seperates the street from the housenumber according to testcases for NL and DE
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-            $addressArr = Svea\Helper::splitStreetAddress( $order['payment_address_1'] );
+            $addressArr = \Svea\WebPay\Helper\Helper::splitStreetAddress( $order['payment_address_1'] );
         }  else {
             $addressArr[1] =  $order['payment_address_1'];
             $addressArr[2] =  "";
@@ -135,7 +134,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         if ($company == TRUE){  // company customer
 
-            $item = Item::companyCustomer();
+            $item = \Svea\WebPay\BuildOrder\RowBuilders\Item::companyCustomer();
 
             $item = $item->setEmail($order['email'])
                          ->setCompanyName($order['payment_company'])
@@ -166,7 +165,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
             $ssn = (isset($_GET['ssn'])) ? $_GET['ssn'] : 0;
 
-            $item = Item::individualCustomer();
+            $item = \Svea\WebPay\BuildOrder\RowBuilders\Item::individualCustomer();
             //send customer filled address to svea. Svea will use address from getAddress for the invoice.
             $item = $item
                 ->setNationalIdNumber($ssn)
@@ -211,7 +210,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
                 //If Auto deliver order is set, DeliverOrder
                 if($this->config->get('svea_invoice_auto_deliver') === '1') {
-                    $deliverObj = WebPay::deliverOrder($conf);
+                    $deliverObj = \Svea\WebPay\WebPay::deliverOrder($conf);
                     //Product rows
                     $deliverObj = $this->addOrderRowsToWebServiceOrder($deliverObj, $products,$currencyValue);
 
@@ -222,12 +221,11 @@ class ControllerPaymentsveainvoice extends SveaCommon {
                         if($addon['value'] >= 0){
                             $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
                             $deliverObj = $deliverObj
-                                ->addOrderRow(WebPayItem::orderRow()
+                                ->addOrderRow(\Svea\WebPay\WebPayItem::orderRow()
                                 ->setQuantity(1)
                                 ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
                                 ->setVatPercent(intval($addon['tax_rate']))
                                 ->setName(isset($addon['title']) ? $addon['title'] : "")
-                                ->setUnit($this->language->get('unit'))
                                 ->setArticleNumber($addon['code'])
                                 ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                             );
@@ -235,19 +233,18 @@ class ControllerPaymentsveainvoice extends SveaCommon {
                             //voucher(-)
                             } elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
                                 $deliverObj = $deliverObj
-                                    ->addDiscount(WebPayItem::fixedDiscount()
+                                    ->addDiscount(\Svea\WebPay\WebPayItem::fixedDiscount()
                                         ->setDiscountId($addon['code'])
                                         ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
                                         ->setVatPercent(0)//no vat when using a voucher
                                         ->setName(isset($addon['title']) ? $addon['title'] : "")
-                                        ->setUnit($this->language->get('unit'))
                                         ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                                 );
                             }
                             //discounts (-)
                             else {
-                                $taxRates = Svea\Helper::getTaxRatesInOrder($deliverObj);
-                                $discountRows = Svea\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
+                                $taxRates = \Svea\WebPay\Helper\Helper::getTaxRatesInOrder($deliverObj);
+                                $discountRows = \Svea\WebPay\Helper\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], $addon['text'], $taxRates );
                                 foreach($discountRows as $row) {
                                     $deliverObj = $deliverObj->addDiscount( $row );
                             }
@@ -311,9 +308,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
     }
 
     public function getAddress() {
-
-        include(DIR_APPLICATION.'../svea/Includes.php');
-
         $this->load->model('payment/svea_invoice');
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -322,7 +316,7 @@ class ControllerPaymentsveainvoice extends SveaCommon {
         $conf = ( $this->config->get('svea_invoice_testmode_'.$countryCode) == '1' )
                 ? new OpencartSveaConfigTest($this->config,'svea_invoice') : new OpencartSveaConfig($this->config,'svea_invoice');
 
-        $svea = WebPay::getAddresses($conf)
+        $svea = \Svea\WebPay\WebPay::getAddresses($conf)
             ->setOrderTypeInvoice()
             ->setCountryCode($countryCode);
 

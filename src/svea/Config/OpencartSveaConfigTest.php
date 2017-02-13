@@ -1,6 +1,6 @@
 <?php
+
 $root = realpath(dirname(__FILE__));
-require_once "$root/../Includes.php";
 
 /*
  * To change this template, choose Tools | Templates
@@ -12,7 +12,7 @@ require_once "$root/../Includes.php";
  *
  * @author anne-hal
  */
-class OpencartSveaConfigTest implements ConfigurationProvider{
+class OpencartSveaConfigTest implements \Svea\WebPay\Config\ConfigurationProvider {
 
     public $config;
     public $payment_method;
@@ -22,16 +22,20 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
         $this->payment_method = $payment_method;
     }
 
-        public function getEndPoint($type) {
-       $type = strtoupper($type);
+    public function getEndPoint($type) {
+        $type = strtoupper($type);
         if($type == "HOSTED"){
-            return Svea\SveaConfig::SWP_TEST_URL;;
+            return Svea\WebPay\Config\ConfigurationService::SWP_TEST_URL;
         } elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
-            return Svea\SveaConfig::SWP_TEST_WS_URL;
+            return Svea\WebPay\Config\ConfigurationService::SWP_TEST_WS_URL;
         } elseif($type == "HOSTED_ADMIN"){
-            return Svea\SveaConfig::SWP_TEST_HOSTED_ADMIN_URL;
+            return Svea\WebPay\Config\ConfigurationService::SWP_TEST_HOSTED_ADMIN_URL;
         } elseif ($type == "ADMIN") {
-            return Svea\SveaConfig::SWP_TEST_ADMIN_URL;
+            return Svea\WebPay\Config\ConfigurationService::SWP_TEST_ADMIN_URL;
+        } elseif ($type == 'CHECKOUT') {
+            return Svea\WebPay\Config\ConfigurationService::CHECKOUT_TEST_BASE_URL;
+        } elseif ($type == 'CHECKOUT_ADMIN') {
+            return Svea\WebPay\Config\ConfigurationService::CHECKOUT_ADMIN_TEST_BASE_URL;
         } else {
             throw new Exception('Invalid type. Accepted values: INVOICE, PAYMENTPLAN, HOSTED_ADMIN or HOSTED');
         }
@@ -51,7 +55,7 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
         $country = strtoupper($country);
         $lowertype = strtolower($type);
         if($lowertype == "paymentplan"){
-             return $this->config->get('svea_partpayment_password_' . $country);
+            return $this->config->get('svea_partpayment_password_' . $country);
         }
         return $this->config->get('svea_'.$lowertype.'_password_' . $country);
     }
@@ -68,17 +72,17 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
     public function getUsername($type, $country) {
         $country = strtoupper($country);
         $lowertype = strtolower($type);
-          if($lowertype == "paymentplan"){
+        if($lowertype == "paymentplan"){
             return $this->config->get('svea_partpayment_username_' . $country);
         }
         return $this->config->get('svea_'.$lowertype.'_username_' . $country);
 
     }
 
-    public function getclientNumber($type, $country) {
+    public function getClientNumber($type, $country) {
         $country = strtoupper($country);
         $lowertype = strtolower($type);
-          if($lowertype == "paymentplan"){
+        if($lowertype == "paymentplan"){
             return $this->config->get('svea_partpayment_clientno_' . $country);
         }
         return $this->config->get('svea_'.$lowertype.'_clientno_' . $country);
@@ -93,6 +97,8 @@ class OpencartSveaConfigTest implements ConfigurationProvider{
     public function getIntegrationVersion() {
         return $this->config->get($this->payment_method . '_version');
     }
-}
 
-?>
+    public function getCheckoutMerchantId(){}
+
+    public function getCheckoutSecret(){}
+}

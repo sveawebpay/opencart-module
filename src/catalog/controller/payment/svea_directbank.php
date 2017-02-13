@@ -1,5 +1,7 @@
 <?php
+
 include_once(dirname(__FILE__).'/svea_common.php');
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerPaymentsveadirectbank extends SveaCommon {
     public function index() {
@@ -32,12 +34,11 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
          **get my methods, present page
          */
         $this->load->language('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
         try {
-            $svea = WebPay::getPaymentMethods($conf);
+            $svea = \Svea\WebPay\WebPay::getPaymentMethods($conf);
             $data['sveaMethods'] = $svea
             ->setContryCode($order_info['payment_iso_code_2'])
             ->doRequest();
@@ -66,10 +67,9 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
         $this->load->model('payment/svea_directbank');
         $this->load->model('localisation/currency');
         $this->load->language('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
-        $svea = WebPay::createOrder($conf);
+        $svea = \Svea\WebPay\WebPay::createOrder($conf);
 
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -165,7 +165,6 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
     public function responseSvea(){
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -174,7 +173,7 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
         //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
 
-        $resp = new SveaResponse($_REQUEST, $countryCode, $conf);
+        $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf);
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
@@ -195,10 +194,9 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
         $this->load->language('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
-        $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
+        $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
          $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
             if ($response->accepted === 1){
@@ -220,7 +218,7 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
 
     private function renderFailure($rejection){
         $this->session->data['error'] = $this->responseCodes($rejection->resultcode, $rejection->errormessage);
-        $this->response->redirect($this->url->link('checkout/checkout', 'error=' . $this->responseCodes($rejection->resultcode, $rejection->errormessage),'SSL'));
+        $this->response->redirect($this->url->link('checkout/checkout/index', 'error=' . $this->responseCodes($rejection->resultcode, $rejection->errormessage),'SSL'));
 
     }
 

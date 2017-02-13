@@ -1,0 +1,240 @@
+body *:focus,
+body *:active {
+    outline: none !important;
+}
+
+input.form-control,
+select.form-control,
+textarea.form-control {
+    font-weight: 600;
+    box-shadow: none;
+    -webkit-transition: padding .1s ease-out;
+    transition: padding .1s ease-out;
+    background-color: #fff;
+    border: 1px solid #cbcbcb;
+    border-radius: 5px;
+    color: #595959;
+    position: relative;
+}
+
+textarea.form-control {
+    max-width: 100%;
+    height: 85px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+
+/* Cart - start */
+.table {
+    margin-bottom: 0;
+}
+
+.table-products {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.table-products > tbody > tr > td {
+    padding: 8px 0;
+    font-size: 13px;
+}
+
+.table-totals > tbody > tr > td {
+    padding: 2px 0;
+    font-size: 12px;
+    color: #a5a5a5;
+    font-weight: 700;
+    border: 0;
+}
+
+.table-totals tr:last-child td {
+    color: #0098b5;
+    font-size: 15px;
+}
+
+.table-products > tbody > tr > td.td-name {
+    width: auto;
+}
+
+.table-products > tbody > tr > td.td-quantity {
+    width: 30%;
+}
+
+.table-products > tbody > tr > td.td-total {
+    width: 30%;
+}
+
+.table-totals > tbody > tr > td.td-title {
+    width: auto;
+}
+
+.table-totals > tbody > tr > td.td-value {
+    width: 30%;
+}
+/* Cart - end */
+
+.margin-bottom {
+    margin-bottom: 15px;
+}
+
+.addon {
+    position: relative;
+}
+
+.addon .glyphicon {
+    position: absolute;
+    left: 0;
+    padding: 15px;
+    pointer-events: none;
+    color: #aaa;
+    z-index: 10;
+}
+
+.addon input {
+    padding-left: 35px;
+}
+
+.list-group li > a .glyphicon {
+    padding-right: 3px;
+    vertical-align: text-top;
+}
+
+/*.change-checkout-method {*/
+    /*color: #111;*/
+/*}*/
+
+/*.change-checkout-method a {*/
+    /*font-size: 14px;*/
+    /*color: #111;*/
+    /*text-decoration: none;*/
+/*}*/
+
+/*.change-checkout-method a:hover {*/
+    /*color: #111;*/
+    /*text-decoration: underline;*/
+/*}*/
+
+/*@media (max-width: 767px) {*/
+    /*.change-checkout-method .row .text-left h1 {*/
+        /*text-align: center !important;*/
+    /*}*/
+/*}*/
+
+.sco-main-content {
+    padding: 0;
+    background-color: #fafafa;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    color: #595959;
+}
+
+.sco-main-content .list-group-item a {
+    color: #0098b5;
+}
+
+.sco-left-column {
+    background-color: #fafafa;
+    padding: 15px 15px 15px 35px;
+}
+
+.sco-right-column {
+    background-color: #fff;
+    border-left: 1px solid #e5e5e5;
+    padding: 15px 20px;
+    min-height: 650px;
+    position: relative;
+}
+
+.sco-right-column .buttons {
+    position: absolute;
+    bottom: 0;
+    right: 30px;
+}
+
+@media (max-width: 767px) {
+    .sco-left-column,
+    .sco-right-column {
+        padding: 15px;
+    }
+
+    .sco-right-column {
+        padding-bottom: 30px;
+    }
+}
+
+.allow-classic-checkout {
+    overflow: hidden;
+    padding: 20px 15px;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.allow-classic-checkout p {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+}
+
+.allow-classic-checkout .glyphicon {
+    color: #0098b5;
+}
+
+@media (max-width: 767px) {
+    .allow-classic-checkout .glyphicon {
+        display: none;
+    }
+}
+
+#sco-email {
+    border-radius: 5px 5px 0 0;
+    border-bottom: 1px solid transparent;
+    z-index: 1;
+}
+
+#sco-postcode {
+    border-radius: 0 0 5px 5px;
+}
+
+#sco-shipping,
+#sco-email,
+#sco-postcode {
+    height: 44px;
+}
+
+#sco-details {
+    display: none;
+}
+
+#sco-coupon,
+#sco-voucher,
+#sco-comment {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#sco-coupon input.form-control:focus,
+#sco-voucher input.form-control:focus,
+#sco-comment textarea.form-control:focus {
+    border: 1px solid #0098b5;
+    box-shadow: none;
+}
+
+.sco-change-cart {
+    color: #0098b5;
+    font-size: 11px;
+}
+
+#sco-snippet-section p {
+    margin-bottom: 30px;
+}
+
+.sco-disclaimer {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 300;
+    color: #111;
+}
