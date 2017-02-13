@@ -1,6 +1,6 @@
 # OpenCart - Svea payment module
 
-##Version 2.7.2
+##Version 3.0.1
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
