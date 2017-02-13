@@ -1,7 +1,0 @@
-Updated integrationLib 2016-02-11 to:
-
-sveawebpay/php-integration
-
-release/2.3.0
-
-Remember to activate integration functions in Config/ConfigurationProvider.php on update

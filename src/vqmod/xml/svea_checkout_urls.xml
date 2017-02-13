@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>SveaWebPay Checkout URLs</id>
+    <version>3.1.4</version>
+    <vqmver>2.5.0</vqmver>
+    <author>Savo Garovic / Svea Ekonomi AB, SveaWebPay</author>
+    <file path="system/library/url.php">
+        <operation>
+            <search><![CDATA[public function link($route, $args = '', $secure = false) {]]></search>
+            <add position="after"><![CDATA[if ($route=='checkout/checkout') { $route = 'extension/svea/checkout'; }]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/checkout.php">
+        <operation>
+            <search><![CDATA['href' => $this->url->link('checkout/checkout', '', true)]]></search>
+            <add position="replace"><![CDATA['href' => $this->url->link('checkout/checkout/index', '', true)]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/confirm.php">
+        <operation>
+            <search><![CDATA[$redirect = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace"><![CDATA[$redirect = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/guest_shipping.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/guest.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/login.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/payment_address.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/payment_method.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/register.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/shipping_address.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/checkout/shipping_method.php">
+        <operation>
+            <search><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add position="replace">
+                <![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+</modification>
