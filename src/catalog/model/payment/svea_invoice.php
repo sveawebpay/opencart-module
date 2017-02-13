@@ -21,9 +21,9 @@ class ModelPaymentsveainvoice extends Model {
 
         if ($status) {
             $method_data = array(
+                                'id'         => 'svea_invoice',
                                 'code'         => 'svea_invoice',
                                 'title'      => $this->language->get('text_title') . ' ' . $this->config->get('svea_invoice_payment_description'),
-                                'terms'      => '',
                                 'sort_order' => $this->config->get('svea_invoice_sort_order')
                                 );
         }
@@ -62,7 +62,7 @@ class ModelPaymentsveainvoice extends Model {
              return $this->config->get('svea_invoice_product_price');
         }
         /**
-         * Deprecated. Not in use.
+         * Deprecated. Not in use. config param doesn't exist.
          * @return type
          */
         public function getProductPriceModeMin(){

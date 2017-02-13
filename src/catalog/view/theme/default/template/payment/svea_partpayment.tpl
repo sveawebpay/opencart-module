@@ -1,13 +1,13 @@
-<div class="container-fluid">
+<div class="content">
     <div><?php echo $logo; ?></div>
 
-    <div class="container-fluid" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
-        <?php echo $text_payment_options; ?>:<br />
+    <div class="content" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
+        <?php echo $this->language->get('text_payment_options') ?>:<br />
         <?php
 
         if( empty( $paymentOptions ) )     // catch error fetching payment plans
         {
-            printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", $response_no_campaign_on_amount);
+            printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>", $this->language->get('response_no_campaign_on_amount'));
         }
         else    // present payment plans
         {
@@ -15,14 +15,12 @@
                 printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>",  $paymentOptions['error'] );
             }else{
                 $flag = true;
-                printf("<div class=\"form-group\">");
                 foreach( $paymentOptions as $p )
                 {
-                    printf(   "<div class=\"col-sm-9\"><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>",
+                    printf(   "<div><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>",
                                     $p['campaignCode'], $flag ? 'checked' : '', $p['description'].': '.$p['price_per_month'] );
                     $flag = false;
                 }
-                 printf("</div>");
             }
 
 
@@ -37,7 +35,7 @@
         <?php // get SSN
         if( $countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI")
         { ?>
-             <?php echo $text_ssn; ?>:
+            <?php echo $this->language->get('text_ssn') ?>:
             <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span><br /><br />
         <?php
         }
@@ -81,11 +79,12 @@
 
             if($countryCode == "NL" || $countryCode == "DE"){ ?>
                 <span id="sveaBirthDateCont">
-                    <?php echo $text_birthdate; ?>:
+                    <?php echo $this->language->get('text_birthdate'); ?>:
                     <?php echo "$birthDay $birthMonth $birthYear"; ?><br /><br />
                     <?php   if($countryCode == "NL"){
-                    echo $text_initials; ?>:
-                    <input type="text" id="initials" name="initials" />
+                            echo $this->language->get('text_initials');
+                            ?>:
+                        <input type="text" id="initials" name="initials" />
                     <?php } ?>
                </span>
             <?php
@@ -102,8 +101,8 @@
 if( $countryCode == "SE" || $countryCode == "DK" )
 { ?>
     <div class="buttons">
-        <div class="pull-right">
-            <a id="getPlan" class="btn btn-primary"><span><?php echo $text_get_address; ?></span></a>
+        <div class="right">
+            <a id="getPlan" class="button"><span><?php echo $this->language->get('text_get_address') ?></span></a>
         </div>
     </div>
 
@@ -114,9 +113,9 @@ if( $countryCode == "SE" || $countryCode == "DK" )
 } ?>
 
 <div class="content" id="svea_partpayment_tr" style="clear:both; margin-top:15px;display:inline-block;">
-    <?php echo $text_invoice_address;
-        if($svea_partpayment_shipping_billing == '1'){
-             echo ' / '.$text_shipping_address;
+    <?php echo $this->language->get('text_invoice_address');
+        if($this->config->get('svea_partpayment_shipping_billing') == '1'){
+             echo ' / '.$this->language->get('text_shipping_address');
         }
     ?>:<br />
     <div id="svea_partpayment_address"></div>
@@ -125,8 +124,8 @@ if( $countryCode == "SE" || $countryCode == "DK" )
 <br />
 
 <div class="buttons">
-    <div class="pull-right">
-        <a id="checkout"  class="btn btn-primary"><span><?php echo $button_confirm; ?></span></a>
+    <div class="right">
+        <a id="checkout"  class="button"><span><?php echo $button_confirm; ?></span></a>
    </div>
 </div>
 
@@ -176,7 +175,6 @@ $('a#checkout').click(function(event) {
                 },
             url: 'index.php?route=payment/svea_partpayment/confirm',
             success: function(data) {
-
 
                 if(data.success){
                     location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect

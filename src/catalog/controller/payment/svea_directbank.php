@@ -1,22 +1,22 @@
 <?php
 include_once(dirname(__FILE__).'/svea_common.php');
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerPaymentsveadirectbank extends SveaCommon {
     public function index() {
         $this->load->model('checkout/order');
-    	//$data['button_confirm'] = $this->language->get('button_confirm');
-    	$data['button_continue'] = $this->language->get('button_continue');
-        $data['button_back'] = $this->language->get('button_back');
+    	//$this->data['button_confirm'] = $this->language->get('button_confirm');
+    	$this->data['button_continue'] = $this->language->get('button_continue');
+        $this->data['button_back'] = $this->language->get('button_back');
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
-                $data['back'] = 'index.php?route=checkout/payment';
+                $this->data['back'] = 'index.php?route=checkout/payment';
         } else {
-                $data['back'] = 'index.php?rout=checkout/guest_step_2';
+                $this->data['back'] = 'index.php?rout=checkout/guest_step_2';
         }
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $data['countryCode'] = $order_info['payment_iso_code_2'];
+        $this->data['countryCode'] = $order_info['payment_iso_code_2'];
         $this->id = 'payment';
-
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_directbank.tpl')) {
                 $this->template = $this->config->get('config_template') . '/template/payment/svea_directbank.tpl';
@@ -24,21 +24,19 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
                 $this->template = 'default/template/payment/svea_directbank.tpl';
         }
 
-        $data['logo'] = "";
-        $data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
-
+        $this->data['logo'] = "";
+        $this->data['svea_banks_base'] = "admin/view/image/payment/svea_direct/";
 
         /*
          **get my methods, present page
          */
         $this->load->language('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
         try {
-            $svea = WebPay::getPaymentMethods($conf);
-            $data['sveaMethods'] = $svea
+            $svea = \Svea\WebPay\WebPay::getPaymentMethods($conf);
+            $this->data['sveaMethods'] = $svea
             ->setContryCode($order_info['payment_iso_code_2'])
             ->doRequest();
         } catch (Exception $e) {
@@ -49,27 +47,22 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
         }
 
 
-        $data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
+        $this->data['continue'] = 'index.php?route=payment/svea_directbank/redirectSvea';
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_directbank.tpl')) {
-                return $this->load->view($this->config->get('config_template') . '/template/payment/svea_directbank.tpl', $data);
-        } else {
-                return $this->load->view('default/template/payment/svea_directbank.tpl', $data);
+        $this->render();
+
         }
 
+        public function redirectSvea(){
 
-    }
-
-    public function redirectSvea(){
-
+        $this->load->model('checkout/coupon');
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
         $this->load->model('localisation/currency');
         $this->load->language('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
-        $svea = WebPay::createOrder($conf);
+        $svea = \Svea\WebPay\WebPay::createOrder($conf);
 
         //Get order information
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -115,6 +108,7 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
             $form = $svea
                 ->setCountryCode($order['payment_iso_code_2'])
                 ->setCurrency($this->session->data['currency'])
+
                 ->setClientOrderNumber($this->session->data['order_id'])
                 ->setOrderDate(date('c'))
                 ->usePaymentMethod($_POST['svea_directbank_payment_method'])
@@ -131,18 +125,21 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
             exit();
         }
 
+        // 2.x below
         //Save order but Void it while order status is unsure
-        $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], 0,'Sent to Svea gateway.');
+        //$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], 0,'Sent to Svea gateway.'); // 2.x
 
-         echo '<html><head>
-                <script type="text/javascript">
-                    function doPost(){
-                        document.forms[0].submit();
+        echo '<html>
+                <head>
+                    <script type="text/javascript">
+                        function doPost(){
+                            document.forms[0].submit();
                         }
-                </script>
+                    </script>
                 </head>
                 <body onload="doPost()">
-                ';
+                '
+        ;
 
         //print form with hidden buttons
         $fields = $form->htmlFormFieldsAsArray;
@@ -165,7 +162,6 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
     public function responseSvea(){
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
@@ -173,18 +169,20 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
 
         //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
-
-        $resp = new SveaResponse($_REQUEST, $countryCode, $conf);
+        $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf);
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
-        if($response->resultcode !== '0'){
-        if ($response->accepted === 1){
-                $this->response->redirect($this->url->link('checkout/success', '','SSL'));
+          $this->session->data['order_id'] = $clean_clientOrderNumber;
+        if($resp->response->resultcode !== '0'){
+            if ($resp->response->accepted === 1){
+                header("Location: index.php?route=checkout/success");
+                flush();
             }else{
-                $this->renderFailure($response);
+                $this->session->data['error_warning'] = $this->responseCodes($resp->response->resultcode, $resp->response->errormessage);
+                $this->renderFailure($resp->response);
             }
         }else{
-            $this->renderFailure($response);
+            $this->renderFailure($resp->response);
         }
     }
 
@@ -195,33 +193,46 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
         $this->load->model('checkout/order');
         $this->load->model('payment/svea_directbank');
         $this->load->language('payment/svea_directbank');
-        include(DIR_APPLICATION.'../svea/Includes.php');
 
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
-        $resp = new SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
+        $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
-         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
-            if ($response->accepted === 1){
-                 //sets orderhistory
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('svea_directbank_order_status_id'),'Svea transactionId: '.$response->transactionId,true);
-                //adds comments to edit order comment field to use when edit order
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$response->clientOrderNumber . "'");
+        $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
+           if ($response->accepted === 1){
+                $this->model_checkout_order->confirm($clean_clientOrderNumber, $this->config->get('svea_card_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . $clean_clientOrderNumber . "'");
+                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . $clean_clientOrderNumber. "', order_status_id = '" . (int)$this->config->get('svea_card_order_status_id') . "', notify = '" . 1 . "', comment = 'Payment accepted. Svea transactionId: " . $response->transactionId . "', date_added = NOW()");
 
-            }else{
-                $error = $this->responseCodes($response->resultcode, $response->errormessage);
-//                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE); //status 10 equals failed
-                  $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,$error,FALSE);//void it. Won't show upp in order history, but won't cause trouble
-                //adds comments to edit order comment field to use when edit order
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
             }
     }
 
 
 
     private function renderFailure($rejection){
-        $this->session->data['error'] = $this->responseCodes($rejection->resultcode, $rejection->errormessage);
-        $this->response->redirect($this->url->link('checkout/checkout', 'error=' . $this->responseCodes($rejection->resultcode, $rejection->errormessage),'SSL'));
+        $this->data['continue'] = 'index.php?route=checkout/cart';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/payment/svea_hostedg_failure.tpl';
+		} else {
+			$this->template = 'default/template/payment/svea_hostedg_failure.tpl';
+		}
 
+
+		$this->children = array(
+			'common/column_right',
+			'common/footer',
+			'common/column_left',
+			'common/header'
+		);
+
+        $this->data['text_message'] = "<br />".  $this->responseCodes($rejection->resultcode, $rejection->errormessage)."<br /><br /><br />";
+        $this->data['heading_title'] = $this->language->get('error_heading');
+        $this->data['footer'] = "";
+
+        $this->data['button_continue'] = $this->language->get('button_continue');
+		$this->data['button_back'] = $this->language->get('button_back');
+
+        $this->data['continue'] = 'index.php?route=checkout/cart';
+        $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
 
       private function responseCodes($err,$msg = "") {

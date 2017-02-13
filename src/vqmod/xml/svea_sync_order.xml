@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>SveaWebPay Checkout Sync Order</id>
+    <version>3.1.4</version>
+    <vqmver>2.5.0</vqmver>
+    <author>Savo Garovic / Svea Ekonomi AB, SveaWebPay</author>
+    <file path="admin/view/template/sale/order_form.tpl">
+        <operation>
+            <search position="before"><![CDATA[$('input[name=\'product\']').autocomplete({]]></search>
+            <add><![CDATA[
+                <?php if (isset($payment_code) && $payment_code === 'sco') { ?>
+                    $( document ).ready(function() {
+                        var orderId = <?php echo $order_id; ?>;
+
+                        if (orderId) {
+                            $.ajax({
+                                type: 'POST',
+                                url: '<?php echo $store_url; ?>index.php?route=svea/sync_order&token=' + getURLVar('token'),
+                                data: {
+                                    orderId: orderId
+                                },
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response['success']) {
+                                        var status_id = response['order_status_id'];
+                                        $('[name="order_status_id"]').val(status_id);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                <?php } ?>
+                ]]>
+            </add>
+        </operation>
+    </file>
+</modification>

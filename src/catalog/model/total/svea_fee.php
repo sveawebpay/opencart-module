@@ -20,15 +20,24 @@ class ModelTotalSveafee extends Model {
                 $this->load->model('localisation/country');
                // $country_info = $this->model_localisation_country->getCountry($this->session->data['payment_country_id']);
                 $country = '';
-                $address = '';
-                if(isset($this->session->data['payment_address']['address_id'])) {
-                   $this->load->model('account/address');
-			$address = $this->model_account_address->getAddress($this->session->data['payment_address']['address_id']);
-                } elseif (isset($this->session->data['payment_address'])) {
-			$address = $this->session->data['payment_address'];
-		}
-                if (is_array($address) && !empty($address)) {
-                    $country = $address['iso_code_2'];
+                $paymentAddress = array();
+                if($this->customer->isLogged() && isset($this->session->data['payment_address_id'])) {
+                    $this->load->model('account/address');
+                    $paymentAddress
+                        = $this->model_account_address->getAddress(
+                            $this->session->data['payment_address_id']
+                        );
+
+                } elseif (isset($this->session->data['guest'])) {
+                      if (isset($this->session->data['guest']['payment'])
+                            && !empty($this->session->data['guest']['payment'])
+                        ) {
+                            $paymentAddress = $this->session->data['guest']['payment'];
+                        }
+
+                }
+                if (is_array($paymentAddress) && !empty($paymentAddress)) {
+                    $country = $paymentAddress['iso_code_2'];
                 } else {
                     return;
                 }
@@ -43,7 +52,9 @@ class ModelTotalSveafee extends Model {
                 if ( $svea_fee_status == false) {
                     return;
                 }
+
             $this->load->language('total/svea_fee');
+
             // add our svea_fee total to the rest of the totals
             $total_data[] = array(
                 'code' => 'svea_fee',
@@ -56,6 +67,8 @@ class ModelTotalSveafee extends Model {
             // calculate tax, add tax and fee to globals total, taxes
             if (isset($svea_fee_tax_class_id)) {
 
+                if (floatval(VERSION) >= 1.5)
+                {
                     $tax_rates = $this->tax->getRates($svea_fee_fee, $svea_fee_tax_class_id);
 
                     foreach ($tax_rates as $tax_rate) {
@@ -65,8 +78,24 @@ class ModelTotalSveafee extends Model {
                             $taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
                         }
                     }
-                    $total += $svea_fee_fee;
 
+                    $total += $svea_fee_fee;
+                }
+                else // OpenCart <1.5
+                {
+                    $tax_rates = $this->tax->getRate($svea_fee_tax_class_id);
+
+                    $fee = $svea_fee_fee;
+                    $tax = (($tax_rates / 100) * $fee );
+
+                    if (!isset($taxes[$svea_fee_tax_class_id])) {
+                        $taxes[$svea_fee_tax_class_id] = $tax;
+                    } else {
+                        $taxes[$svea_fee_tax_class_id] += $tax;
+                    }
+
+                    $total += $fee + $tax;
+                }
             }
         }
     }

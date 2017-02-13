@@ -15,7 +15,6 @@ $_['text_initials']           = 'Initialer';
 $_['text_product_invoice'] 		= 'Lägsta belopp att betala';
 $_['text_customerreference']	= 'Er referens';
 
-
 //Error responses
 $_['response_20000'] = "Ordern är stängd.";
 $_['response_20001'] = "Ordern är nekad.";

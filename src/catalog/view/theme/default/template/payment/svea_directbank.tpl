@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="buttons">
         <form id="sveaForm" action="<?php echo $continue; ?>" method="post">
             <div><p><?php echo $logo; ?></p></div>
             <table class="radio">
@@ -6,28 +6,30 @@
             $i = 0;
             foreach ($sveaMethods as $sveaM){
                 if(substr($sveaM, 0, 2) == "DB"){
-                    echo ' <div class="form-group">';
+                    echo ' <tr class="highlight">';
                     $checked = $i == 0 ? "checked" : "";
 
                     echo '
-
-                                <div class="col-sm-9">
-                                 <input '.$checked. ' id="svea_'.$sveaM.'" type="radio" value="'.$sveaM.'" name="svea_directbank_payment_method">
-                                 <img src="'.$svea_banks_base.$sveaM.'.png" >
-
+                                <td>
+                                    <input '.$checked. ' id="svea_'.$sveaM.'" type="radio" value="'.$sveaM.'" name="svea_directbank_payment_method">
+                                </td>
+                                <td><img src="'.$svea_banks_base.$sveaM.'.png" ></td>
                            '
                         ;
                         $i++;
-                    echo '</div>';
+                    echo '</tr>';
                 }
             }
 
             ?>
             </table>
 
-            <div class="buttons">
-                <div class="pull-right">
-                    <input id="checkout_choose" class="btn btn-primary" type='submit' name='submit' value='<?php echo $button_continue; ?>' />
+                <div class="right">
+            <?php if(floatval(VERSION) >= 1.5){?>
+                <input id="checkout_choose" class="button" type='submit' name='submit' value='<?php echo $button_continue; ?>' />
+                <?php }else{ ?>
+                    <a id="checkout_choose" class="button" onclick="$('#sveaForm').submit()"><span><?php echo $button_continue; ?></span></a>
+            <?php }?>
                 </div>
-            </div>
         </form>
+ 

@@ -1,0 +1,73 @@
+<modification>
+    <id>SCO</id>
+    <version>3.0</version>
+    <vqmver>2.1</vqmver>
+    <author>Svea / Savo Garovic</author>
+
+    <file name="system/library/url.php">
+        <operation>
+            <search position="after"><![CDATA[public function link($route, $args = '', $connection = 'NONSSL') {]]></search>
+            <add><![CDATA[if ($route=='checkout/checkout') { $route = 'svea/checkout'; }]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/checkout.php">
+        <operation>
+            <search position="replace"><![CDATA['href' => $this->url->link('checkout/checkout', '', true)]]></search>
+            <add><![CDATA['href' => $this->url->link('checkout/checkout/index', '', true)]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/confirm.php">
+        <operation>
+            <search position="replace"><![CDATA[$redirect = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$redirect = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/guest_shipping.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/guest.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/login.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/payment_address.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/payment_method.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/register.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/shipping_address.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+    <file name="catalog/controller/checkout/shipping_method.php">
+        <operation>
+            <search position="replace"><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout', '', true);]]></search>
+            <add><![CDATA[$json['redirect'] = $this->url->link('checkout/checkout/index', '', true);]]></add>
+        </operation>
+    </file>
+</modification>

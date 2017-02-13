@@ -1,8 +1,10 @@
 {
     "module_name": "Opencart",
-    "module_version": "3.1.4",
+    "module_version": "2.7.",
     "module_shop_version_support": [
-        "2.0.0"
+        "1.4.9",
+        " - ",
+        "1.5.6"
     ],
     "invoice_paymentplan": {
         "invoice": [
@@ -77,6 +79,9 @@
 			],
 			"close_order": [
 				"svea_admin","module_admin"
+			],
+			"credit_order": [
+				"module_admin"
 			]
 		},
 	"card": {

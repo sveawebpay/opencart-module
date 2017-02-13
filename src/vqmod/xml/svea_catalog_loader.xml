@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>Loadin Catalog Models</id>
+    <version>3.0</version>
+    <vqmver>2.1</vqmver>
+    <author>Savo Garovic / Svea</author>
+    <file name="system/engine/loader.php">
+        <operation info="Add function which I could access catalog models from admin">
+            <search position="after"><![CDATA[
+                 protected $registry;
+            ]]></search>
+            <add><![CDATA[
+                public function catalogModel($model) {
+                    $file = DIR_CATALOG . 'model/' . $model . '.php';
+                    $class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
+
+                    if (file_exists($file)) {
+                       include_once($file);
+
+                       $this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
+                    } else {
+                       trigger_error('Error: Could not load model ' . $model . '!');
+                       exit();
+                    }
+                }
+            ]]></add>
+        </operation>
+    </file>
+</modification>

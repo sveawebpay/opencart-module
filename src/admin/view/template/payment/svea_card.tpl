@@ -1,49 +1,36 @@
-<?php echo $header; ?><?php echo $column_left; ?>
-<div id="content">
-    <div class="page-header">
-      <div class="container-fluid">
-        <div class="pull-right">
-          <button type="submit" onclick="$('#form').submit();" form="form-sveacard" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
-          <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
-        <h1><?php echo $heading_title; ?></h1>
-        <ul class="breadcrumb">
-          <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-          <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-          <?php } ?>
-        </ul>
-      </div>
-    </div>
-    <div class="container-fluid">
-    <?php if ($error_warning) { ?>
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
-    <?php } ?>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-pencil"></i> </h3>
-        </div>
-    <div class="panel-body">
+<?php echo $header; ?>
+<?php if ($error_warning) { ?>
+<div class="warning"><?php echo $error_warning; ?></div>
+<?php } ?>
+<div class="box">
+    <div class="left"></div>
+    <div class="right"></div>
+  <div class="heading">
+    <h1 style=""><?php echo $heading_title; ?></h1>
+    <div class="buttons"><a onclick="$('#form').submit();" class="button"><span><?php echo $button_save; ?></span></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a></div>
+  </div>
+    <div class="content">
+    <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
         <!--general settings -->
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveacard" class="form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-3 control-label">Version</div>
-                <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
-                <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_card_version" id="svea_card_version" />
-            </div>
-              <div class="form-group">
-                    <label for="svea_card_testmode" class="col-sm-3 control-label"><?php echo $entry_testmode; ?></label>
-                    <div class="col-sm-9">
-                        <select name="svea_card_testmode">
-                            <option value="1" <?php if($svea_card_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
-                            <option value="0" <?php if($svea_card_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
-                        </select>
-                    </div>
-                </div>
-              <div class="form-group">
-                    <label for="svea_geo_zone_id" class="col-sm-3 control-label"><?php echo $entry_geo_zone; ?></label>
-                    <div class="col-sm-9">
-                         <select name="svea_geo_zone_id">
+        <table class="form">
+            <tbody>
+                <tr>
+                    <td>Version</td>
+                    <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
+                    <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_card_version" id="svea_card_version" />
+                </tr>
+                <tr>
+                    <td><?php echo $entry_testmode; ?>:</td>
+                    <td><select name="svea_card_testmode">
+                          <option value="1" <?php if($svea_card_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
+                          <option value="0" <?php if($svea_card_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
+                          </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?php echo $entry_geo_zone; ?></td>
+                    <td>
+                        <select name="svea_geo_zone_id">
                             <option value="0"><?php echo $text_all_zones; ?></option>
                             <?php foreach ($geo_zones as $geo_zone) { ?>
                                 <?php if ($geo_zone['geo_zone_id'] == $svea_card_geo_zone_id) { ?>
@@ -53,11 +40,11 @@
                                 <?php } ?>
                             <?php } ?>
                       </select>
-                    </div>
-                </div>
-              <div class="form-group">
-                    <label for="svea_card_status" class="col-sm-3 control-label"><?php echo $entry_status; ?></label>
-                    <div class="col-sm-9">
+                    </td>
+                </tr>
+                <tr>
+                    <td><?php echo $entry_status; ?></td>
+                    <td>
                         <select name="svea_card_status">
                             <?php if ($svea_card_status) { ?>
                             <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -66,146 +53,143 @@
                             <option value="1"><?php echo $text_enabled; ?></option>
                             <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
                             <?php } ?>
-                        </select>
-                    </div>
-                </div>
-              <div class="form-group">
-                    <label for="svea_card_sort_order" class="col-sm-3 control-label"><?php echo $entry_sort_order; ?></label>
-                    <div class="col-sm-9">
-                       <input type="text" name="svea_card_sort_order" value="<?php echo $svea_card_sort_order; ?>" size="1" />
-                    </div>
-                </div>
-              <div class="form-group">
-                    <label for="svea_card_payment_description" class="col-sm-3 control-label"><?php echo $entry_payment_description; ?></label>
-                    <div class="col-sm-9">
-                      <textarea rows="2" cols="30" name="svea_card_payment_description"><?php echo $svea_card_payment_description; ?></textarea>
-                    </div>
-                </div>
-
-
-
+                      </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?php echo $entry_sort_order; ?></td>
+                    <td><input type="text" name="svea_card_sort_order" value="<?php echo $svea_card_sort_order; ?>" size="1" /></td>
+                </tr>
+                <tr>
+                    <td><?php echo $entry_payment_description; ?></td>
+                    <td><textarea rows="2" cols="30" name="svea_card_payment_description"><?php echo $svea_card_payment_description; ?></textarea></td>
+                </tr>
 
                 <!-- order statuses -->
-                <div class="form-group">
-                    <h5 class="col-sm-3 control-label"><?php echo $entry_order_status; ?></h5>
-                    <div class="col-sm-9"></div>
-                </div>
-                <div class="form-group">
-                    <label for="svea_card_order_status_id" class="col-sm-3 control-label">
-                       <?php echo $entry_status_order; ?>
-                    </label>
-                     <div class="col-sm-9">
-                          <select name="svea_card_order_status_id">
-                            <?php foreach ($order_statuses as $order_status) { ?>
+                 <tr>
+                    <td><?php echo $entry_order_status; ?></td>
+                    <td>
+                        <div><?php echo $entry_status_order; ?></div>
+                        <select name="svea_card_order_status_id">
+                        <?php foreach ($order_statuses as $order_status) { ?>
                             <?php if ($order_status['order_status_id'] == $svea_card_order_status_id) { ?>
                             <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                             <?php } else { ?>
                             <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                            <?php } ?>
-                            <?php } ?>
+                            <?php }
+                        } ?>
                         </select>
-                     </div>
-                </div>
-              <div class="form-group">
-                  <label for="svea_card_canceled_status_id" class="col-sm-3 control-label">
-                        <span data-toggle="tooltip" title="<?php echo $entry_status_canceled_text; ?>"><?php echo $entry_status_canceled; ?></span>
-                    </label>
-                     <div class="col-sm-9">
-                         <select name="svea_card_canceled_status_id">
+                        <div>
+                            <span><?php echo $entry_status_canceled; ?></span>
+                            <span class="help"><?php echo $entry_status_canceled_text; ?></span>
+                        </div>
+                        <select name="svea_card_canceled_status_id">
                             <?php foreach ($order_statuses as $order_status) {
                                 if ($order_status['order_status_id'] == $svea_card_canceled_status_id) { ?>
-                             <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                 <?php } else { ?>
-                             <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                  <?php } ?>
-                             <?php } ?>
-                        </select>
-                     </div>
-                </div>
-                 <div class="form-group">
-                  <label for="svea_card_deliver_status_id" class="col-sm-3 control-label">
-                        <span data-toggle="tooltip" title="<?php echo $entry_status_confirmed_text; ?>"><?php echo $entry_status_confirmed; ?></span>
-                    </label>
-                     <div class="col-sm-9">
-                        <select name="svea_card_deliver_status_id">
-                        <?php foreach ($order_statuses as $order_status) {
-                            if ($order_status['order_status_id'] == $svea_card_deliver_status_id) { ?>
                             <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                            <?php } else { ?>
+                                <?php } else { ?>
                             <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                <?php } ?>
                             <?php } ?>
-                        <?php } ?>
                         </select>
-                     </div>
-                </div>
-              <div class="form-group">
-                    <label for="svea_card_refunded_status_id" class="col-sm-3 control-label">
-                        <span data-toggle="tooltip" title="<?php echo $entry_status_refunded_text; ?>"><?php echo $entry_status_refunded; ?></span>
-                    </label>
-                     <div class="col-sm-9">
+                        <div>
+                            <span><?php echo $entry_status_confirmed; ?></span>
+                            <span class="help"><?php echo $entry_status_confirmed_text; ?></span>
+                        </div>
+                        <select name="svea_card_deliver_status_id">
+                            <?php foreach ($order_statuses as $order_status) {
+                                if ($order_status['order_status_id'] == $svea_card_deliver_status_id) { ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                                <?php } else { ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                <?php } ?>
+                            <?php } ?>
+                        </select>
+                        <div>
+                            <span><?php echo $entry_status_refunded; ?></span>
+                            <span class="help"><?php echo $entry_status_refunded_text; ?></span>
+                        </div>
                         <select name="svea_card_refunded_status_id">
                             <?php foreach ($order_statuses as $order_status) {
                                 if ($order_status['order_status_id'] == $svea_card_refunded_status_id) { ?>
-                             <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                 <?php } else { ?>
-                             <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                  <?php } ?>
-                             <?php } ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                                <?php } else { ?>
+                            <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                                <?php } ?>
+                            <?php } ?>
                         </select>
-                     </div>
-                </div>
-
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <!-- Mode specific -->
-        <div class="tab-content">
-            <ul class="nav nav-tabs" id="svea_merchant">
-                <li><a href="#tab-cardtest" data-toggle="tab">Test</a></li>
-                <li><a href="#tab-cardprod" data-toggle="tab">Prod</a></li>
-            </ul>
-            <div class="tab-content">
-                  <!--Test -->
-                <div class="tab-pane" id="tab-cardtest">
-                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_merchant_id_test"><?php echo $entry_merchant_id; ?></label>
-                        <div class="col-sm-9">
-                            <input name="svea_card_merchant_id_test" type="text"
-                                    value="<?php echo $value_merchant_test; ?>" />
-                        </div>
-                    </div>
-                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_sw_test"><?php echo $entry_sw; ?></label>
-                        <div class="col-sm-9">
-                            <input name="svea_card_sw_test" type="text"
-                                    value="<?php echo $value_sw_test; ?>" />
-                        </div>
-                    </div>
-                </div>
-                <!--Prod -->
-                <div class="tab-pane" id="tab-cardprod">
-                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_merchant_id_prod"><?php echo $entry_merchant_id; ?></label>
-                        <div class="col-sm-9">
-                            <input name="svea_card_merchant_id_prod" type="text"
-                                    value="<?php echo $value_merchant_prod; ?>" />
-                        </div>
-                    </div>
-                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_sw_prod"><?php echo $entry_sw; ?></label>
-                        <div class="col-sm-9">
-                            <input name="svea_card_sw_prod" type="text"
-                                    value="<?php echo $value_sw_prod; ?>" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+         <?php if($version >= 1.5){ ?>
+         <div class="htabs" id="htabs" >
+             <a href="#tab-card_test" style="display: inline">Test</a>
+             <a href="#tab-card_prod" style="display: inline">Prod</a>
         </div>
-
-
+         <?php } ?>
+        <!-- Countrycode and testmode specific -->
+        <!--Test -->
+        <?php
+        if($version < 1.5){
+            echo '<h2>Test</h2>';
+        }
+        ?>
+        <div id="tab-card_test" style="display: inline;">
+             <table class="form">
+                 <tbody>
+                     <tr>
+                         <td><?php echo $entry_merchant_id; ?>:</td>
+                         <td>
+                             <input name="svea_card_merchant_id_test" type="text"
+                                    value="<?php echo $value_merchant_test; ?>" />
+                         </td>
+                     </tr>
+                     <tr>
+                         <td><?php echo $entry_sw; ?>:</td>
+                         <td>
+                             <input name="svea_card_sw_test" type="text"
+                                    value="<?php echo $value_sw_test; ?>" />
+                         </td>
+                     </tr>
+                 </tbody>
+             </table>
+         </div>
+<!--Prod -->
+        <?php
+        if($version < 1.5){
+            echo '<h2>Prod</h2>';
+        }
+        ?>
+        <div id="tab-card_prod" style="display: inline;">
+            <table class="form">
+                <tbody>
+                    <tr>
+                        <td><?php echo $entry_merchant_id; ?>:</td>
+                        <td>
+                            <input name="svea_card_merchant_id_prod" type="text"
+                                   value="<?php echo $value_merchant_prod; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $entry_sw; ?>:</td>
+                        <td>
+                            <input name="svea_card_sw_prod" type="text"
+                                   value="<?php echo $value_sw_prod; ?>" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
       </form>
     </div>
-    </div><!-- panel-default -->
-  </div><!-- container-fluid -->
-<div style="height:100px"></div>
-  <script type="text/javascript"><!--
-$('#svea_merchant a:first').tab('show');
+    <div style="height:100px"></div>
+    </div>
+<script type="text/javascript"><!--
+$('#tab-card_test a').tabs();
+$('#tab-card_prod a').tabs();
+$('#htabs a').tabs();
+
 //--></script>
 <?php echo $footer; ?>

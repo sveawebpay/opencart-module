@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <modification>
-<id>SveaWebPay Product Price</id>
-<version>3.1.4</version>
-<vqmver>2.5.0</vqmver>
-<author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
+    <id>SveaWebPay Product Price</id>
+    <version>3.0</version>
+    <vqmver>2.1</vqmver>
+    <author>Savo Garovic / Svea Ekonomi AB, SveaWebPay</author>
+
     <file name="catalog/controller/product/product.php">
-       <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
+        <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
         <operation name="svea controller load data to view">
-            <search position="before"><![CDATA[  $data['options'] = array(); ]]></search>
+            <search position="before"><![CDATA[  if ((float)$product_info['special']) { ]]></search>
             <add><![CDATA[
 
-                    $this->load->model('localisation/country');
+             $this->load->model('localisation/country');
                         $this->load->model('payment/svea_partpayment');
                         $this->load->model('payment/svea_invoice');
                         $this->load->language('payment/svea_invoice');
@@ -21,17 +21,15 @@
                         $viewProduct = null;
                         $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
                         if($svea_show_paymentplan === '1' || $svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DE"){
-                            $currency_decimals =  $this->currency->getCode() == 'EUR' ? 1 : 0;
+                            $currency_decimals = $_SESSION['currency'] == 'EUR' ? 1 : 0;
                             $price_list = array();
                             $prices = array();
 
-                            $symbolRight = $this->currency->getSymbolRight( $this->currency->getCode());
-                            $symbolLeft = $this->currency->getSymbolLeft( $this->currency->getCode());
-                            $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price,  $this->currency->getCode(),false,false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
-
+                            $symbolRight = $this->currency->getSymbolRight($_SESSION['currency']);
+                            $symbolLeft = $this->currency->getSymbolLeft($_SESSION['currency']);
+                            $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price, $_SESSION['currency'],false,false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
                             //paymentplan
                             if($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "NL"){
-
 
                                 $q ="SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
                                     `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
@@ -43,9 +41,7 @@
 
                                 $query = $this->db->query($q);
                                 $campaigns = $query->rows;
-                                $priceList = $this->sveaPaymentPlanParamsHelper($currency_converted_price,$campaigns);
-
-                                if(sizeof($priceList)){//&& admin settings for product display is set to yes
+                                $priceList = $this->sveaPaymentPlanParamsHelper($currency_converted_price,$campaigns);                                if(sizeof($priceList)){//&& admin settings for product display is set to yes
                                     $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_paymentplan').'</h4>';
 
                                     foreach ($priceList as $value) {
@@ -54,16 +50,16 @@
                                                     "<div style='float:left;'>".
                                                         $value['description'] .
                                                    "</div>
-                                                    <span style='color: #002A46;
+                                                    <div style='color: #002A46;
                                                                 width:90%;
-
+                                                                margin-left: 80px;
                                                                 margin-right: auto;
                                                                 float:left;'>
                                                         <strong >".
                                                    $symbolLeft.round(round($value['pricePerMonth'],$currency_decimals)).$symbolRight.
                                                               "/".$this->language->get('month').
                                                         "</strong>
-                                                    </span>
+                                                    </div>
                                                 </div>";
 
                                     }
@@ -71,8 +67,8 @@
                                 }
                             }
                             //invoice
-                            $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']),  $this->currency->getCode(),false,false );
-                            if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $currency_converted_price >= $lowest_to_pay){
+                                $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']), $_SESSION['currency'],false,false );
+                                if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $currency_converted_price >= $lowest_to_pay){
 
                                 $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_invoice').'</h4>';
                                 //Based on condition to pay 3% of amount or 100
@@ -81,17 +77,18 @@
                                 $price_list[] = '<div class="svea_product_price_item" style="display:block; margin: 5px 10px 10px 10px">'.
                                                     "<div style='float:left;'>".
                                                     $this->language->get('text_product_invoice')."</div>
-                                                    <span style='color: #002A46;
+                                                    <div style='color: #002A46;
                                                                 width:90%;
-
+                                                                margin-left: 80px;
                                                                 margin-right: auto;
                                                                 float:left;'>
                                                         <strong >".
                                                     $symbolLeft.round(round($price,$currency_decimals)).$symbolRight.
                                                         "</strong>
-                                                    </span>
+                                                    </div>
                                                 </div>";
                             }
+
                             //lowest price
                             $lowest_price = 0;
                             if(sizeof($prices) > 0){
@@ -103,21 +100,18 @@
                                 $viewProduct['text_from'] =  $this->language->get('text_from')." ";
                                 $viewProduct['lowest_price'] = $lowest_price;
                                 $viewProduct['arrow'] = "<img src='admin/view/image/payment/svea_direct/blue_arrow.png'>";
-                                $viewProduct['line'] = "<img width='321' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
+                                $viewProduct['line'] = "<img width='209' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
                                 $viewProduct['widget_background'] = ($svea_country['iso_code_2'] == "NO" || $svea_country['iso_code_2'] == "DK" || $svea_country['iso_code_2'] == "NL") ? "svea_finans_background" : "svea_background";
                             }
-
                         }
-                 $data['svea_widget'] = $viewProduct;
-
+                $this->data['svea_widget'] = $viewProduct;
        ]]></add>
         </operation>
         <!--inserted somewhere as their own functions in controller product.php -->
         <operation name="svea controller helper functions">
-            <search position="before"><![CDATA[  public function write() { ]]></search>
+            <search position="before"><![CDATA[   	public function upload() { ]]></search>
             <add><![CDATA[
-
-         private function svea_get_invoice_lowest($svea_country_code) {
+                private function svea_get_invoice_lowest($svea_country_code) {
                         switch ($svea_country_code) {
                             case "SE":
                                 return 50;
@@ -156,13 +150,12 @@
                               if ($price >= $value['fromAmount'] && $price <= $value['toAmount']) {
                                 $pair = array();
                                 $pair['pricePerMonth'] = $price * $value['monthlyAnnuityFactor'] + $value['notificationFee'];
-
                                 foreach ($value as $key => $val) {
-                                    if ($key == 'campaignCode') {
+                                    if ($key == "campaignCode") {
                                         $pair[$key] = $val;
                                     }
 
-                                if($key == 'description'){
+                                if($key == "description"){
                                     $pair[$key] = $val;
                                 }
 
@@ -201,17 +194,16 @@
 
                     return $country;
                 }
-
        ]]></add>
         </operation>
     </file>
     <file name="catalog/view/theme/*/template/product/product.tpl">
-<!--inserted between cart and review divs in product.tpl -->
+        <!--inserted between cart and review divs in product.tpl -->
         <operation name="svea widget style and html">
-            <search position="before">
-            <![CDATA[  <div id="product">  ]]> </search>
-                <add><![CDATA[
-
+            <search position="before" offset="2">
+                <![CDATA[ <div><img src="catalog/view/theme/default/image/stars-<?php echo $rating; ?>.png" alt="<?php echo $reviews; ?>" />&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $reviews; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $text_write; ?></a></div>
+        ]]> </search>
+            <add><![CDATA[
                         <?php
                     if (count($svea_widget) > 0) { ?>
 
@@ -239,7 +231,7 @@
                                                 position:absolute;
                                                 z-index:2;
                                                 left: -2px;
-                                                top:20px;
+                                                top:21px;
                                                margin: 7px -10px 3px 17px;
                                                "><?php echo $svea_widget['arrow']; ?>
                                     </div>
@@ -247,7 +239,7 @@
                                           position:absolute;
                                            z-index:2;
                                            left:50px;
-                                           top:23px;
+                                           top:26px;
                                           color: #002A46;
                                           width:auto;
                                           padding: 3px;
@@ -262,7 +254,7 @@
                                     float: none;
                                     display:none;
                                     width: 100% !important;
-                                    max-width: 323px;
+                                    max-width: 206px;
                                     padding: 5px;
                                     box-shadow: inset 10px 10px 10px -11px #d2d2d2;
                                     border-radius: 4px 4px 4px 4px;
@@ -289,10 +281,9 @@
                     </div>
                 </div>
             <?php } ?>
-
             ]]></add>
         </operation>
-<!--inserted befort footer in product.tpl -->
+        <!--inserted befort footer in product.tpl -->
         <operation name="svea script ">
             <search position="before"><![CDATA[  <?php echo $footer; ?> ]]></search>
             <add><![CDATA[

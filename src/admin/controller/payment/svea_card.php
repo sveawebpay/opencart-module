@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentsveacard extends Controller {
     private $error = array();
-    protected $svea_version = '3.1.4';
+    protected $svea_version = '2.7.2';
 
     public function index() {
         $this->load->language('payment/svea_card');
@@ -21,174 +21,165 @@ class ControllerPaymentsveacard extends Controller {
 
                 $this->session->data['success'] = $this->language->get('text_success');
 
-                $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->redirect(HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token']);
         }
 
-        $data['svea_version_text'] = $this->getSveaVersion();
-        $data['svea_version'] = $this->svea_version;
-        $data['heading_title']      = $this->language->get('heading_title');
-        $data['text_enabled']       = $this->language->get('text_enabled');
-        $data['text_disabled']      = $this->language->get('text_disabled');
-        $data['text_all_zones']     = $this->language->get('text_all_zones');
+        $this->data['heading_title']      = $this->language->get('heading_title');
+        $this->data['text_enabled']       = $this->language->get('text_enabled');
+        $this->data['text_disabled']      = $this->language->get('text_disabled');
+        $this->data['text_all_zones']     = $this->language->get('text_all_zones');
 
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_status_order'] = $this->language->get('entry_status_order');
-        $data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
-        $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
-        $data['entry_status_confirmed'] = $this->language->get('entry_status_confirmed');
-        $data['entry_status_confirmed_text'] = $this->language->get('entry_status_confirmed_text');
-        $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
-        $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
-        $data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
-        $data['entry_status']       = $this->language->get('entry_status');
-        $data['entry_sort_order']   = $this->language->get('entry_sort_order');
-        $data['entry_payment_description']   = $this->language->get('entry_payment_description');
+        $this->data['entry_order_status'] = $this->language->get('entry_order_status');
+        $this->data['entry_status_order'] = $this->language->get('entry_status_order');
+        $this->data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
+        $this->data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
+        $this->data['entry_status_confirmed'] = $this->language->get('entry_status_confirmed');
+        $this->data['entry_status_confirmed_text'] = $this->language->get('entry_status_confirmed_text');
+        $this->data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
+        $this->data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
+        $this->data['entry_geo_zone']     = $this->language->get('entry_geo_zone');
+        $this->data['entry_status']       = $this->language->get('entry_status');
+        $this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
+        $this->data['entry_payment_description']   = $this->language->get('entry_payment_description');
 
-        $data['button_save']        = $this->language->get('button_save');
-        $data['button_cancel']      = $this->language->get('button_cancel');
+        $this->data['button_save']        = $this->language->get('button_save');
+        $this->data['button_cancel']      = $this->language->get('button_cancel');
 
-        $data['tab_general']        = $this->language->get('tab_general');
-
+        $this->data['tab_general']        = $this->language->get('tab_general');
+        $this->data['svea_version_text'] = $this->getSveaVersion();
+        $this->data['svea_version'] = $this->svea_version;
         //Credentials
-        $data['entry_test']        = $this->language->get('entry_test');
-        $data['entry_prod']       = $this->language->get('entry_prod');
+        $this->data['entry_test']        = $this->language->get('entry_test');
+        $this->data['entry_prod']       = $this->language->get('entry_prod');
 
         //Definitions lang
-        $data['entry_testmode']     = $this->language->get('entry_testmode');
-        $data['entry_merchant_id']  = $this->language->get('entry_merchant_id');
-        $data['entry_sw']           = $this->language->get('entry_sw');
-        $data['entry_merchant_id']  = $this->language->get('entry_merchant_id');
-        $data['entry_sw']           = $this->language->get('entry_sw');
+        $this->data['entry_testmode']     = $this->language->get('entry_testmode');
+        $this->data['entry_merchant_id']  = $this->language->get('entry_merchant_id');
+        $this->data['entry_sw']           = $this->language->get('entry_sw');
+        $this->data['entry_merchant_id']  = $this->language->get('entry_merchant_id');
+        $this->data['entry_sw']           = $this->language->get('entry_sw');
 
         //Definitions settings
-        $data['svea_card_sort_order']  = $this->config->get('svea_card_sort_order');
-        $data['svea_card_testmode']    = $this->config->get('svea_card_testmode');
+        $this->data['svea_card_sort_order']  = $this->config->get('svea_card_sort_order');
+        $this->data['svea_card_testmode']    = $this->config->get('svea_card_testmode');
 
-        $data['version']  = floatval(VERSION);
+        $this->data['version']  = floatval(VERSION);
 
-        $data['value_merchant_test'] = $this->config->get('svea_card_merchant_id_test');
-        $data['value_sw_test'] = $this->config->get('svea_card_sw_test');
-        $data['value_merchant_prod'] = $this->config->get('svea_card_merchant_id_prod');
-        $data['value_sw_prod'] = $this->config->get('svea_card_sw_prod');
+        $this->data['value_merchant_test'] = $this->config->get('svea_card_merchant_id_test');
+        $this->data['value_sw_test'] = $this->config->get('svea_card_sw_test');
+        $this->data['value_merchant_prod'] = $this->config->get('svea_card_merchant_id_prod');
+        $this->data['value_sw_prod'] = $this->config->get('svea_card_sw_prod');
 
         if (isset($this->error['warning'])) {
-                $data['error_warning'] = $this->error['warning'];
+                $this->data['error_warning'] = $this->error['warning'];
         } else {
-                $data['error_warning'] = '';
+                $this->data['error_warning'] = '';
         }
 
-        $data['breadcrumbs'] = array();
+        $this->document->breadcrumbs = array();
 
-        $data['breadcrumbs'][] = array(
-                'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
+        $this->document->breadcrumbs[] = array(
+        'href'      => HTTPS_SERVER . 'index.php?route=common/home&token=' . $this->session->data['token'],
+        'text'      => $this->language->get('text_home'),
+        'separator' => FALSE
         );
 
-        $data['breadcrumbs'][] = array(
-                'text' => $this->language->get('text_payment'),
-                'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL')
+        $this->document->breadcrumbs[] = array(
+        'href'      => HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'],
+        'text'      => $this->language->get('text_payment'),
+        'separator' => ' :: '
         );
 
-        $data['breadcrumbs'][] = array(
-                'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('payment/svea_card', 'token=' . $this->session->data['token'], 'SSL')
+        $this->document->breadcrumbs[] = array(
+        'href'      => HTTPS_SERVER . 'index.php?route=payment/svea_card&token=' . $this->session->data['token'],
+        'text'      => $this->language->get('heading_title'),
+        'separator' => ' :: '
         );
 
-        $data['action'] = $this->url->link('payment/svea_card', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/svea_card&token=' . $this->session->data['token'];
+
+        $this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
 
         //statuses
         $this->load->model('localisation/order_status');
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
         if (isset($this->request->post['svea_card_order_status_id'])) {
-                $data['svea_card_order_status_id'] = $this->request->post['svea_card_order_status_id'];
+                $this->data['svea_card_order_status_id'] = $this->request->post['svea_card_order_status_id'];
         } else {
-                $data['svea_card_order_status_id'] = $this->config->get('svea_card_order_status_id');
+                $this->data['svea_card_order_status_id'] = $this->config->get('svea_card_order_status_id');
         }
         if (isset($this->request->post['svea_card_canceled_status_id'])) {
-            $data['svea_card_canceled_status_id'] = $this->request->post['svea_card_canceled_status_id'];
+            $this->data['svea_card_canceled_status_id'] = $this->request->post['svea_card_canceled_status_id'];
         } else {
-            $data['svea_card_canceled_status_id'] = $this->config->get('svea_card_canceled_status_id');
+            $this->data['svea_card_canceled_status_id'] = $this->config->get('svea_card_canceled_status_id');
         }
         if (isset($this->request->post['svea_card_deliver_status_id'])) {
-            $data['svea_card_deliver_status_id'] = $this->request->post['svea_card_deliver_status_id'];
+            $this->data['svea_card_deliver_status_id'] = $this->request->post['svea_card_deliver_status_id'];
         } else {
-            $data['svea_card_deliver_status_id'] = $this->config->get('svea_card_deliver_status_id');
+            $this->data['svea_card_deliver_status_id'] = $this->config->get('svea_card_deliver_status_id');
         }
         if (isset($this->request->post['svea_card_refunded_status_id'])) {
-            $data['svea_card_refunded_status_id'] = $this->request->post['svea_card_refunded_status_id'];
+            $this->data['svea_card_refunded_status_id'] = $this->request->post['svea_card_refunded_status_id'];
         } else {
-            $data['svea_card_refunded_status_id'] = $this->config->get('svea_card_refunded_status_id');
+            $this->data['svea_card_refunded_status_id'] = $this->config->get('svea_card_refunded_status_id');
         }
 
         if (isset($this->request->post['svea_card_geo_zone_id'])) {
-                $data['svea_card_geo_zone_id'] = $this->request->post['svea_card_geo_zone_id'];
+                $this->data['svea_card_geo_zone_id'] = $this->request->post['svea_card_geo_zone_id'];
         } else {
-                $data['svea_card_geo_zone_id'] = $this->config->get('svea_card_geo_zone_id');
+                $this->data['svea_card_geo_zone_id'] = $this->config->get('svea_card_geo_zone_id');
         }
 
         $this->load->model('localisation/geo_zone');
 
-        $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+        $this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
         if (isset($this->request->post['svea_card_status'])) {
-                $data['svea_card_status'] = $this->request->post['svea_card_status'];
+                $this->data['svea_card_status'] = $this->request->post['svea_card_status'];
         } else {
-                $data['svea_card_status'] = $this->config->get('svea_card_status');
+                $this->data['svea_card_status'] = $this->config->get('svea_card_status');
         }
 
         if (isset($this->request->post['svea_card_sort_order'])) {
-                $data['svea_card_sort_order'] = $this->request->post['svea_card_sort_order'];
+                $this->data['svea_card_sort_order'] = $this->request->post['svea_card_sort_order'];
         } else {
-                $data['svea_card_sort_order'] = $this->config->get('svea_card_sort_order');
+                $this->data['svea_card_sort_order'] = $this->config->get('svea_card_sort_order');
         }
                 //payment info
         if (isset($this->request->post['svea_card_payment_description'])) {
-                $data['svea_card_payment_description'] = $this->request->post['svea_card_payment_description'];
+                $this->data['svea_card_payment_description'] = $this->request->post['svea_card_payment_description'];
         } else {
-                $data['svea_card_payment_description'] = $this->config->get('svea_card_payment_description');
+                $this->data['svea_card_payment_description'] = $this->config->get('svea_card_payment_description');
         }
 
         if (isset($this->request->post['svea_card_testmode'])) {
-			$data['svea_card_testmode'] = $this->request->post['svea_card_testmode'];
+			$this->data['svea_card_testmode'] = $this->request->post['svea_card_testmode'];
             } else {
-                    $data['svea_card_testmode'] = $this->config->get('svea_card_testmode');
+                    $this->data['svea_card_testmode'] = $this->config->get('svea_card_testmode');
             }
 
-        $data['header'] = $this->load->controller('common/header');
-        $data['column_left'] = $this->load->controller('common/column_left');
-        $data['footer'] = $this->load->controller('common/footer');
-
-        $this->response->setOutput($this->load->view('payment/svea_card.tpl', $data));
-    }
-
-        public function install() {
-            $this->load->model('setting/setting');
-            $this->model_setting_setting->editSetting('svea_card', array('svea_card_status'=>1));
+            $this->template = 'payment/svea_card.tpl';
+            $this->children = array(
+                    'common/header',
+                    'common/footer'
+            );
+            $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
 	}
 
-	public function uninstall() {
-            $this->load->model('setting/setting');
-            $this->model_setting_setting->editSetting('svea_card', array('svea_card_status'=>0));
-	}
-
-         protected function getSveaVersion(){
-            $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
-            $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
-            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
+        protected function getSveaVersion(){
+            $update_url = "https://github.com/sveawebpay/opencart-module/archive/Opencart_1.x.zip";
+            $docs_url = "https://github.com/sveawebpay/opencart-module/tree/Opencart_1.x";
+            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/Opencart_1.x/docs/info.json";
             $json = file_get_contents($url);
             $data = json_decode($json);
-
             if($data->module_version == $this->svea_version){
                 return "You have the latest ". $this->svea_version . " version.";
             }else{
              return $this->svea_version . '<br />
                 There is a new version available.<br />
                 <a href="'.$docs_url.'" title="Go to release notes on github">View version details</a> or <br />
-                <a title="Download zip" href="'.$update_url.'"><img width="67" src="view/image/download.png"></a>';
-
+                <a title="Download zip" href="'.$update_url.'"><img width="67" src="view/image/svea_download.png"></a>';
             }
-
         }
 
 	private function validate() {

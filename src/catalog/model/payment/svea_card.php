@@ -20,13 +20,12 @@ class ModelPaymentsveacard extends Model {
         $method_data = array();
 
         if ($status) {
-             $method_data = array(
-                                'code'         => 'svea_card',
-                                'title'      => $this->language->get('text_title') . ' ' . $this->config->get('svea_card_payment_description'),
-                                'terms'      => '',
-                                'sort_order' => $this->config->get('svea_card_sort_order')
-                                );
-
+        $method_data = array(
+                            'id'         => 'svea_card',
+                            'code'       => 'svea_card',
+                            'title'      => $this->language->get('text_title') . ' ' . $this->config->get('svea_card_payment_description'),
+                            'sort_order' => $this->config->get('svea_card_sort_order')
+        );
     }
 
 

@@ -9,7 +9,6 @@ $_['text_svea_directbank']  = '<img src="http://cdn.svea.com/sveaekonomi/rgb_eko
 
 // Entry
 $_['entry_order_status'] = 'Order Status:';
-$_['entry_status_order'] = 'Created:';
 $_['entry_status_refunded'] = 'Credited:';
 $_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
 
