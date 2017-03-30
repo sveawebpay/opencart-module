@@ -29,7 +29,6 @@ class ModelSveaCheckout extends Model
         $this->db->query("INSERT INTO `" . DB_PREFIX . "order` 
 							SET
 								order_id 					= '" . (int)$order['order_id'] . "',
-								order_status_id             = '" . (int)$order['order_status_id'] . "',
 								invoice_prefix 				= '" . $this->db->escape($order['invoice_prefix']) . "',
 								store_id 					= '" . (int)$order['store_id'] . "',
 								store_name 					= '" . $this->db->escape($order['store_name']) . "',
@@ -87,7 +86,6 @@ class ModelSveaCheckout extends Model
 
 							ON DUPLICATE KEY UPDATE
 					            
-					            order_status_id             = '" . (int)$order['order_status_id'] . "',
 								invoice_prefix 				= '" . $this->db->escape($order['invoice_prefix']) . "',
 								store_id 					= '" . (int)$order['store_id'] . "',
 								store_name 					= '" . $this->db->escape($order['store_name']) . "',
@@ -334,12 +332,6 @@ class ModelSveaCheckout extends Model
             }
         }
 
-        // Set order status
-        $oc_order_status_id = $this->getOrderStatusIdFromResponse($response);
-        if ($oc_order_status_id !== null) {
-            $data['order_status_id'] = $oc_order_status_id;
-        }
-
         $query = "UPDATE `" . DB_PREFIX . "order` 
 				    SET ";
 
@@ -353,18 +345,20 @@ class ModelSveaCheckout extends Model
 
         $this->db->query($query);
 
-//        $this->db->query("UPDATE `" . DB_PREFIX . "order`
-//						  SET
-//								firstname 				= '" . $this->db->escape($data['firstname']) . "',
-//								lastname				= '" . $this->db->escape($data['lastname']) . "',
-//								email 					= '" . $this->db->escape($data['email']) . "',
-//								telephone 				= '" . $this->db->escape($data['telephone']) . "',
-//
-//
-//								date_modified 			= NOW()
-//
-//								WHERE order_id = '" . (int)$data['order_id'] . "'
-//								LIMIT 1");
+        $oc_order_status_id = $this->getOrderStatusIdFromResponse($response);
+        $this->load->model('checkout/order');
+        $sco_order_id = $response['orderid'];
+        $comment =  'Svea Checkout Order Id: '. $sco_order_id;
+
+        // CONFIRM ORDER
+        $this->model_checkout_order->addOrderHistory($order_id, $oc_order_status_id, $comment, true);
+
+        // Set order status
+        if ($oc_order_status_id !== null) {
+            $query = "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . $oc_order_status_id . "',";
+            $query .= " date_modified = NOW() WHERE order_id = '" . (int)$order_id . "' LIMIT 1 ";
+            $this->db->query($query);
+        }
 
         return true;
     }

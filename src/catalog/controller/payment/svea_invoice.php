@@ -321,20 +321,38 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         $svea = \Svea\WebPay\WebPay::getAddresses($conf)
             ->setOrderTypeInvoice()
-            ->setCountryCode($countryCode);
+            ->setCountryCode($countryCode)
+            ->setCustomerIdentifier($this->request->post['ssn']);
 
         if($this->request->post['company'] == 'true') {
-            $svea = $svea->setCompany($this->request->post['ssn']);
-//            if( isset($_GET['customerreference']) && strlen($_GET['customerreference']) <= 32) {
-//                $this->session->data['svea_reference'] = $_GET['customerreference'];
-//            }
+            $svea = $svea->getCompanyAddresses();
         }
         else {
-            $svea = $svea->setIndividual($this->request->post['ssn']);
+            $svea = $svea->getIndividualAddresses();
         }
 
         try{
             $svea = $svea->doRequest();
+
+            $result = array();
+            if ($svea->accepted != TRUE) {
+                $result = array("error" => $svea->errormessage);
+            }
+            else {
+                foreach ($svea->customerIdentity as $ci)
+                {
+                    $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
+
+                    $result[] = array(  "fullName"  => $name,
+                        "street"    => $ci->street,
+                        "address_2" => $ci->coAddress,
+                        "zipCode"  =>  $ci->zipCode,
+                        "locality"  => $ci->locality,
+                        "addressSelector" => $ci->addressSelector);
+                }
+            }
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($result));
         }
         catch (Exception $e){
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
@@ -342,26 +360,6 @@ class ControllerPaymentsveainvoice extends SveaCommon {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($response));
         }
-
-        $result = array();
-        if ($svea->accepted != TRUE) {
-            $result = array("error" => $svea->errormessage);
-        }
-        else {
-            foreach ($svea->customerIdentity as $ci)
-            {
-                $name = ($ci->fullName) ? $ci->fullName : $ci->legalName;
-
-                $result[] = array(  "fullName"  => $name,
-                                    "street"    => $ci->street,
-                                    "address_2" => $ci->coAddress,
-                                    "zipCode"  =>  $ci->zipCode,
-                                    "locality"  => $ci->locality,
-                                    "addressSelector" => $ci->addressSelector);
-            }
-        }
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($result));
     }
 
     // update order billingaddress

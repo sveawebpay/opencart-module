@@ -30,7 +30,6 @@ class ControllerSveaPayment extends SveaCommon
 
         $locale = isset($this->session->data['sco_locale']) ? strtolower($this->session->data['sco_locale']) : 'sv-se';
         $currency = isset($this->session->data['sco_currency']) ? strtoupper($this->session->data['sco_currency']) : 'SEK';
-        $country = isset($this->session->data['sco_country']) ? strtoupper($this->session->data['sco_country']) : 'SE';
 
         $this->load->model('localisation/currency');
         $currency_info = $this->model_localisation_currency->getCurrencyByCode($currency);
@@ -282,7 +281,7 @@ class ControllerSveaPayment extends SveaCommon
 
         $order = array(
             'order_id'					=> $order_id,
-            'order_status_id'           => $this->config->get('sco_pending_status_id'),
+            //'order_status_id'           => $this->config->get('sco_pending_status_id'),
             'invoice_prefix' 			=> $this->config->get('config_invoice_prefix'),
             'store_id' 					=> $this->config->get('config_store_id'),
             'store_name' 				=> $this->config->get('config_name'),

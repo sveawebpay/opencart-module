@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <link href="catalog/view/theme/default/stylesheet/svea/sco.css" rel="stylesheet">
 <script src="catalog/view/theme/default/javascript/svea/sco.js"></script>
-<div class="container">
+<div class="container" id="container">
 
     <section class="checkout-page-container">
         <!-- Checkout main content - start -->
@@ -11,7 +11,7 @@
             <?php if ($status_default_checkout) { ?>
             <section class="allow-classic-checkout">
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-12" style="width: 100%;">
                         <p><i class="glyphicon glyphicon-refresh"></i> <?php echo $text_normal_checkout; ?></p>
                     </div>
                 </div>

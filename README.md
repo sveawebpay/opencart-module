@@ -28,7 +28,6 @@
 
 ## OpenCart 2.2 - Svea checkout and payment modules
 
-### Version 4.0.0
 * Supports OpenCart 2.2.0 and higher (older versions can be accessed here [opencart-module](https://github.com/sveawebpay/opencart-module))
 * Requires PHP 5.3 or higher (namespace support)
 * Features _Product Price Widget_ and admin functions requires [vQmod](https://github.com/vqmod) to be installed in your Opencart installation
@@ -41,7 +40,7 @@ This module is tested with a clean installation of [OpenCart 2.2](http://www.ope
 
 If you are experiencing technical issues with this module, or if you have a feature suggestion, please submit an issue on the GitHub issue list.
 
-For release history, see [**github release tags**](https://github.com/sveawebpay/opencart2-2-module/releases)
+For release history, see [**github release tags**](https://github.com/sveawebpay/opencart-module/releases)
 
 # 1. Installation <a name="i1"></a>
 Before installing, we recommend that you set up a test environment and make a backup of your existing site, database and settings.

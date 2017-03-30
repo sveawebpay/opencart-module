@@ -3,7 +3,7 @@
 <link href="catalog/view/theme/default/stylesheet/svea/sco.css" rel="stylesheet">
 <script src="catalog/view/theme/default/javascript/svea/sco.js"></script>
 
-<div class="container">
+<div class="container" id="container">
 
     <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -15,7 +15,7 @@
 
         <div class="sco-main-content">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12" style="width: 100%;">
                     <section class="sco-right-column">
                         <div id="sco-snippet-section">
                             <?php echo $snippet; ?>

@@ -46,6 +46,7 @@ class ControllerPaymentsveacard extends Controller
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
         $data['entry_payment_description'] = $this->language->get('entry_payment_description');
+        $data['entry_card_logos'] = $this->language->get('entry_card_logos');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
@@ -79,6 +80,19 @@ class ControllerPaymentsveacard extends Controller
         } else {
             $data['error_warning'] = '';
         }
+
+        if (isset($this->request->post['svea_card_logos'])) {
+            $data['svea_card_logos'] = $this->request->post['svea_card_logos'];
+        } elseif ($this->config->get('svea_card_logos')) {
+            $data['svea_card_logos'] = $this->config->get('svea_card_logos');
+        } else {
+            $data['svea_card_logos'] = array();
+        }
+
+        $data['card_logos'] = array(
+            'MASTERCARD.png' => 'view/image/payment/svea_direct/MASTERCARD.png',
+            'VISA.png' => 'view/image/payment/svea_direct/VISA.png'
+        );
 
         $data['breadcrumbs'] = array();
 
@@ -188,9 +202,9 @@ class ControllerPaymentsveacard extends Controller
 
     protected function getSveaVersion()
     {
-        $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
+        $update_url = "https://github.com/sveawebpay/opencart-module/archive/oc-2-2.zip";
         $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
-        $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
+        $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-2-2/docs/info.json";
         $json = file_get_contents($url);
         $data = json_decode($json);
 
