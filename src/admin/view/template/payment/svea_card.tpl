@@ -56,6 +56,25 @@
                       </select>
                     </td>
                 </tr>
+
+                <tr>
+                    <td><?php echo $entry_card_logos; ?></td>
+                    <td><div class="scrollbox">
+                            <?php foreach ($card_logos as $card_name => $card_logo) { ?>
+                            <div>
+                                <?php if (in_array($card_name, $svea_card_logos)) { ?>
+                                <input type="checkbox" name="svea_card_logos[]" value="<?php echo $card_name; ?>" checked="checked" />
+                                <img style="float: none;" src="<?php echo $card_logo; ?>" />
+                                <?php } else { ?>
+                                <input type="checkbox" name="svea_card_logos[]" value="<?php echo $card_name; ?>" />
+                                <img style="float: none;" src="<?php echo $card_logo; ?>" />
+                                <?php } ?>
+                            </div>
+                            <?php } ?>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr>
                     <td><?php echo $entry_sort_order; ?></td>
                     <td><input type="text" name="svea_card_sort_order" value="<?php echo $svea_card_sort_order; ?>" size="1" /></td>

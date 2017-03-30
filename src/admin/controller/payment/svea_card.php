@@ -41,6 +41,7 @@ class ControllerPaymentsveacard extends Controller {
         $this->data['entry_status']       = $this->language->get('entry_status');
         $this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
         $this->data['entry_payment_description']   = $this->language->get('entry_payment_description');
+        $this->data['entry_card_logos'] = $this->language->get('entry_card_logos');
 
         $this->data['button_save']        = $this->language->get('button_save');
         $this->data['button_cancel']      = $this->language->get('button_cancel');
@@ -75,6 +76,18 @@ class ControllerPaymentsveacard extends Controller {
         } else {
                 $this->data['error_warning'] = '';
         }
+
+        if (isset($this->request->post['svea_card_logos'])) {
+            $this->data['svea_card_logos'] = $this->request->post['svea_card_logos'];
+        } elseif ($this->config->get('svea_card_logos')) {
+            $this->data['svea_card_logos'] = $this->config->get('svea_card_logos');
+        } else {
+            $this->data['svea_card_logos'] = array();
+        }
+        $this->data['card_logos'] = array(
+            'MASTERCARD.png' => 'view/image/payment/svea_direct/MASTERCARD.png',
+            'VISA.png' => 'view/image/payment/svea_direct/VISA.png'
+        );
 
         $this->document->breadcrumbs = array();
 
@@ -167,9 +180,9 @@ class ControllerPaymentsveacard extends Controller {
 	}
 
         protected function getSveaVersion(){
-            $update_url = "https://github.com/sveawebpay/opencart-module/archive/Opencart_1.x.zip";
-            $docs_url = "https://github.com/sveawebpay/opencart-module/tree/Opencart_1.x";
-            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/Opencart_1.x/docs/info.json";
+            $update_url = "https://github.com/sveawebpay/opencart-module/archive/oc-1.zip";
+            $docs_url = "https://github.com/sveawebpay/opencart-module/tree/oc-1";
+            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-1/docs/info.json";
             $json = file_get_contents($url);
             $data = json_decode($json);
             if($data->module_version == $this->svea_version){

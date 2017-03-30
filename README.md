@@ -1,6 +1,5 @@
 # OpenCart - Svea payment module
 
-##Version 3.0.1
 * Supports OpenCart 1.4.9 or higher
 * Requires PHP 5.3 or higher (namespace support)
 * Feature _Product Price Widget_ and admin functions requires [vQmod](https://code.google.com/p/vqmod/) to be installed in your Opencart installation
@@ -41,7 +40,7 @@ ensure that the module works properly.
 ### Configure the payment module(s) in the OpenCart admin panel
 In this example we'll first configure the Svea invoice payment method, instructions for other payment methods follow below.
 
-![Svea payment modules] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Modules.PNG "Svea payment modules")
+![Svea payment modules](docs/image/Modules.PNG "Svea payment modules")
 
 #### Svea invoice configuration
 The various Svea payment modules are located under Extensions/Payments in the OpenCart administration interface.
@@ -68,7 +67,7 @@ Note! Requirers [vQmod](https://code.google.com/p/vqmod/)
 * Fill out the required fields _username, password_ and _client no_. In an production environment, use your Svea account credentials for the desired locales and payment methods. For testing purposes, make sure to use the supplied test account credentials. Note that there are separate settings for each country in which you have an agreement with Svea to accept invoice payments, each country has its own unique client no and credentials.
 * Finally, remember to _save_ your settings.
 
-![Invoice payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/Invoice.PNG "Invoice settings")
+![Invoice payment settings](docs/image/Invoice.PNG "Invoice settings")
 
 #### Next we set up the Svea invoice fee (used by Svea Invoice payment method )
 The Svea invoice fee has its own module, which is located under Extensions/Order Totals in the OpenCart administration interface.
@@ -81,7 +80,7 @@ The Svea invoice fee has its own module, which is located under Extensions/Order
 * Set the corresponding _tax class_ which should apply to the Svea invoice fee. Note that you must specify a _tax class_ or the invoice fee will show up in the order total display, but it will not be included in the order total.
 * Finally, the _sort order_ field should be set to apply before taxes (i.e. to a lower value than Order Totals/Taxes).
 
-![Invoice fee additional settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/InvoiceFee.PNG "Invoice fee additional settings")
+![Invoice fee additional settings](docs/image/InvoiceFee.PNG "Invoice fee additional settings")
 
 See also "Localisation and additional OpenCart configuration requirements" below.
 
@@ -121,7 +120,7 @@ Module supports one Svea merchant id per Opencart installation.
 * Set _testmode_ and _status_ to enabled.
 * Fill out the required fields _merchant id_ and _secret word_. There are tabs for each _test_ and _prod_. For _prod_, use your Svea account credentials. For _test_, make sure to use the supplied test account credentials.
 
-![Card payment settings] (https://github.com/sveawebpay/opencart-module/raw/develop/docs/image/CardPayment.PNG "Invoice fee additional settings")
+![Card payment settings](docs/image/CardPayment.PNG "Invoice fee additional settings")
 
 #### Svea Direct Payment
 Module supports one Svea merchant id per Opencart installation.

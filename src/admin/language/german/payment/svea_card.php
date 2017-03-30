@@ -18,6 +18,7 @@ $_['entry_status_refunded'] = 'Kreditiert:';
 $_['entry_status_refunded_text'] = 'Gilt für gelieferte Bestellungen.';
 $_['entry_status_confirmed'] = 'Bestätigt:';
 $_['entry_status_confirmed_text'] = 'Manuell bestätigt Zahlung.';
+$_['entry_card_logos'] = 'Kartenlogos';
 
 $_['entry_geo_zone']     = 'Geographische Zone:';
 $_['entry_status']       = 'Status:';

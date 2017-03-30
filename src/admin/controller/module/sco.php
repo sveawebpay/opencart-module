@@ -220,7 +220,7 @@ class ControllerModuleSco extends Controller
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
-        $module_info_data_url = $url = "https://raw.githubusercontent.com/sveawebpay/opencart2-2-module/master/docs/info.json";
+        $module_info_data_url = $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-1/docs/info.json";
         $json_info = file_get_contents($module_info_data_url);
         $decoded_data = json_decode($json_info);
         $latest_version = $decoded_data->module_version;
@@ -228,10 +228,10 @@ class ControllerModuleSco extends Controller
 
         $data['module_version'] = $this->module_version;
         if ($latest_version > $this->module_version) {
-            $data['module_repo_url'] = 'https://github.com/sveawebpay/opencart2-2-module/archive/master.zip';
+            $data['module_repo_url'] = 'https://github.com/sveawebpay/opencart-module/archive/oc-1.zip';
             $data['module_version_info'] = $this->language->get('text_module_version_info_new');
         } else {
-            $data['module_repo_url'] = 'https://github.com/sveawebpay/opencart2-2-module/blob/master/README.md';
+            $data['module_repo_url'] = 'https://github.com/sveawebpay/opencart-module/blob/oc-1/README.md';
             $data['module_version_info'] = $this->language->get('text_module_version_info');
         }
 

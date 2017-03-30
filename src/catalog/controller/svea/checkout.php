@@ -33,6 +33,7 @@ class ControllerSveaCheckout extends Controller
         $this->session->data['sco_currency'] = 'SEK';
         $this->session->data['currency'] = 'SEK';
         $this->session->data['sco_country'] = 'SE';
+        $this->session->data['sco_country_id'] = '203'; // Hard coded Sweden country
 
         $this->data['status_default_checkout'] = $this->config->get('sco_status_checkout');
 

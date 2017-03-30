@@ -18,6 +18,7 @@ $_['entry_status_refunded'] = 'Hyvitetty:';
 $_['entry_status_refunded_text'] = 'Tilaus pitää olla toimitettu/lunastettu ennen hyvitystä.';
 $_['entry_status_confirmed'] = 'Hyväksytty:';
 $_['entry_status_confirmed_text'] = 'Manuaalisesti hyväksytty maksu.';
+$_['entry_card_logos'] = 'Kortti logot';
 
 $_['entry_geo_zone']     = 'Maa:';
 $_['entry_status']       = 'Tila:';

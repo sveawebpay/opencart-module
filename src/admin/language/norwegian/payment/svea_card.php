@@ -18,6 +18,7 @@ $_['entry_status_refunded'] = 'Krediter:';
 $_['entry_status_refunded_text'] = 'Ordren må være levert før den krediteres.';
 $_['entry_status_confirmed'] = 'Godkjent:';
 $_['entry_status_confirmed_text'] = 'Manuelt godkjenne en betaling.';
+$_['entry_card_logos'] = 'Kort logoer';
 
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';

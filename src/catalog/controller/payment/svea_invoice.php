@@ -308,13 +308,14 @@ class ControllerPaymentsveainvoice extends SveaCommon {
 
         $svea = \Svea\WebPay\WebPay::getAddresses($conf)
             ->setOrderTypeInvoice()
-            ->setCountryCode($countryCode);
+            ->setCountryCode($countryCode)
+            ->setCustomerIdentifier($this->request->post['ssn']);
 
         if($this->request->post['company'] == 'true') {
-            $svea = $svea->setCompany($this->request->post['ssn']);
+            $svea = $svea->getCompanyAddresses();
         }
         else {
-            $svea = $svea->setIndividual($this->request->post['ssn']);
+            $svea = $svea->getIndividualAddresses();
         }
 
         try{

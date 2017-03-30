@@ -291,9 +291,9 @@ class ControllerPaymentsveapartpayment extends Controller {
     }
 
     protected function getSveaVersion(){
-            $update_url = "https://github.com/sveawebpay/opencart-module/archive/Opencart_1.x.zip";
-            $docs_url = "https://github.com/sveawebpay/opencart-module/tree/Opencart_1.x";
-            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/Opencart_1.x/docs/info.json";
+            $update_url = "https://github.com/sveawebpay/opencart-module/archive/oc-1.zip";
+            $docs_url = "https://github.com/sveawebpay/opencart-module/tree/oc-1";
+            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-1/docs/info.json";
             $json = file_get_contents($url);
             $data = json_decode($json);
             if($data->module_version == $this->svea_version){
