@@ -6,10 +6,9 @@ class ControllerExtensionSveaVoucher extends Controller {
      * Show voucher template
      */
 	public function index() {
-        $this->load->language('extension/total/voucher');
 		$this->load->language('extension/svea/checkout');
 
-		$data['text_voucher_code']	= $this->language->get('text_success');
+        $data['text_voucher_code']	= $this->language->get('text_voucher_code');
 		$data['voucher']			= NULL;
 
 		if ( (isset($this->session->data['voucher'])) AND (!empty($this->session->data['voucher'])) ) {
@@ -38,7 +37,6 @@ class ControllerExtensionSveaVoucher extends Controller {
 	public function add() {
 		$json = array();
 
-        $this->load->language('extension/total/voucher');
 		$this->load->language('extension/svea/checkout');
 		$this->load->model('extension/total/voucher');
 
@@ -47,13 +45,13 @@ class ControllerExtensionSveaVoucher extends Controller {
 		$result = $this->model_extension_total_voucher->getVoucher($voucher);
 
 		if (empty($voucher)) {
-			$json['error'] = $this->language->get('error_empty');
+            $json['error'] = $this->language->get('error_no_voucher');
 			unset($this->session->data['voucher']);
 		} elseif ($result) {
-			$json['success'] = $this->language->get('text_success');
+            $json['success'] = $this->language->get('success_add_voucher');
 			$this->session->data['voucher'] = $this->request->post['voucher'];
 		} else {
-			$json['error'] = $this->language->get('error_voucher');
+            $json['error'] = $this->language->get('error_unknown_voucher');
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

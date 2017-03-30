@@ -9,6 +9,11 @@ class SveaCommon extends Controller
     {
 
         foreach ($products as $product) {
+            $product['name'] = $this->db->escape($product['name']);
+            if (mb_strlen($product['name']) > 40) {
+                $product['name'] = mb_substr($product['name'], 0, 37) . "...";
+            }
+
             $item = \Svea\WebPay\WebPayItem::orderRow()
                 ->setQuantity(intval($product['quantity']))
                 ->setName($product['name'])
@@ -37,6 +42,11 @@ class SveaCommon extends Controller
     {
 
         foreach ($products as $product) {
+            $product['name'] = $this->db->escape($product['name']);
+            if (mb_strlen($product['name']) > 40) {
+                $product['name'] = mb_substr($product['name'], 0, 37) . "...";
+            }
+
             $item = \Svea\WebPay\WebPayItem::orderRow()
                 ->setQuantity(intval($product['quantity']))
                 ->setName($product['name'])
@@ -81,6 +91,10 @@ class SveaCommon extends Controller
             }
         }
         foreach ($addons as $addon) {
+            if (isset($addon['title']) && mb_strlen($addon['title']) > 40) {
+                $addon['title'] = mb_substr($addon['title'], 0, 37) . "...";
+            }
+
             if ($addon['value'] >= 0) {
                 $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100);
                 $svea = $svea

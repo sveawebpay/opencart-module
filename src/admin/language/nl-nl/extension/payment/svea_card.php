@@ -18,6 +18,7 @@ $_['entry_status_refunded'] = 'Gecrediteerd:';
 $_['entry_status_refunded_text'] = 'De bestelling moet zijn geleverd/binnengekomen voor creditering.';
 $_['entry_status_confirmed'] = 'Bevestigd:';
 $_['entry_status_confirmed_text'] = 'Handmatig bevestigde betaling .';
+$_['entry_card_logos'] = 'Card logos';
 
 $_['entry_geo_zone']     = 'Geo zone:';
 $_['entry_status']       = 'Status:';

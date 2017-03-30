@@ -13,7 +13,7 @@ class ControllerExtensionSveaShipping extends Controller
 
         $address = array(
             'postcode' => $postcode,
-            'country_id' => isset($this->session->data['sco_country']) ? strtoupper($this->session->data['sco_country']) : 'SE',
+            'country_id' => isset($this->session->data['sco_country_id']) ? strtoupper($this->session->data['sco_country_id']) : $this->config->get('config_country_id'),
             'zone_id' => $this->config->get('config_zone_id'),
             'iso_code_2' => isset($this->session->data['sco_country']) ? $this->session->data['sco_country'] : strtoupper($this->language->get('code')),
         );

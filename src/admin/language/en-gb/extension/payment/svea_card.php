@@ -19,6 +19,7 @@ $_['entry_status_refunded'] = 'Credited:';
 $_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
 $_['entry_status_confirmed'] = 'Confirm:';
 $_['entry_status_confirmed_text'] = 'Manually confirms payment.';
+$_['entry_card_logos'] = 'Card logos';
 
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';

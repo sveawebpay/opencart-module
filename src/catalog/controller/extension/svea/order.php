@@ -292,7 +292,6 @@ class ControllerExtensionSveaOrder extends Controller
 
                 if ($sco_order !== null && isset($sco_order['checkout_id'])) {
                     $sco_order_id = (int)$sco_order['checkout_id'];
-                    $country_code = isset($this->session->data['sco_country']) ? strtoupper($this->session->data['sco_country']) : 'SE';
                     $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
                     if ($this->config->get('sco_test_mode')) {
                         $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
@@ -562,7 +561,7 @@ class ControllerExtensionSveaOrder extends Controller
     {
         $order_data = $this->order_data_from_admin;
         $deliveries = $order_data['Deliveries'];
-        return $deliveries[0]['DeliveryAmount'] / 100;
+        return $deliveries[0]['DeliveryAmount'];
     }
 
     private function getCreditRows()

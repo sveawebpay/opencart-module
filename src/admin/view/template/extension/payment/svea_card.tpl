@@ -69,6 +69,26 @@
                         </select>
                     </div>
                 </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="input-process-status"><?php echo $entry_card_logos; ?></label>
+                <div class="col-sm-9">
+                    <div class="well well-sm" style="height: 120px; overflow: auto;">
+                        <?php foreach ($card_logos as $card_name => $card_logo) { ?>
+                        <div class="checkbox">
+                            <label>
+                                <?php if (in_array($card_name, $svea_card_logos)) { ?>
+                                <input type="checkbox" name="svea_card_logos[]" value="<?php echo $card_name; ?>" checked="checked" />
+                                <img src="<?php echo $card_logo; ?>" />
+                                <?php } else { ?>
+                                <input type="checkbox" name="svea_card_logos[]" value="<?php echo $card_name; ?>" />
+                                <img src="<?php echo $card_logo; ?>" />
+                                <?php } ?>
+                            </label>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
               <div class="form-group">
                     <label for="svea_card_sort_order" class="col-sm-3 control-label"><?php echo $entry_sort_order; ?></label>
                     <div class="col-sm-9">
