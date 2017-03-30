@@ -4,7 +4,6 @@ class ControllerSveaCheckout extends Controller
 {
     public function index()
     {
-        $this->load->language('checkout/checkout');
         $this->load->language('svea/checkout');
 
         $this->load->model('svea/checkout');
@@ -33,6 +32,7 @@ class ControllerSveaCheckout extends Controller
         $this->session->data['sco_currency'] = 'SEK';
         $this->session->data['currency'] = 'SEK';
         $this->session->data['sco_country'] = 'SE';
+        $this->session->data['sco_country_id'] = '203'; // Hard coded Sweden country
 
         $data['status_default_checkout'] = $this->config->get('sco_status_checkout');
 
@@ -46,7 +46,6 @@ class ControllerSveaCheckout extends Controller
         $data['heading_cart'] = $this->language->get('heading_cart');
         $data['heading_payment'] = $this->language->get('heading_payment');
 
-        $data['text_comment'] = $this->language->get('text_comments');
         $data['text_tooltip_shipping'] = $this->language->get('text_shipping_method');
         $data['text_checkout_into'] = $this->language->get('text_checkout_into');
         $data['text_normal_checkout'] = sprintf($this->language->get('text_normal_checkout'), $this->url->link('checkout/checkout/index'));
@@ -75,17 +74,12 @@ class ControllerSveaCheckout extends Controller
             }
         }
 
+        $data['text_comment'] = $this->language->get('text_comment');
         $data['status_coupon'] = $this->config->get('coupon_status');
-        if ($data['status_coupon']) {
-            $this->load->language('total/coupon');
-            $data['text_coupon'] = $this->language->get('heading_title');
-        }
+        $data['text_coupon'] = $this->language->get('text_coupon');
 
         $data['status_voucher'] = $this->config->get('voucher_status');
-        if ($data['status_voucher']) {
-            $this->load->language('total/voucher');
-            $data['text_voucher'] = $this->language->get('heading_title');
-        }
+        $data['text_voucher'] = $this->language->get('text_voucher');
 
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');

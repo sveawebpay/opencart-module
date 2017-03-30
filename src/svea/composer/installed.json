@@ -1,17 +1,17 @@
 [
     {
         "name": "sveaekonomi/checkout",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sveawebpay/php-checkout.git",
-            "reference": "855f35714dcc0cfa2520f3a5ce31442c33535bd8"
+            "reference": "d8b80abe2738d02c35b6e33a2784f3a232d332f0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-checkout/zipball/855f35714dcc0cfa2520f3a5ce31442c33535bd8",
-            "reference": "855f35714dcc0cfa2520f3a5ce31442c33535bd8",
+            "url": "https://api.github.com/repos/sveawebpay/php-checkout/zipball/d8b80abe2738d02c35b6e33a2784f3a232d332f0",
+            "reference": "d8b80abe2738d02c35b6e33a2784f3a232d332f0",
             "shasum": ""
         },
         "require": {
@@ -27,9 +27,9 @@
             "sebastian/phpcpd": "^2.0.4",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2017-01-30 09:37:30",
+        "time": "2017-03-20 10:20:40",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "Svea\\Checkout\\": "src"
@@ -54,12 +54,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/sveawebpay/php-integration.git",
-            "reference": "f3dc41330d2f0173f8699a48ac78c79b8e1c2e5c"
+            "reference": "161371a613a246a6a140857e2a91055aea0bd90e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/f3dc41330d2f0173f8699a48ac78c79b8e1c2e5c",
-            "reference": "f3dc41330d2f0173f8699a48ac78c79b8e1c2e5c",
+            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/161371a613a246a6a140857e2a91055aea0bd90e",
+            "reference": "161371a613a246a6a140857e2a91055aea0bd90e",
             "shasum": ""
         },
         "require": {
@@ -71,9 +71,9 @@
         "require-dev": {
             "phpunit/phpunit": "~4.8 || ~5.5"
         },
-        "time": "2017-01-30 10:05:55",
+        "time": "2017-03-30 08:03:31",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "Svea\\WebPay\\": "src"

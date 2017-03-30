@@ -19,6 +19,7 @@ $_['entry_status_confirmed'] = 'Godkänd:';
 $_['entry_status_confirmed_text'] = 'Manuellt godkänna betalning.';
 $_['entry_status_refunded'] = 'Krediterad:';
 $_['entry_status_refunded_text'] = 'Ordern måste vara levererad/inlöst innan den krediteras.';
+$_['entry_card_logos'] = 'Kort logotyper';
 
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';

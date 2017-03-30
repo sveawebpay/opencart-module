@@ -34,7 +34,6 @@ class ControllerSveaSuccess extends Controller
         // Clear opencart Cart
         $this->cart->clear();
 
-        $this->load->language('checkout/success');
         $this->load->language('svea/checkout');
         $this->load->model('extension/extension');
 

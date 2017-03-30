@@ -1,5 +1,5 @@
 # PHP Checkout library for Svea Checkout
-Version 1.0.1
+Version 1.0.2
 
 ## Index
 * [1. Setup](#1-setup)
@@ -30,7 +30,7 @@ The checkout requires jQuery to be able to run properly, if jQuery isn't loaded 
 In command line
 ```bash
 
-    Composer require svea/checkout
+    Composer require sveaekonomi/checkout
 
 ```
 
@@ -39,7 +39,7 @@ or add this part to your composer.json
 ```json
     {
         "require": {
-            "svea/checkout": "dev-master"
+            "sveaekonomi/checkout": "dev-master"
         }
     }
 ```

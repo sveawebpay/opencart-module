@@ -154,9 +154,9 @@ class ControllerTotalSveaFee extends Controller {
     }
 
      protected function getSveaVersion(){
-            $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
+            $update_url = "https://github.com/sveawebpay/opencart-module/archive/oc-2-0.zip";
             $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
-            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
+            $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-2-0/docs/info.json";
             $json = file_get_contents($url);
             $data = json_decode($json);
 

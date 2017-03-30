@@ -568,7 +568,7 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
     {
         $order_data = $this->order_data_from_admin;
         $deliveries = $order_data['Deliveries'];
-        return $deliveries[0]['DeliveryAmount'] / 100;
+        return $deliveries[0]['DeliveryAmount'];
     }
 
     private function getCreditRows()
