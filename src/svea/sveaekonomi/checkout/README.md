@@ -1,5 +1,5 @@
 # PHP Checkout library for Svea Checkout
-Version 1.0.2
+Version 1.0.4
 
 ## Index
 * [1. Setup](#1-setup)
