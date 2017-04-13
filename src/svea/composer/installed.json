@@ -1,17 +1,17 @@
 [
     {
         "name": "sveaekonomi/checkout",
-        "version": "1.0.2",
-        "version_normalized": "1.0.2.0",
+        "version": "1.0.4",
+        "version_normalized": "1.0.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sveawebpay/php-checkout.git",
-            "reference": "d8b80abe2738d02c35b6e33a2784f3a232d332f0"
+            "reference": "0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-checkout/zipball/d8b80abe2738d02c35b6e33a2784f3a232d332f0",
-            "reference": "d8b80abe2738d02c35b6e33a2784f3a232d332f0",
+            "url": "https://api.github.com/repos/sveawebpay/php-checkout/zipball/0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab",
+            "reference": "0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab",
             "shasum": ""
         },
         "require": {
@@ -27,9 +27,9 @@
             "sebastian/phpcpd": "^2.0.4",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2017-03-20 10:20:40",
+        "time": "2017-04-13 13:53:55",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "Svea\\Checkout\\": "src"
@@ -73,7 +73,7 @@
         },
         "time": "2017-03-30 08:03:31",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "Svea\\WebPay\\": "src"
