@@ -54,12 +54,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/sveawebpay/php-integration.git",
-            "reference": "161371a613a246a6a140857e2a91055aea0bd90e"
+            "reference": "ee867e989c81b5d9a60c22b7aa535614ffc73b8f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/161371a613a246a6a140857e2a91055aea0bd90e",
-            "reference": "161371a613a246a6a140857e2a91055aea0bd90e",
+            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/ee867e989c81b5d9a60c22b7aa535614ffc73b8f",
+            "reference": "ee867e989c81b5d9a60c22b7aa535614ffc73b8f",
             "shasum": ""
         },
         "require": {
@@ -71,7 +71,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.8 || ~5.5"
         },
-        "time": "2017-03-30 08:03:31",
+        "time": "2017-07-26 07:39:21",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
