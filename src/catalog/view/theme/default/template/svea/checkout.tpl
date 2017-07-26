@@ -63,7 +63,7 @@
                             <ul class="list-group">
 
                                 <!-- coupon - start -->
-                                <?php if ($status_coupon) { ?>
+                                <?php if ($status_coupon && $sco_show_coupons === '1') { ?>
                                 <li class="list-group-item">
                                     <a data-toggle="collapse" href="#sco-coupon" aria-expanded="false"
                                        aria-controls="sco-coupon"><?php echo $text_coupon; ?></a>
@@ -83,7 +83,7 @@
                                 <!-- coupon - end -->
 
                                 <!-- voucher - start -->
-                                <?php if ($status_voucher) { ?>
+                                <?php if ($status_voucher && $sco_show_voucher === '1') { ?>
                                 <li class="list-group-item">
                                     <a data-toggle="collapse" href="#sco-voucher" aria-expanded="false"
                                        aria-controls="sco-voucher"><?php echo $text_voucher; ?></a>
@@ -103,6 +103,7 @@
                                 <!-- voucher - end -->
 
                                 <!-- order comment - start -->
+                                <?php if ($sco_show_comment === '1') { ?>
                                 <li class="list-group-item">
                                     <a data-toggle="collapse" href="#sco-comment" aria-expanded="false"
                                        aria-controls="sco-comment"><?php echo $text_comment; ?></a>
@@ -110,6 +111,7 @@
                                         <textarea class="form-control" name="comment" id="comment"><?php echo $order_comment; ?></textarea>
                                     </div>
                                 </li>
+                                <?php } ?>
                                 <!-- order comment - end -->
                             </ul>
                             <!-- Miscellaneous section (coupons, vouchers, comment ...) - start -->

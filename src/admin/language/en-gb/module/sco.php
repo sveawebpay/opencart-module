@@ -11,6 +11,8 @@ $_['text_module_version_info']      = 'You have the latest version of the module
 $_['created_status_order']          = 'Created';
 $_['pending_status_order']          = 'Pending';
 $_['failed_status_order']           = 'Failed';
+$_['text_show']                     = 'Show';
+$_['text_hide']                     = 'Hide';
 
 $_['entry_status_canceled']         = 'Cancelled/Annulled:';
 $_['entry_status_canceled_text']    = 'Applies on orders not yet delivered/captured.';
@@ -18,6 +20,10 @@ $_['entry_status_delivered']        = 'Delivered:';
 $_['entry_status_delivered_text']   = 'Delivers a created order.';
 $_['entry_status_refunded']         = 'Credited:';
 $_['entry_status_refunded_text']    = 'Applies on orders delivered/captured.';
+
+$_['item_voucher']					= 'Gift Certificate';
+$_['item_coupon']					= 'Coupon';
+$_['item_comment']				    = 'Message';
 
 // Tabs
 $_['tab_general']				    = 'General';
@@ -29,6 +35,7 @@ $_['tab_authorization_prod']		= 'Production Credentials';
 $_['entry_test_mode']			    = 'Test mode';
 $_['entry_order_status']		    = 'Order Status';
 $_['entry_oc_order_status']		    = 'Open Cart Status';
+$_['entry_show_options_on_checkout']= 'Show options on checkout page';
 $_['entry_status_checkout']		    = 'Show option to go to default checkout on checkout page.';
 $_['entry_status']				    = 'Status';
 

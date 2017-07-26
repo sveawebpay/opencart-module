@@ -103,6 +103,24 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-process-status"><?php echo $entry_show_options_on_checkout; ?></label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 120px; overflow: auto;">
+                                        <?php foreach ($options_on_checkout_page as $option_name => $option_title) { ?>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"
+                                                       <?php echo $$option_name === '1' ? 'checked="checked"' : '' ?>
+                                                       name="<?php echo $option_name; ?>" value="1"/>
+                                                <?php echo '&nbsp;' . $option_title; ?>
+                                            </label>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- order statuses - start -->
                             <div class="form-group">
                                 <h5 class="col-sm-2 control-label">Svea <?php echo $entry_order_status; ?></h5>

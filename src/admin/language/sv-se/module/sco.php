@@ -11,6 +11,8 @@ $_['text_module_version_info']      = 'Du har den senaste versionen. Gå till do
 $_['created_status_order']          = 'Skapad';
 $_['pending_status_order']          = 'Väntande';
 $_['failed_status_order']           = 'Misslyckad';
+$_['text_show']                     = 'Visa';
+$_['text_hide']                     = 'Dölj';
 
 $_['entry_status_canceled']         = 'Cancellerad/Annulerad:';
 $_['entry_status_canceled_text']    = 'Kan utföras på ordrar som ännu inte är levererade/inlösta.';
@@ -18,6 +20,10 @@ $_['entry_status_delivered']        = 'Levererad:';
 $_['entry_status_delivered_text']   = 'Levererar en skapad order. ';
 $_['entry_status_refunded']         = 'Krediterad:';
 $_['entry_status_refunded_text']    = 'Kan utföras på ordrar som är levererade/inlösta.';
+
+$_['item_voucher']					= 'Presentkort';
+$_['item_coupon']					= 'Rabattkod';
+$_['item_comment']				    = 'Meddelande';
 
 // Tabs
 $_['tab_general']				    = 'Övrigt';
@@ -29,6 +35,7 @@ $_['tab_authorization_prod']		= 'Produktionsuppgifter';
 $_['entry_test_mode']			    = 'Testläge';
 $_['entry_order_status']		    = 'Orderstatusar:';
 $_['entry_oc_order_status']         = 'Opencart Status';
+$_['entry_show_options_on_checkout']= 'Visa alternativ på kassan';
 $_['entry_status_checkout']		    = 'Visa alternativ för att gå till standardkassan på checkoutsidan. ';
 $_['entry_status']				    = 'Status';
 

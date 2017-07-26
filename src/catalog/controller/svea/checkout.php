@@ -63,6 +63,10 @@ class ControllerSveaCheckout extends Controller
             }
         }
 
+        $data['sco_show_coupons'] = $this->config->get('sco_show_coupons_on_checkout');
+        $data['sco_show_voucher'] = $this->config->get('sco_show_voucher_on_checkout');
+        $data['sco_show_comment'] = $this->config->get('sco_show_order_comment_on_checkout');
+
         $data['sco_email'] = isset($this->session->data['sco_email']) ? $this->session->data['sco_email'] : null;
         $data['sco_postcode'] = isset($this->session->data['sco_postcode']) ? $this->session->data['sco_postcode'] : null;
 
