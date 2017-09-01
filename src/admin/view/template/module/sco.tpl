@@ -104,21 +104,32 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-process-status"><?php echo $entry_show_options_on_checkout; ?></label>
-                                <div class="col-sm-10">
-                                    <div class="well well-sm" style="height: 120px; overflow: auto;">
-                                        <?php foreach ($options_on_checkout_page as $option_name => $option_title) { ?>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"
-                                                       <?php echo $$option_name === '1' ? 'checked="checked"' : '' ?>
-                                                       name="<?php echo $option_name; ?>" value="1"/>
-                                                <?php echo '&nbsp;' . $option_title; ?>
-                                            </label>
-                                        </div>
-                                        <?php } ?>
+                                <?php foreach ($options_on_checkout_page as $option_name => $option_title) { ?>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="input-process-status"><?php echo $option_title; ?></label>
+
+                                    <div class="col-sm-10">
+                                        <label class="radio-inline">
+                                            <?php if ($$option_name === '1') { ?>
+                                            <input type="radio" name="<?php echo $option_name; ?>" value="1" checked="checked" />
+                                            <?php echo $text_yes; ?>
+                                            <?php } else { ?>
+                                            <input type="radio" name="<?php echo $option_name; ?>" value="1" />
+                                            <?php echo $text_yes; ?>
+                                            <?php } ?>
+                                        </label>
+                                        <label class="radio-inline">
+                                            <?php if ($$option_name !== '1') { ?>
+                                            <input type="radio" name="<?php echo $option_name; ?>" value="0" checked="checked" />
+                                            <?php echo $text_no; ?>
+                                            <?php } else { ?>
+                                            <input type="radio" name="<?php echo $option_name; ?>" value="0" />
+                                            <?php echo $text_no; ?>
+                                            <?php } ?>
+                                        </label>
                                     </div>
                                 </div>
+                                <?php } ?>
                             </div>
 
                             <!-- order statuses - start -->

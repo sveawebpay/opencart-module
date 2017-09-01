@@ -1,6 +1,6 @@
 <?php
 
-$_['text_normal_checkout']			= '<a href="%s">Click here</a> to go to default checkout!';
+$_['text_normal_checkout']			= '<a href="%s">Click here to go to default checkout!</a>';
 $_['text_checkout_into']			= 'Please enter your E-Mail and Postal Code to continue with Svea Ekonomi Checkout.';
 
 $_['entry_email']					= 'E-mail';
@@ -34,7 +34,7 @@ $_['text_account']					= 'Do you want to create an account?';
 $_['text_coupon']					= 'Do you want to add a coupon?';
 $_['text_voucher']					= 'Do you want to add a gift voucher?';
 $_['text_comment']					= 'Do you want to leave a message?';
-$_['text_change_cart']						= 'Do you want to change the cart?';
+$_['text_change_cart']				= 'Do you want to change the cart?';
 
 $_['text_coupon_code']				= 'You have added coupon:';
 $_['text_voucher_code']				= 'You have added voucher:';
@@ -55,7 +55,7 @@ $_['text_override_total']			= 'Total (incl. VAT)';
 
 $_['text_order_comment']			= 'Approved authorization created in Svea: %s';
 
-$_['item_voucher']					= 'Gift Certificate';
+$_['item_voucher']					= 'Voucher';
 $_['item_coupon']					= 'Coupon';
 $_['item_comment']				    = 'Message';
 $_['item_shipping']					= 'Shipping';
@@ -92,6 +92,8 @@ $_['error_push_update']				= 'Error: Failed to update reservation to Svea';
 
 $_['text_home']                     = 'Home';
 $_['button_continue']               = 'Continue';
+$_['button_back']                   = 'Back';
 $_['text_basket']                   = 'Shopping Cart';
 $_['text_checkout']                 = 'Checkout';
 $_['text_success']                  = 'Success';
+$_['text_change_postcode']          = 'Change';

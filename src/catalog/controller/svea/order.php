@@ -102,7 +102,7 @@ class ControllerSveaOrder extends Controller
                     //and it is not directbank
                     //and if status wasn't already deliver
                 } elseif ($this->config->get($this->request->post['payment_method'] . '_deliver_status_id') == $this->request->post['order_status_id']
-                    && $order_info['order_status_id'] != $this->request->post['order_status_id']
+                    /*&& $order_info['order_status_id'] != $this->request->post['order_status_id']*/
                     && $this->request->post['payment_method'] != 'svea_directbank'
                 ) {
 

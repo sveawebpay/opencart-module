@@ -1,6 +1,6 @@
 <?php
 
-$_['text_normal_checkout']			= '<a href="%s">Klicka här</a> för att gå till standardkassan';
+$_['text_normal_checkout']			= '<a href="%s">Klicka här för att gå till standardkassan</a>';
 $_['text_checkout_into']			= 'Var god fyll i din E-Mail och ditt postnummer för att fortsätta betalning med Svea Ekonomi Checkout';
 
 $_['entry_email']					= 'E-post';
@@ -92,6 +92,8 @@ $_['error_push_update']				= 'Failed to update reservation to Svea!';
 
 $_['text_home']                     = 'Hem';
 $_['button_continue']               = 'Fortsätta';
+$_['button_back']                   = 'Tillbaka';
 $_['text_basket']                   = 'Kundvagn';
 $_['text_checkout']                 = 'Kassa';
 $_['text_success']                  = 'Framgång';
+$_['text_change_postcode']          = 'Ändra';

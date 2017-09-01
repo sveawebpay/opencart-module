@@ -6,7 +6,7 @@ class ControllerModuleSco extends Controller
 
     // Use this name as params prefix (Svea checkout)
     private $name = 'sco';
-    private $module_version = '4.1.0';
+    private $module_version = '4.2.0';
 
     public function index()
     {
@@ -73,10 +73,13 @@ class ControllerModuleSco extends Controller
         );
 
         $data['options_on_checkout_page'] = array(
-            'sco_show_coupons_on_checkout' => $this->language->get('item_coupon'),
-            'sco_show_voucher_on_checkout' => $this->language->get('item_voucher'),
-            'sco_show_order_comment_on_checkout' => $this->language->get('item_comment')
+            'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
+            'sco_show_voucher_on_checkout' => $this->language->get('text_show_voucher_on_checkout'),
+            'sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout')
         );
+
+        $data['text_yes'] = $this->language->get('text_yes');
+        $data['text_no'] = $this->language->get('text_no');
 
         foreach ($fields as $field => $default) {
             if (isset($this->request->post[$this->name . '_' . $field])) {
