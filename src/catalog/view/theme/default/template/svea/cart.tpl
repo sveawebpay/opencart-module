@@ -1,3 +1,5 @@
+<h3><?php echo $heading_cart; ?></h3>
+
 <table class="table table-products">
 	<?php foreach ($products as $product) { ?>
 		<tr>
@@ -24,7 +26,7 @@
 <table class="table table-totals">
 	<?php foreach ($totals as $total) { ?>
 		<tr>
-			<td class="text-right td-title"><?php echo $total['title']; ?></td>
+			<td class="text-left td-title"><?php echo $total['title']; ?></td>
 			<td class="text-right td-value"><?php echo $total['text']; ?></td>
 		</tr>
 	<?php } ?>

@@ -43,10 +43,8 @@ class ControllerSveaCheckout extends Controller
         $data['heading_order'] = $this->language->get('heading_order');
         $data['heading_shipping'] = $this->language->get('heading_shipping');
         $data['heading_misc'] = $this->language->get('heading_misc');
-        $data['heading_cart'] = $this->language->get('heading_cart');
         $data['heading_payment'] = $this->language->get('heading_payment');
 
-        $data['text_tooltip_shipping'] = $this->language->get('text_shipping_method');
         $data['text_checkout_into'] = $this->language->get('text_checkout_into');
         $data['text_normal_checkout'] = sprintf($this->language->get('text_normal_checkout'), $this->url->link('checkout/checkout/index'));
 
@@ -65,6 +63,10 @@ class ControllerSveaCheckout extends Controller
         $data['sco_email'] = isset($this->session->data['sco_email']) ? $this->session->data['sco_email'] : null;
         $data['sco_postcode'] = isset($this->session->data['sco_postcode']) ? $this->session->data['sco_postcode'] : null;
 
+        $data['sco_show_coupons'] = $this->config->get('sco_show_coupons_on_checkout');
+        $data['sco_show_voucher'] = $this->config->get('sco_show_voucher_on_checkout');
+        $data['sco_show_comment'] = $this->config->get('sco_show_order_comment_on_checkout');
+
         $data['order_comment'] = '';
         if (isset($this->session->data['order_id'])) {
             $this->load->model('checkout/order');
@@ -77,6 +79,13 @@ class ControllerSveaCheckout extends Controller
         $data['text_comment'] = $this->language->get('text_comment');
         $data['status_coupon'] = $this->config->get('coupon_status');
         $data['text_coupon'] = $this->language->get('text_coupon');
+
+        $data['coupon_icon_title'] = $this->language->get('item_coupon');
+        $data['voucher_icon_title'] = $this->language->get('item_voucher');
+        $data['comment_icon_title'] = $this->language->get('item_comment');
+        $data['text_change_postcode'] = $this->language->get('text_change_postcode');
+        $data['button_continue'] = $this->language->get('button_continue');
+        $data['button_back'] = $this->language->get('button_back');
 
         $data['status_voucher'] = $this->config->get('voucher_status');
         $data['text_voucher'] = $this->language->get('text_voucher');

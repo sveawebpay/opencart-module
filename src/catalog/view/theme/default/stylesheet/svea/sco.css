@@ -13,21 +13,124 @@ textarea.form-control {
     background-color: #fff;
     border: 1px solid #cbcbcb;
     border-radius: 5px;
-    color: #595959;
+    color: #3d3d3d;
     position: relative;
 }
 
-textarea.form-control {
-    max-width: 100%;
-    height: 85px;
+.checkout-page-container h1,
+.checkout-page-container h2,
+.checkout-page-container h3,
+.checkout-page-container h4,
+.checkout-page-container h5,
+.checkout-page-container h6 {
+    color: #00325c;
+}
+
+.checkout-page-container h3 {
+    font-size: 32px;
 }
 
 .form-group {
     margin-bottom: 0;
 }
 
+.sco-form,
+.sco-form input,
+.sco-form a,
+.sco-form span,
+.sco-form p {
+    color: #3d3d3d;
+}
+
+.sco-form i {
+    color: #00AECE;
+}
+
+
+/* Inactive form */
+.sco-form.inactive,
+.sco-form.inactive input,
+.sco-form.inactive a,
+.sco-form.inactive span,
+.sco-form.inactive p {
+    color: #DADADA;
+}
+
+.sco-form .cover-layer {
+    display: none
+}
+
+.sco-form.passed .cover-layer {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 999;
+}
+
+.sco-form.inactive i {
+    color: #DADADA;
+}
+
+.shipping-methods {
+    margin-top: 15px;
+    position: relative;
+}
+
+.shipping-methods:after {
+    content: "▼";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    font-size: 14px;
+    padding: 11px 15px;
+    color: #00AECE;
+    pointer-events: none;
+}
+
+#sco-shipping {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+
+#sco-shipping::-ms-expand {
+    display: none;
+}
+
+.sco-form {
+}
+
+.sco-form input {
+    outline: 0.5px;
+}
+
+.sco-main-content a {
+    color: #00AECE;
+}
+
+textarea.form-control {
+    height: 85px;
+    resize: none;
+}
+
+#sco-comment-add {
+    height: 85px;
+}
+
+
+#sco-form {
+    margin-top: 20px;
+}
 
 /* Cart - start */
+#sco-cart h3 {
+    margin-bottom: 0;
+}
+
 .table {
     margin-bottom: 0;
 }
@@ -38,20 +141,33 @@ textarea.form-control {
 }
 
 .table-products > tbody > tr > td {
-    padding: 8px 0;
+    padding: 15px 0;
     font-size: 13px;
+    border-top: 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-totals {
+    margin-bottom: 15px;
 }
 
 .table-totals > tbody > tr > td {
     padding: 2px 0;
     font-size: 12px;
-    color: #a5a5a5;
-    font-weight: 700;
     border: 0;
 }
 
+.table-totals .td-title {
+    font-weight: 700;
+}
+
+.table-totals .td-value,
+.table-products .td-total {
+    text-transform: uppercase;
+}
+
 .table-totals tr:last-child td {
-    color: #0098b5;
+    /*color: #00AECE;*/
     font-size: 15px;
 }
 
@@ -84,12 +200,12 @@ textarea.form-control {
     position: relative;
 }
 
-.addon .glyphicon {
+.addon i {
     position: absolute;
     left: 0;
     padding: 15px;
     pointer-events: none;
-    color: #aaa;
+    /*color: #aaa;*/
     z-index: 10;
 }
 
@@ -97,43 +213,14 @@ textarea.form-control {
     padding-left: 35px;
 }
 
-.list-group li > a .glyphicon {
+.list-group li > a i {
     padding-right: 3px;
     vertical-align: text-top;
 }
 
-/*.change-checkout-method {*/
-    /*color: #111;*/
-/*}*/
-
-/*.change-checkout-method a {*/
-    /*font-size: 14px;*/
-    /*color: #111;*/
-    /*text-decoration: none;*/
-/*}*/
-
-/*.change-checkout-method a:hover {*/
-    /*color: #111;*/
-    /*text-decoration: underline;*/
-/*}*/
-
-/*@media (max-width: 767px) {*/
-    /*.change-checkout-method .row .text-left h1 {*/
-        /*text-align: center !important;*/
-    /*}*/
-/*}*/
-
 .sco-main-content {
     padding: 0;
-    background-color: #fafafa;
-    border-radius: 5px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
     overflow: hidden;
-    color: #595959;
-}
-
-.sco-main-content .list-group-item a {
-    color: #0098b5;
 }
 
 .sco-left-column {
@@ -142,51 +229,19 @@ textarea.form-control {
 }
 
 .sco-right-column {
-    background-color: #fff;
-    border-left: 1px solid #e5e5e5;
-    padding: 15px 20px;
-    min-height: 650px;
-    position: relative;
-}
-
-.sco-right-column .buttons {
-    position: absolute;
-    bottom: 0;
-    right: 30px;
 }
 
 @media (max-width: 767px) {
     .sco-left-column,
     .sco-right-column {
-        padding: 15px;
     }
 
     .sco-right-column {
-        padding-bottom: 30px;
     }
 }
 
 .allow-classic-checkout {
-    overflow: hidden;
-    padding: 20px 15px;
-    background-color: #fff;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.allow-classic-checkout p {
-    margin: 0;
     text-align: center;
-    font-size: 16px;
-}
-
-.allow-classic-checkout .glyphicon {
-    color: #0098b5;
-}
-
-@media (max-width: 767px) {
-    .allow-classic-checkout .glyphicon {
-        display: none;
-    }
 }
 
 #sco-email {
@@ -196,13 +251,26 @@ textarea.form-control {
 }
 
 #sco-postcode {
-    border-radius: 0 0 5px 5px;
+    border-radius: 5px;
 }
 
+.sco-input,
 #sco-shipping,
 #sco-email,
 #sco-postcode {
-    height: 44px;
+    height: 42px;
+    line-height: 28px;
+}
+
+.sco-input.form-control {
+    z-index: 0;
+}
+
+#sco-email:read-only,
+#sco-postcode:read-only {
+    background: transparent;
+    /*color: #939598;*/
+    opacity: .7;
 }
 
 #sco-details {
@@ -212,20 +280,21 @@ textarea.form-control {
 #sco-coupon,
 #sco-voucher,
 #sco-comment {
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 25px;
 }
 
 #sco-coupon input.form-control:focus,
 #sco-voucher input.form-control:focus,
 #sco-comment textarea.form-control:focus {
-    border: 1px solid #0098b5;
+    border: 1px solid #00AECE;;
     box-shadow: none;
 }
 
 .sco-change-cart {
-    color: #0098b5;
+    color: #00AECE;
     font-size: 11px;
+    display: block;
+    text-align: right;
 }
 
 #sco-snippet-section p {
@@ -236,5 +305,142 @@ textarea.form-control {
     margin-top: 10px;
     font-size: 12px;
     font-weight: 300;
-    color: #111;
+    /*color: #111;*/
+}
+
+@media (min-width: 767px) {
+    .svea-checkout .checkout-page-container {
+        width: 760px;
+        margin: 0 auto;
+        padding: 30px 45px 90px 45px; /* Bootstrap add 15 more pixels on left and right side */
+        border: 1px solid lightgray;
+        border-radius: 5px;
+    }
+
+    .action-icons {
+        padding: 0 20%;
+    }
+}
+
+@media (max-width: 767px) {
+    .svea-checkout .checkout-page-container {
+        padding: 30px 15px 90px 15px; /* Bootstrap add 15 more pixels for container element */
+        border-radius: 5px;
+    }
+}
+
+.action-icons {
+    display: flex;
+    justify-content: space-around;
+    margin: 45px 0 15px 0;
+}
+
+.sco-checkout-extra-options {
+    text-align: center;
+    flex: 0 0 30%;
+}
+
+.sco-checkout-extra-options a,
+.sco-checkout-extra-options a:hover,
+.sco-checkout-extra-options a:active {
+    text-decoration: none;
+}
+
+.sco-checkout-extra-options i {
+    font-size: 30px;
+    opacity: 1;
+}
+
+.sco-checkout-extra-options a span {
+    display: block;
+}
+
+.addon .change-postcode {
+    position: absolute;
+    display: none;
+    top: 12px;
+    right: 15px;
+    font-size: 12px;
+    color: #00AECE;
+    cursor: pointer;
+}
+
+.sco-continue-btn,
+.sco-back-btn
+{
+    margin-top: 15px;
+}
+
+.sco-primary-btn,
+.sco-primary-btn:hover,
+.sco-primary-btn:active,
+.sco-primary-btn:focus {
+    height: 42px;
+    font-size: 16px;
+    background: #00AECE;
+    color: #FFFFFF;
+    border: none;
+}
+
+.sco-primary-btn:active:focus,
+.sco-primary-btn.pushed {
+    background: #00839b;
+}
+
+.sco-btn-danger {
+    height: 42px;
+    font-size: 16px;
+}
+
+.sco-primary-btn:disabled {
+    background: #DADADA;
+}
+
+.sco-checkout-extra-options i.check-icon {
+    display: none;
+    color: #92ab63;
+    font-size: 16px !important;
+    opacity: 1 !important;
+}
+
+.sco-checkout-extra-options.used i.check-icon {
+    display: inline;
+}
+
+.checkout-page-container .addon-content {
+    margin-bottom: 45px;
+}
+
+.checkout-page-container .addon-content i {
+    color: #FFFFFF;
+}
+
+.sco-danger {
+    color: #DC901A;
+    background: none;
+    border: none;
+}
+
+input.form-control.sco-input-alert {
+    border: 1px solid #DC901A;
+}
+
+#sco-snippet-loader {
+    color: #00AECE;
+    font-size: 32px;
+}
+
+#sco-snippet-loader {
+    display: inline-block;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+.sco-input-label {
+    position: absolute;
+    top: 0px;
+    left: 13px;
+    z-index: 2;
+    font-size: 10px;
+    color: #00839b !important;
 }

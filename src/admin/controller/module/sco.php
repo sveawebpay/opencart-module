@@ -6,7 +6,7 @@ class ControllerModuleSco extends Controller
 
     // Use this name as params prefix (Svea checkout)
     private $name = 'sco';
-    private $module_version = '4.1.0';
+    private $module_version = '4.2.0';
 
     public function index()
     {
@@ -64,8 +64,20 @@ class ControllerModuleSco extends Controller
             'pending_status_id' => '1',
             'delivered_status_id' => '15',
             'canceled_status_id' => '7',
-            'credited_status_id' => '11'
+            'credited_status_id' => '11',
+            'show_coupons_on_checkout' => '1',
+            'show_voucher_on_checkout' => '1',
+            'show_order_comment_on_checkout' => '1'
         );
+
+        $data['options_on_checkout_page'] = array(
+            'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
+            'sco_show_voucher_on_checkout' => $this->language->get('text_show_voucher_on_checkout'),
+            'sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout')
+        );
+
+        $data['text_yes'] = $this->language->get('text_yes');
+        $data['text_no'] = $this->language->get('text_no');
 
         foreach ($fields as $field => $default) {
             if (isset($this->request->post[$this->name . '_' . $field])) {
@@ -200,6 +212,7 @@ class ControllerModuleSco extends Controller
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_order_status'] = $this->language->get('entry_order_status');
         $data['entry_oc_order_status'] = $this->language->get('entry_oc_order_status');
+        $data['entry_show_options_on_checkout'] = $this->language->get('entry_show_options_on_checkout');
 
         $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
         $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');

@@ -19,6 +19,14 @@ $_['entry_status_delivered_text']   = 'Delivers a created order.';
 $_['entry_status_refunded']         = 'Credited:';
 $_['entry_status_refunded_text']    = 'Applies on orders delivered/captured.';
 
+$_['text_show_voucher_on_checkout']	= 'Show Voucher on Checkout page';
+$_['text_show_coupons_on_checkout']	= 'Show Coupon on Checkout page';
+$_['text_show_order_comment_on_checkout']   = 'Show Message on Checkout page';
+
+$_['item_voucher']					= 'Voucher';
+$_['item_coupon']					= 'Coupon';
+$_['item_comment']				    = 'Message';
+
 // Tabs
 $_['tab_general']				    = 'General';
 $_['tab_authorization']			    = 'Authorization';
@@ -29,6 +37,7 @@ $_['tab_authorization_prod']		= 'Production Credentials';
 $_['entry_test_mode']			    = 'Test mode';
 $_['entry_order_status']		    = 'Order Status';
 $_['entry_oc_order_status']		    = 'Open Cart Status';
+$_['entry_show_options_on_checkout']= 'Show options on checkout page';
 $_['entry_status_checkout']		    = 'Show option to go to default checkout on checkout page.';
 $_['entry_status']				    = 'Status';
 
