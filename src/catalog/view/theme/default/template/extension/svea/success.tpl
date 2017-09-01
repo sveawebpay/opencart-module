@@ -20,10 +20,6 @@
                         <div id="sco-snippet-section">
                             <?php echo $snippet; ?>
                         </div>
-
-                        <div class="buttons">
-                            <div class="pull-right"><a href="<?php echo $continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
-                        </div>
                     </section>
                 </div>
             </div>

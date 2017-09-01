@@ -12,6 +12,7 @@ class ControllerExtensionSveaCart extends Controller
 
         $data['cart'] = $this->url->link('checkout/cart');
         $data['text_change_cart'] = $this->language->get('text_change_cart');
+        $data['heading_cart'] = $this->language->get('heading_cart');
 
         // PRODUCTS
         $data['products'] = array();
@@ -19,7 +20,7 @@ class ControllerExtensionSveaCart extends Controller
         foreach ($products as $product) {
 
             $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-            $product['price'] = $this->removeTrail($product['price']);
+            $product['price'] = $product['price'];
 
             $data['products'][] = array(
                 'product_id' => $product['product_id'],
@@ -38,7 +39,7 @@ class ControllerExtensionSveaCart extends Controller
             foreach ($this->session->data['vouchers'] as $key => $voucher) {
 
                 $voucher['amount'] = $this->currency->format($voucher['amount'], $this->session->data['currency']);
-                $voucher['amount'] = $this->removeTrail($voucher['amount']);
+                $voucher['amount'] = $voucher['amount'];
 
                 $data['vouchers'][] = array(
                     'key' => $key,
@@ -89,7 +90,7 @@ class ControllerExtensionSveaCart extends Controller
         $data['totals'] = array();
 
         foreach ($totals as $total) {
-            $total['value'] = $this->removeTrail($this->currency->format($total['value'], $this->session->data['currency']));
+            $total['value'] = $this->currency->format($total['value'], $this->session->data['currency']);
             $data['totals'][] = array(
                 'title' => $total['title'],
                 'text' => $total['value']

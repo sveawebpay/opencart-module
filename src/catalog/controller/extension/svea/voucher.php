@@ -8,8 +8,9 @@ class ControllerExtensionSveaVoucher extends Controller {
 	public function index() {
 		$this->load->language('extension/svea/checkout');
 
-        $data['text_voucher_code']	= $this->language->get('text_voucher_code');
-		$data['voucher']			= NULL;
+        $data['text_voucher_code'] = $this->language->get('text_voucher_code');
+        $data['item_voucher'] = $this->language->get('item_voucher');
+        $data['voucher'] = NULL;
 
 		if ( (isset($this->session->data['voucher'])) AND (!empty($this->session->data['voucher'])) ) {
 			$this->load->model('extension/total/voucher');

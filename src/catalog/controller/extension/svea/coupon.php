@@ -7,6 +7,7 @@ class ControllerExtensionSveaCoupon extends Controller
         $this->load->language('extension/svea/checkout');
 
         $data['text_coupon_code'] = $this->language->get('text_coupon_code');
+        $data['item_coupon'] = $this->language->get('item_coupon');
         $data['coupon'] = NULL;
 
         if ((isset($this->session->data['coupon'])) && (!empty($this->session->data['coupon']))) {

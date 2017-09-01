@@ -19,6 +19,14 @@ $_['entry_status_delivered_text']   = 'Levererar en skapad order. ';
 $_['entry_status_refunded']         = 'Krediterad:';
 $_['entry_status_refunded_text']    = 'Kan utföras på ordrar som är levererade/inlösta.';
 
+$_['text_show_voucher_on_checkout']	= 'Visa Presentkort på checkoutsidan';
+$_['text_show_coupons_on_checkout']	= 'Visa Rabattkod på checkoutsidan';
+$_['text_show_order_comment_on_checkout']   = 'Visa Meddelande på checkoutsidan';
+
+$_['item_voucher']					= 'Presentkort';
+$_['item_coupon']					= 'Rabattkod';
+$_['item_comment']				    = 'Meddelande';
+
 // Tabs
 $_['tab_general']				    = 'Övrigt';
 $_['tab_authorization']			    = 'Identifiering';
@@ -29,6 +37,7 @@ $_['tab_authorization_prod']		= 'Produktionsuppgifter';
 $_['entry_test_mode']			    = 'Testläge';
 $_['entry_order_status']		    = 'Orderstatusar:';
 $_['entry_oc_order_status']         = 'Opencart Status';
+$_['entry_show_options_on_checkout']= 'Visa alternativ på kassan';
 $_['entry_status_checkout']		    = 'Visa alternativ för att gå till standardkassan på checkoutsidan. ';
 $_['entry_status']				    = 'Status';
 
