@@ -6,8 +6,7 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
     public $config;
     public $payment_method;
 
-    public function __construct($config, $payment_method = NULL)
-    {
+    public function __construct($config, $payment_method = NULL) {
         $this->config = $config;
         $this->payment_method = $payment_method;
     }
@@ -16,11 +15,11 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
     {
         $type = strtoupper($type);
 
-        if ($type == "HOSTED") {
+        if($type == "HOSTED"){
             return Svea\WebPay\Config\ConfigurationService::SWP_TEST_URL;
-        } elseif ($type == "INVOICE" || $type == "PAYMENTPLAN") {
+        } elseif($type == "INVOICE" || $type == "PAYMENTPLAN"){
             return Svea\WebPay\Config\ConfigurationService::SWP_TEST_WS_URL;
-        } elseif ($type == "HOSTED_ADMIN") {
+        } elseif($type == "HOSTED_ADMIN"){
             return Svea\WebPay\Config\ConfigurationService::SWP_TEST_HOSTED_ADMIN_URL;
         } elseif ($type == "ADMIN") {
             return Svea\WebPay\Config\ConfigurationService::SWP_TEST_ADMIN_URL;
