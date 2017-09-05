@@ -1,6 +1,5 @@
 <?php
 
-
 class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\ConfigurationProvider
 {
     public $config;
