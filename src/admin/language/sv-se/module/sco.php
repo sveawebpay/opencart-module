@@ -20,6 +20,7 @@ $_['entry_status_delivered']        = 'Levererad:';
 $_['entry_status_delivered_text']   = 'Levererar en skapad order. ';
 $_['entry_status_refunded']         = 'Krediterad:';
 $_['entry_status_refunded_text']    = 'Kan utföras på ordrar som är levererade/inlösta.';
+$_['entry_shop_terms_uri']          = 'Butikens köpvillkor';
 
 $_['text_show_voucher_on_checkout']	= 'Visa Presentkort på checkoutsidan';
 $_['text_show_coupons_on_checkout']	= 'Visa Rabattkod på checkoutsidan';

@@ -20,6 +20,7 @@ $_['entry_status_delivered']        = 'Delivered:';
 $_['entry_status_delivered_text']   = 'Delivers a created order.';
 $_['entry_status_refunded']         = 'Credited:';
 $_['entry_status_refunded_text']    = 'Applies on orders delivered/captured.';
+$_['entry_shop_terms_uri']          = 'Shop terms';
 
 $_['text_show_voucher_on_checkout']	= 'Show Voucher on Checkout page';
 $_['text_show_coupons_on_checkout']	= 'Show Coupon on Checkout page';

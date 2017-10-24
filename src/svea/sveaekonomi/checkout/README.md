@@ -1,5 +1,5 @@
 # PHP Checkout library for Svea Checkout
-Version 1.0.4
+Version 1.0.3
 
 ## Index
 * [1. Setup](#1-setup)
@@ -127,7 +127,7 @@ $data = array(
         "TermsUri" => "http://localhost:51898/terms",
         "CheckoutUri" => "http://localhost:51925/",
         "ConfirmationUri" => "http://localhost:51925/checkout/confirm",
-        "PushUri" => "https://svea.com/push.aspx?sid=123&svea_order=123"
+        "pushUri" => "https://svea.com/push.php?svea_order_id={checkout.order.uri}"
     )
 );
 ```
@@ -277,7 +277,7 @@ Array
             [TermsUri] => http://localhost:51898/terms
             [CheckoutUri] => http://localhost:51925/
             [ConfirmationUri] => http://localhost:51925/checkout/confirm
-            [PushUri] => https://svea.com/push.aspx?sid=123&svea_order=123
+            [PushUri] => https://svea.com/push.php?svea_order={checkout.order.uri}
         )
 
     [Cart] => Array

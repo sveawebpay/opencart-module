@@ -28,11 +28,11 @@
 
 ## OpenCart 2.2 - Svea checkout and payment modules
 
-* Supports OpenCart 2.2.0 and higher (older versions can be accessed here [opencart-module](https://github.com/sveawebpay/opencart-module))
+* Supports OpenCart 2.2.0.0 (older and newer versions can be found in the branches)
 * Requires PHP 5.3 or higher (namespace support)
-* Features _Product Price Widget_ and admin functions requires [vQmod](https://github.com/vqmod) to be installed in your Opencart installation
-* Features Sveas new iFrame checkout page (currently only available for Sweden)
-* Features Svea Checkout with invoices, payment plans, card and direct bank payments that only works in Sweden currently
+* Features _Product Price Widget_ and admin functions requires [vQmod](https://github.com/vqmod) to be installed in your OpenCart installation
+* Features Sveas new iframe checkout page
+* Features Svea Checkout with invoices, payment plans, card and direct bank payments
 * Features Payment modules for invoices, payment plans, card and direct bank payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany.
 * Features integrated admin functionality that corresponds with Sveas servers, current functions are delivering, confirming, canceling and crediting orders
 
@@ -66,7 +66,7 @@ The following examples assumes that you have already downloaded and installed Op
 * Login to the admin page
 * Navigate to the Extensions/Payments page
 * Install all the modules that you are going to use
-![Svea payment modules] (docs/image/ModulesPayments.png "Svea payment modules")
+![Svea payment modules](docs/image/ModulesPayments.png "Svea payment modules")
 * Proceed to [2. OpenCart configuration](#i2)
 
 # 2. OpenCart configuration <a name="i2"></a>
@@ -88,19 +88,19 @@ These steps contain general setup information regarding OpenCart, if you already
 * Fill out the fields and add a country
 * By not selecting any zone in the table(like in the example below) you will select all zones within the chosen country
 * Save
-![Geo zones](docs/image/Geo zones.png "Geo zones")
+![Geo zones](docs/image/Geo_zones.png "Geo zones")
 
 ## 2.3 Tax rates <a name="i2-3"></a>
 * Navigate to System/Localisation/Taxes/Tax Rates
 * Click the plus sign in the top-right corner to add a new tax rate
 * Fill out the fields and select the geo zone you created in the previous step and save
-![Tax rates](docs/image/Tax rates.png "Tax rates")
+![Tax rates](docs/image/Tax_rates.png "Tax rates")
 
 ## 2.4 Tax classes <a name="i2-4"></a>
 * Navigate to System/Localisation/Taxes/Tax Classes
 * Click the plus sign in the top-right corner to add a new tax rate
 * Fill out the fields and add the tax rate you created in the previous step and save
-![Tax classes](docs/image/Tax classes.png "Tax classes")
+![Tax classes](docs/image/Tax_classes.png "Tax classes")
 
 ## 2.5 Additional requirements <a name="i2-5"></a>
 ### Specifying prices
@@ -135,12 +135,12 @@ After configuring the invoice fee in [3.1](#i3-1) go to either [3.2](#i3-2) Chec
 * Set the _fee_ for each country that you are going to accept invoices from(the amount is excluding VAT)
 * Select the _tax class_ you created earlier in section [2.4](#i2-4)
 * Select a value for the _sort order_ e.g. 4 or 5, preferably a value lower than the sort order for taxes otherwise there will be no tax on the invoice fee
-![Svea invoice fee](docs/image/Svea invoice fee.png "Svea invoice fee")
+![Svea invoice fee](docs/image/Svea_invoice_fee.png "Svea invoice fee")
 
 ## 3.2 Checkout  <a name="i3-2"></a>
 * Navigate to Extensions/Modules and press edit on Svea Checkout
 * First select the Authorization tab and fill out your credentials that you received from Svea after signing an agreement with us
-![Checkout authorization](docs/image/Checkout authorization.png "Checkout authorization")
+![Checkout authorization](docs/image/Checkout_authorization.png "Checkout authorization")
 * Go back to the General tab
 * Set _Status_ to _Enabled_
 * Set _Test mode_ to _Enabled_ as you will be needing to do tests before we will allow you to use our production environment
@@ -151,7 +151,7 @@ After configuring the invoice fee in [3.1](#i3-1) go to either [3.2](#i3-2) Chec
 * Set _Credited_ to _Credited_
 
 Congratulations! You have now configured all the required settings for the checkout and can now proceed with testing! You don't have to read anything else from section 3 as it's only if you're not using the checkout.
-![Checkout general](docs/image/Checkout authorization.png "Checkout general")
+![Checkout general](docs/image/Checkout_general.png "Checkout general")
 
 ## 3.3 Svea Invoice <a name="i3-3"></a>
 * Navigate to Extensions/Payments
@@ -265,10 +265,10 @@ Note! Requires [vQmod](https://github.com/vqmod)
 The request made from the card and direct payment modules to Sveas systems is made through a redirected form.
 The response of the payment is then returned to the module via POST or GET (selectable in the corresponding Svea admin interface).
 
-###When using GET response
+#### When using GET response
 Have in mind that a long response string sent via GET could get cut off in some browsers and especially in some servers due to server limitations.
 Our recommendation to solve this is to check the PHP configuration of the server and set it to accept at LEAST 1024 characters.
 
-###When using POST response
+#### When using POST response
 As our servers are using SSL-certificates and when using POST to get the response from a payment the users browser prompts the user with a question whether to continue or not, if the receiving site does not have a certificate.
 Would the customer then click cancel, the process does not continue.  This does not occur if your server holds a certificate. To solve this we recommend that you purchase a SSL-certificate from your provider.
