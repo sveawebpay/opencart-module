@@ -26,7 +26,7 @@
 
 # I. Information
 
-## OpenCart 2.2 - Svea checkout and payment modules
+## OpenCart 2.0 - Svea checkout and payment modules
 
 * Supports OpenCart 2.0.0 to 2.1.0.2 (newer and older versions can be found by selecting other branches))
 * Requires PHP 5.3 or higher (namespace support)
