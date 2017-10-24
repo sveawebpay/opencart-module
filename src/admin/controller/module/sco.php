@@ -67,7 +67,8 @@ class ControllerModuleSco extends Controller
             'credited_status_id' => '11',
             'show_coupons_on_checkout' => '1',
             'show_voucher_on_checkout' => '1',
-            'show_order_comment_on_checkout' => '1'
+            'show_order_comment_on_checkout' => '1',
+            'checkout_terms_uri' => ''
         );
 
         $data['options_on_checkout_page'] = array(
@@ -220,6 +221,8 @@ class ControllerModuleSco extends Controller
         $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
         $data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
         $data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
+        $data['entry_shop_terms_uri'] = $this->language->get('entry_shop_terms_uri');
+        $data['entry_shop_terms_uri_example'] = $_SERVER['HTTP_HOST'] . str_replace("admin", "", rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\'));
 
         $data['entry_checkout_merchant_id'] = $this->language->get('entry_checkout_merchant_id');
         $data['entry_checkout_secret'] = $this->language->get('entry_checkout_secret');

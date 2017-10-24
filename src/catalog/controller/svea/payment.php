@@ -133,13 +133,20 @@ class ControllerSveaPayment extends SveaCommon
 
     private function setOrderGeneralData($checkout_order_entry, $locale)
     {
+        $terms_uri =  $this->url->link('information/information', array('information_id' => $this->config->get('config_checkout_id')));
+        $config_terms_uri_secured = $this->config->get('sco_checkout_terms_uri_secured');
+        $config_terms_uri = $this->config->get('sco_checkout_terms_uri');
+        if ($config_terms_uri != "") {
+            $terms_uri =  $this->createUrl($config_terms_uri, $config_terms_uri_secured);
+        }
+
         $checkout_order_entry
             ->setCountryCode('SE')// customer country, we recommend basing this on the customer billing address
             ->setCurrency('SEK')
             ->setCheckoutUri($this->url->link('svea/checkout'))
             ->setConfirmationUri($this->url->link('svea/success'))
             ->setPushUri($this->url->link('svea/push') . '&svea_order={checkout.order.uri}')
-            ->setTermsUri($this->url->link('information/information') . '&information_id=' . $this->config->get('config_checkout_id'))
+            ->setTermsUri($terms_uri)
             ->setLocale($locale);
     }
 
@@ -415,6 +422,12 @@ class ControllerSveaPayment extends SveaCommon
             $order_builder->addPresetValue($presetPhoneNumber);
         }
 
+    }
+
+    private function createUrl($route, $secure) {
+        $url = ($secure ? 'https://' : 'http://');
+        $url .= $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/' . $route;
+        return $url;
     }
 
 }

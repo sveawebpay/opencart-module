@@ -17,11 +17,11 @@ class ComposerStaticInit1a778baa5fcbd8a2a47f867c789902d5
     public static $prefixDirsPsr4 = array (
         'Svea\\WebPay\\' => 
         array (
-            0 => __DIR__ . '/..' . '/svea/webpay/src',
+            0 => __DIR__ . '/..' . '/sveaekonomi/webpay/src',
         ),
         'Svea\\Checkout\\' => 
         array (
-            0 => __DIR__ . '/..' . '/svea/checkout-php/src',
+            0 => __DIR__ . '/..' . '/sveaekonomi/checkout/src',
         ),
     );
 

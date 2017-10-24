@@ -149,6 +149,17 @@
                                     <?php } ?>
                             </div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-checkout-secret-word"><?php echo $entry_shop_terms_uri; ?></label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><?php echo $entry_shop_terms_uri_example ?></span>
+                                        <input type="text" name="sco_checkout_terms_uri" id="input-checkout-terms-uri" class="form-control"
+                                               value="<?php echo $sco_checkout_terms_uri; ?>" placeholder="terms-uri-example">
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- order statuses - start -->
                             <div class="form-group">
                                 <h5 class="col-sm-2 control-label">Svea <?php echo $entry_order_status; ?></h5>
