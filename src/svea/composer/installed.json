@@ -1,18 +1,12 @@
 [
     {
         "name": "sveaekonomi/checkout",
-        "version": "1.0.4",
-        "version_normalized": "1.0.4.0",
+        "version": "dev-develop",
+        "version_normalized": "dev-develop",
         "source": {
             "type": "git",
-            "url": "https://github.com/sveawebpay/php-checkout.git",
-            "reference": "0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-checkout/zipball/0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab",
-            "reference": "0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab",
-            "shasum": ""
+            "url": "http://tfs.ia.corp.svea.com:8080/tfs/Projects/Svea.WebPay.Extensions/_git/php-checkout",
+            "reference": "44ec8b029a5c16498a9756358ff8aabed2685207"
         },
         "require": {
             "ext-curl": "*",
@@ -27,15 +21,32 @@
             "sebastian/phpcpd": "^2.0.4",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2017-04-13 13:53:55",
+        "time": "2017-04-18 15:05:13",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "Svea\\Checkout\\": "src"
             }
         },
-        "notification-url": "https://packagist.org/downloads/",
+        "scripts": {
+            "test": [
+                "Svea\\Checkout\\Util\\ScriptHandler::runUnitTests"
+            ],
+            "php-doc": [
+                "Svea\\Checkout\\Util\\ScriptHandler::createPhpDocumentation"
+            ],
+            "code-analyse": [
+                "Svea\\Checkout\\Util\\ScriptHandler::createLogFolder",
+                "Svea\\Checkout\\Util\\ScriptHandler::codeAnalysisPhpLoc",
+                "Svea\\Checkout\\Util\\ScriptHandler::codeAnalysisPhpCpd",
+                "Svea\\Checkout\\Util\\ScriptHandler::codeAnalysisPhpCs",
+                "Svea\\Checkout\\Util\\ScriptHandler::codeAnalysisPhpMd"
+            ],
+            "fix-sniff-violations": [
+                "Svea\\Checkout\\Util\\ScriptHandler::fixSniffViolations"
+            ]
+        },
         "license": [
             "Apache-2.0"
         ],
@@ -53,33 +64,26 @@
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/sveawebpay/php-integration.git",
-            "reference": "99f1d794159e449dd6522396a827be9b2ee9da41"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/99f1d794159e449dd6522396a827be9b2ee9da41",
-            "reference": "99f1d794159e449dd6522396a827be9b2ee9da41",
-            "shasum": ""
+            "url": "http://tfs.ia.corp.svea.com:8080/tfs/Projects/Svea.WebPay.Extensions/_git/php-integration",
+            "reference": "ec9879764d29f65f02adc8d51bc20fe27b65c864"
         },
         "require": {
             "ext-curl": "*",
             "ext-soap": "*",
             "php": ">=5.3.0",
-            "sveaekonomi/checkout": "^1.0.0"
+            "sveaekonomi/checkout": "dev-develop"
         },
         "require-dev": {
             "phpunit/phpunit": "~4.8 || ~5.5"
         },
-        "time": "2017-09-05 08:41:19",
+        "time": "2017-09-05 08:47:08",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "Svea\\WebPay\\": "src"
             }
         },
-        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "Apache-2.0"
         ],

@@ -66,7 +66,8 @@ class ControllerExtensionModuleSco extends Controller
             'credited_status_id' => '11',
             'show_coupons_on_checkout' => '1',
             'show_voucher_on_checkout' => '1',
-            'show_order_comment_on_checkout' => '1'
+            'show_order_comment_on_checkout' => '1',
+            'checkout_terms_uri' => '',
         );
 
         $data['options_on_checkout_page'] = array(
@@ -90,17 +91,6 @@ class ControllerExtensionModuleSco extends Controller
 
         // Set custom events
         $this->load->model('extension/svea/events');
-
-        $this->model_extension_svea_events->addSveaCustomEvent(
-            'sco_edit_checkout_url_before',
-            'catalog/controller/checkout/checkout/before',
-            'extension/svea/checkout/redirectToScoPage'
-        );
-        $this->model_extension_svea_events->addSveaCustomEvent(
-            'sco_edit_order_from_admin_before',
-            'catalog/controller/api/order/edit/before',
-            'extension/svea/order/edit'
-        );
 
         // Add order statuses
         $this->load->model('localisation/order_status');
@@ -211,6 +201,25 @@ class ControllerExtensionModuleSco extends Controller
      * */
     public function install()
     {
+        // Set custom events
+        $this->load->model('extension/svea/events');
+
+        $this->model_extension_svea_events->addSveaCustomEvent(
+            'sco_edit_checkout_url_before',
+            'catalog/controller/checkout/checkout/before',
+            'extension/svea/checkout/redirectToScoPage'
+        );
+        $this->model_extension_svea_events->addSveaCustomEvent(
+            'sco_edit_order_from_admin_before',
+            'catalog/controller/api/order/edit/before',
+            'extension/svea/order/edit'
+        );
+
+        $this->model_extension_svea_events->addSveaCustomEvent(
+            'sco_add_history_order_from_admin_before',
+            'catalog/controller/api/order/history/before',
+            'extension/svea/order/history'
+        );
     }
 
     /*
@@ -222,7 +231,8 @@ class ControllerExtensionModuleSco extends Controller
         $this->load->model('extension/event');
 
         $this->model_extension_event->deleteEvent('sco_edit_checkout_url_before');
-        $this->model_svea_events->deleteSveaCustomEvents();
+        $this->model_extension_event->deleteEvent('sco_add_history_order_from_admin_before');
+        $this->model_extension_svea_events->deleteSveaCustomEvents();
     }
 
     private function setLanguage()
@@ -253,6 +263,8 @@ class ControllerExtensionModuleSco extends Controller
         $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
         $data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
         $data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
+        $data['entry_shop_terms_uri'] = $this->language->get('entry_shop_terms_uri');
+        $data['entry_shop_terms_uri_example'] = $_SERVER['HTTP_HOST'] . str_replace("admin", "", rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\'));
 
         $data['entry_checkout_merchant_id'] = $this->language->get('entry_checkout_merchant_id');
         $data['entry_checkout_secret'] = $this->language->get('entry_checkout_secret');
