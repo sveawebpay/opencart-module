@@ -237,6 +237,10 @@ class ModelExtensionSveaCheckout extends Model
             $data['telephone'] = $this->db->escape($response['phonenumber']);
         }
 
+        if (isset($response['emailaddress'])) {
+            $data['email'] = $this->db->escape($response['emailaddress']);
+        }
+
         // Payment data
         if (isset($response['billingaddress']) && is_array($response['billingaddress'])) {
             $billing_address = $response['billingaddress'];
