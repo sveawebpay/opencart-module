@@ -264,10 +264,10 @@ Note! Requires [vQmod](https://github.com/vqmod)
 The request made from the card and direct payment modules to Sveas systems is made through a redirected form.
 The response of the payment is then returned to the module via POST or GET (selectable in the corresponding Svea admin interface).
 
-####When using GET response
+#### When using GET response
 Have in mind that a long response string sent via GET could get cut off in some browsers and especially in some servers due to server limitations.
 Our recommendation to solve this is to check the PHP configuration of the server and set it to accept at LEAST 1024 characters.
 
-####When using POST response
+#### When using POST response
 As our servers are using SSL-certificates and when using POST to get the response from a payment the users browser prompts the user with a question whether to continue or not, if the receiving site does not have a certificate.
 Would the customer then click cancel, the process does not continue.  This does not occur if your server holds a certificate. To solve this we recommend that you purchase a SSL-certificate from your provider.
