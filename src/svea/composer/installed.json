@@ -29,7 +29,7 @@
         },
         "time": "2017-04-13T13:53:55+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "Svea\\Checkout\\": "src"
@@ -73,7 +73,7 @@
         },
         "time": "2017-10-05T07:35:42+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "Svea\\WebPay\\": "src"
