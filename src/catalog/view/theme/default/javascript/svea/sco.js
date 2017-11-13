@@ -55,6 +55,15 @@ $(document).ready(function () {
           }
 
           shippingEl.html(html);
+            $.ajax({
+                type: 'POST',
+                url: 'index.php?route=svea/shipping/save',
+                data: shippingEl,
+                dataType: 'json',
+                success: function () {
+                    updateCartInformation();
+                }
+            });
           $('#sco-details').show("fast", function () {
             stepOneFormEl.addClass('passed');
             postCodeEl.prop('disabled', true);
