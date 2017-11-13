@@ -1,6 +1,7 @@
 <?php
 // Heading
 $_['heading_title']				    = 'Svea Checkout';
+$_['text_extension']                = 'Extension';
 
 // Text
 $_['text_module']				    = 'Modules';
@@ -43,8 +44,15 @@ $_['entry_status_checkout']		    = 'Show option to go to default checkout on che
 $_['entry_status']				    = 'Status';
 
 // Tab 2
+$_['entry_checkout_default_country']= 'Default checkout country';
+$_['entry_checkout_default_country_text']   = 'If a customer selects a country which is not one of the ones below then this checkout will be loaded';
+
 $_['entry_checkout_merchant_id']    = 'Checkout Merchant Id';
-$_['entry_checkout_secret']		    = 'Checkout Secret word';
+$_['entry_checkout_secret']		    = 'Checkout Secret Word';
+
+$_['entry_sweden']                  = 'Sweden';
+$_['entry_norway']                  = 'Norway';
+$_['entry_finland']                 = 'Finland';
 
 // Error
 $_['error_permission']			    = 'Warning: You do not have permission to modify the Svea Checkout module!';

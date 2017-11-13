@@ -21,7 +21,7 @@
             "sebastian/phpcpd": "^2.0.4",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2017-04-18 15:05:13",
+        "time": "2017-04-18T15:05:13+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -60,12 +60,12 @@
     },
     {
         "name": "sveaekonomi/webpay",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "dev-develop",
+        "version_normalized": "dev-develop",
         "source": {
             "type": "git",
             "url": "http://tfs.ia.corp.svea.com:8080/tfs/Projects/Svea.WebPay.Extensions/_git/php-integration",
-            "reference": "ec9879764d29f65f02adc8d51bc20fe27b65c864"
+            "reference": "bc47c1009f1cfb78acc93228a8bc8d4506d198eb"
         },
         "require": {
             "ext-curl": "*",
@@ -76,7 +76,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.8 || ~5.5"
         },
-        "time": "2017-09-05 08:47:08",
+        "time": "2017-11-07T16:37:03+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {

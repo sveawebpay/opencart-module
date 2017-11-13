@@ -2,10 +2,57 @@
 
 class ControllerExtensionSveaCheckout extends Controller
 {
+    private function setCheckoutCountry($country)
+    {
+        if($country == 203)
+        {
+            $this->session->data['sco_locale'] = "sv-se";
+            $this->session->data['sco_currency'] = "SEK";
+            $this->session->data['currency'] = 'SEK';
+        }
+        else if($country == 160)
+        {
+            $this->session->data['sco_locale'] = "nn-no";
+            $this->session->data['sco_currency'] = "NOK";
+            $this->session->data['currency'] = 'NOK';
+        }
+        else if($country == 72)
+        {
+            $this->session->data['sco_locale'] = "fi-fi";
+            $this->session->data['sco_currency'] = "EUR";
+            $this->session->data['currency'] = 'EUR';
+        }
+        else {
+
+        }
+        $this->load->model('localisation/country');
+        $countryCode = $this->model_localisation_country->getCountry($country);
+        $this->session->data['sco_country'] = $countryCode['iso_code_2'];
+        $this->session->data['sco_country_id'] = $country;
+    }
+    public function getCheckoutCountry()
+    {
+
+        if($this->session->data['language'] == "sv-se")
+        {
+            return 203;
+        }
+        else if($this->session->data['language'] == "nn-no")
+        {
+            return 160;
+        }
+        else if($this->session->data['language'] == "fi-fi")
+        {
+            return 72;
+        }
+        else
+        {
+            return $this->config->get('sco_checkout_default_country_id');
+        }
+    }
     public function index()
     {
         $this->load->language('extension/svea/checkout');
-
         $this->load->model('extension/svea/checkout');
         $this->load->model('extension/extension');
 
@@ -28,11 +75,7 @@ class ControllerExtensionSveaCheckout extends Controller
         }
         /* Check status - end */
 
-        $this->session->data['sco_locale'] = 'sv-se';
-        $this->session->data['sco_currency'] = 'SEK';
-        $this->session->data['currency'] = 'SEK';
-        $this->session->data['sco_country'] = 'SE';
-        $this->session->data['sco_country_id'] = '203'; // Hard coded Sweden country
+        $this->setCheckoutCountry($this->getCheckoutCountry());
 
         $data['status_default_checkout'] = $this->config->get('sco_status_checkout');
 

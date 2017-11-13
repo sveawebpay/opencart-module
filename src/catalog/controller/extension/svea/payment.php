@@ -361,7 +361,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
         return (int)$order_id;
     }
 
-
+ 
     private function updateCheckoutRow($order_id, $response)
     {
         if (!is_array($response)) {

@@ -16,9 +16,10 @@ class ControllerExtensionSveaPush extends Controller
             if ($test_mode) {
                 $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
             }
-
+            $this->load->model('extension/svea/checkout');
             $checkout_entry = \Svea\WebPay\WebPay::checkout($config);
-            $checkout_entry->setCheckoutOrderId($checkout_order_id);
+            $checkout_entry->setCountryCode($this->model_extension_svea_checkout->getCountryCode((int)$checkout_order_id));
+            $checkout_entry->setCheckoutOrderId((int)$checkout_order_id);
 
             // Get Svea Checkout order
             try {
@@ -39,7 +40,6 @@ class ControllerExtensionSveaPush extends Controller
         // End of logic!
         exit;
     }
-
 
     private function updateOrders($response)
     {
