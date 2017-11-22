@@ -46,7 +46,11 @@ class ControllerExtensionSveaOrder extends Controller
                 $svea_order_history_comment = $this->db->query("SELECT comment FROM " . DB_PREFIX . "order_history WHERE order_id = " . (int)$this->request->get['order_id']);
                 foreach ($svea_order_history_comment->rows as $svea_order_history) {
                     $svea_order_id_exists = strpos($svea_order_history['comment'], 'Svea order id', 0);
+                    $svea_transaction_id_exists = strpos($svea_order_history['comment'], 'Svea transactionId', 0);
                     if ($svea_order_id_exists !== false) {
+                        preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
+                    }
+                    elseif ($svea_transaction_id_exists !== false) {
                         preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
                     }
                 }
@@ -404,7 +408,10 @@ class ControllerExtensionSveaOrder extends Controller
 
                 foreach ($svea_order_history_comment->rows as $svea_order_history) {
                     $svea_order_id_exists = strpos($svea_order_history['comment'], 'Svea order id', 0);
+                    $svea_transaction_id_exists = strpos($svea_order_history['comment'], 'Svea transactionId', 0);
                     if ($svea_order_id_exists !== false) {
+                        preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
+                    } elseif ($svea_transaction_id_exists !== false) {
                         preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
                     }
                 }

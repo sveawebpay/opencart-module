@@ -265,7 +265,8 @@ class ControllerExtensionModuleSco extends Controller
         $this->load->model('extension/event');
 
         $this->model_extension_event->deleteEvent('sco_edit_checkout_url_before');
-        $this->model_extension_event->deleteEvent('sco_add_history_order_from_admin_before');
+        $this->model_extension_event->deleteEvent('sco_add_history_order_from_admin');
+        $this->model_extension_event->deleteEvent('sco_edit_order_from_admin_before');
         $this->model_extension_svea_events->deleteSveaCustomEvents();
     }
 
