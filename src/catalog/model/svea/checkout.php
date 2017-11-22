@@ -212,6 +212,8 @@ class ModelSveaCheckout extends Model
 										code		= '" . $this->db->escape($total['code']) . "',
 										title		= '" . $this->db->escape($total['title']) . "',
 										`value`		= '" . (float)$total['value'] . "',
+										text		= '" . $this->db->escape($total['text'])
+											. "',
 										sort_order	= '" . (int)$total['sort_order'] . "'");
             }
         }
