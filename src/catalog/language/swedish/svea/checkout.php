@@ -92,7 +92,7 @@ $_['error_push_update']				= 'Failed to update reservation to Svea!';
 
 $_['text_home']                     = 'Hem';
 $_['button_continue']               = 'Fortsätta';
-$_['button_back']                   = 'Tillbak';
+$_['button_back']                   = 'Tillbaka';
 $_['text_basket']                   = 'Kundvagn';
 $_['text_checkout']                 = 'Kassa';
 $_['text_success']                  = 'Framgång';

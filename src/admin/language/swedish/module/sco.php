@@ -43,8 +43,15 @@ $_['entry_status_checkout']		    = 'Visa alternativ för att gå till standardka
 $_['entry_status']				    = 'Status';
 
 // Tab 2
+$_['entry_checkout_default_country']= 'Generellt checkout land';
+$_['entry_checkout_default_country_text']   = 'Om en kund väljer ett land som inte är något av dom nedanför så laddas checkouten från denna land';
+
 $_['entry_checkout_merchant_id']    = 'Checkout Merchant Id';
-$_['entry_checkout_secret']		    = 'Checkout Secret word';
+$_['entry_checkout_secret']		    = 'Checkout Secret Word';
+
+$_['entry_sweden']                  = 'Sverige';
+$_['entry_norway']                  = 'Norge';
+$_['entry_finland']                 = 'Finland';
 
 // Error
 $_['error_permission']			    = 'Varning: Du har inte tillstånd att redigera Svea checkoutmodulen. ';

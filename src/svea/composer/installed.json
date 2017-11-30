@@ -1,17 +1,17 @@
 [
     {
         "name": "sveaekonomi/checkout",
-        "version": "1.0.4",
-        "version_normalized": "1.0.4.0",
+        "version": "dev-develop",
+        "version_normalized": "dev-develop",
         "source": {
             "type": "git",
             "url": "https://github.com/sveawebpay/php-checkout.git",
-            "reference": "0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab"
+            "reference": "e2b64d8c52a7946518143aa5e275fffc026465e9"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-checkout/zipball/0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab",
-            "reference": "0212c9d2b3ec05b7a2cfbb8ce27222eb4dbe44ab",
+            "url": "https://api.github.com/repos/sveawebpay/php-checkout/zipball/e2b64d8c52a7946518143aa5e275fffc026465e9",
+            "reference": "e2b64d8c52a7946518143aa5e275fffc026465e9",
             "shasum": ""
         },
         "require": {
@@ -27,7 +27,7 @@
             "sebastian/phpcpd": "^2.0.4",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2017-04-13T13:53:55+00:00",
+        "time": "2017-04-13T08:43:44+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -54,24 +54,24 @@
         "source": {
             "type": "git",
             "url": "https://github.com/sveawebpay/php-integration.git",
-            "reference": "4d62eda691f20f2b8df86f7508893d347200a780"
+            "reference": "28443a108a3ae184f3cade4bf4c22349222e4c6f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/4d62eda691f20f2b8df86f7508893d347200a780",
-            "reference": "4d62eda691f20f2b8df86f7508893d347200a780",
+            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/28443a108a3ae184f3cade4bf4c22349222e4c6f",
+            "reference": "28443a108a3ae184f3cade4bf4c22349222e4c6f",
             "shasum": ""
         },
         "require": {
             "ext-curl": "*",
             "ext-soap": "*",
             "php": ">=5.3.0",
-            "sveaekonomi/checkout": "^1.0.0"
+            "sveaekonomi/checkout": "dev-develop"
         },
         "require-dev": {
             "phpunit/phpunit": "~4.8 || ~5.5"
         },
-        "time": "2017-10-05T07:35:42+00:00",
+        "time": "2017-11-13T09:39:21+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {

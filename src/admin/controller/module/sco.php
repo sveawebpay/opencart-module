@@ -6,7 +6,7 @@ class ControllerModuleSco extends Controller
 
     // Use this name as params prefix (Svea checkout)
     private $name = 'sco';
-    private $module_version = '4.2.0';
+    private $module_version = '4.1.0';
 
     public function index()
     {
@@ -51,11 +51,24 @@ class ControllerModuleSco extends Controller
         // Set cancel url
         $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
+        $this->load->model('localisation/country');
         $fields = array(
             'checkout_merchant_id' => null,
             'checkout_secret_word' => null,
+            'checkout_merchant_id_se' => null,
+            'checkout_secret_word_se' => null,
+            'checkout_merchant_id_no' => null,
+            'checkout_secret_word_no' => null,
+            'checkout_merchant_id_fi' => null,
+            'checkout_secret_word_fi' => null,
             'checkout_test_merchant_id' => null,
             'checkout_test_secret_word' => null,
+            'checkout_test_merchant_id_se' => null,
+            'checkout_test_secret_word_se' => null,
+            'checkout_test_merchant_id_no' => null,
+            'checkout_test_secret_word_no' => null,
+            'checkout_test_merchant_id_fi' => null,
+            'checkout_test_secret_word_fi' => null,
             'status' => '0',
             'test_mode' => '1',
             'status_checkout' => '0',
@@ -68,7 +81,8 @@ class ControllerModuleSco extends Controller
             'show_coupons_on_checkout' => '1',
             'show_voucher_on_checkout' => '1',
             'show_order_comment_on_checkout' => '1',
-            'checkout_terms_uri' => ''
+            'checkout_terms_uri' => '',
+            'checkout_default_country_id' => ''
         );
 
         $data['options_on_checkout_page'] = array(
@@ -99,6 +113,8 @@ class ControllerModuleSco extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
+        $data['countries'] = array();
+        array_push($data['countries'],$this->model_localisation_country->getCountry(203),$this->model_localisation_country->getCountry(160),$this->model_localisation_country->getCountry(72));
         // set response
         $this->response->setOutput($this->load->view('module/sco.tpl', $data));
     }
@@ -120,24 +136,43 @@ class ControllerModuleSco extends Controller
 	    $post_fields = $this->request->post;
 
 	    // - if status enabled
-	    if ($post_fields[$status_field_name] == '1')
-	    {
-		    $checkout_merchant_id_field_name = $this->name . '_checkout_merchant_id';
-		    $checkout_secret_word_field_name = $this->name . '_checkout_secret_word';
+        if ($post_fields[$status_field_name] == '1')
+        {
+            $data = array(
+                'sco_checkout_merchant_id_se',
+                'sco_checkout_secret_word_se',
+                'sco_checkout_merchant_id_no',
+                'sco_checkout_secret_word_no',
+                'sco_checkout_merchant_id_fi',
+                'sco_checkout_secret_word_fi',);
 
-		    // - if test-mode enabled set test credentials
-		    if($post_fields[$test_mode_field_name] == '1')
-		    {
-			    $checkout_merchant_id_field_name = $this->name . '_checkout_test_merchant_id';
-			    $checkout_secret_word_field_name = $this->name . '_checkout_test_secret_word';
-		    }
+            // - if test-mode enabled set test credentials
+            if($post_fields[$test_mode_field_name] == '1')
+            {
+                $data = array(
+                    'sco_checkout_test_merchant_id_se',
+                    'sco_checkout_test_secret_word_se',
+                    'sco_checkout_test_merchant_id_no',
+                    'sco_checkout_test_secret_word_no',
+                    'sco_checkout_test_merchant_id_fi',
+                    'sco_checkout_test_secret_word_fi',);
+            }
 
-		    // - check values
-		    if (empty($post_fields[$checkout_merchant_id_field_name]) || empty($post_fields[$checkout_secret_word_field_name]))
-		    {
-			    $this->error['warning'] = $this->language->get('error_authorization_data');
-		    }
-	    }
+            // - check values
+            $empty_field_count = 0;
+            for($i = 0; $i < count($data); $i++)
+            {
+                if(empty($post_fields[current($data)]))
+                {
+                    $empty_field_count++;
+                }
+                next($data);
+            }
+            if($empty_field_count == 6)
+            {
+                $this->error['warning'] = $this->language->get('error_authorization_data');
+            }
+        }
 
         $this->error = $this->validateStatuses();
 
@@ -231,8 +266,13 @@ class ControllerModuleSco extends Controller
 
         $data['tab_general'] = $this->language->get('tab_general');
         $data['tab_authorization'] = $this->language->get('tab_authorization');
-	    $data['tab_authorization_test'] = $this->language->get('tab_authorization_test');
+        $data['entry_checkout_default_country'] = $this->language->get('entry_checkout_default_country');
+        $data['entry_checkout_default_country_text'] = $this->language->get('entry_checkout_default_country_text');
+        $data['tab_authorization_test'] = $this->language->get('tab_authorization_test');
 	    $data['tab_authorization_prod'] = $this->language->get('tab_authorization_prod');
+        $data['entry_sweden'] = $this->language->get('entry_sweden');
+        $data['entry_norway'] = $this->language->get('entry_norway');
+        $data['entry_finland'] = $this->language->get('entry_finland');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');

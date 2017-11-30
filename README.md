@@ -28,7 +28,7 @@
 
 ## OpenCart 2.0 - Svea checkout and payment modules
 
-* Supports OpenCart 2.0.0 to 2.1.0.2 (newer and older versions can be found by selecting other branches))
+* Supports OpenCart 2.0.0.0 to 2.1.0.2 (newer and older versions can be found by selecting other branches))
 * Requires PHP 5.3 or higher (namespace support)
 * Features _Product Price Widget_ and admin functions requires [vQmod](https://github.com/vqmod) to be installed in your Opencart installation
 * Features Sveas new iFrame checkout page (currently only available for Sweden)
