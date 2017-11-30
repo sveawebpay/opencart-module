@@ -23,6 +23,7 @@ class ModelSveaEvents extends Model
 
         if ($svea_active_payments_count === 0 && $sco_active === false) {
             $this->model_extension_event->deleteEvent('sco_edit_order_from_admin_before');
+            $this->model_extension_event->deleteEvent('sco_add_history_order_from_admin');
         }
     }
 

@@ -28,8 +28,7 @@ class ControllerSveaPayment extends SveaCommon
 
         $order_id = $this->addOrder($order_id, $email);
 
-        $locale = isset($this->session->data['sco_locale']) ? strtolower($this->session->data['sco_locale']) : 'sv-se';
-        $currency = isset($this->session->data['sco_currency']) ? strtoupper($this->session->data['sco_currency']) : 'SEK';
+        $currency = strtoupper($this->session->data['sco_currency']);
 
         $this->load->model('localisation/currency');
         $currency_info = $this->model_localisation_currency->getCurrencyByCode($currency);
@@ -46,7 +45,7 @@ class ControllerSveaPayment extends SveaCommon
 
         $order_builder = $checkout_order_entry->getCheckoutOrderBuilder();
 
-        $this->setOrderGeneralData($checkout_order_entry, $locale);
+        $this->setOrderGeneralData($checkout_order_entry);
 
         $order_builder = $this->addOrderRowsToWebServiceOrder($order_builder, $products, $currency_value);
 
@@ -131,7 +130,7 @@ class ControllerSveaPayment extends SveaCommon
         return $this->getHashOfOldState() !== $this->getHashOfCurrentState();
     }
 
-    private function setOrderGeneralData($checkout_order_entry, $locale)
+    private function setOrderGeneralData($checkout_order_entry)
     {
         $terms_uri =  $this->url->link('information/information', array('information_id' => $this->config->get('config_checkout_id')));
 
@@ -142,13 +141,13 @@ class ControllerSveaPayment extends SveaCommon
         }
 
         $checkout_order_entry
-            ->setCountryCode('SE')// customer country, we recommend basing this on the customer billing address
-            ->setCurrency('SEK')
+            ->setCountryCode($this->session->data['sco_country'])// customer country, we recommend basing this on the customer billing address
+            ->setCurrency($this->session->data['sco_currency'])
             ->setCheckoutUri($this->url->link('svea/checkout'))
             ->setConfirmationUri($this->url->link('svea/success'))
-            ->setPushUri($this->url->link('svea/push', array('svea_order' => '{checkout.order.uri}')))
-            ->setTermsUri($terms_uri)
-            ->setLocale($locale);
+            ->setPushUri(str_replace('&amp;', '&', urldecode($this->url->link('svea/push', array('svea_order' => '{checkout.order.uri}')))))
+            ->setTermsUri(str_replace('&amp;', '&',(urldecode($terms_uri))))
+            ->setLocale($this->session->data['sco_locale']);
     }
 
     private function addOrder($order_id, $email)

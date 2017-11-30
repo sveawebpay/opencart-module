@@ -49,13 +49,26 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
 
     public function getSecret($type, $country){}
 
-    public function getCheckoutMerchantId()
+    public function getCheckoutMerchantId($country = NULL)
     {
-        return $this->config->get('sco_checkout_test_merchant_id');
+        if($this->config->get('sco_checkout_test_merchant_id_' . strtolower($country)) !== NULL)
+        {
+            return $this->config->get('sco_checkout_test_merchant_id_' . strtolower($country));
+        }
+        else
+        {
+            throw new Exception('Could not fetch Merchant Id');
+        }
     }
-
-    public function getCheckoutSecret()
+    public function getCheckoutSecret($country = NULL)
     {
-        return $this->config->get('sco_checkout_test_secret_word');
+        if($this->config->get('sco_checkout_test_secret_word_' . strtolower($country)) !== NULL)
+        {
+            return $this->config->get('sco_checkout_test_secret_word_' . strtolower($country));
+        }
+        else
+        {
+            throw new Exception('Could not fetch secret word');
+        }
     }
 }

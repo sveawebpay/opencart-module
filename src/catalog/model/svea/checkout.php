@@ -14,6 +14,25 @@ class ModelSveaCheckout extends Model
         return isset($query->row['product_id']) ? $query->rows : null;
     }
 
+    public function getCountryCode($checkout_order_id)
+    {
+        $checkout_order_id = (int)$checkout_order_id;
+        $query = $this->db->query("SELECT currency FROM " . DB_PREFIX . "order_sco WHERE checkout_id = '" . $checkout_order_id . "'");
+        if($query->num_rows !== 0) {
+            if ($query->row['currency'] == "NOK") {
+                return "NO";
+            } elseif ($query->row['currency'] == "SEK") {
+                return "SE";
+            } elseif ($query->row['currency'] == "EUR") {
+                return "FI";
+            } else {
+                $this->log->write("Svea Error: Could not fetch currency from table order_sco in database.");
+                return NULL;
+            }
+        }
+        $this->log->write("Svea Error: Received push for order " . $checkout_order_id . " but order is missing in your database.");
+        return NULL;
+    }
 
     public function addOrder($order)
     {

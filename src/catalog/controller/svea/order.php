@@ -54,7 +54,11 @@ class ControllerSveaOrder extends Controller
 
                 foreach ($svea_order_history_comment->rows as $svea_order_history) {
                     $svea_order_id_exists = strpos($svea_order_history['comment'], 'Svea order id', 0);
+                    $svea_transaction_id_exists = strpos($svea_order_history['comment'], 'Svea transactionId', 0);
                     if ($svea_order_id_exists !== false) {
+                        preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
+                    }
+                    elseif ($svea_transaction_id_exists !== false) {
                         preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
                     }
                 }
@@ -264,6 +268,7 @@ class ControllerSveaOrder extends Controller
 
                 if ($sco_order !== null && isset($sco_order['checkout_id'])) {
                     $sco_order_id = (int)$sco_order['checkout_id'];
+                    $country = $this->model_svea_checkout->getCountryCode($sco_order['checkout_id']);
                     $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
                     if ($this->config->get('sco_test_mode')) {
                         $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
@@ -275,9 +280,10 @@ class ControllerSveaOrder extends Controller
                      */
                     if ($this->config->get('sco_canceled_status_id') === $order_status_id) {
                         try {
-                            if ($this->canOrderBeCancelled($sco_order_id) === true) {
+                            if ($this->canOrderBeCancelled($sco_order_id, $country) === true) {
                                 $cancel_response = \Svea\WebPay\WebPayAdmin::cancelOrder($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->cancelCheckoutOrder()
                                     ->doRequest();
 
@@ -301,11 +307,12 @@ class ControllerSveaOrder extends Controller
                          * Credited (Refunded) Order
                          */
                         try {
-                            if ($this->canOrderBeCreditedByDeliveryRows($sco_order_id) === true) {
+                            if ($this->canOrderBeCreditedByDeliveryRows($sco_order_id, $country) === true) {
                                 $delivery_id = $this->getDeliveryId();
                                 $credit_rows = $this->getCreditRows();
                                 $credit_response = \Svea\WebPay\WebPayAdmin::creditOrderRows($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->setDeliveryId($delivery_id)
                                     ->setRowsToCredit($credit_rows)
                                     ->creditCheckoutOrderRows()
@@ -317,12 +324,13 @@ class ControllerSveaOrder extends Controller
                                     $json['error'] = ' Credit Error: Order can not be Credited!';
                                     $this->request->post['order_status_id'] = $order_info['order_status_id'];
                                 }
-                            } elseif ($this->canOrderBeCreditedByAmount($sco_order_id) === true) {
+                            } elseif ($this->canOrderBeCreditedByAmount($sco_order_id, $country) === true) {
                                 $delivery_id = $this->getDeliveryId();
                                 $delivery_credit = $this->getDeliveryAmount();
 
                                 $credit_response = \Svea\WebPay\WebPayAdmin::creditAmount($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->setDeliveryId($delivery_id)
                                     ->setAmountIncVat($delivery_credit)
                                     ->creditCheckoutAmount()
@@ -348,9 +356,10 @@ class ControllerSveaOrder extends Controller
                          * Delivered (Confirm) Order
                          */
                         try {
-                            if ($this->canOrderBeDelivered($sco_order_id) === true) {
+                            if ($this->canOrderBeDelivered($sco_order_id, $country) === true) {
                                 $deliver_response = \Svea\WebPay\WebPayAdmin::deliverOrderRows($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->deliverCheckoutOrder()
                                     ->doRequest();
 
@@ -442,7 +451,11 @@ class ControllerSveaOrder extends Controller
 
                 foreach ($svea_order_history_comment->rows as $svea_order_history) {
                     $svea_order_id_exists = strpos($svea_order_history['comment'], 'Svea order id', 0);
+                    $svea_transaction_id_exists = strpos($svea_order_history['comment'], 'Svea transactionId', 0);
                     if ($svea_order_id_exists !== false) {
+                        preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
+                    }
+                    elseif ($svea_transaction_id_exists !== false) {
                         preg_match_all('/\d+/', $svea_order_history['comment'], $svea_order_id);
                     }
                 }
@@ -681,6 +694,7 @@ class ControllerSveaOrder extends Controller
 
                 if ($sco_order !== null && isset($sco_order['checkout_id'])) {
                     $sco_order_id = (int)$sco_order['checkout_id'];
+                    $country = $this->model_svea_checkout->getCountryCode($sco_order['checkout_id']);
                     $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
                     if ($this->config->get('sco_test_mode')) {
                         $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
@@ -692,9 +706,10 @@ class ControllerSveaOrder extends Controller
                      */
                     if ($this->config->get('sco_canceled_status_id') === $order_status_id) {
                         try {
-                            if ($this->canOrderBeCancelled($sco_order_id) === true) {
+                            if ($this->canOrderBeCancelled($sco_order_id, $country) === true) {
                                 $cancel_response = \Svea\WebPay\WebPayAdmin::cancelOrder($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->cancelCheckoutOrder()
                                     ->doRequest();
 
@@ -720,11 +735,12 @@ class ControllerSveaOrder extends Controller
                          * Credited (Refunded) Order
                          */
                         try {
-                            if ($this->canOrderBeCreditedByDeliveryRows($sco_order_id) === true) {
+                            if ($this->canOrderBeCreditedByDeliveryRows($sco_order_id, $country) === true) {
                                 $delivery_id = $this->getDeliveryId();
                                 $credit_rows = $this->getCreditRows();
                                 $credit_response = \Svea\WebPay\WebPayAdmin::creditOrderRows($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->setDeliveryId($delivery_id)
                                     ->setRowsToCredit($credit_rows)
                                     ->creditCheckoutOrderRows()
@@ -738,12 +754,13 @@ class ControllerSveaOrder extends Controller
                                     $json['error'] = ' Credit Error: Order can not be Credited!';
                                     $this->request->post['order_status_id'] = $order_info['order_status_id'];
                                 }
-                            } elseif ($this->canOrderBeCreditedByAmount($sco_order_id) === true) {
+                            } elseif ($this->canOrderBeCreditedByAmount($sco_order_id, $country) === true) {
                                 $delivery_id = $this->getDeliveryId();
                                 $delivery_credit = $this->getDeliveryAmount();
 
                                 $credit_response = \Svea\WebPay\WebPayAdmin::creditAmount($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->setDeliveryId($delivery_id)
                                     ->setAmountIncVat($delivery_credit)
                                     ->creditCheckoutAmount()
@@ -771,9 +788,10 @@ class ControllerSveaOrder extends Controller
                          * Delivered (Confirm) Order
                          */
                         try {
-                            if ($this->canOrderBeDelivered($sco_order_id) === true) {
+                            if ($this->canOrderBeDelivered($sco_order_id, $country) === true) {
                                 $deliver_response = \Svea\WebPay\WebPayAdmin::deliverOrderRows($config)
                                     ->setCheckoutOrderId($sco_order_id)
+                                    ->setCountryCode($country)
                                     ->deliverCheckoutOrder()
                                     ->doRequest();
 
@@ -820,20 +838,21 @@ class ControllerSveaOrder extends Controller
         }
     }
 
-    private function getOrderDataFromWebPayAdmin($checkout_order_id)
+    private function getOrderDataFromWebPayAdmin($checkout_order_id, $countryCode)
     {
         $config = $this->getConfiguration();
         $this->order_data_from_admin = \Svea\WebPay\WebPayAdmin::queryOrder($config)
             ->setCheckoutOrderId($checkout_order_id)
+            ->setCountryCode($countryCode)
             ->queryCheckoutOrder()
             ->doRequest();
 
         return $this->order_data_from_admin;
     }
 
-    private function canOrderBeCancelled($checkout_order_id)
+    private function canOrderBeCancelled($checkout_order_id, $countryCode)
     {
-        $order_data = $this->getOrderDataFromWebPayAdmin($checkout_order_id);
+        $order_data = $this->getOrderDataFromWebPayAdmin($checkout_order_id, $countryCode);
         if (isset($order_data['Actions'])) {
             $actions = $order_data['Actions'];
             $order_rows = $order_data['OrderRows'];
@@ -858,14 +877,14 @@ class ControllerSveaOrder extends Controller
         return false;
     }
 
-    private function canOrderBeDelivered($checkout_order_id)
+    private function canOrderBeDelivered($checkout_order_id, $countryCode)
     {
-        $order_data = $this->getOrderDataFromWebPayAdmin($checkout_order_id);
+        $order_data = $this->getOrderDataFromWebPayAdmin($checkout_order_id, $countryCode);
         if (isset($order_data['Actions'])) {
             $actions = $order_data['Actions'];
             $order_rows = $order_data['OrderRows'];
             if (in_array('CanDeliverOrder', $actions) === true && count($order_rows) > 0) {
-                if ($order_data['PaymentType'] !== 'Card') {
+                if ($order_data['PaymentType'] !== 'Card' && $order_data['PaymentType'] !== 'PaymentPlan') {
                     foreach ($order_rows as $order_row) {
                         $row_actions = $order_row['Actions'];
                         if (in_array('CanDeliverRow', $row_actions) !== true) {
@@ -880,23 +899,23 @@ class ControllerSveaOrder extends Controller
         return false;
     }
 
-    private function canOrderBeCreditedByAmount($checkout_order_id)
+    private function canOrderBeCreditedByAmount($checkout_order_id, $countryCode)
     {
-        return $this->canOrderBeCredited($checkout_order_id, 'CanCreditAmount');
+        return $this->canOrderBeCredited($checkout_order_id, 'CanCreditAmount' , $countryCode);
     }
 
-    private function canOrderBeCreditedByDeliveryRows($checkout_order_id)
+    private function canOrderBeCreditedByDeliveryRows($checkout_order_id, $countryCode)
     {
-        return $this->canOrderBeCredited($checkout_order_id, 'CanCreditOrderRows');
+        return $this->canOrderBeCredited($checkout_order_id, 'CanCreditOrderRows', $countryCode);
     }
 
-    private function canOrderBeCredited($checkout_order_id, $action_type)
+    private function canOrderBeCredited($checkout_order_id, $action_type, $countryCode)
     {
         if (empty($action_type)) {
             return false;
         }
 
-        $order_data = $this->getOrderDataFromWebPayAdmin($checkout_order_id);
+        $order_data = $this->getOrderDataFromWebPayAdmin($checkout_order_id, $countryCode);
         $order_rows = $order_data['OrderRows'];
         $deliveries = $order_data['Deliveries'];
         if (count($order_rows) === 0 && count($deliveries) === 1) {

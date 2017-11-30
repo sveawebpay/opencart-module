@@ -111,7 +111,7 @@ class OpencartSveaConfigTest implements \Svea\WebPay\Config\ConfigurationProvide
         return $this->config->get($this->payment_method . '_version');
     }
 
-    public function getCheckoutMerchantId(){}
+    public function getCheckoutMerchantId($country = NULL){}
 
-    public function getCheckoutSecret(){}
+    public function getCheckoutSecret($country = NULL){}
 }

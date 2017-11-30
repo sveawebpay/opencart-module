@@ -3,7 +3,7 @@
 class ControllerPaymentsveacard extends Controller
 {
     private $error = array();
-    protected $svea_version = '3.1.4';
+    protected $svea_version = '4.1.0';
 
     public function index()
     {

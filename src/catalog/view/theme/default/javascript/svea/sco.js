@@ -9,7 +9,7 @@ $(document).ready(function () {
   var voucherEl = $('#sco-voucher');
   var continueBtnStep1 = $('#continue-step-1');
   var continueBtnStep2;
-  var postCodeLength = 5;
+  var postCodeLength = 4;
   var stepOneFormEl = $('.sco-form.step-1');
   var stepTwoFormEl = $('.sco-form.step-2');
   var snippetContainerEl = $('#sco-snippet-section');
@@ -26,7 +26,7 @@ $(document).ready(function () {
   postCodeEl.allchange(function () {
     if (postCodeEl.val()) {
       var postcode = postCodeEl.val().replace(/\D/g, '');
-      if (postcode && postcode.length === postCodeLength && postcode === postCodeEl.val()) {
+      if (postcode && postcode.length >= postCodeLength && postcode >= postCodeEl.val()) {
         continueBtnStep1.prop('disabled', false);
       } else {
         continueBtnStep1.prop('disabled', true);
@@ -37,7 +37,7 @@ $(document).ready(function () {
   continueBtnStep1.on('click', function () {
     var postcode = postCodeEl.val().replace(/\D/g, '');
 
-    if (postcode && postcode.length === postCodeLength && postcode === postCodeEl.val()) {
+    if (postcode && postcode.length >= postCodeLength && postcode >= postCodeEl.val()) {
       $.ajax({
         type: 'POST',
         url: 'index.php?route=svea/shipping',
@@ -115,7 +115,7 @@ $(document).ready(function () {
   $('#sco-form input').on('change', function () {
     var postcode = postCodeEl.val().replace(/\D/g, '');
 
-    if (postcode && postcode.length === postCodeLength && postcode === postCodeEl.val()) {
+    if (postcode && postcode.length >= postCodeLength && postcode >= postCodeEl.val()) {
       continueBtnStep1.prop('disabled', false);
     } else {
       continueBtnStep1.prop('disabled', true);
@@ -275,7 +275,7 @@ $(document).ready(function () {
       url += '&create=true';
     }
 
-    if (postcode.length > 4) {
+    if (postcode.length >= 4) {
       continueBtnStep2.prop('disabled', true);
       $.ajax({
         type: 'POST',
