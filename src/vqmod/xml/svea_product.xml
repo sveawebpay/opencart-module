@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
-<id>SveaWebPay Product Price</id>
-<version>3.1.4</version>
-<vqmver>2.5.0</vqmver>
-<author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
+    <id>SveaWebPay Product Price</id>
+    <version>3.1.4</version>
+    <vqmver>2.5.0</vqmver>
+    <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
     <file name="catalog/controller/product/product.php">
-       <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
+        <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
         <operation name="svea controller load data to view">
             <search position="before"><![CDATA[  $data['options'] = array(); ]]></search>
             <add><![CDATA[
@@ -21,13 +21,13 @@
                         $viewProduct = null;
                         $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
                         if($svea_show_paymentplan === '1' || $svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DE"){
-                            $currency_decimals =  $this->currency->getCode() == 'EUR' ? 1 : 0;
+                            $currency_decimals =  $this->session->data['currency'] == 'EUR' ? 1 : 0;
                             $price_list = array();
                             $prices = array();
 
-                            $symbolRight = $this->currency->getSymbolRight( $this->currency->getCode());
-                            $symbolLeft = $this->currency->getSymbolLeft( $this->currency->getCode());
-                            $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price,  $this->currency->getCode(),false,false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
+                            $symbolRight = $this->currency->getSymbolRight( $this->session->data['currency']);
+                            $symbolLeft = $this->currency->getSymbolLeft( $this->session->data['currency']);
+                            $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price, $this->session->data['currency'], false, false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
 
                             //paymentplan
                             if($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "NL"){
@@ -71,7 +71,7 @@
                                 }
                             }
                             //invoice
-                            $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']),  $this->currency->getCode(),false,false );
+                            $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']), $this->session->data['currency'], false, false );
                             if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $currency_converted_price >= $lowest_to_pay){
 
                                 $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_invoice').'</h4>';
@@ -206,11 +206,11 @@
         </operation>
     </file>
     <file name="catalog/view/theme/*/template/product/product.tpl">
-<!--inserted between cart and review divs in product.tpl -->
+        <!--inserted between cart and review divs in product.tpl -->
         <operation name="svea widget style and html">
             <search position="before">
-            <![CDATA[  <div id="product">  ]]> </search>
-                <add><![CDATA[
+                <![CDATA[  <div id="product">  ]]> </search>
+            <add><![CDATA[
 
                         <?php
                     if (count($svea_widget) > 0) { ?>
@@ -292,7 +292,7 @@
 
             ]]></add>
         </operation>
-<!--inserted befort footer in product.tpl -->
+        <!--inserted befort footer in product.tpl -->
         <operation name="svea script ">
             <search position="before"><![CDATA[  <?php echo $footer; ?> ]]></search>
             <add><![CDATA[
@@ -327,3 +327,4 @@
         </operation>
     </file>
 </modification>
+

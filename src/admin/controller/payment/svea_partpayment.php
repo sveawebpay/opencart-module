@@ -1,4 +1,7 @@
 <?php
+
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
+
 class ControllerPaymentsveapartpayment extends Controller {
 	private $error = array();
         protected $svea_version = '3.1.4';
@@ -207,9 +210,7 @@ class ControllerPaymentsveapartpayment extends Controller {
      * Svea: Create table if does not exists, call Svea API, load with params values for specific countrycode
      * Called whenever saving payment plan module settings, will update stored campaigns in table svea_params_table.
      */
-    private function loadPaymentPlanParams(){
-        //Load SVEA includes
-        include(DIR_APPLICATION . '../svea/Includes.php');
+    private function loadPaymentPlanParams() {
         $countryCode = array("SE","NO","FI","DK","NL","DE");
         for($i=0;$i<sizeof($countryCode);$i++){
 
@@ -232,7 +233,7 @@ class ControllerPaymentsveapartpayment extends Controller {
                     $conf->config->set('svea_partpayment_password_' . $countryCode[$i], $password);
                     $conf->config->set('svea_partpayment_clientno_' . $countryCode[$i], $client_id);
 
-                    $svea_params = WebPay::getPaymentPlanParams($conf);
+                    $svea_params = \Svea\WebPay\WebPay::getPaymentPlanParams($conf);
 
                     try {
                         $svea_params = $svea_params->setCountryCode($countryCode[$i])
@@ -259,6 +260,13 @@ class ControllerPaymentsveapartpayment extends Controller {
      * Create Svea params talbe if not exists
      */
     public function install() {
+        $this->load->model('svea/events');
+        $this->model_svea_events->addSveaCustomEvent(
+            'sco_edit_order_from_admin_before',
+            'catalog/controller/api/order/edit/before',
+            'svea/order/edit'
+        );
+
         $q  = ' CREATE TABLE IF NOT EXISTS `' . DB_PREFIX .'svea_params_table`
                 (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `campaignCode` VARCHAR( 100 ) NOT NULL,
@@ -285,7 +293,9 @@ class ControllerPaymentsveapartpayment extends Controller {
 
     public function uninstall() {
         $this->load->model('setting/setting');
+        $this->load->model('svea/events');
         $this->model_setting_setting->editSetting('svea_partpayment', array('svea_partpayment_status'=>0));
+        $this->model_svea_events->deleteSveaCustomEvents();
     }
 
     protected function getSveaVersion(){

@@ -1,0 +1,25 @@
+{
+  "name": "svea/opencart-module-2-2-0",
+  "description": "Svea Opencart module with checkout",
+  "minimum-stability": "dev",
+  "config": {
+    "secure-http": false,
+    "vendor-dir": "src/svea",
+    "preferred-install": {
+      "*": "dist"
+    }
+  },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "http://tfs.ia.corp.svea.com:8080/tfs/Projects/Svea.WebPay.Extensions/_git/php-integration"
+    },
+    {
+      "type": "git",
+      "url": "http://tfs.ia.corp.svea.com:8080/tfs/Projects/Svea.WebPay.Extensions/_git/php-checkout"
+    }
+  ],
+  "require": {
+    "sveaekonomi/webpay": "dev-develop"
+  }
+}
