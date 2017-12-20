@@ -277,17 +277,19 @@ $('#getPlan').click(function() {
 //--></script>
 <script>
 $(document).ready(function () {
-  $('#button-payment-method').click(function() {
+if( $('#collapse-checkout-confirm').html().length > 0) {
     var country = $('#input-payment-country option:selected').text();
     /// only execute for finland
     if (country === 'Finland') {
-      fireEmail();
+        var email = $('#input-payment-email').val();
+        fireEmail(email);
     }
-  });
-  function fireEmail() {
-      console.log('making ajax');
+  }
+  function fireEmail(email) {
+      
       $.ajax("index.php?route=extension/svea/email/index", {
-        type: 'GET',
+        method: 'POST',
+        data: { email: email },
         statusCode: {
           201: function (response) {
             $('a#checkout').removeClass('disabled');

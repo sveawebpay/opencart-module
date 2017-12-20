@@ -5,12 +5,14 @@ class ControllerExtensionSveaEmail extends Controller {
 
 	public function index() 
 	{
-
-		if (!array_key_exists('email', $this->session->data['guest']) || !isset($this->session->data['guest']['email'])) {
-			return;
+		@$emailAddress = $this->request->post['email'];
+	
+		
+		if  (!array_key_exists('email', $this->request->post)) {
+			$emailAddress = $this->customer->getEmail();
+			
 		}
-
-		$emailAddress = $this->session->data['guest']['email'];
+		
 
 		if ($this->isEmail($emailAddress) && $this->session->data['payment_address']['iso_code_2'] === 'FI' && $this->session->data['shipping_address']['iso_code_2'] === 'FI') {
 			try {
