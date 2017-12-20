@@ -25,7 +25,6 @@ class ControllerExtensionSveaSuccess extends Controller
 
         unset($this->session->data['sco_locale']);
         unset($this->session->data['sco_currency']);
-        unset($this->session->data['order_id']);
         unset($this->session->data['sco_order_id']);
         unset($this->session->data['sco_cart_hash']);
         unset($this->session->data['sco_email']);

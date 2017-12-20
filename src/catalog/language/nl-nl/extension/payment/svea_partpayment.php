@@ -12,6 +12,7 @@ $_['text_initials']            = 'Initialen';
 $_['text_payment_options']     = 'Betaalopties';
 $_['text_get_address']        = 'Adresgegevens ophalen';
 $_['text_from']        			= 'Van';
+$_['text_required']             = 'Verplicht veld';
 
 //Error responses
 $_['response_20000'] = "De order is gesloten";

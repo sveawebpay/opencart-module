@@ -1,7 +1,7 @@
 <?php
 // Text
-$_['text_title']               = 'Svea WebPay Partpayment';
-$_['text_paymentplan']        = 'Partpayment';
+$_['text_title']               = 'Svea WebPay Payment Plan';
+$_['text_paymentplan']        = 'Payment Plan';
 $_['text_ssn']                 = 'Social Security No';
 $_['text_get_payment_options'] = 'Get payment options';
 $_['text_invoice_address']     = 'Invoice address';
@@ -12,6 +12,7 @@ $_['text_initials']            = 'Initials';
 $_['text_payment_options']     = 'Payment options';
 $_['text_get_address']        = 'Get address';
 $_['text_from']        			= 'From';
+$_['text_required']             = 'Required field';
 
 //Error responses
 $_['response_20000'] = "Order closed";

@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']               = 'Svea WebPay Osamaksu';
+$_['text_title']               = 'Maksa osissa, tutustu erämaksuvaihtoehtoihin';
 $_['text_paymentplan']        = 'Osamaksu';
 $_['text_ssn']                = 'Henkilötunnus';
 $_['text_get_payment_options'] = 'Hae maksuvaihtoehdot';
@@ -12,6 +12,7 @@ $_['text_vat_no']             = 'ALV';
 $_['text_initials']           = 'Tunnukset';
 $_['text_get_address']        = 'Hae osoite';
 $_['text_from']        			= 'Alkaen';
+$_['text_required']             = 'Vaadittu kenttä';
 
 
 //Error responses

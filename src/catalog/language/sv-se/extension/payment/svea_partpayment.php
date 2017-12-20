@@ -13,6 +13,7 @@ $_['text_initials']            = 'Initialer';
 $_['text_payment_options']     = 'Betalningsalternativ';
 $_['text_get_address']        = 'Hämta address';
 $_['text_from']        			= 'Från';
+$_['text_required']             = 'Obligatoriskt fält';
 
 
 //Error responses

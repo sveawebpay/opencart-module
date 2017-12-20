@@ -12,6 +12,7 @@ $_['text_initials']           = 'Initialer';
 $_['text_payment_options']     = 'Betalingsalternativer';
 $_['text_get_address']        = 'Adresse';
 $_['text_from']        			= 'Fra';
+$_['text_required']             = 'Obligatorisk felt';
 
 
 //Error responses

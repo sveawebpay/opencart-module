@@ -82,8 +82,14 @@ class ControllerExtensionSveaOrder extends Controller
                     if ($svea_response->accepted == TRUE) {
                         $svea_comment = ' | Order canceled at Svea. ';
                     } else {
-                        $json['error'] = ' Svea Error: ' . $svea_response->errormessage . '. Resultcode: ' . $svea_response->resultcode;
-                        $this->request->post['order_status_id'] = $order_info['order_status_id'];
+                        if($this->syncSveaStatus($svea_order_id[0][0], $order_info['payment_iso_code_2'], $payment_method, $conf) == true)
+                        {
+                            $svea_comment = 'Status was successfully synced with Svea.';
+                        }
+                        else
+                        {
+                            $json['error'] = ' Svea Error: ' . $svea_response->errormessage . '. ResultCode: ' . $svea_response->resultcode;
+                        }
                     }
                     //Deliver
                     //if this action is deliver as configured in module,
@@ -119,8 +125,15 @@ class ControllerExtensionSveaOrder extends Controller
                                 $svea_comment = ' | Transaction confirmed at Svea.';
                             }
                         } else {
-                            $json['error'] = ' Svea Error: ' . $svea_response->errormessage . '. Resultcode: ' . $svea_response->resultcode;
-                            $this->request->post['order_status_id'] = $order_info['order_status_id'];
+
+                            if($this->syncSveaStatus($svea_order_id[0][0], $order_info['payment_iso_code_2'], $payment_method, $conf) == true)
+                            {
+                                $svea_comment = 'Status was successfully synced with Svea.';
+                            }
+                            else
+                            {
+                                $json['error'] = 'Svea Error: ' . $svea_response->errormessage . '. ResultCode: ' . $svea_response->resultcode;
+                            }
                         }
                     } catch (Exception $e) {
                         $this->log->write($e->getMessage());
@@ -211,13 +224,19 @@ class ControllerExtensionSveaOrder extends Controller
                                 if (isset($credit_response->orderType) && $credit_response->orderType == 'Invoice') {
                                     $svea_comment = ' | Order credited at Svea.';
                                 } elseif (isset($credit_response->orderType) && $credit_response->orderType == 'PaymentPlan') {
-                                    $svea_comment = ' | Payment plan rows canelled at Svea. ';
+                                    $svea_comment = ' | Payment plan rows cancelled at Svea. ';
                                 } else {
                                     $svea_comment = ' | Order credited at Svea.';
                                 }
                             } else {
-                                $json['error'] = ' Svea Error: ' . $credit_response->errormessage . '. Resultcode: ' . $credit_response->resultcode;
-                                $this->request->post['order_status_id'] = $order_info['order_status_id'];
+                                if($this->syncSveaStatus($svea_order_id[0][0], $order_info['payment_iso_code_2'], $payment_method, $conf) == true)
+                                {
+                                    $svea_comment = 'Status successfully synced with Svea.';
+                                }
+                                else
+                                {
+                                    $json['error'] = ' Svea Error: ' . $credit_response->errormessage . '. ResultCode: ' . $credit_response->resultcode;
+                                }
                             }
                         }
                     }
@@ -255,13 +274,13 @@ class ControllerExtensionSveaOrder extends Controller
                                     ->cancelCheckoutOrder()
                                     ->doRequest();
                                 if ($cancel_response === '') {
-                                    $svea_comment = ' | Order canceled at Svea. ';
+                                    $svea_comment = ' | Order cancelled at Svea. ';
                                 } else {
-                                    $json['error'] = ' Svea Error: Order is not successfully Canceled!';
+                                    $json['error'] = "Svea Error: Order wasn't successfully cancelled!";
                                     $this->request->post['order_status_id'] = $order_info['order_status_id'];
                                 }
                             } else {
-                                $json['error'] = ' Svea Error: Order can not be Cancelled!';
+                                $json['error'] = ' Svea Error: Order cannot be cancelled!';
                                 $this->request->post['order_status_id'] = $order_info['order_status_id'];
                             }
                         } catch (\Exception $e) {
@@ -287,7 +306,7 @@ class ControllerExtensionSveaOrder extends Controller
                                 if (isset($credit_response['HeaderLocation'])) {
                                     $svea_comment = ' | Order credited at Svea. Svea Checkout Order Id: ' . $sco_order_id;
                                 } else {
-                                    $json['error'] = ' Credit Error: Order can not be Credited!';
+                                    $json['error'] = ' Credit Error: Order cannot be Credited!';
                                     $this->request->post['order_status_id'] = $order_info['order_status_id'];
                                 }
                             } elseif ($this->canOrderBeCreditedByAmount($sco_order_id, $country) === true) {
@@ -303,11 +322,11 @@ class ControllerExtensionSveaOrder extends Controller
                                 if ($credit_response === '') {
                                     $svea_comment = ' | Order credited at Svea. Svea Checkout Order Id: ' . $sco_order_id;
                                 } else {
-                                    $json['error'] = ' Credit Error: Order can not be Credited!';
+                                    $json['error'] = ' Credit Error: Order cannot be Credited!';
                                     $this->request->post['order_status_id'] = $order_info['order_status_id'];
                                 }
                             } else {
-                                $json['error'] = ' Credit Error: Order can not be Credited!';
+                                $json['error'] = ' Credit Error: Order cannot be Credited!';
                                 $this->request->post['order_status_id'] = $order_info['order_status_id'];
                             }
                         } catch (Exception $e) {
@@ -329,11 +348,11 @@ class ControllerExtensionSveaOrder extends Controller
                                 if (isset($deliver_response['HeaderLocation'])) {
                                     $svea_comment = ' | Order delivered at Svea. Svea Checkout Order Id: ' . $sco_order_id;
                                 } else {
-                                    $json['error'] = ' Deliver Error: Order can not be Delivered!';
+                                    $json['error'] = ' Deliver Error: Order cannot be Delivered!';
                                     $this->request->post['order_status_id'] = $order_info['order_status_id'];
                                 }
                             } else {
-                                $json['error'] = ' Deliver Error: Order can not be Delivered!';
+                                $json['error'] = ' Deliver Error: Order cannot be Delivered!';
                                 $this->request->post['order_status_id'] = $order_info['order_status_id'];
                             }
                         } catch (Exception $e) {
@@ -948,6 +967,66 @@ class ControllerExtensionSveaOrder extends Controller
             $this->request->post['comment'] = $this->request->post['comment'] . $comment;
         } else {
             $this->request->post['comment'] = $comment;
+        }
+    }
+
+    private function syncSveaStatus($orderId, $countryCode, $payment_method, $config)
+    {
+        $queryOrder = \Svea\WebPay\WebPayAdmin::queryOrder($config)
+            ->setOrderId($orderId)
+            ->setCountryCode($countryCode);
+        if ($payment_method == 'svea_invoice')
+        {
+            $queryOrder = $queryOrder->queryInvoiceOrder()->doRequest();
+        }
+        else if ($payment_method == 'svea_partpayment')
+        {
+            $queryOrder = $queryOrder->queryPaymentPlanOrder()->doRequest();
+        }
+        else if ($payment_method == 'svea_card')
+        {
+            $queryOrder = $queryOrder->queryCardOrder()->doRequest();
+        }
+        else if ($payment_method == 'svea_directbank')
+        {
+            $queryOrder = $queryOrder->queryDirectBankOrder()->doRequest();
+        }
+        else
+        {
+            return false;
+        }
+
+        if(isset($queryOrder->orderDeliveryStatus))
+        {
+            $orderStatus = $queryOrder->orderDeliveryStatus;
+        }
+        else if(isset($queryOrder->status))
+        {
+            $orderStatus = $queryOrder->status;
+        }
+        else if(isset($queryOrder->OrderStatus))
+        {
+            $orderStatus = $queryOrder->OrderStatus;
+        }
+        else
+        {
+            $orderStatus = false;
+        }
+
+        if ($orderStatus == "Cancelled" || $orderStatus == "ANNULLED") {
+            $this->request->post['order_status_id'] = $this->config->get($payment_method . '_canceled_status_id');
+            $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $this->config->get($payment_method . '_canceled_status_id'), "Unable to update order status, synchronized with Svea instead.");
+            return true;
+        } else if ($orderStatus == "Delivered" || $orderStatus == "CONFIRMED" || $orderStatus == "SUCCESS") {
+            $this->request->post['order_status_id'] = $this->config->get($payment_method . '_deliver_status_id');
+            $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $this->config->get($payment_method . '_deliver_status_id'), "Unable to update order status, synchronized with Svea instead.");
+            return true;
+        } else if ($orderStatus == "Credited" || $orderStatus == "CREDSUCCESS") {
+            $this->request->post['order_status_id'] = $this->config->get($payment_method . '_refunded_status_id');
+            $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $this->config->get($payment_method . '_refunded_status_id'), "Unable to update order status, synchronized with Svea instead.");
+            return true;
+        } else {
+            return false;
         }
     }
 }

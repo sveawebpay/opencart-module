@@ -13,6 +13,7 @@ $_['text_get_payment_options'] = 'Hente betalingsmuligheder';
 $_['text_payment_options']     = 'Betalingsmuligheder';
 $_['text_get_address']        = 'Adresse';
 $_['text_from']        			= 'Fra';
+$_['text_required']             = 'Påkrævet område';
 
 //Error responses
 $_['response_20000'] = 'Ordre lukket';

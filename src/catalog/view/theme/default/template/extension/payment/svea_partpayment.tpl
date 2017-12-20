@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div><?php echo $logo; ?></div>
 
-    <div class="container-fluid" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px;display:inline-block;">
+    <div class="container-fluid" id="svea_partpaymentalt_tr" style="clear:both; margin-top:15px; display:inline-block;">
         <?php echo $text_payment_options; ?>:<br />
         <?php
 
@@ -37,9 +37,14 @@
         <?php // get SSN
         if( $countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI")
         { ?>
+        <br />
+        <div style="margin-left:15px;">
              <?php echo $text_ssn; ?>:
+            <br />
             <input type="text" id="ssn" name="ssn" /><span style="color: red">*</span><br /><br />
-        <?php
+        </div>
+            <?php
+
         }
         elseif( $countryCode == "NL" || $countryCode == "DE" )
         {
@@ -96,7 +101,6 @@
     } ?>
 
     <div id="svea_partpayment_err"  style="color:red; clear:both; margin-top:15px;"></div>
-</div>
 
 <?php // show getAddress button for private persons in SE, DK
 if( $countryCode == "SE" || $countryCode == "DK" )
@@ -130,6 +134,27 @@ if( $countryCode == "SE" || $countryCode == "DK" )
    </div>
 </div>
 
+
+<!-- Modal -->
+<div id="svea_error_sending_mail" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Error sending mail</h4>
+      </div>
+      <div class="modal-body">
+        <p>There was a problem sending you the email with the terms for payment plans</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script type="text/javascript"><!--
 
 //Loader
@@ -159,7 +184,7 @@ $('a#checkout').click(function(event) {
 
     //validate empty field
     if(ssnNo == ''){
-        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>*Required');
+        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br><div style="margin-left:15px"/;>* <?php echo $text_required ?></div>');
         $('#sveaLoading').remove();
         runningCheckout = false;
         return false;
@@ -182,7 +207,7 @@ $('a#checkout').click(function(event) {
                     location = '<?php echo $continue; ?>'; // runningCheckout stays in effect until opencart finishes its redirect
                 }
                 else{
-                    $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+data.error);
+                    $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>* '+data.error);
 
                     // remove runningCheckout so that we can retry the payment
                     $('#sveaLoading').remove();
@@ -208,18 +233,18 @@ $('#getPlan').click(function() {
 
 
     if(ssnNo == ''){
-        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>*Required');
+        $("#svea_partpayment_err").empty().addClass("attention").show().append('<br><div style="margin-left:15px"/;>* <?php echo $text_required ?></div>');
         $('#sveaLoading').remove();
         runningGetPlan = false;
     }
     else{
-    	$.ajax({
+        $.ajax({
             type: 'post',
             dataType: 'json',
             url: 'index.php?route=extension/payment/svea_partpayment/getAddressAndPaymentOptions',
             data: {
                 ssn: ssnNo},
-    		success: function(data) {
+            success: function(data) {
 
                     if(data.addresses.error){
                         $("#svea_partpayment_err").empty().addClass("attention").show().append('<br>'+data.addresses.error);
@@ -244,9 +269,39 @@ $('#getPlan').click(function() {
 
                     $('#sveaLoading').remove();
                     runningGetPlan = false;
-    		}
+            }
             }
         );
     }
 });
 //--></script>
+<script>
+$(document).ready(function () {
+  $('#button-payment-method').click(function() {
+    var country = $('#input-payment-country option:selected').text();
+    /// only execute for finland
+    if (country === 'Finland') {
+      fireEmail();
+    }
+  });
+  function fireEmail() {
+      console.log('making ajax');
+      $.ajax("index.php?route=extension/svea/email/index", {
+        type: 'GET',
+        statusCode: {
+          201: function (response) {
+            $('a#checkout').removeClass('disabled');
+          },
+          401: function (response) {
+            $('a#checkout').addClass('disabled');
+            $("#svea_error_sending_mail").modal();
+            
+          }
+        },
+        success: function () {
+          
+        }
+       });
+    }
+});
+</script>
