@@ -118,6 +118,10 @@ class ControllerPaymentsveacard extends SveaCommon {
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
 
+        if($this->session->data['comment'] != "") {
+            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_card_order_status_id'), 'Customer comment: ' . $this->session->data['comment']);
+        }
+
         $conf = ($this->config->get('svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_card')) : new OpencartSveaConfig($this->config, 'svea_card');
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();

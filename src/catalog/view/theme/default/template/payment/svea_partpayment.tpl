@@ -1,3 +1,52 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    if( $('#collapse-checkout-confirm').html().length > 0) {
+        var country = $('#input-payment-country option:selected').text();
+        var email = $('#input-payment-email').val();
+        /// only execute for finland
+        if (country === 'Finland') {
+          fireEmail(email);
+        }
+    }
+  function fireEmail(email) {
+      $.ajax("index.php?route=svea/email/index", {
+        type: 'POST',
+        data: { email: email},
+        statusCode: {
+          201: function (response) {
+            $('a#checkout').removeClass('disabled');
+          },
+          401: function (response) {
+            $('a#checkout').addClass('disabled');
+            $("#svea_error_sending_mail").modal();
+            
+          }
+        },
+        success: function () {
+          
+        }
+       });
+    }
+});
+</script>
+<!-- Modal -->
+<div id="svea_error_sending_mail" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Error sending mail</h4>
+      </div>
+      <div class="modal-body">
+        <p>There was a problem sending you the email with the terms for payment plans</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container-fluid">
     <div><?php echo $logo; ?></div>
 

@@ -170,6 +170,10 @@ class ControllerPaymentsveadirectbank extends SveaCommon {
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
 
+        if($this->session->data['comment'] != "") {
+            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_directbank_order_status_id'), 'Customer comment: ' . $this->session->data['comment']);
+        }
+
         //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
 
