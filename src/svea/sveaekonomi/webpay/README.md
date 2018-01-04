@@ -1,6 +1,6 @@
 # Svea PHP Integration Package Documentation
 
-## Version 3.3.0
+## Version 3.3.1
 
 ### Current build status
 | Branch                    received| Build status                               |
@@ -626,6 +626,7 @@ Example for populating order with required fields.
         ->setConfirmationUri('http://localhost:51925/checkout/confirm') //required
         ->setPushUri('https://svea.com/push.aspx?sid=123&svea_order=123') //required
         ->setTermsUri('http://localhost:51898/terms') //required
+        ->setValidationCallbackUri('http://localhost:51898/validation-callback') // optional
         ->setLocale('sv-Se'); // required
   ```
 
@@ -1527,6 +1528,7 @@ $order = WebPay::checkout($config)
   ->setConfirmationUri("http://localhost:51925/checkout/confirm")     // required Merchant settings (confirmation uri)
   ->setPushUri("https://svea.com/push.aspx?sid=123&svea_order=123")   // required Merchant settings (push uri)
   ->setTermsUri("http://localhost:51898/terms")                       // required Merchant settings (terms uri)
+  ->setValidationCallbackUri('http://localhost:51898/validation-callback') // optional Merchant settings (validation uri)
   ->setLocale('sv-SE')                                                // required for Svea Checkout
   ->createOrder()                                                     // Create new Checkout order
    ;
@@ -1542,8 +1544,10 @@ Use the WebPay::checkout()->getOrder() method to get existing Checkout order inf
 $locale = 'sv-SE';
 
 $order = WebPay::checkout($config)
-  ->setId(50)             // required Checkout order ID
-  ->getOrder()            // Get existing Checkout order
+  ->setCountryCode('SE')   // required locale field
+  ->setCheckoutOrderId(50) // required Checkout order ID
+  ->getOrder()             // Get existing Checkout order
+
 ;
 ...
 ```
@@ -1557,10 +1561,10 @@ Use the WebPay::checkout()->updateOrder() method to update existing Checkout ord
 $locale = 'sv-SE';
 
 $order = WebPay::checkout($config)
-  ->setId(5)                           // required Checkout order ID
-  ->addOrderRow($orderRow)             // see WebPayItem::orderRow
-  ->updateOrder()                      // Update existing Checkout order
-;
+  ->setCountryCode('SE')   // required locale field
+  ->setCheckoutOrderId(50) // required Checkout order ID
+  ->addOrderRow($orderRow) // see WebPayItem::orderRow
+  ->updateOrder();         // Update existing Checkout order
 ...
 ```
 

@@ -378,8 +378,6 @@ class ControllerExtensionSveaPayment extends SveaCommon
             'status' => isset( $response['status'] ) ? $response['status'] : null,
 
             'type'   => isset( $response['customer']['iscompany'] ) ? ( $response['customer']['iscompany'] ? 'company' : 'person') : 'person',
-            'gender' => isset( $response['customer']['ismale'] ) ? ( $response['customer']['ismale'] ? 'male' : 'female' ) : null,
-            'date_of_birth' => isset( $response['customer']['iscompany'] ) ? $response['customer']['dateofbirth'] : null,
 
             'locale' => isset( $response['locale'] ) ? $response['locale'] : null,
             'currency' => isset( $response['currency'] ) ? $response['currency'] : null,
