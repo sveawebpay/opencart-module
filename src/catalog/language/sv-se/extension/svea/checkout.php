@@ -5,7 +5,7 @@ $_['text_checkout_into']			= 'Var god fyll i din E-Mail och ditt postnummer för
 
 $_['entry_email']					= 'E-post';
 $_['entry_password']				= 'Lösenord';
-$_['entry_postcode']				= 'Postnummer';
+$_['entry_postcode']				= 'Postkod';
 $_['entry_new_password']			= 'Ange ditt nya lösenord';
 
 $_['heading_order']					= 'Beställningsdetaljer';
@@ -65,20 +65,20 @@ $_['error_internal_message']		= 'Ett tekniskt fel uppstod i kopplingen till Svea
 
 $_['error_shipping']				= 'Fel: Det går inte att välja leveransmetod';
 
-$_['error_attempts']				= 'Du har gjort för många försök';
+$_['error_attempts']				= 'Du har gjort för många försök, var vänlig försök igen senare';
 $_['error_approved']				= 'Ditt konto är inte godkänt ännu';
 $_['error_login']					= 'Inloggningen misslyckades, kontrollera uppgifterna';
 
-$_['error_account_email']			= 'E-postadressen är inte gilltig';
+$_['error_account_email']			= 'E-postadressen är inte giltig';
 $_['error_account_exists']			= 'E-postadressen är redan registrerad';
-$_['error_account_postcode']		= 'postnummret är inte gilltigt';
-$_['error_account_password']		= 'Lösenordet är inte gilltigt, det måste bestå av 4 till 20 tecken';
+$_['error_account_postcode']		= 'Postkoden är inte giltigt';
+$_['error_account_password']		= 'Lösenordet är inte giltigt, det måste bestå av 4 till 20 tecken';
 $_['error_account_create']			= 'Det gick inte att skapa kontot, var vänlig kontakta kundtjänst';
 
-$_['error_unknown_coupon']			= 'Rabattkoden är inte gilltig';
-$_['error_unknown_voucher']			= 'Presentkortet är inte gilltigt';
-$_['error_no_coupon']				= 'Var välig ange en rabattkod!';
-$_['error_no_voucher']				= 'Var välig ange presentkortets värdekod!';
+$_['error_unknown_coupon']			= 'Rabattkoden är inte giltig';
+$_['error_unknown_voucher']			= 'Presentkortet är inte giltigt';
+$_['error_no_coupon']				= 'Var vänlig ange en rabattkod!';
+$_['error_no_voucher']				= 'Var vänlig ange presentkortets värdekod!';
 
 $_['error_push_inactive']			= 'SCO is disable at store!';
 $_['error_push_no_sco_id']			= 'No valid SCO ID found!';
@@ -91,7 +91,7 @@ $_['error_push_already_created']	= 'Reservation already created, aborting...';
 $_['error_push_update']				= 'Failed to update reservation to Svea!';
 
 $_['text_home']                     = 'Hem';
-$_['button_continue']               = 'Fortsätta';
+$_['button_continue']               = 'Fortsätt';
 $_['button_back']                   = 'Tillbaka';
 $_['text_basket']                   = 'Kundvagn';
 $_['text_checkout']                 = 'Kassa';

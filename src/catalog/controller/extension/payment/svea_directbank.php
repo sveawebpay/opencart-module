@@ -170,9 +170,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
-        if($this->session->data['comment'] != "") {
-            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_directbank_order_status_id'), 'Customer comment: ' . $this->session->data['comment']);
-        }//Testmode
+        //Testmode
         $conf = ($this->config->get('svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'svea_directbank')) : new OpencartSveaConfig($this->config, 'svea_directbank');
 
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf);
@@ -180,6 +178,9 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
         if ($response->accepted === 1){
+            if($this->session->data['comment'] != "") {
+                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_directbank_order_status_id'), 'Customer comment: ' . $this->session->data['comment'], false);
+            }
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
                 $this->renderFailure($response);

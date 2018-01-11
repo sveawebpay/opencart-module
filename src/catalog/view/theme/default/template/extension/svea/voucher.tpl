@@ -16,7 +16,7 @@
 	<?php } else { ?>
 	<!-- Voucher unsuccessfully - start -->
 	<div class="input-group">
-		<input type="text"  placeholder="Voucher code" class="form-control sco-input" name="voucher" />
+		<input type="text"  placeholder="<?php echo $item_voucher?>" class="form-control sco-input" name="voucher" />
 		<span class="input-group-btn">
 					<button class="btn sco-primary-btn" id="sco-voucher-add" type="button"><i class="glyphicon glyphicon-plus"></i></button>
 				</span>

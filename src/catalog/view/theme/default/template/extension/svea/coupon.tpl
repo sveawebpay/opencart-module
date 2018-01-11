@@ -18,7 +18,7 @@
     <?php } else { ?>
     <!-- Coupon unsuccessfully - start -->
     <div class="input-group">
-        <input type="text" class="form-control sco-input" name="coupon" placeholder="Coupon"/>
+        <input type="text" class="form-control sco-input" name="coupon" placeholder="<?php echo $item_coupon; ?>"/>
         <span class="input-group-btn">
                     <button class="btn sco-primary-btn" id="sco-coupon-add" type="button">
                         <i class="glyphicon glyphicon-plus"></i>
