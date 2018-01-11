@@ -152,5 +152,6 @@ class ControllerExtensionSveaSuccess extends Controller
         );
 
         $this->model_extension_svea_checkout->updateCheckoutOrder($data);
+        $this->model_extension_svea_checkout->addInvoiceFee($response);
     }
 }

@@ -374,7 +374,7 @@ class ModelExtensionSveaCheckout extends Model
         $comment =  'Svea Checkout Order Id: '. $sco_order_id;
 
         // CONFIRM ORDER
-        $this->model_checkout_order->addOrderHistory($order_id, $oc_order_status_id, $comment, true);
+        $this->model_checkout_order->addOrderHistory($order_id, $oc_order_status_id, $comment, false);
 
         // Set order status
         if ($oc_order_status_id !== null) {
@@ -472,6 +472,38 @@ class ModelExtensionSveaCheckout extends Model
         return true;
     }
 
+    public function addInvoiceFee($data)
+    {
+        if (is_array($data['cart']['items']) || is_object($data['cart']['items'])) {
+            $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$data['clientordernumber'] . "' ORDER BY sort_order");
+            foreach ($data['cart']['items'] as $order_row) {
+                if ($order_row['name'] == "InvoiceFee") {
+                    if (is_array($totals->rows) || is_object($totals->rows)) {
+                        foreach ($totals->rows as $total) {
+                            if ($total['code'] == 'sco_invoice_fee') {
+                                return true; // Invoice fee already added
+                            }
+                        }
+                    }
+                    if (is_array($totals->rows) || is_object($totals->rows)) {
+                        foreach ($totals->rows as $total) {
+                            if ($total['code'] == 'tax') {
+                                $total['value'] = $total['value'] + $order_row['unitprice'] - ($order_row['unitprice'] / ((100 + $order_row['vatpercent']) / 100));
+                                $this->db->query("UPDATE " . DB_PREFIX . "order_total SET value = '" . (float)$total['value'] . "' WHERE " . "order_total_id = " . (int)$total['order_total_id']); // Update tax
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int)$data['clientordernumber'] . "', code = '" . $this->db->escape("sco_invoice_fee") . "', title = '" . $this->db->escape("Invoice Fee(excl. tax)") . "', `value` = '" . ($order_row['unitprice'] / ((100 + $order_row['vatpercent']) / 100)) . "', sort_order = '" . (int)($total['sort_order'] - 1) . "'");
+                            } elseif ($total['code'] == 'total') {
+                                $total['value'] = $total['value'] + $order_row['unitprice'];
+                                $this->db->query("UPDATE " . DB_PREFIX . "order_total SET value = '" . (float)$total['value'] . "' WHERE " . "order_total_id = " . (int)$total['order_total_id']);
+                                $this->db->query("UPDATE " . DB_PREFIX . "order SET total = '" . (float)$total['value'] . "' WHERE " . "order_id = " . (int)$data['clientordernumber']);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     public function getCheckoutOrder($order_id)
     {

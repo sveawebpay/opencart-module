@@ -633,9 +633,9 @@ class ControllerExtensionSveaOrder extends Controller
                                     $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $this->request->post['order_status_id'], $history);
                                     $svea_comment = ' | Order credited at Svea.';
                                 } elseif (isset($credit_response->orderType) && $credit_response->orderType == 'PaymentPlan') {
-                                    $history = 'Payment plan rows canelled at Svea. ';
+                                    $history = 'Payment plan rows cancelled at Svea. ';
                                     $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $this->request->post['order_status_id'], $history);
-                                    $svea_comment = ' | Payment plan rows canelled at Svea. ';
+                                    $svea_comment = ' | Payment plan rows cancelled at Svea. ';
                                 } else {
                                     $history = 'Order credited at Svea.';
                                     $this->model_checkout_order->addOrderHistory($this->request->get['order_id'], $this->request->post['order_status_id'], $this->request->post['order_status_id'], $history);
