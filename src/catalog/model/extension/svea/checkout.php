@@ -374,14 +374,17 @@ class ModelExtensionSveaCheckout extends Model
         $comment =  'Svea Checkout Order Id: '. $sco_order_id;
 
         // CONFIRM ORDER
-        $this->model_checkout_order->addOrderHistory($order_id, $oc_order_status_id, $comment, false);
 
+        $current_oc_order_status = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . (int)$order_id . "'")->row;
+        if($oc_order_status_id != $current_oc_order_status['order_status_id'] && $oc_order_status_id != $this->config->get('sco_failed_status_id')) {
+            $this->model_checkout_order->addOrderHistory($order_id, $oc_order_status_id, $comment, false);
+        }
         // Set order status
-        if ($oc_order_status_id !== null) {
+       /* if ($oc_order_status_id !== null) {
             $query = "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . $oc_order_status_id . "',";
             $query .= " date_modified = NOW() WHERE order_id = '" . (int)$order_id . "' LIMIT 1 ";
             $this->db->query($query);
-        }
+        }*/
 
         return true;
     }
@@ -392,9 +395,9 @@ class ModelExtensionSveaCheckout extends Model
 
         if (isset($response['status'])) {
             $sco_order_status_string = strtolower($response['status']);
-            if ($sco_order_status_string === 'paymentguaranteed' || $sco_order_status_string === 'final') {
+            if ($sco_order_status_string == 'paymentguaranteed' || $sco_order_status_string == 'waitingtobesent' || $sco_order_status_string == 'final') {
                 $oc_order_status_id = $this->config->get('config_order_status_id');
-            } else if ($sco_order_status_string === 'cancelled') {
+            } else if ($sco_order_status_string == 'cancelled' || 'confirmed') {
                 $oc_order_status_id = $this->config->get('sco_failed_status_id');
             }
         }
