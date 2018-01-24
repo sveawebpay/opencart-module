@@ -259,19 +259,22 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
      * Also adds server port if exists. (e.g. :8080)
      */
     private function setServerURL() {
+        if ($this->config->get('config_secure')) {
+            $server_url = $this->config->get('config_ssl');
+        } else {
             $server_url = $this->config->get('config_url');
-            $server_name = $_SERVER['SERVER_NAME'];
-            $server_port = $_SERVER['SERVER_PORT'];
-            $type = substr( $server_url, 0, strpos($server_url, "//")+2 );
-            $subpath = substr( $server_url, strpos($server_url, "//")+2 );
-            if($server_port != "" || $server_port != "80"){
-                $server_port = ":" . $server_port;
-            }  else {
-                $server_port = "";
-            }
-            $return_url = $type . $server_name . $server_port . substr( $subpath, strpos($subpath, "/") );
+        }
 
-            return $return_url;
+        $server_name = $_SERVER['SERVER_NAME'];
+        $server_port = $_SERVER['SERVER_PORT'];
+        $type = substr( $server_url, 0, strpos($server_url, "//")+2 );
+        $subpath = substr( $server_url, strpos($server_url, "//")+2 );
+        if($server_port != "" || $server_port != "80" || $server_port != "443"){
+            $server_port = ":" . $server_port;
+        }  else {
+            $server_port = "";
+        }
+        $return_url = $type . $server_name . $server_port . substr( $subpath, strpos($subpath, "/") );
+        return $return_url;
     }
-
 }
