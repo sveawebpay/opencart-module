@@ -1,0 +1,16 @@
+<div class="container-fluid">
+
+    <div><span>{{ logo }}</span></div>
+    <div><span>{{ cardLogos }}</span></div>
+
+    {{ form_start_tag~input_message~merchant_id~input_mac }}
+
+    <div class="buttons">
+        <div class="pull-right">
+            <input id="checkout" class="btn btn-primary" type='submit' name='submit' value='{{ submitMessage}}' />
+        </div>
+
+        {{ form_end_tag }}
+
+    </div>
+</div>

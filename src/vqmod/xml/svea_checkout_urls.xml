@@ -7,7 +7,7 @@
     <file path="system/library/url.php">
         <operation>
             <search><![CDATA[public function link($route, $args = '', $secure = false) {]]></search>
-            <add position="after"><![CDATA[if ($route=='checkout/checkout') { $route = 'svea/checkout'; }]]></add>
+            <add position="after"><![CDATA[if ($route=='checkout/checkout') { $route = 'extension/svea/checkout'; }]]></add>
         </operation>
     </file>
     <file path="catalog/controller/checkout/checkout.php">

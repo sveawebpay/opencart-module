@@ -3,11 +3,17 @@
 /nbproject/private/
 src/svea/**/.git
 
-src/svea/svea/checkout-php/examples/
-src/svea/svea/checkout-php/tests/
-src/svea/svea/checkout-php/.gitignore
+src/svea/sveaekonomi/checkout/examples/
+src/svea/sveaekonomi/checkout/tests/
+src/svea/sveaekonomi/checkout/.gitignore
+src/svea/sveaekonomi/checkout/.editorconfig
 
-src/svea/svea/webpay/example/
-src/svea/svea/webpay/test/
-src/svea/svea/webpay/.gitignore
+src/svea/sveaekonomi/webpay/example/
+src/svea/sveaekonomi/webpay/test/
+src/svea/sveaekonomi/webpay/.gitignore
 src/svea/bin/
+
+composer.json
+composer.prod.json
+composer.dev.json
+composer.lock

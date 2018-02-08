@@ -6,6 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
-    'Svea\\WebPay\\' => array($vendorDir . '/svea/webpay/src'),
-    'Svea\\Checkout\\' => array($vendorDir . '/svea/checkout-php/src'),
+    'Svea\\WebPay\\' => array($vendorDir . '/sveaekonomi/webpay/src'),
+    'Svea\\Checkout\\' => array($vendorDir . '/sveaekonomi/checkout/src'),
 );

@@ -1,0 +1,258 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+      <div class="container-fluid">
+        <div class="pull-right">
+          <button type="submit" onclick="$('#form').submit();" form="form-sveainvoice" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+          <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+        <h1>{{ heading_title }}</h1>
+        <ul class="breadcrumb">
+          {% for breadcrumb in breadcrumbs %}
+          <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-pencil"></i> </h3>
+        </div>
+    <div class="panel-body">
+        <!--general settings -->
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-sveainvoice" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-3 control-label">Version</div>
+                    <div class="col-sm-9">{{ payment_svea_version_text }}</div>
+                    <input type="hidden" value="{{ payment_svea_version }}" name="payment_svea_invoice_version" id="payment_svea_invoice_version" />
+                </div>
+                <div class="form-group">
+                    <label for="payment_svea_invoice_geo_zone_id" class="col-sm-3 control-label">{{ entry_geo_zone }}</label>
+                    <div class="col-sm-9">
+                        <select name="payment_svea_invoice_geo_zone_id">
+                            <option value="0">{{ text_all_zones }}</option>
+                            {% for geo_zone in geo_zones %}
+                            {% if geo_zone.geo_zone_id  ==  payment_svea_invoice_geo_zone_id %}
+                            <option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
+                             {% else %}
+                            <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="payment_svea_invoice_status" class="col-sm-3 control-label">{{ entry_status }}</label>
+                    <div class="col-sm-9">
+                        <select name="payment_svea_invoice_status">
+                            {% if payment_svea_invoice_status %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                             {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="payment_svea_invoice_sort_order" class="col-sm-3 control-label">{{ entry_sort_order }}</label>
+                    <div class="col-sm-9">
+                       <input type="text" name="payment_svea_invoice_sort_order" value="{{ payment_svea_invoice_sort_order }}" size="1" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="payment_svea_invoice_payment_description" class="col-sm-3 control-label">{{ entry_payment_description }}</label>
+                    <div class="col-sm-9">
+                     <textarea rows="2" cols="30" name="payment_svea_invoice_payment_description">{{ payment_svea_invoice_payment_description }}</textarea>
+                    </div>
+                </div>
+                    <!-- order statuses -->
+                <div class="form-group">
+                    <h5 class="col-sm-3 control-label">{{ entry_order_status }}</h5>
+                    <div class="col-sm-9"></div>
+                </div>
+                <div class="form-group">
+                    <label for="payment_svea_invoice_order_status_id" class="col-sm-3 control-label">
+                       {{ entry_status_order }}
+                    </label>
+                     <div class="col-sm-9">
+                          <select name="payment_svea_invoice_order_status_id">
+                            {% for order_status in order_statuses %}
+                            {% if order_status.order_status_id  ==  payment_svea_invoice_order_status_id %}
+                            <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                            {% else %}
+                            <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                     </div>
+                </div>
+              <div class="form-group">
+                  <label for="payment_svea_invoice_deliver_status_id" class="col-sm-3 control-label">
+                        <span data-toggle="tooltip" title="{{ entry_status_delivered_text }}">{{ entry_status_delivered }}</span>
+                    </label>
+                     <div class="col-sm-9">
+                        <select name="payment_svea_invoice_deliver_status_id">
+                            {% for deliver_status in order_statuses %}
+                            {% if deliver_status.order_status_id  ==  payment_svea_invoice_deliver_status_id %}
+                            <option value="{{ deliver_status.order_status_id }}" selected="selected">{{ deliver_status.name }}</option>
+                            {% endif %}
+                            <option value="{{ deliver_status.order_status_id }}">{{ deliver_status.name }}</option>
+                            {% else %}
+                            {% endfor %}
+                        </select>
+                     </div>
+                </div>
+              <div class="form-group">
+                  <label for="payment_svea_invoice_canceled_status_id" class="col-sm-3 control-label">
+                        <span data-toggle="tooltip" title="{{ entry_status_canceled_text }}">{{ entry_status_canceled }}</span>
+                    </label>
+                     <div class="col-sm-9">
+                         <select name="payment_svea_invoice_canceled_status_id">
+                            {% for order_status in order_statuses %}
+                                {% if order_status.order_status_id  ==  payment_svea_invoice_canceled_status_id %}
+                             <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                                  {% else %}
+                             <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                     </div>
+                </div>
+              <div class="form-group">
+                    <label for="payment_svea_invoice_refunded_status_id" class="col-sm-3 control-label">
+                        <span data-toggle="tooltip" title="{{ entry_status_refunded_text }}">{{ entry_status_refunded }}</span>
+                    </label>
+                     <div class="col-sm-9">
+                        <select name="payment_svea_invoice_refunded_status_id">
+                            {% for order_status in order_statuses %}
+                                {% if order_status.order_status_id  ==  payment_svea_invoice_refunded_status_id %}
+                             <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                                 {% else %}
+                             <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                     </div>
+                </div>
+                    <!--shipping billing-->
+                    <div class="form-group">
+                        <label for="payment_svea_invoice_shipping_billing" class="col-sm-3 control-label">
+                            <span data-toggle="tooltip" title="{{ entry_shipping_billing_text }}">{{ entry_shipping_billing }}</span>
+                        </label>
+                         <div class="col-sm-9">
+                           {% if payment_svea_invoice_shipping_billing  ==  "0" %}
+                            <input type="radio" name="payment_svea_invoice_shipping_billing" value="1" />
+                            {{ entry_yes }}
+                            <input type="radio" name="payment_svea_invoice_shipping_billing" value="0" checked="checked" />
+                            {{ entry_no }}
+                             {% else %}
+                            <input type="radio" name="payment_svea_invoice_shipping_billing" value="1" checked="checked" />
+                            {{ entry_yes }}
+                            <input type="radio" name="payment_svea_invoice_shipping_billing" value="0" />
+                            {{ entry_no }}
+                            {% endif %}
+                         </div>
+                    </div>
+                    <!-- autodeliver -->
+                    <div class="form-group">
+                        <label for="payment_svea_invoice_auto_deliver" class="col-sm-3 control-label">
+                            <span data-toggle="tooltip" title="{{ entry_auto_deliver_text }}">{{ entry_auto_deliver }}</span>
+                        </label>
+                         <div class="col-sm-9">
+                            <select name="payment_svea_invoice_auto_deliver">
+                                <option value="0" {% if payment_svea_invoice_auto_deliver  ==  '0'%} {{ 'selected="selected"' }}{% endif %} >{{ text_disabled }}</option>
+                                <option value="1" {% if payment_svea_invoice_auto_deliver  ==  '1'%} {{ 'selected="selected"' }}{% endif %} >{{ text_enabled }}</option>
+                            </select>
+                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="entry_distribution_type" class="col-sm-3 control-label">
+                            {{ entry_distribution_type }}
+                        </label>
+                        <div class="col-sm-9">
+                            <select name="payment_svea_invoice_distribution_type">
+                                <option value="Post" {% if payment_svea_invoice_distribution_type  ==  'Post'%} {{ 'selected="selected"' }}{% endif %} >{{ entry_post }}</option>
+                                <option value="Email" {% if payment_svea_invoice_distribution_type  ==  'Email'%} {{ 'selected="selected"' }}{% endif %} >{{ entry_email }}</option>
+                            </select>
+                         </div>
+                    </div>
+                   {# <div class="form-group">
+                        <label for="payment_svea_invoice_product_price" class="col-sm-3 control-label">
+                            <span data-toggle="tooltip" title="{{ entry_product_text }}">{{ entry_product }}</span>
+                        </label>
+                        <div class="col-sm-9">
+                        <div class="col-sm-4">
+                           {% if payment_svea_invoice_product_price %}
+                            <input type="radio" name="payment_svea_invoice_product_price" value="1" checked="checked" />
+                            {{ entry_yes }}
+                            <input type="radio" name="payment_svea_invoice_product_price" value="0" />
+                            {{ entry_no }}
+                             {% else %}
+                            <input type="radio" name="payment_svea_invoice_product_price" value="1" />
+                            {{ entry_yes }}
+                            <input type="radio" name="payment_svea_invoice_product_price" value="0" checked="checked" />
+                            {{ entry_no }}
+                           {% endif %}
+                         </div>
+                    </div>
+                </div> #}
+            <!-- Countrycode specific -->
+            <div class="tab-content" id="tab-invoice" >
+                <ul class="nav nav-tabs" id="payment_svea_country">
+                    {% for code in credentials %}
+                    <li><a href="#tab-{{ code.lang}}" data-toggle="tab">{{ code.lang }}</a></li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content">
+                {% for code in credentials %}
+                    <div class="tab-pane" id="tab-{{ code.lang }}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="{{ code.name_testmode }}">{{ entry_testmode }}</label>
+                            <div class="col-sm-9">
+                                <select name="{{ code.name_testmode }}">
+                                    <option value="1" {% if code.value_testmode  ==  '1'%} {{ 'selected="selected"' }}{% endif %} >{{ text_enabled }}</option>
+                                    <option value="0" {% if code.value_testmode  ==  '0'%} {{ 'selected="selected"' }}{% endif %} >{{ text_disabled }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="{{ code.name_username }}">{{ entry_username }}</label>
+                            <div class="col-sm-9">
+                                  <input name="{{ code.name_username }}" type="text"
+                                           value="{{ code.value_username }}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="{{ code.name_password }}">{{ entry_password }}</label>
+                            <div class="col-sm-9">
+                                 <input name="{{ code.name_password }}" type="text"
+                                           value="{{ code.value_password }}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="{{ code.name_clientno }}">{{ entry_clientno }}</label>
+                            <div class="col-sm-9">
+                                 <input name="{{ code.name_clientno }}" type="text"
+                                           value="{{ code.value_clientno }}" />
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </form>
+    </div>
+    </div><!-- panel-default -->
+  </div><!-- container-fluid -->
+<div style="height:100px"></div>
+  <script type="text/javascript"><!--
+$('#payment_svea_country a:first').tab('show');
+//--></script>
+{{ footer }}

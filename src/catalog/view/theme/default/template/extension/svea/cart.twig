@@ -1,0 +1,36 @@
+<h3>{{ heading_cart }}</h3>
+
+<table class="table table-products">
+    {% for product in products %}
+		<tr>
+			<td class="text-left td-name">
+                {{ product.name }}
+                {% if product.option %}
+                {% for option in product.option %}
+					<br />
+					&nbsp;<small> - {{ option.name }}: {{ option.value }}</small>
+                {% endfor %}
+                {% endif %}
+			</td>
+			<td class="text-right td-quantity">x {{ product.quantity }}</td>
+			<td class="text-right td-total">{{ product.price }}</td>
+		</tr>
+    {% endfor %}
+
+    {% for voucher in vouchers %}
+		<tr>
+			<td class="text-left td-name">{{ voucher.description }}</td>
+			<td class="text-right td-quantity">x 1</td>
+			<td class="text-right td-total">{{ voucher.amount }}</td>
+		</tr>
+    {% endfor %}
+</table>
+<table class="table table-totals">
+    {% for total in totals %}
+		<tr>
+			<td class="text-left td-title">{{ total.title }}</td>
+			<td class="text-right td-value">{{ total.text }}</td>
+		</tr>
+    {% endfor %}
+</table>
+<a class="sco-change-cart" href="{{ cart }}" title="{{ text_change_cart }}">{{ text_change_cart }}</a>

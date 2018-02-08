@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--<?xml version="1.0" encoding="UTF-8"?>
 <modification>
     <id>SveaWebPay Product Price</id>
     <version>3.1.4</version>
@@ -11,104 +11,104 @@
             <add><![CDATA[
 
                     $this->load->model('localisation/country');
-                        $this->load->model('payment/svea_partpayment');
-                        $this->load->model('payment/svea_invoice');
-                        $this->load->language('payment/svea_invoice');
-                        $this->load->language('payment/svea_partpayment');
-                        $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
-                        $svea_show_paymentplan =  $this->model_payment_svea_partpayment->getProductPriceMode();
-                        $svea_show_invoice =  $this->model_payment_svea_invoice->getProductPriceMode();
-                        $viewProduct = null;
-                        $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
-                        if($svea_show_paymentplan === '1' || $svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DE"){
-                            $currency_decimals =  $this->session->data['currency'] == 'EUR' ? 1 : 0;
-                            $price_list = array();
-                            $prices = array();
+                    $this->load->model('extension/payment/svea_partpayment');
+                    $this->load->model('extension/payment/svea_invoice');
+                    $this->load->language('extension/payment/svea_invoice');
+                    $this->load->language('extension/payment/svea_partpayment');
+                    $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
+                    $svea_show_paymentplan = $this->model_extension_payment_svea_partpayment->getProductPriceMode();
+                    $svea_show_invoice = $this->model_extension_payment_svea_invoice->getProductPriceMode();
+                    $viewProduct = null;
+                    $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
+                    if ($svea_show_paymentplan === '1' || $svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DE") {
+                        $currency_decimals = $this->session->data['currency'] == 'EUR' ? 1 : 0;
+                        $price_list = array();
+                        $prices = array();
 
-                            $symbolRight = $this->currency->getSymbolRight( $this->session->data['currency']);
-                            $symbolLeft = $this->currency->getSymbolLeft( $this->session->data['currency']);
-                            $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price, $this->session->data['currency'], false, false ), $product_info['tax_class_id'], $this->config->get('config_tax')));
+                        $symbolRight = $this->currency->getSymbolRight($this->session->data['currency']);
+                        $symbolLeft = $this->currency->getSymbolLeft($this->session->data['currency']);
+                        $currency_converted_price = floatval($this->tax->calculate($this->currency->format($calculate_price, $this->session->data['currency'], false, false), $product_info['tax_class_id'], $this->config->get('config_tax')));
 
-                            //paymentplan
-                            if($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "NL"){
+                        //paymentplan
+                        if ($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "NL") {
 
 
-                                $q ="SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
-                                    `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
-                                    `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
-                                    FROM `"  . DB_PREFIX .  "svea_params_table`
-                                    WHERE `timestamp`=(SELECT MAX(timestamp) FROM `"  . DB_PREFIX .  "svea_params_table` WHERE `countryCode` = '".$svea_country['iso_code_2']."')
-                                    AND `countryCode` = '".$svea_country['iso_code_2']."'
-                                    ORDER BY `monthlyAnnuityFactor` ASC";
+                            $q = "SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
+                                                        `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
+                                                        `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
+                                                        FROM `" . DB_PREFIX . "svea_params_table`
+                                                        WHERE `timestamp`=(SELECT MAX(timestamp) FROM `" . DB_PREFIX . "svea_params_table` WHERE `countryCode` = '" . $svea_country['iso_code_2'] . "')
+                                                        AND `countryCode` = '" . $svea_country['iso_code_2'] . "'
+                                                        ORDER BY `monthlyAnnuityFactor` ASC";
 
-                                $query = $this->db->query($q);
-                                $campaigns = $query->rows;
-                                $priceList = $this->sveaPaymentPlanParamsHelper($currency_converted_price,$campaigns);
+                            $query = $this->db->query($q);
+                            $campaigns = $query->rows;
+                            $priceList = $this->sveaPaymentPlanParamsHelper($currency_converted_price, $campaigns);
 
-                                if(sizeof($priceList)){//&& admin settings for product display is set to yes
-                                    $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_paymentplan').'</h4>';
+                            if (sizeof($priceList)) {//&& admin settings for product display is set to yes
+                                $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">' . $this->language->get('text_paymentplan') . '</h4>';
 
-                                    foreach ($priceList as $value) {
+                                foreach ($priceList as $value) {
                                     $prices[] = $value['pricePerMonth'];
-                                       $price_list[] = '<div class="svea_product_price_item" style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'.
-                                                    "<div style='float:left;'>".
-                                                        $value['description'] .
-                                                   "</div>
-                                                    <span style='color: #002A46;
-                                                                width:90%;
+                                    $price_list[] = '<div class="svea_product_price_item" style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">' .
+                                        "<div style='float:left;'>" .
+                                        $value['description'] .
+                                        "</div>
+                                                                        <span style='color: #002A46;
+                                                                                    width:90%;
 
-                                                                margin-right: auto;
-                                                                float:left;'>
-                                                        <strong >".
-                                                   $symbolLeft.round(round($value['pricePerMonth'],$currency_decimals)).$symbolRight.
-                                                              "/".$this->language->get('month').
-                                                        "</strong>
-                                                    </span>
-                                                </div>";
-
-                                    }
+                                                                                    margin-right: auto;
+                                                                                    float:left;'>
+                                                                            <strong >" .
+                                        $symbolLeft . round(round($value['pricePerMonth'], $currency_decimals)) . $symbolRight .
+                                        "/" . $this->language->get('month') .
+                                        "</strong>
+                                                                        </span>
+                                                                    </div>";
 
                                 }
-                            }
-                            //invoice
-                            $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']), $this->session->data['currency'], false, false );
-                            if($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $currency_converted_price >= $lowest_to_pay){
 
-                                $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">'. $this->language->get('text_invoice').'</h4>';
-                                //Based on condition to pay 3% of amount or 100
-                                $price = $currency_converted_price * 0.03 < $lowest_to_pay ? $lowest_to_pay : $currency_converted_price * 0.03;
-                                $prices[] = $price;
-                                $price_list[] = '<div class="svea_product_price_item" style="display:block; margin: 5px 10px 10px 10px">'.
-                                                    "<div style='float:left;'>".
-                                                    $this->language->get('text_product_invoice')."</div>
-                                                    <span style='color: #002A46;
-                                                                width:90%;
-
-                                                                margin-right: auto;
-                                                                float:left;'>
-                                                        <strong >".
-                                                    $symbolLeft.round(round($price,$currency_decimals)).$symbolRight.
-                                                        "</strong>
-                                                    </span>
-                                                </div>";
                             }
-                            //lowest price
-                            $lowest_price = 0;
-                            if(sizeof($prices) > 0){
-                                $lowest_price = $symbolLeft.round(min($prices)).$symbolRight;
-                            }
-                            $viewProduct = array();
-                            if(sizeof($price_list) > 0){
-                                $viewProduct['price_list'] = $price_list;
-                                $viewProduct['text_from'] =  $this->language->get('text_from')." ";
-                                $viewProduct['lowest_price'] = $lowest_price;
-                                $viewProduct['arrow'] = "<img src='admin/view/image/payment/svea_direct/blue_arrow.png'>";
-                                $viewProduct['line'] = "<img width='321' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
-                                $viewProduct['widget_background'] = ($svea_country['iso_code_2'] == "NO" || $svea_country['iso_code_2'] == "DK" || $svea_country['iso_code_2'] == "NL") ? "svea_finans_background" : "svea_background";
-                            }
-
                         }
-                 $data['svea_widget'] = $viewProduct;
+                        //invoice
+                        $lowest_to_pay = $this->currency->format($this->svea_get_invoice_lowest($svea_country['iso_code_2']), $this->session->data['currency'], false, false);
+                        if ($svea_show_invoice === '1' && $svea_country['iso_code_2'] != "DK" && $currency_converted_price >= $lowest_to_pay) {
+
+                            $price_list[] = '<h4 style="display:block;  list-style-position:outside; margin: 5px 10px 10px 10px">' . $this->language->get('text_invoice') . '</h4>';
+                            //Based on condition to pay 3% of amount or 100
+                            $price = $currency_converted_price * 0.03 < $lowest_to_pay ? $lowest_to_pay : $currency_converted_price * 0.03;
+                            $prices[] = $price;
+                            $price_list[] = '<div class="svea_product_price_item" style="display:block; margin: 5px 10px 10px 10px">' .
+                                "<div style='float:left;'>" .
+                                $this->language->get('text_product_invoice') . "</div>
+                                                                        <span style='color: #002A46;
+                                                                                    width:90%;
+
+                                                                                    margin-right: auto;
+                                                                                    float:left;'>
+                                                                            <strong >" .
+                                $symbolLeft . round(round($price, $currency_decimals)) . $symbolRight .
+                                "</strong>
+                                                                        </span>
+                                                                    </div>";
+                        }
+                        //lowest price
+                        $lowest_price = 0;
+                        if (sizeof($prices) > 0) {
+                            $lowest_price = $symbolLeft . round(min($prices)) . $symbolRight;
+                        }
+                        $viewProduct = array();
+                        if (sizeof($price_list) > 0) {
+                            $viewProduct['price_list'] = $price_list;
+                            $viewProduct['text_from'] = $this->language->get('text_from') . " ";
+                            $viewProduct['lowest_price'] = $lowest_price;
+                            $viewProduct['arrow'] = "<img src='admin/view/image/payment/svea_direct/blue_arrow.png'>";
+                            $viewProduct['line'] = "<img width='321' height='1' src='admin/view/image/payment/svea_direct/grey_line.png'>";
+                            $viewProduct['widget_background'] = ($svea_country['iso_code_2'] == "NO" || $svea_country['iso_code_2'] == "DK" || $svea_country['iso_code_2'] == "NL") ? "svea_finans_background" : "svea_background";
+                        }
+
+                    }
+                    $data['payment_svea_widget'] = $viewProduct;
 
        ]]></add>
         </operation>
@@ -326,5 +326,4 @@
             ]]></add>
         </operation>
     </file>
-</modification>
-
+</modification>-->

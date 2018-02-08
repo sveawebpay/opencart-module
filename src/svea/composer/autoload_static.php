@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1a778baa5fcbd8a2a47f867c789902d5
+class ComposerStaticInit358c631fcbe21e22fbb6aba481fe515e
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -17,19 +17,19 @@ class ComposerStaticInit1a778baa5fcbd8a2a47f867c789902d5
     public static $prefixDirsPsr4 = array (
         'Svea\\WebPay\\' => 
         array (
-            0 => __DIR__ . '/..' . '/svea/webpay/src',
+            0 => __DIR__ . '/..' . '/sveaekonomi/webpay/src',
         ),
         'Svea\\Checkout\\' => 
         array (
-            0 => __DIR__ . '/..' . '/svea/checkout-php/src',
+            0 => __DIR__ . '/..' . '/sveaekonomi/checkout/src',
         ),
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1a778baa5fcbd8a2a47f867c789902d5::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1a778baa5fcbd8a2a47f867c789902d5::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit358c631fcbe21e22fbb6aba481fe515e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit358c631fcbe21e22fbb6aba481fe515e::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }
