@@ -69,12 +69,22 @@ $(document).ready(function () {
             continueBtnStep1.attr('id', 'continue-step-2');
             continueBtnStep2 = $('#continue-step-2');
             continueBtnStep2.show();
+              if(sessionStorage.getItem("lastStep") ==  2)
+              {
+                  sessionStorage.setItem("lastStep", 3);
+                  continueBtnStep2.click();
+              }
           });
+
         }
       });
     }
   });
-
+    if(sessionStorage.getItem("lastStep") ==  1)
+    {
+        sessionStorage.setItem("lastStep", 2);
+        continueBtnStep1.click();
+    }
   changePostcodeEl.on('click', function () {
     continueBtnStep2.attr('id', 'continue-step-1');
     continueBtnStep1 = $('#continue-step-1');
@@ -94,7 +104,6 @@ $(document).ready(function () {
       continueBtnStep2.addClass('sco-continue-btn');
       snippetContainerEl.html('');
       changePostcodeEl.hide();
-
       $('html, body').animate({
         scrollTop: stepTwoFormEl.offset().top - 15
       }, 500);
@@ -290,6 +299,7 @@ $(document).ready(function () {
           $('html, body').animate({
             scrollTop: continueBtnStep2.offset().top - 15
           }, 500);
+            sessionStorage.setItem("lastStep", 1);
         },
         error: function (data) {
           continueBtnStep2.prop('disabled', false);

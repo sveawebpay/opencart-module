@@ -18,8 +18,17 @@ class ControllerExtensionSveaPayment extends SveaCommon
         }
 
         $email = isset($this->request->post['email']) ? $this->request->post['email'] : null;
+        if(isset($this->session->data['order_id']))
+        {
+            $query_response = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id='" . $this->db->escape($this->session->data['order_id']) . "';")->row;
+            if($query_response['order_status_id'] != 0)
+            {
+                unset($this->session->data['order_id']);
+                unset($this->session->data['sco_order_id']);
+                unset($this->session->data['sco_cart_hash']);
+            }
+        }
         $order_id = (isset($this->session->data['order_id'])) ? (int)$this->session->data['order_id'] : null;
-
         $this->load->language('extension/svea/checkout');
         $this->load->model('extension/extension');
 
@@ -53,14 +62,34 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $add_ons = $this->addTaxRateToAddons();
         $this->addAddonRowsToSveaOrder($order_builder, $add_ons, $currency_value);
-
         $sco_order_id = isset($this->session->data['sco_order_id']) ? $this->session->data['sco_order_id'] : null;
+
+        if(isset($this->session->data['sco_order_id']))
+        {
+            $status_check = \Svea\WebPay\WebPay::checkout($config);
+            $status_check->setCheckoutOrderId($sco_order_id);
+            try{
+                $status_check_response = $status_check->getOrder();
+                if($status_check_response['Status'] != 'Created')
+                {
+                    unset($this->session->data['sco_order_id']);
+                    unset($this->session->data['sco_cart_hash']);
+                    unset($sco_order_id);
+                }
+            }
+            catch (\Exception $e) {
+                unset($this->session->data['sco_order_id']);
+                unset($this->session->data['sco_cart_hash']);
+                unset($sco_order_id);
+            }
+        }
+
         $isScoUpdate = false;
         $isChangedState = $this->isChangedState();
 
 
         try {
-            if ($sco_order_id) {
+            if (isset($sco_order_id)) {
                 $isScoUpdate = true;
                 $checkout_order_entry->setCheckoutOrderId($sco_order_id);
 

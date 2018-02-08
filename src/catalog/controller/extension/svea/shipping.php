@@ -60,7 +60,7 @@ class ControllerExtensionSveaShipping extends Controller
         foreach ($methods as $method) {
             foreach ($method['quote'] as $quote) {
 
-                $name = (count($method['quote']) > 1) ? sprintf($text_multi, $method['title'], $quote['title']) : $method['title'];
+                $name = (count($method['quote']) > 0) ? sprintf($text_multi, $method['title'], $quote['title']) : $method['title'];
                 $name = ($quote['cost']) ? sprintf($text_cost, $name, $quote['text']) : $name;
 
                 $json['methods'][] = array(

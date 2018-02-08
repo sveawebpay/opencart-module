@@ -4,7 +4,7 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionPaymentSveapartpayment extends Controller
 {
-    protected $svea_version = '4.1.0';
+    protected $svea_version = '4.1.48';
     private $error = array();
 
     public function index()

@@ -2,7 +2,7 @@
 
 <link href="catalog/view/theme/default/stylesheet/svea/sco.css" rel="stylesheet">
 <script src="catalog/view/theme/default/javascript/svea/sco.js"></script>
-
+<script>sessionStorage.setItem("lastStep", 0);</script>
 <div class="container" id="container">
 
     <ul class="breadcrumb">
