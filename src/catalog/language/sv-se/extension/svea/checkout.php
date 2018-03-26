@@ -89,6 +89,7 @@ $_['error_push_oc_id_match']		= 'IDs do not match!';
 $_['error_push_not_complete']		= 'Reservation not complete, aborting...';
 $_['error_push_already_created']	= 'Reservation already created, aborting...';
 $_['error_push_update']				= 'Failed to update reservation to Svea!';
+$_['error_sco']                     = 'Ett tillfälligt fel har inträffat. Hör gärna av dig till oss och uppge felkod: ';
 
 $_['text_home']                     = 'Hem';
 $_['button_continue']               = 'Fortsätt';

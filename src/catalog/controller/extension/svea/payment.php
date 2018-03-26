@@ -125,7 +125,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             header('HTTP/1.1 500 PHP Library Error');
             header('Content-Type: application/json; charset=UTF-8');
             $er = array();
-            $er['message'] = $e->getMessage();
+            $er['message'] = $this->language->get('error_sco') . $e->getMessage();
             $er['isScoUpdate'] = $isScoUpdate; // this is update request flag
             die(json_encode($er));
         }

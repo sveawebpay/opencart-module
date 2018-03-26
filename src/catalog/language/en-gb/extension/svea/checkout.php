@@ -89,6 +89,7 @@ $_['error_push_oc_id_match']		= 'Error: IDs do not match';
 $_['error_push_not_complete']		= 'Error: Reservation not complete, aborting...';
 $_['error_push_already_created']	= 'Error: Reservation already created, aborting...';
 $_['error_push_update']				= 'Error: Failed to update reservation to Svea';
+$_['error_sco']                     = 'A temporary error has occurred. Please get in touch with us and supply us with this error message: ';
 
 $_['text_home']                     = 'Home';
 $_['button_continue']               = 'Continue';
