@@ -203,7 +203,7 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
                 } else {
                     $response = array("success" => true);
                     //update order status for created
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_order_status_id'),'Svea order id: '. $svea->sveaOrderId);
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_processing_status'),'Svea order id: '. $svea->sveaOrderId);
                 }
 
                 //else send errors to view

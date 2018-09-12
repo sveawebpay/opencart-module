@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveacard extends Controller
 {
-    protected $svea_version = '4.1.49';
+    protected $svea_version = '4.3.0';
     private $error = array();
 
     public function index()
@@ -34,14 +34,6 @@ class ControllerExtensionPaymentSveacard extends Controller
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_all_zones'] = $this->language->get('text_all_zones');
 
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_status_order'] = $this->language->get('entry_status_order');
-        $data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
-        $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
-        $data['entry_status_confirmed'] = $this->language->get('entry_status_confirmed');
-        $data['entry_status_confirmed_text'] = $this->language->get('entry_status_confirmed_text');
-        $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
-        $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
         $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
@@ -113,30 +105,6 @@ class ControllerExtensionPaymentSveacard extends Controller
         $data['action'] = $this->url->link('extension/payment/svea_card', 'token=' . $this->session->data['token'], true);
         $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true);
 
-        //statuses
-        $this->load->model('localisation/order_status');
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-        if (isset($this->request->post['svea_card_order_status_id'])) {
-            $data['svea_card_order_status_id'] = $this->request->post['svea_card_order_status_id'];
-        } else {
-            $data['svea_card_order_status_id'] = $this->config->get('svea_card_order_status_id');
-        }
-        if (isset($this->request->post['svea_card_canceled_status_id'])) {
-            $data['svea_card_canceled_status_id'] = $this->request->post['svea_card_canceled_status_id'];
-        } else {
-            $data['svea_card_canceled_status_id'] = $this->config->get('svea_card_canceled_status_id');
-        }
-        if (isset($this->request->post['svea_card_deliver_status_id'])) {
-            $data['svea_card_deliver_status_id'] = $this->request->post['svea_card_deliver_status_id'];
-        } else {
-            $data['svea_card_deliver_status_id'] = $this->config->get('svea_card_deliver_status_id');
-        }
-        if (isset($this->request->post['svea_card_refunded_status_id'])) {
-            $data['svea_card_refunded_status_id'] = $this->request->post['svea_card_refunded_status_id'];
-        } else {
-            $data['svea_card_refunded_status_id'] = $this->config->get('svea_card_refunded_status_id');
-        }
-
         if (isset($this->request->post['svea_card_geo_zone_id'])) {
             $data['svea_card_geo_zone_id'] = $this->request->post['svea_card_geo_zone_id'];
         } else {
@@ -194,7 +162,6 @@ class ControllerExtensionPaymentSveacard extends Controller
     protected function getSveaVersion()
     {
         $update_url = "https://github.com/sveawebpay/opencart-module/archive/oc-2-3.zip";
-        $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
         $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-2-3/docs/info.json";
         $json = file_get_contents($url);
         $data = json_decode($json);
@@ -204,8 +171,7 @@ class ControllerExtensionPaymentSveacard extends Controller
         } else {
             return $this->svea_version . '<br />
                 There is a new version available.<br />
-                <a href="' . $docs_url . '" title="Go to release notes on github">View version details</a> or <br />
-                <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
+                <a href="' . $update_url . '" title="Download here">Download here</a>';
 
         }
 

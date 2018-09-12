@@ -1,11 +1,15 @@
 <?php
 
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
+
+use Svea\WebPay;
+
 class ControllerExtensionModuleSco extends Controller
 {
     private $error = array();
 
     // Use this name as params prefix (Svea checkout)
-    private $module_version = '4.1.49';
+    private $module_version = '4.3.0';
 
     public function index()
     {
@@ -27,6 +31,11 @@ class ControllerExtensionModuleSco extends Controller
             $old_status = $this->config->get('sco_status');
             if ($this->request->post[$status_field_name] == '1' && empty($old_status)) {
                 $this->disableOldPaymentTypes();
+            }
+
+            if($this->request->post['sco_show_widget_on_product_page'] == 1)
+            {
+                $this->updateCampaigns();
             }
 
             // go back to module list
@@ -76,13 +85,15 @@ class ControllerExtensionModuleSco extends Controller
             'show_coupons_on_checkout' => '1',
             'show_voucher_on_checkout' => '1',
             'show_order_comment_on_checkout' => '1',
+            /*'show_widget_on_product_page' => '0',*/
             'checkout_terms_uri' => '',
             'checkout_default_country_id' => '',
         );
         $data['options_on_checkout_page'] = array(
             'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
             'sco_show_voucher_on_checkout' => $this->language->get('text_show_voucher_on_checkout'),
-            'sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout')
+            'sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout'),
+            /*'sco_show_widget_on_product_page' => $this->language->get('text_show_widget_on_product_page'),*/
         );
 
         $data['text_yes'] = $this->language->get('text_yes');
@@ -101,9 +112,6 @@ class ControllerExtensionModuleSco extends Controller
         // Set custom events
         $this->load->model('extension/svea/events');
 
-        // Add order statuses
-        $this->load->model('localisation/order_status');
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         // Add countries sweden, norway, finland
         $data['countries'] = array();
@@ -175,38 +183,8 @@ class ControllerExtensionModuleSco extends Controller
 
         }
 
-        $this->error = $this->validateStatuses();
-
         return !$this->error;
     }
-
-    private function validateStatuses()
-    {
-        $post_fields = $this->request->post;
-
-        $pending_status_field = 'sco_pending_status_id';
-        $failed_status_field = 'sco_failed_status_id';
-        $delivered_status_field = 'sco_delivered_status_id';
-        $canceled_status_field = 'sco_canceled_status_id';
-        $credited_status_field = 'sco_credited_status_id';
-
-        $statuses = array(
-            $post_fields[$pending_status_field],
-            $post_fields[$failed_status_field],
-            $post_fields[$delivered_status_field],
-            $post_fields[$canceled_status_field],
-            $post_fields[$credited_status_field],
-        );
-
-        foreach (array_count_values($statuses) as $val => $c) {
-            if ($c > 1) {
-                $this->error['warning'] = $this->language->get('error_duplicate_statuses');
-            }
-        }
-
-        return $this->error;
-    }
-
     /**
      * Disable all old Svea payment types
      */
@@ -361,7 +339,6 @@ class ControllerExtensionModuleSco extends Controller
         return $data;
     }
 
-
     private function setCheckoutDBTable()
     {
         $result = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "order_sco'");
@@ -386,4 +363,106 @@ class ControllerExtensionModuleSco extends Controller
         }
     }
 
+    private function updateCampaigns()
+    {
+        $this->db->query('CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . 'sco_campaigns`
+                (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `campaignCode` VARCHAR( 100 ) NOT NULL,
+                `contractLengthInMonths` INT NOT NULL ,
+                `description` VARCHAR( 100 ) NOT NULL ,
+                `fromAmount` DOUBLE NOT NULL ,
+                `initialFee` DOUBLE NOT NULL ,
+                `interestRatePercent` INT NOT NULL ,
+                `monthlyAnnuityFactor` DOUBLE NOT NULL ,
+                `notificationFee` DOUBLE NOT NULL ,
+                `numberOfInterestFreeMonths` INT NOT NULL ,
+                `numberOfPaymentFreeMonths` INT NOT NULL ,
+                `paymentPlanType` VARCHAR( 100 ) NOT NULL ,
+                `toAmount` DOUBLE NOT NULL ,
+                `timestamp` INT UNSIGNED NOT NULL,
+                `countryCode` VARCHAR( 100 ) NOT NULL,
+                `productionEnvironment` INT NOT NULL,
+            )   ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
+            ');
+
+        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . 'sco_campaigns');
+
+        $testMode = $this->model_setting_setting->getSettingValue('sco_test_mode');
+
+        $config = ($testMode == "1") ? new OpencartSveaCheckoutConfigTest($this->config) : new OpencartSveaCheckoutConfig($this->config);
+        $testString = ($testMode == "1") ? "'sco_checkout_test_merchant_id_%'" : "'sco_checkout_merchant_id_%'";
+
+        $countriesQuery = $this->db->query("SELECT `key`, `value` FROM " . DB_PREFIX . "setting WHERE `key` LIKE " . $testString . ";");
+
+        foreach($countriesQuery->rows as $val)
+        {
+            if($val['value'] != "")
+            {
+                $request = \Svea\WebPay\WebPay::checkout($config);
+
+                $presetValueIsCompany = \Svea\WebPay\WebPayItem::presetValue()
+                    ->setTypeName(\Svea\WebPay\Checkout\Model\PresetValue::IS_COMPANY)
+                    ->setValue(false)
+                    ->setIsReadonly(true);
+
+                $request->setCountryCode(strtoupper(substr($val['key'], -2)))
+                    ->addPresetValue($presetValueIsCompany);
+
+                $response = $request->getAvailablePartPaymentCampaigns();
+
+                if ($response == null)
+                {
+
+                }
+                else
+                {
+                    foreach ($response as $responseResultItem)
+                    {
+                        try
+                        {
+                            $campaignCode = (isset($responseResultItem['CampaignCode'])) ? $responseResultItem['CampaignCode'] : "";
+                            $description = (isset($responseResultItem['Description'])) ? $responseResultItem['Description'] : "";
+                            $paymentPlanType = (isset($responseResultItem['PaymentPlanType'])) ? $responseResultItem['PaymentPlanType'] : "";
+                            $contractLength = (isset($responseResultItem['ContractLengthInMonths'])) ? $responseResultItem['ContractLengthInMonths'] : "";
+                            $monthlyAnnuityFactor = (isset($responseResultItem['MonthlyAnnuityFactor'])) ? $responseResultItem['MonthlyAnnuityFactor'] : "";
+                            $initialFee = (isset($responseResultItem['InitialFee'])) ? $responseResultItem['InitialFee']: "";
+                            $notificationFee = (isset($responseResultItem['NotificationFee'])) ? $responseResultItem['NotificationFee'] : "";
+                            $interestRatePercentage = (isset($responseResultItem['InterestRatePercent'])) ? $responseResultItem['InterestRatePercent'] : "";
+                            $interestFreeMonths = (isset($responseResultItem['NumberOfInterestFreeMonths'])) ? $responseResultItem['NumberOfInterestFreeMonths'] : "";
+                            $paymentFreeMonths = (isset($responseResultItem['NumberOfPaymentFreeMonths'])) ? $responseResultItem['NumberOfPaymentFreeMonths'] : "";
+                            $fromAmount = (isset($responseResultItem['FromAmount'])) ? $responseResultItem['FromAmount'] : "";
+                            $toAmount = (isset($responseResultItem['ToAmount'])) ? $responseResultItem['ToAmount'] : "";
+
+                            try
+                            {
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "sco_campaigns SET
+                                    campaignCode = '" . $this->db->escape($campaignCode) . "',
+                                    contractLengthInMonths = '" . $this->db->escape($contractLength) . "',
+                                    description = '" . $this->db->escape($description) . "',
+                                    fromAmount = '" . $this->db->escape($fromAmount) . "',
+                                    initialFee = '" . $this->db->escape($initialFee) . "',
+                                    interestRatePercent = '" . $this->db->escape($interestRatePercentage) . "',
+                                    monthlyAnnuityFactor = '" . $this->db->escape($monthlyAnnuityFactor) . "',
+                                    notificationFee = '" . $this->db->escape($notificationFee) . "',
+                                    numberOfInterestFreeMonths = '" . $this->db->escape($interestFreeMonths) . "',
+                                    numberOfPaymentFreeMonths = '" . $this->db->escape($paymentFreeMonths) . "',
+                                    paymentPlanType = '" .  $this->db->escape($paymentPlanType) . "',
+                                    toAmount = '" . $this->db->escape($toAmount) . "',
+                                    timestamp = '" . $this->db->escape(time()) . "',
+                                    countryCode = '" . $this->db->escape(strtoupper(substr($val['key'], -2))) . "'");
+                            }
+                            catch (Exception $e)
+                            {
+                                $this->log->write($e->getMessage());
+                            }
+                        }
+                        catch (Exception $e)
+                        {
+                            $this->log->write($e->getMessage());
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

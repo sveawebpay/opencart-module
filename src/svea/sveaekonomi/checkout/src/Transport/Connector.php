@@ -199,7 +199,6 @@ class Connector
     {
         $timestamp = $this->createTimestamp();
         $request->setTimestamp($timestamp);
-
         $authToken = base64_encode($this->merchantId . ':' .
             hash('sha512', $request->getBody() . $this->sharedSecret . $timestamp));
         $request->setAuthorizationToken($authToken);

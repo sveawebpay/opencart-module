@@ -368,7 +368,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             'accept_language' 			=> isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) 	? $this->request->server['HTTP_ACCEPT_LANGUAGE'] 					: NULL,
             'language_id' 				=> $this->config->get('config_language_id'),
             'vouchers'					=> $vouchers,
-            'products'					=> $products,
+            'products'					=> isset($products) ? $products : NULL,
             'totals'					=> $totals,
             'total' 					=> $total,
         );

@@ -38,7 +38,7 @@ $_['tab_authorization_prod']		= 'Produksjons data';
 // Tab 1
 $_['entry_test_mode']			    = 'Test modus';
 $_['entry_order_status']		    = 'Ordre status';
-$_['entry_oc_order_status']		    = 'Open Cart Status';
+$_['entry_oc_order_status']		    = 'Opencart Status';
 $_['entry_show_options_on_checkout']= 'Vis valg på Checkout siden';
 $_['entry_status_checkout']		    = 'Vis valg for å gå til standard checkout på checkout siden.';
 $_['entry_status']				    = 'Status';

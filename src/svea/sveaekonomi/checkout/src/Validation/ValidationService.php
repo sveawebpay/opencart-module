@@ -59,6 +59,21 @@ abstract class ValidationService
     }
 
     /**
+     * @param array  $data
+     * @param string $paramTitle
+     * @throws SveaInputValidationException
+     */
+    protected function mustBeBoolean($data, $paramTitle)
+    {
+        if (!is_bool($data)) {
+            throw new SveaInputValidationException(
+                "$paramTitle must be passed as a boolean and can't be empty!",
+                ExceptionCodeList::INPUT_VALIDATION_ERROR
+            );
+        }
+    }
+
+    /**
      * @param mixed $data
      * @param string $dataTitle
      * @throws SveaInputValidationException

@@ -179,7 +179,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         if($response->resultcode !== '0'){
         if ($response->accepted === 1){
             if($this->session->data['comment'] != "") {
-                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_directbank_order_status_id'), 'Customer comment: ' . $this->session->data['comment'], false);
+                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_processing_status'), 'Customer comment: ' . $this->session->data['comment'], false);
             }
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{

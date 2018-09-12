@@ -9,7 +9,7 @@
  * Return desired class
  * @param string $className
  */
-function __autoload_svea_checkout_connection_classes($className)
+function spl__autoload_svea_checkout_connection_classes($className)
 {
     /* Skip other namespaces */
     if (!preg_match('#^(Svea\\\\Checkout)#', $className)) {
@@ -24,4 +24,4 @@ function __autoload_svea_checkout_connection_classes($className)
     }
 }
 
-spl_autoload_register('__autoload_svea_checkout_connection_classes');
+spl_autoload_register('spl__autoload_svea_checkout_connection_classes');

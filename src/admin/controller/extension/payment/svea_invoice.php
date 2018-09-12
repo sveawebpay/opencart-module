@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveainvoice extends Controller
 {
-    protected $svea_version = '4.1.49';
+    protected $svea_version = '4.3.0';
     private $error = array();
 
     public function index()
@@ -29,16 +29,6 @@ class ControllerExtensionPaymentSveainvoice extends Controller
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_all_zones'] = $this->language->get('text_all_zones');
-        //order status
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_order_status_text'] = $this->language->get('entry_order_status_text');
-        $data['entry_status_order'] = $this->language->get('entry_status_order');
-        $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
-        $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
-        $data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
-        $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
-        $data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
-        $data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
 
         $data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
         $data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
@@ -230,7 +220,6 @@ class ControllerExtensionPaymentSveainvoice extends Controller
     protected function getSveaVersion()
     {
         $update_url = "https://github.com/sveawebpay/opencart-module/archive/oc-2-3.zip";
-        $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
         $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-2-3/docs/info.json";
         $json = file_get_contents($url);
         $data = json_decode($json);
@@ -240,8 +229,7 @@ class ControllerExtensionPaymentSveainvoice extends Controller
         } else {
             return $this->svea_version . '<br />
                 There is a new version available.<br />
-                <a href="' . $docs_url . '" title="Go to release notes on github">View version details</a> or <br />
-                <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
+                <a href="' . $update_url . '" title="Download here">Download here</a>';
 
         }
 

@@ -8,7 +8,7 @@ $_['text_module']				    = 'Modules';
 $_['text_success']				    = 'Success: You have modified the Svea Checkout module!';
 $_['text_edit']					    = 'Edit Svea Checkout';
 $_['text_module_version_info_new']  = 'There is a new version available. Click to download.';
-$_['text_module_version_info']      = 'You have the latest version of the module. Go to documentation.';
+$_['text_module_version_info']      = 'You have the latest version of the module. Click to read the documentation.';
 $_['created_status_order']          = 'Created';
 $_['pending_status_order']          = 'Pending';
 $_['failed_status_order']           = 'Failed';
@@ -24,6 +24,7 @@ $_['entry_shop_terms_uri']          = 'Shop terms';
 $_['text_show_voucher_on_checkout']	= 'Show Voucher on Checkout page';
 $_['text_show_coupons_on_checkout']	= 'Show Coupon on Checkout page';
 $_['text_show_order_comment_on_checkout']   = 'Show Message on Checkout page';
+$_['text_show_widget_on_product_page'] = 'Show part payment campaign widget on product page';
 
 $_['item_voucher']					= 'Voucher';
 $_['item_coupon']					= 'Coupon';
@@ -36,9 +37,9 @@ $_['tab_authorization_test']	    = 'Test Credentials';
 $_['tab_authorization_prod']		= 'Production Credentials';
 
 // Tab 1
-$_['entry_test_mode']			    = 'Test mode';
+$_['entry_test_mode']			    = 'Test Mode';
 $_['entry_order_status']		    = 'Order Status';
-$_['entry_oc_order_status']		    = 'Open Cart Status';
+$_['entry_oc_order_status']		    = 'Opencart Status';
 $_['entry_show_options_on_checkout']= 'Show options on checkout page';
 $_['entry_status_checkout']		    = 'Show option to go to default checkout on checkout page.';
 $_['entry_status']				    = 'Status';

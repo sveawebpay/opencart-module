@@ -2,7 +2,7 @@
 
 class ControllerExtensionTotalSveaFee extends Controller
 {
-    protected $svea_version = '4.1.49';
+    protected $svea_version = '4.3.0';
     private $error = array();
 
     public function index()

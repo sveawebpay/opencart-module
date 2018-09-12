@@ -51,7 +51,7 @@
                         <div class="tab-pane active" id="tab-general">
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-status">Module version</label>
+                                <label class="col-sm-2 control-label" for="input-status">Version</label>
                                 <div class="col-sm-10" style="padding-top: 9px;">
                                     <div><?php echo $module_version; ?></div>
                                     <a href="<?php echo $module_repo_url; ?>"><?php echo $module_version_info; ?></a>
@@ -134,7 +134,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-checkout-secret-word"><?php echo $entry_shop_terms_uri; ?></label>
+                                <label class="col-sm-2 control-label" for="input-checkout-terms-uri"><?php echo $entry_shop_terms_uri; ?></label>
                                 <div class="col-sm-10">
                                     <div class="input-group">
                                         <span class="input-group-addon"><?php echo $entry_shop_terms_uri_example ?></span>
@@ -143,96 +143,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-                            <!-- order statuses - start -->
-                            <div class="form-group">
-                                <h5 class="col-sm-2 control-label">Svea <?php echo $entry_order_status; ?></h5>
-                                <h5 class="col-sm-10 control-label" style="text-align: left"><?php echo $entry_oc_order_status ?></h5>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><?php echo $pending_status_order; ?></label>
-                                <div class="col-sm-10">
-                                    <select name="sco_pending_status_id" class="form-control">
-                                        <?php foreach ($order_statuses as $order_status) { ?>
-                                        <?php if ($order_status['order_status_id'] == $sco_pending_status_id) { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                        <?php } else { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                        <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><?php echo $failed_status_order; ?></label>
-                                <div class="col-sm-10">
-                                    <select name="sco_failed_status_id" class="form-control">
-                                        <?php foreach ($order_statuses as $order_status) { ?>
-                                        <?php if ($order_status['order_status_id'] == $sco_failed_status_id) { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                        <?php } else { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                        <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <span data-toggle="tooltip" title="<?php echo $entry_status_delivered_text; ?>"><?php echo $entry_status_delivered; ?></span>
-                                </label>
-                                <div class="col-sm-10">
-                                    <select name="sco_delivered_status_id" class="form-control">
-                                        <?php foreach ($order_statuses as $order_status) { ?>
-                                        <?php if ($order_status['order_status_id'] == $sco_delivered_status_id) { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                        <?php } else { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                        <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <span data-toggle="tooltip" title="<?php echo $entry_status_canceled_text; ?>"><?php echo $entry_status_canceled; ?></span>
-                                </label>
-                                <div class="col-sm-10">
-                                    <select name="sco_canceled_status_id" class="form-control">
-                                        <?php foreach ($order_statuses as $order_status) { ?>
-                                        <?php if ($order_status['order_status_id'] == $sco_canceled_status_id) { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                        <?php } else { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                        <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <span data-toggle="tooltip" title="<?php echo $entry_status_refunded_text; ?>"><?php echo $entry_status_refunded; ?></span>
-                                </label>
-                                <div class="col-sm-10">
-                                    <select name="sco_credited_status_id" class="form-control">
-                                        <?php foreach ($order_statuses as $order_status) { ?>
-                                        <?php if ($order_status['order_status_id'] == $sco_credited_status_id) { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                        <?php } else { ?>
-                                        <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                        <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- order statuses - end -->
-
                         </div>
 
 

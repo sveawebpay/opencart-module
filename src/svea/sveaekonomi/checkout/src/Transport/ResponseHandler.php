@@ -75,16 +75,14 @@ class ResponseHandler
             $errorMessage = 'Undefined error occurred.';
             $errorCode = null;
 
-            if (!empty($this->body)) {
+            if (!empty($this->body) && ($this->body != "null")) {
                 $errorContent = $this->getContent();
                 if (isset($errorContent['Code'])) {
                     $errorCode = $errorContent['Code'];
                 }
-
                 if (isset($errorContent['Message'])) {
                     $errorMessage = $errorContent['Message'];
                 }
-
                 if (isset($errorContent['Errors']) && is_array($errorContent['Errors'])) {
                     $error = $errorContent['Errors'][0];
                     $errorMessage = $error['ErrorMessage'];

@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveadirectbank extends Controller
 {
-    protected $svea_version = '4.1.49';
+    protected $svea_version = '4.3.0';
     private $error = array();
 
     public function index()
@@ -36,10 +36,6 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_all_zones'] = $this->language->get('text_all_zones');
 
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_status_order'] = $this->language->get('entry_status_order');
-        $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
-        $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
         $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
@@ -165,7 +161,6 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
     protected function getSveaVersion()
     {
         $update_url = "https://github.com/sveawebpay/opencart-module/archive/oc-2-3.zip";
-        $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
         $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/oc-2-3/docs/info.json";
         $json = file_get_contents($url);
         $data = json_decode($json);
@@ -175,11 +170,9 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         } else {
             return $this->svea_version . '<br />
                 There is a new version available.<br />
-                <a href="' . $docs_url . '" title="Go to release notes on github">View version details</a> or <br />
-                <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
+                <a href="' . $update_url . '" title="Download here">Download here</a>';
 
         }
-
     }
 
     public function install()
