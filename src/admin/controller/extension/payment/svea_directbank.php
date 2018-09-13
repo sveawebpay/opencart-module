@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveadirectbank extends Controller
 {
-    protected $svea_version = '4.3.1';
+    protected $svea_version = '4.3.2';
     private $error = array();
 
     public function index()

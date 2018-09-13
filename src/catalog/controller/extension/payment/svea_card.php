@@ -158,7 +158,7 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
 
             if ($response->accepted === 1)
             {
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_processing_status'),'Svea transactionId: '.$response->transactionId,false);
+                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId,false);
             }
             else
             {

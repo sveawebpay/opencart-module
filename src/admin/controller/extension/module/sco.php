@@ -9,7 +9,7 @@ class ControllerExtensionModuleSco extends Controller
     private $error = array();
 
     // Use this name as params prefix (Svea checkout)
-    private $module_version = '4.3.1';
+    private $module_version = '4.3.2';
 
     public function index()
     {

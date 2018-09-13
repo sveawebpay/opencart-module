@@ -268,8 +268,8 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                             $response = array("success" => true);
                             //update order status for delivered
                             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea InvoiceId: ".$deliverObj->invoiceId."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_invoice_deliver_status_id'), 'Svea InvoiceId '.$deliverObj->invoiceId);
+                            $completeStatus = $this->config->get('config_complete_status');
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea InvoiceId '.$deliverObj->invoiceId);
                         }
                         //if not, send error codes
                         else {
@@ -289,7 +289,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                 else {
                     $response = array("success" => true);
                     //update order status for created
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_processing_status'),'Svea order id '. $svea->sveaOrderId);
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id '. $svea->sveaOrderId);
                 }
 
             // not accepted, send errors to view

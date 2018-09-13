@@ -186,8 +186,8 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
                             $response = array("success" => true);
                             //update order status for delivered
                             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']." | Order delivered. Svea contractNumber: ".$deliverObj->contractNumber."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('svea_partpayment_deliver_status_id'), 'Svea contractNumber '.$deliverObj->contractNumber);
+                            $completeStatus = $this->config->get('config_complete_status');
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea contractNumber '.$deliverObj->contractNumber);
                          } else {
                             $response = array("error" => $this->responseCodes($deliverObj->resultcode, $deliverObj->errormessage));
                         }
@@ -203,7 +203,7 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
                 } else {
                     $response = array("success" => true);
                     //update order status for created
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_processing_status'),'Svea order id: '. $svea->sveaOrderId);
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id: '. $svea->sveaOrderId);
                 }
 
                 //else send errors to view
