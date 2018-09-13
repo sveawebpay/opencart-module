@@ -206,19 +206,17 @@ Our module supports one Svea merchant id per Opencart installation.
 ## 4.1 Administrating orders <a name="i4-1"></a>
 **Important!** The Svea order id information saved in the Comment field must not be changed for the action to work. You may add to the information, but not change or remove it.
 
-If the order is made in the checkout, the order status will be synchronized if the order has a different status in Sveas admin, meaning you sometimes won't have to change the order status. (Most commonly for checkout orders that are payed with a card or by direct bank as these are delivered automatically after one day unless agreed upon else with Svea.)
-* Go to Sales -> Orders -> Edit order -> Totals tab
-* When you change the _Order Status_ to the same status set in module, the action will be sent to Sveas admin aswell, meaning you do not have to log in to Sveas admin interface.
-* Save.
+To deliver an order just set the order status in the order history to one of the statuses that's configured in System->Settings->Store->Option->Complete Order Status
+To credit or cancel an order just select any other status thats not selected in the above setting.
 
 Actions available:
 
 | Method        | Deliver order | Cancel order  |   Credit order    | Auto Deliver order  |
 |---------------|:-------------:|:-------------:|:-----------------:|:-------------------:|
 | Invoice       |   *           |   *           |   *               |   *                 |
-| Payment plan  |   *           |   *           |                   |   *                 |
+| Payment plan  |   *           |   *           |   *               |   *                 |
 | Card          |   *           |   *           |   *               |                     |
-| Direct bank   |               |               |   *               |                     |
+| Direct bank   |    N/A        |       N/A   |   *                 |    N/A              |
 
 ## 4.2 Troubleshooting and recommendations <a name="i4-2"></a>
 Always check that your settings are properly configured before posting issues or contacting our support, go through these steps first:

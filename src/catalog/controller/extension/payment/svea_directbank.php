@@ -175,11 +175,11 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
 
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf);
         $response = $resp->getResponse();
-        $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
+        //$clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
         if ($response->accepted === 1){
             if($this->session->data['comment'] != "") {
-                $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_processing_status'), 'Customer comment: ' . $this->session->data['comment'], false);
+                //$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_processing_status'), 'Customer comment: ' . $this->session->data['comment'], false);
             }
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
@@ -204,7 +204,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
          $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
             if ($response->accepted === 1){
                  //sets orderhistory
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('svea_directbank_order_status_id'),'Svea transactionId: '.$response->transactionId,true);
+                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_processing_status'),'Svea transactionId: '.$response->transactionId,true);
                 //adds comments to edit order comment field to use when edit order
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment accepted. Svea transactionId: ".$response->transactionId."' WHERE order_id = '" . (int)$response->clientOrderNumber . "'");
 
