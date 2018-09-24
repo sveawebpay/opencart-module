@@ -52,7 +52,8 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $checkout_order_entry = \Svea\WebPay\WebPay::checkout($config);
 
-        $order_builder = $checkout_order_entry->getCheckoutOrderBuilder();
+        $order_builder = $checkout_order_entry->getCheckoutOrderBuilder()
+        ->setPartnerKey('3D5E28FB-EA86-41FE-98CB-60CCAE8E6075');
 
         $this->setOrderGeneralData($checkout_order_entry);
 

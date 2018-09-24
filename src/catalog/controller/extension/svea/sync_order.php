@@ -147,7 +147,7 @@ class ControllerExtensionSveaSyncOrder extends Controller
                 $oc_order_status_id = $this->config->get('sco_pending_status_id');
                 break;
             case 'Denied':
-                $oc_order_status_id = $this->config->get('sco_failed_status_id');
+                $oc_order_status_id = 0;
                 break;
         }
 

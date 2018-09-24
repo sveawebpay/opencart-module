@@ -184,7 +184,7 @@ class Helper
         // @todo change this to properly defined information
         $library_properties = array(
             'library_name' => 'PHP Integration Package',
-            'library_version' => '3.3.1',
+            'library_version' => '3.6.1',
         );
 
         return $library_properties;
@@ -312,5 +312,31 @@ class Helper
     public static function paymentPlanPricePerMonth($price, $paymentPlanParamsResponseObject, $ignoreMaxAndMinFlag = false)
     {
         return new PaymentPlanPricePerMonth($price, $paymentPlanParamsResponseObject, $ignoreMaxAndMinFlag);
+    }
+
+    public static function getCardPayCurrencies()
+    {
+        $currencyList = array(
+            "SEK",
+            "NOK",
+            "DKK",
+            "EUR",
+            "USD",
+            "GBP",
+            "PLN"
+            );
+        return $currencyList;
+    }
+
+    public static function isCardPayCurrency($currency)
+    {
+        foreach(self::getCardPayCurrencies() as $cardPayCurrency)
+        {
+            if(strtoupper($currency) === $cardPayCurrency)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

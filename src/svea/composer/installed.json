@@ -54,12 +54,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/sveawebpay/php-integration.git",
-            "reference": "63e2596d5a571ae398c8cb45796d4786ad2e98a3"
+            "reference": "5e82c4421dd110e775cd1de844aac2e065b94181"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/63e2596d5a571ae398c8cb45796d4786ad2e98a3",
-            "reference": "63e2596d5a571ae398c8cb45796d4786ad2e98a3",
+            "url": "https://api.github.com/repos/sveawebpay/php-integration/zipball/5e82c4421dd110e775cd1de844aac2e065b94181",
+            "reference": "5e82c4421dd110e775cd1de844aac2e065b94181",
             "shasum": ""
         },
         "require": {
@@ -71,7 +71,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.8 || ~5.5"
         },
-        "time": "2018-03-07T12:16:03+00:00",
+        "time": "2018-09-21T10:41:03+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -89,6 +89,6 @@
                 "email": "support-webpay@sveaekonomi.se"
             }
         ],
-        "description": "Php integration library for webpay and admin functionality."
+        "description": "Php integration library for Svea Ekonomis payment methods"
     }
 ]
