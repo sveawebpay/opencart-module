@@ -82,47 +82,6 @@
                     </div>
                 </div>
 
-
-
-
-                <!-- order statuses -->
-                <div class="form-group">
-                    <h5 class="col-sm-3 control-label">{{ entry_order_status }}</h5>
-                    <div class="col-sm-9"></div>
-                </div>
-                <div class="form-group">
-                    <label for="payment_svea_directbank_order_status_id" class="col-sm-3 control-label">
-                       {{ entry_status_order }}
-                    </label>
-                     <div class="col-sm-9">
-                          <select name="payment_svea_directbank_order_status_id">
-                            {% for order_status in order_statuses %}
-                            {% if order_status.order_status_id  ==  payment_svea_directbank_order_status_id %}
-                            <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
-                             {% else %}
-                            <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="payment_svea_directbank_refunded_status_id" class="col-sm-3 control-label">
-                        <span data-toggle="tooltip" title="{{ entry_status_refunded_text }}">{{ entry_status_refunded }}</span>
-                    </label>
-                     <div class="col-sm-9">
-                        <select name="payment_svea_directbank_refunded_status_id">
-                            {% for order_status in order_statuses %}
-                                {% if order_status.order_status_id  ==  payment_svea_directbank_refunded_status_id %}
-                             <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
-                                 {% else %}
-                             <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                     </div>
-                </div>
-
         <!-- Mode specific -->
         <div class="tab-content">
             <ul class="nav nav-tabs" id="payment_svea_merchant_db">

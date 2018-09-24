@@ -104,6 +104,16 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-checkout_terms_uri">{{ entry_shop_terms_uri }}</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">{{ entry_shop_terms_uri_example }}</span>
+                                        <input type="text" name="module_sco_checkout_terms_uri" id="input-checkout_terms_uri" class="form-control" value="{{ module_sco_checkout_terms_uri }}" placeholder="terms url">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 {% for option_name, option_title in options_on_checkout_page %}
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" for="input-process-status">{{ option_title }}</label>
@@ -130,98 +140,6 @@
                                 </div>
                                 {% endfor %}
                             </div>
-
-
-                            <!-- order statuses - start -->
-                            <div class="form-group">
-                                <h5 class="col-sm-2 control-label">Svea {{ entry_order_status }}</h5>
-                                <h5 class="col-sm-10 control-label" style="text-align: left">{{ entry_oc_order_status}}</h5>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ pending_status_order }}</label>
-                                <div class="col-sm-10">
-                                    <select name="module_sco_pending_status_id" class="form-control">
-                                        {% for order_status in order_statuses %}
-                                        {% if order_status.order_status_id  ==  module_sco_pending_status_id %}
-                                            <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
-                                            {% else %}
-                                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
-                                        {% endif %}{% endfor %}
-
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ failed_status_order }}</label>
-                                <div class="col-sm-10">
-                                    <select name="module_sco_failed_status_id" class="form-control">
-                                        {% for order_status in order_statuses %}
-                                        {% if order_status.order_status_id  ==  module_sco_failed_status_id %}
-                                            <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
-                                         {% else %}
-                                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
-                                        {% endif %}{% endfor %}
-
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <span data-toggle="tooltip" title="{{ entry_status_delivered_text }}">{{ entry_status_delivered }}</span>
-                                </label>
-                                <div class="col-sm-10">
-                                    <select name="module_sco_delivered_status_id" class="form-control">
-                                        {% for order_status in order_statuses %}
-                                        {% if order_status.order_status_id  ==  module_sco_delivered_status_id %}
-                                            <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
-                                         {% else %}
-                                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
-                                        {% endif %}{% endfor %}
-
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <span data-toggle="tooltip" title="{{ entry_status_canceled_text }}">{{ entry_status_canceled }}</span>
-                                </label>
-                                <div class="col-sm-10">
-                                    <select name="module_sco_canceled_status_id" class="form-control">
-                                        {% for order_status in order_statuses %}
-                                        {% if order_status.order_status_id  ==  module_sco_canceled_status_id %}
-                                            <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
-                                         {% else %}
-                                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
-                                        {% endif %}{% endfor %}
-
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <span data-toggle="tooltip" title="{{ entry_status_refunded_text }}">{{ entry_status_refunded }}</span>
-                                </label>
-                                <div class="col-sm-10">
-                                    <select name="module_sco_credited_status_id" class="form-control">
-                                        {% for order_status in order_statuses %}
-                                        {% if order_status.order_status_id  ==  module_sco_credited_status_id %}
-                                            <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
-                                         {% else %}
-                                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
-                                        {% endif %}{% endfor %}
-
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- order statuses - end -->
-
-                        </div>
-
 
                         <!-- Authorization -->
                         <div class="tab-pane" id="tab-authorization">

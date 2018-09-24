@@ -18,6 +18,10 @@ class OrderBuilder
     public $testmode = false;
 
     /**
+     * @var boolean
+     */
+    public $logging = false;
+    /**
      * @var ConfigurationProvider $conf
      */
     public $conf;
@@ -82,12 +86,29 @@ class OrderBuilder
      */
     public $clientOrderNumber;
 
+    /*
+     * @var \Svea\WebPay\BuildOrder\RowBuilders\OrderDeliveryAddress
+     */
+    public $orderDeliveryAddress;
+
     /**
      * @param ConfigurationProvider $config
      */
     public function __construct($config)
     {
         $this->conf = $config;
+    }
+
+    /*
+     * Optional
+     * @param \Svea\WebPay\BuildOrder\RowBuilders\OrderDeliveryAddress
+     * @return $this
+     */
+    public function setOrderDeliveryAddress($orderDeliveryAddressObject)
+    {
+        $this->orderDeliveryAddress = $orderDeliveryAddressObject;
+
+        return $this;
     }
 
     /**
@@ -272,6 +293,19 @@ class OrderBuilder
     public function setOrderDate($orderDateAsString)
     {
         $this->orderDate = $orderDateAsString;
+
+        return $this;
+    }
+
+    /**
+     * Enables/disables logging for raw HTTP requests / responses
+     *
+     * @param boolean $status, if true then raw requests / responses will be logged on the order. Disabled by default.
+     * @return $this
+     */
+    public function enableLogging($status)
+    {
+        $this->logging = $status;
 
         return $this;
     }

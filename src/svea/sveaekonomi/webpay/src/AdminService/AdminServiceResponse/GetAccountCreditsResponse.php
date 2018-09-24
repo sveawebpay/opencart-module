@@ -37,13 +37,14 @@ class GetAccountCreditsResponse
     /**
      * GetOrdersResponse constructor.
      * @param $message
+     * @param $logs
      */
-    function __construct($message)
+    function __construct($message, $logs)
     {
-        $this->formatObject($message);
+        $this->formatObject($message, $logs);
     }
 
-    protected function formatObject($message)
+    protected function formatObject($message, $logs)
     {
         $this->errormessage = isset($message->ErrorMessage) ? $message->ErrorMessage : "";
         $this->resultcode = $message->ResultCode;
@@ -82,7 +83,7 @@ class GetAccountCreditsResponse
 
                 $this->customer->setNationalIdNumber($order->Customer->NationalIdNumber);
                 $this->customer->setInitials($order->Customer->IndividualIdentity->Initials);
-                if (isset($order->Customer->IndividualIdentity->BirthDate)) { // setBirthDate is picky about the argument format
+                if (isset($order->Customer->IndividualIdentity->BirthDate) && $order->Customer->IndividualIdentity->BirthDate) { // setBirthDate is picky about the argument format
                     $this->customer->setBirthDate($order->Customer->IndividualIdentity->BirthDate);
                 }
                 $this->customer->setName($order->Customer->IndividualIdentity->FirstName, $order->Customer->IndividualIdentity->LastName); // sets firstName, lastName if present

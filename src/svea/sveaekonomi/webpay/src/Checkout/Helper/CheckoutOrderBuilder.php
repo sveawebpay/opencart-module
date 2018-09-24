@@ -8,6 +8,7 @@ use Svea\WebPay\Checkout\Model\PresetValue;
 use Svea\WebPay\Checkout\Service\GetOrderService;
 use Svea\WebPay\Checkout\Service\CreateOrderService;
 use Svea\WebPay\Checkout\Service\UpdateOrderService;
+use Svea\WebPay\Checkout\Service\GetAvailablePartPaymentCampaignsService;
 
 /**
  * CheckoutOrderBuilder contains all necessary information
@@ -37,6 +38,11 @@ class CheckoutOrderBuilder extends OrderBuilder
      * @var PresetValue []
      */
     protected $presetValues = array();
+
+    /**
+     * @var string $partnerKey
+     */
+    protected $partnerKey;
 
     /**
      * CheckoutOrderBuilder constructor.
@@ -86,6 +92,18 @@ class CheckoutOrderBuilder extends OrderBuilder
         $updateOrderService = new UpdateOrderService($this);
 
         return $updateOrderService->doRequest();
+    }
+
+    /**
+     * Returns all campaigns that is available on the merchant
+     *
+     * @return array
+     */
+    public function getAvailablePartPaymentCampaigns()
+    {
+        $getAvailablePartPaymentCampaigns = new GetAvailablePartPaymentCampaignsService($this);
+
+        return $getAvailablePartPaymentCampaigns->doRequest();
     }
 
     /**
@@ -262,5 +280,27 @@ class CheckoutOrderBuilder extends OrderBuilder
         $this->presetValues [] = $presetValues;
 
         return $this;
+    }
+
+    /**
+     * Sets a partnerKey which is provided by Svea.
+     * Optional to use
+     * @param string $partnerKey
+     * @return $this
+     */
+    public function setPartnerKey($partnerKey)
+    {
+        $this->partnerKey = $partnerKey;
+
+        return $this;
+    }
+
+    /**
+     * Returns a partnerKey
+     * @return string
+     */
+    public function getPartnerKey()
+    {
+        return $this->partnerKey;
     }
 }

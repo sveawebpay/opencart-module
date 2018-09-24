@@ -1,4 +1,4 @@
-<!--<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <modification>
     <id>SveaWebPay Product Price</id>
     <version>3.1.4</version>
@@ -326,4 +326,4 @@
             ]]></add>
         </operation>
     </file>
-</modification>-->
+</modification>

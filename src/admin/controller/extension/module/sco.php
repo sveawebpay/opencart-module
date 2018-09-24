@@ -5,7 +5,7 @@ class ControllerExtensionModuleSco extends Controller
     private $error = array();
 
     // Use this name as params prefix (Svea checkout)
-    private $module_version = '4.2.0';
+    private $module_version = '4.3.3';
 
     public function index()
     {
@@ -68,11 +68,6 @@ class ControllerExtensionModuleSco extends Controller
             'test_mode' => '1',
             'status_checkout' => '0',
             'product_option' => '0',
-            'failed_status_id' => '10',
-            'pending_status_id' => '1',
-            'delivered_status_id' => '15',
-            'canceled_status_id' => '7',
-            'credited_status_id' => '11',
             'show_coupons_on_checkout' => '1',
             'show_voucher_on_checkout' => '1',
             'show_order_comment_on_checkout' => '1',
@@ -175,36 +170,7 @@ class ControllerExtensionModuleSco extends Controller
 
         }
 
-        $this->error = $this->validateStatuses();
-
         return !$this->error;
-    }
-
-    private function validateStatuses()
-    {
-        $post_fields = $this->request->post;
-
-        $pending_status_field = 'module_sco_pending_status_id';
-        $failed_status_field = 'module_sco_failed_status_id';
-        $delivered_status_field = 'module_sco_delivered_status_id';
-        $canceled_status_field = 'module_sco_canceled_status_id';
-        $credited_status_field = 'module_sco_credited_status_id';
-
-        $statuses = array(
-            $post_fields[$pending_status_field],
-            $post_fields[$failed_status_field],
-            $post_fields[$delivered_status_field],
-            $post_fields[$canceled_status_field],
-            $post_fields[$credited_status_field],
-        );
-
-        foreach (array_count_values($statuses) as $val => $c) {
-            if ($c > 1) {
-                $this->error['warning'] = $this->language->get('error_duplicate_statuses');
-            }
-        }
-
-        return $this->error;
     }
 
     /**
@@ -283,21 +249,11 @@ class ControllerExtensionModuleSco extends Controller
         $data['text_disabled'] = $this->language->get('text_disabled');
 
         $data['entry_test_mode'] = $this->language->get('entry_test_mode');
-        $data['created_status_order'] = $this->language->get('created_status_order');
-        $data['pending_status_order'] = $this->language->get('pending_status_order');
-        $data['failed_status_order'] = $this->language->get('failed_status_order');
         $data['entry_status_checkout'] = $this->language->get('entry_status_checkout');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_oc_order_status'] = $this->language->get('entry_oc_order_status');
         $data['entry_show_options_on_checkout'] = $this->language->get('entry_show_options_on_checkout');
 
-        $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
-        $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
-        $data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
-        $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
-        $data['entry_status_delivered'] = $this->language->get('entry_status_delivered');
-        $data['entry_status_delivered_text'] = $this->language->get('entry_status_delivered_text');
         $data['entry_shop_terms_uri'] = $this->language->get('entry_shop_terms_uri');
         $data['entry_shop_terms_uri_example'] = $_SERVER['HTTP_HOST'] . str_replace("admin", "", rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\'));
 

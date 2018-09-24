@@ -6,6 +6,7 @@ use Svea\Checkout\Transport\Connector;
 use Svea\Checkout\Validation\ValidateCreateOrderData;
 use Svea\Checkout\Validation\ValidateGetOrderData;
 use Svea\Checkout\Validation\ValidateUpdateOrderData;
+use Svea\Checkout\Validation\ValidateGetAvailablePartPaymentCampaignsData;
 
 class ImplementationFactory
 {
@@ -34,5 +35,14 @@ class ImplementationFactory
     public static function returnUpdateOrderClass(Connector $connector)
     {
         return new UpdateOrder($connector, new ValidateUpdateOrderData());
+    }
+
+    /**
+     * @param Connector $connector
+     * @return ImplementationInterface
+     */
+    public static function returnGetAvailablePartPaymentCampaignsClass(Connector $connector)
+    {
+        return new GetAvailablePartPaymentCampaigns($connector, new ValidateGetAvailablePartPaymentCampaignsData());
     }
 }

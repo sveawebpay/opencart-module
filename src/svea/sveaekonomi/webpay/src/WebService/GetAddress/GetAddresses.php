@@ -24,7 +24,7 @@ use Svea\WebPay\WebService\WebServiceResponse\GetAddressesResponse;
  * ->setOrderTypePaymentPlan()          (deprecated -- supply the method that corresponds to the account credentials used for the address lookup)
  * ->setOrderTypeAccountCredit()        (deprecated -- supply the method that corresponds to the account credentials used for the address lookup)
  *
- * @author Anneli Halld'n, Daniel Brolund, Kristian Grossman-Madsen for Svea Svea\WebPay\WebPay
+ * @author Anneli Halld'n, Daniel Brolund, Kristian Grossman-Madsen, Fredrik Sundell for Svea WebPay
  */
 class GetAddresses
 {
@@ -35,6 +35,7 @@ class GetAddresses
     public $companyId;
     public $ssn;
     public $testmode = false;
+    public $logging = false;
 
     /**
      * @param ConfigurationProvider $config
@@ -42,6 +43,12 @@ class GetAddresses
     function __construct($config)
     {
         $this->conf = $config;
+    }
+
+    public function enableLogging($logging)
+    {
+        $this->logging = $logging;
+        return $this;
     }
 
     /**
@@ -165,13 +172,9 @@ class GetAddresses
      */
     public function doRequest()
     {
-        $this->request = $this->prepareRequest();
-
-        $request = new SveaDoRequest($this->conf, $this->orderType);
-
-        $svea_req = $request->GetAddresses($this->request);
-
-        $response = new SveaResponse($svea_req, "");
+        $preparedRequest = $this->prepareRequest();
+        $request = new SveaDoRequest($this->conf, $this->orderType, "GetAddresses", $preparedRequest, $this->logging);
+        $response = new SveaResponse($request->result['requestResult'], "", NULL, NULL, isset($request->result['logs']) ? $request->result['logs'] : NULL);
 
         return $response->response;
     }

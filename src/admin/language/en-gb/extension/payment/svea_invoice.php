@@ -8,19 +8,6 @@ $_['text_extension']	      = 'Extensions';
 $_['text_success']            = 'Success: You have modified Svea Invoice payment module!';
 $_['text_svea_invoice']       = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png" alt="Svea Ekonomi" title="Svea Ekonomi" />';
 
-// Entry
-$_['entry_order_status'] = 'Order status:';
-$_['entry_status_order'] = 'Created:';
-$_['entry_status_canceled'] = 'Cancelled/Annulled:';
-$_['entry_status_canceled_text'] = 'Applies on orders not yet delivered/captured.';
-$_['entry_status_delivered'] = 'Delivered:';
-$_['entry_status_delivered_text'] = 'Delivers a created order.';
-$_['entry_status_refunded'] = 'Credited:';
-$_['entry_status_refunded_text'] = 'Applies on orders delivered/captured.';
-
-
-$_['entry_order_status']      = 'Order Status:';
-$_['entry_order_status_text'] = 'Order status for created order but not delivered. Deliver the invoice from Svea admin.';
 $_['entry_geo_zone']          = 'Geo Zone:';
 $_['entry_status']            = 'Status:';
 $_['entry_sort_order']        = 'Sort Order:';

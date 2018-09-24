@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveadirectbank extends Controller
 {
-    protected $svea_version = '4.2.0';
+    protected $svea_version = '4.3.3';
     private $error = array();
 
     public function index()
@@ -36,10 +36,6 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_all_zones'] = $this->language->get('text_all_zones');
 
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_status_order'] = $this->language->get('entry_status_order');
-        $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
-        $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
         $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
@@ -93,20 +89,6 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         );
         $data['action'] = $this->url->link('extension/payment/svea_directbank', 'user_token=' . $this->session->data['user_token'], true);
         $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true);
-
-        //statuses
-        $this->load->model('localisation/order_status');
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-        if (isset($this->request->post['payment_svea_directbank_order_status_id'])) {
-            $data['payment_svea_directbank_order_status_id'] = $this->request->post['payment_svea_directbank_order_status_id'];
-        } else {
-            $data['payment_svea_directbank_order_status_id'] = $this->config->get('payment_svea_directbank_order_status_id');
-        }
-        if (isset($this->request->post['payment_svea_directbank_refunded_status_id'])) {
-            $data['payment_svea_directbank_refunded_status_id'] = $this->request->post['payment_svea_directbank_refunded_status_id'];
-        } else {
-            $data['payment_svea_directbank_refunded_status_id'] = $this->config->get('payment_svea_directbank_refunded_status_id');
-        }
 
         if (isset($this->request->post['payment_svea_directbank_geo_zone_id'])) {
             $data['payment_svea_directbank_geo_zone_id'] = $this->request->post['payment_svea_directbank_geo_zone_id'];

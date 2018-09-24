@@ -65,6 +65,18 @@ class CheckoutOrderEntry
     }
 
     /**
+     * Returns all campaigns that is available on the merchant
+     *
+     * @return array
+     */
+    public function getAvailablePartPaymentCampaigns()
+    {
+        $getAvailablePartPaymentCampaigns = $this->checkoutOrderBuilder->getAvailablePartPaymentCampaigns();
+
+        return $getAvailablePartPaymentCampaigns;
+    }
+
+    /**
      * @param string $checkoutUri
      * @return $this
      */
@@ -162,6 +174,19 @@ class CheckoutOrderEntry
     public function addPresetValue($presetValues)
     {
         $this->checkoutOrderBuilder->addPresetValue($presetValues);
+
+        return $this;
+    }
+
+    /**
+     * Sets a partnerKey that's provided by Svea
+     *
+     * @param string $partnerKey
+     * @return $this
+     */
+    public function setPartnerKey($partnerKey)
+    {
+        $this->checkoutOrderBuilder->setPartnerKey($partnerKey);
 
         return $this;
     }

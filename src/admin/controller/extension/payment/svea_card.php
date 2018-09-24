@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveacard extends Controller
 {
-    protected $svea_version = '4.2.0';
+    protected $svea_version = '4.3.3';
     private $error = array();
 
     public function index()
@@ -33,15 +33,6 @@ class ControllerExtensionPaymentSveacard extends Controller
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_all_zones'] = $this->language->get('text_all_zones');
-
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_status_order'] = $this->language->get('entry_status_order');
-        $data['entry_status_canceled'] = $this->language->get('entry_status_canceled');
-        $data['entry_status_canceled_text'] = $this->language->get('entry_status_canceled_text');
-        $data['entry_status_confirmed'] = $this->language->get('entry_status_confirmed');
-        $data['entry_status_confirmed_text'] = $this->language->get('entry_status_confirmed_text');
-        $data['entry_status_refunded'] = $this->language->get('entry_status_refunded');
-        $data['entry_status_refunded_text'] = $this->language->get('entry_status_refunded_text');
         $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
@@ -112,30 +103,6 @@ class ControllerExtensionPaymentSveacard extends Controller
 
         $data['action'] = $this->url->link('extension/payment/svea_card', 'user_token=' . $this->session->data['user_token'], true);
         $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true);
-
-        //statuses
-        $this->load->model('localisation/order_status');
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-        if (isset($this->request->post['payment_svea_card_order_status_id'])) {
-            $data['payment_svea_card_order_status_id'] = $this->request->post['payment_svea_card_order_status_id'];
-        } else {
-            $data['payment_svea_card_order_status_id'] = $this->config->get('payment_svea_card_order_status_id');
-        }
-        if (isset($this->request->post['payment_svea_card_canceled_status_id'])) {
-            $data['payment_svea_card_canceled_status_id'] = $this->request->post['payment_svea_card_canceled_status_id'];
-        } else {
-            $data['payment_svea_card_canceled_status_id'] = $this->config->get('payment_svea_card_canceled_status_id');
-        }
-        if (isset($this->request->post['payment_svea_card_deliver_status_id'])) {
-            $data['payment_svea_card_deliver_status_id'] = $this->request->post['payment_svea_card_deliver_status_id'];
-        } else {
-            $data['payment_svea_card_deliver_status_id'] = $this->config->get('payment_svea_card_deliver_status_id');
-        }
-        if (isset($this->request->post['payment_svea_card_refunded_status_id'])) {
-            $data['payment_svea_card_refunded_status_id'] = $this->request->post['payment_svea_card_refunded_status_id'];
-        } else {
-            $data['payment_svea_card_refunded_status_id'] = $this->config->get('payment_svea_card_refunded_status_id');
-        }
 
         if (isset($this->request->post['payment_svea_card_geo_zone_id'])) {
             $data['payment_svea_card_geo_zone_id'] = $this->request->post['payment_svea_card_geo_zone_id'];

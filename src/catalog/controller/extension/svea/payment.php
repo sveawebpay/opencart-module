@@ -53,7 +53,8 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $checkout_order_entry = \Svea\WebPay\WebPay::checkout($config);
 
-        $order_builder = $checkout_order_entry->getCheckoutOrderBuilder();
+        $order_builder = $checkout_order_entry->getCheckoutOrderBuilder()
+            ->setPartnerKey('3D5E28FB-EA86-41FE-98CB-60CCAE8E6075');
 
         $this->setOrderGeneralData($checkout_order_entry);
 
@@ -370,7 +371,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             'accept_language' 			=> isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) 	? $this->request->server['HTTP_ACCEPT_LANGUAGE'] 					: NULL,
             'language_id' 				=> $this->config->get('config_language_id'),
             'vouchers'					=> $vouchers,
-            'products'					=> $products,
+            'products'					=> isset($products) ? $products : NULL,
             'totals'					=> $totals,
             'total' 					=> $total,
         );

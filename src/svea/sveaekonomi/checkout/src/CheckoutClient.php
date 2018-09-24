@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Svea Connection library for @todo NAME ON CHECKOUT
+ * Svea Connection library for Svea Checkout
  *
  *
- * Copyright 2016 Svea Ekonomi AB
+ * Copyright 2018 Svea Ekonomi AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
  * @category  Payment
  * @package   Svea_Checkout
  * @author    Svea Ekonomi AB <support-webpay@sveaekonomi.se>
- * @copyright 2016 Svea Ekonomi AB
+ * @copyright 2018 Svea Ekonomi AB
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache license v2.0
  */
 namespace Svea\Checkout;
@@ -85,6 +85,17 @@ class CheckoutClient
     public function get($data)
     {
         return $this->executeAction(ImplementationFactory::returnGetOrderClass($this->connector), $data);
+    }
+
+    /**
+     * Returns available part payment
+     *
+     * @param array $data
+     * @return mixed
+     */
+    public function getAvailablePartPaymentCampaigns($data)
+    {
+        return $this->executeAction(ImplementationFactory::returnGetAvailablePartPaymentCampaignsClass($this->connector), $data);
     }
 
     /**

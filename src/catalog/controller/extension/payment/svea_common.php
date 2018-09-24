@@ -80,6 +80,9 @@ class SveaCommon extends Controller
         WHERE `order_id` = " . (int)$this->session->data['order_id']);
         if ($vouchers->num_rows >= 1) {
             foreach ($vouchers->rows as $voucher) {
+                if (mb_strlen($voucher['description']) > 40) {
+                    $voucher['description'] = mb_substr($voucher['description'], 0, 37) . "...";
+                }
                 $svea = $svea
                     ->addOrderRow(\Svea\WebPay\WebPayItem::orderRow()
                         ->setQuantity(1)
@@ -87,6 +90,7 @@ class SveaCommon extends Controller
                         ->setVatPercent(0)//no vat when buying a voucher
                         ->setArticleNumber($voucher['code'])
                         ->setDescription($voucher['description'])
+                        ->setName($voucher['description'])
                     );
             }
         }

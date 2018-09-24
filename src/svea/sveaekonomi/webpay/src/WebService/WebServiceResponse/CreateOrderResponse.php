@@ -53,10 +53,20 @@ class CreateOrderResponse extends WebServiceResponse
     public $clientOrderNumber;
 
     /**
+     * @var string $pending true if created order is pending at Svea
+     */
+    public $pending = 0;
+
+    /**
+     * @var string $pendingReason if pending is true then a reason can be found in this variable
+     */
+    public $pendingReasons;
+    /**
      * CreateOrderResponse constructor.
      * @param $response
+     * @param $logs
      */
-    public function __construct($response)
+    public function __construct($response, $logs = NULL)
     {
         // was request accepted?
         $this->accepted = $response->CreateOrderEuResult->Accepted;
@@ -64,6 +74,11 @@ class CreateOrderResponse extends WebServiceResponse
 
         // set response resultcode
         $this->resultcode = $response->CreateOrderEuResult->ResultCode;
+
+        if(isset($logs))
+        {
+            $this->logs = $logs;
+        }
 
         // set response attributes        
         if ($this->accepted == 1) {
@@ -83,6 +98,11 @@ class CreateOrderResponse extends WebServiceResponse
             }
             if (isset($response->CreateOrderEuResult->CreateOrderResult->CustomerIdentity)) {
                 $this->customerIdentity = new CreateOrderIdentity($response->CreateOrderEuResult->CreateOrderResult->CustomerIdentity);
+            }
+            if (isset($response->CreateOrderEuResult->CreateOrderResult->PendingReasons))
+            {
+                $this->pending = 1;
+                $this->pendingReasons = $response->CreateOrderEuResult->CreateOrderResult->PendingReasons;
             }
         }
     }

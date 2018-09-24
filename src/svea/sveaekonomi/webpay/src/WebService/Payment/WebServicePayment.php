@@ -6,6 +6,7 @@ use Svea\WebPay\Helper\Helper;
 use Svea\WebPay\Response\SveaResponse;
 use Svea\WebPay\WebService\SveaSoap\SveaAuth;
 use Svea\WebPay\WebService\SveaSoap\SveaOrder;
+use Svea\WebPay\WebService\SveaSoap\SveaOrderDeliveryAddress;
 use Svea\WebPay\WebService\SveaSoap\SveaRequest;
 use Svea\WebPay\WebService\SveaSoap\SveaIdentity;
 use Svea\WebPay\WebService\SveaSoap\SveaDoRequest;
@@ -47,10 +48,10 @@ class WebServicePayment
     public function doRequest()
     {
         $object = $this->prepareRequest();
-        $request = new SveaDoRequest($this->order->conf, $this->orderType);
-        $svea_req = $request->CreateOrderEu($object);
 
-        $response = new SveaResponse($svea_req, "");
+        $request = new SveaDoRequest($this->order->conf, $this->orderType, "CreateOrderEu", $object, $this->order->logging);
+        $response = new SveaResponse($request->result['requestResult'], "", NULL, NULL, isset($request->result['logs']) ? $request->result['logs'] : NULL);
+
 
         return $response->getResponse();
     }
@@ -75,7 +76,7 @@ class WebServicePayment
         // create soap order object, set authorization
         $sveaOrder = new SveaOrder;
         $sveaOrder->Auth = $this->getPasswordBasedAuthorization();
-        //make orderrows and put in CreateOrderInfromation
+        //make orderrows and put in CreateOrderInformation
         $orderinformation = $this->formatOrderInformationWithOrderRows($this->order->orderRows);
 
         //parallel ways of creating customer
@@ -88,6 +89,11 @@ class WebServicePayment
         $orderinformation->ClientOrderNumber = $this->order->clientOrderNumber;
         $orderinformation->OrderDate = $this->order->orderDate;
         $orderinformation->CustomerReference = $this->order->customerReference;
+        if(isset($this->order->orderDeliveryAddress))
+        {
+            $orderinformation->OrderDeliveryAddress = $this->formatOrderDeliveryAddress();
+
+        }
         $sveaOrder->CreateOrderInformation = $this->setOrderType($orderinformation);
 
         $object = new SveaRequest();
@@ -118,7 +124,24 @@ class WebServicePayment
         return $auth;
     }
 
+    /*
+     *
+     */
+    private function formatOrderDeliveryAddress()
+    {
+        $formattedOrderDeliveryAddress = new SveaOrderDeliveryAddress();
 
+        $formattedOrderDeliveryAddress->FullName = isset($this->order->orderDeliveryAddress->fullName) ? $this->order->orderDeliveryAddress->fullName : "";
+        $formattedOrderDeliveryAddress->FirstName = isset($this->order->orderDeliveryAddress->firstName) ? $this->order->orderDeliveryAddress->firstName : "";
+        $formattedOrderDeliveryAddress->LastName = isset($this->order->orderDeliveryAddress->lastName) ? $this->order->orderDeliveryAddress->lastName : "";
+        $formattedOrderDeliveryAddress->CoAddress = isset($this->order->orderDeliveryAddress->coAddress) ? $this->order->orderDeliveryAddress->coAddress : "";
+        $formattedOrderDeliveryAddress->ZipCode = isset($this->order->orderDeliveryAddress->zipCode) ? $this->order->orderDeliveryAddress->zipCode : "";
+        $formattedOrderDeliveryAddress->HouseNumber = isset($this->order->orderDeliveryAddress->houseNumber) ? $this->order->orderDeliveryAddress->houseNumber : "";
+        $formattedOrderDeliveryAddress->Locality = isset($this->order->orderDeliveryAddress->locality) ? $this->order->orderDeliveryAddress->locality : "";
+        $formattedOrderDeliveryAddress->CountryCode = isset($this->order->orderDeliveryAddress->countryCode) ? $this->order->orderDeliveryAddress->countryCode : "";
+
+        return $formattedOrderDeliveryAddress;
+    }
     /**
      * if CustomerIdentity is created by addCustomerDetails()
      * @return \SveaCustomerIdentity
