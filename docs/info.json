@@ -1,8 +1,8 @@
 {
     "module_name": "Opencart",
-    "module_version": "4.3.3",
+    "module_version": "4.4.0",
     "module_shop_version_support": [
-        "4.3.3"
+        "4.4.0"
     ],
     "invoice_paymentplan": {
         "invoice": [
