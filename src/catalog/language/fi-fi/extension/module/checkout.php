@@ -97,3 +97,10 @@ $_['text_basket']                   = 'Ostoskori';
 $_['text_checkout']                 = 'Kassa';
 $_['text_success']                  = 'Onnistui';
 $_['text_change_postcode']          = 'Vaihda';
+
+$_['paymenttype_card_payment']      = 'Kortti';
+$_['paymenttype_invoice']           = 'Laksu';
+$_['paymenttype_admininvoice']      = 'Hallinnoitu lasku';
+$_['paymenttype_paymentplan']       = 'Erämaksu';
+$_['paymenttype_accountcredit']     = 'Ostoluotto';
+$_['paymenttype_undefined']         = 'Maksu';

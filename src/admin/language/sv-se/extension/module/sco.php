@@ -8,16 +8,7 @@ $_['text_success']				    = 'Modifiering av Svea Checkoutmodulen lyckades!';
 $_['text_edit']					    = 'Redigera Svea Checkout.';
 $_['text_module_version_info_new']  = 'En ny version finns tillgänglig. Klicka för nedladdning.';
 $_['text_module_version_info']      = 'Du har den senaste versionen. Klicka för att gå till dokumentationen.';
-$_['created_status_order']          = 'Skapad';
-$_['pending_status_order']          = 'Väntande';
-$_['failed_status_order']           = 'Misslyckad';
 
-$_['entry_status_canceled']         = 'Cancellerad/Annulerad:';
-$_['entry_status_canceled_text']    = 'Kan utföras på ordrar som ännu inte är levererade/inlösta.';
-$_['entry_status_delivered']        = 'Levererad:';
-$_['entry_status_delivered_text']   = 'Levererar en skapad order. ';
-$_['entry_status_refunded']         = 'Krediterad:';
-$_['entry_status_refunded_text']    = 'Kan utföras på ordrar som är levererade/inlösta.';
 $_['entry_shop_terms_uri']          = 'Butikens köpvillkor';
 
 $_['text_show_voucher_on_checkout']	= 'Visa Presentkort på checkoutsidan';

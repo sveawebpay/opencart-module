@@ -2,13 +2,31 @@
 
 class ControllerExtensionTotalSveaFee extends Controller
 {
-    protected $total_svea_version = '4.3.3';
+    protected $total_svea_version = '4.4.0';
     private $error = array();
+
+    private $userTokenString = "user_";
+    private $extensionString = "setting/extension";
+    private $totalString = "total_";
+    private $linkString = "marketplace/extension";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->userTokenString = "";
+            $this->extensionString = "extension/extension";
+            $this->totalString = "";
+            $this->linkString = "extension/extension";
+        }
+    }
 
     public function index()
     {
         $this->load->language('extension/total/svea_fee');
 
+        $this->setVersionStrings();
+        
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/setting');
@@ -16,20 +34,20 @@ class ControllerExtensionTotalSveaFee extends Controller
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
 
             // if fee enabled in any country, set it as enabled in the order_total listing
-            $total_svea_fee_status = ($this->request->post['total_svea_fee_status_SE'] ||
-                $this->request->post['total_svea_fee_status_NO'] ||
-                $this->request->post['total_svea_fee_status_DK'] ||
-                $this->request->post['total_svea_fee_status_FI'] ||
-                $this->request->post['total_svea_fee_status_NL'] ||
-                $this->request->post['total_svea_fee_status_DE'])
+            $total_svea_fee_status = ($this->request->post[$this->totalString . 'svea_fee_status_SE'] ||
+                $this->request->post[$this->totalString . 'svea_fee_status_NO'] ||
+                $this->request->post[$this->totalString . 'svea_fee_status_DK'] ||
+                $this->request->post[$this->totalString . 'svea_fee_status_FI'] ||
+                $this->request->post[$this->totalString . 'svea_fee_status_NL'] ||
+                $this->request->post[$this->totalString . 'svea_fee_status_DE'])
                 ? true : false;
             // stores config settings to db
-            $this->model_setting_setting->editSetting('total_svea_fee', array_merge($this->request->post, array('total_svea_fee_status' => $total_svea_fee_status)));
+            $this->model_setting_setting->editSetting($this->totalString . 'svea_fee', array_merge($this->request->post, array($this->totalString . 'svea_fee_status' => $total_svea_fee_status)));
             $this->session->data['success'] = $this->language->get('text_success');
-            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=total', 'SSL'));
+            $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', 'SSL'));
         }
 
-        $data['total_svea_version'] = $this->getSveaVersion();
+        $data[$this->totalString . 'svea_version'] = $this->getSveaVersion();
         // localisation of i.e. virtuemart gui elements
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -54,54 +72,54 @@ class ControllerExtensionTotalSveaFee extends Controller
         $cred[] = array(
             "lang" => "SE",
             // (tpl "name" will be built from this key + "lang" above) => tpl "value"
-            'total_svea_fee_fee' => $this->config->get('total_svea_fee_fee_SE'),
-            'total_svea_fee_tax_class' => $this->config->get('total_svea_fee_tax_class_SE'),
-            'total_svea_fee_status' => $this->config->get('total_svea_fee_status_SE'),
-            'total_svea_fee_sort_order' => $this->config->get('total_svea_fee_sort_order_SE')
+            $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_SE'),
+            $this->totalString . 'svea_fee_tax_class' => $this->config->get($this->totalString . 'svea_fee_tax_class_SE'),
+            $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_SE'),
+            $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_SE')
         );
         $cred[] = array(
             "lang" => "NO",
-            'total_svea_fee_fee' => $this->config->get('total_svea_fee_fee_NO'),
-            'total_svea_fee_tax_class' => $this->config->get('total_svea_fee_tax_class_NO'),
-            'total_svea_fee_status' => $this->config->get('total_svea_fee_status_NO'),
-            'total_svea_fee_sort_order' => $this->config->get('total_svea_fee_sort_order_NO')
+            $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_NO'),
+            $this->totalString . 'svea_fee_tax_class' => $this->config->get($this->totalString . 'svea_fee_tax_class_NO'),
+            $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_NO'),
+            $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_NO')
         );
         $cred[] = array(
             "lang" => "FI",
-            'total_svea_fee_fee' => $this->config->get('total_svea_fee_fee_FI'),
-            'total_svea_fee_tax_class' => $this->config->get('total_svea_fee_tax_class_FI'),
-            'total_svea_fee_status' => $this->config->get('total_svea_fee_status_FI'),
-            'total_svea_fee_sort_order' => $this->config->get('total_svea_fee_sort_order_FI')
+            $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_FI'),
+            $this->totalString . 'svea_fee_tax_class' => $this->config->get($this->totalString . 'svea_fee_tax_class_FI'),
+            $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_FI'),
+            $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_FI')
         );
         $cred[] = array(
             "lang" => "DK",
-            'total_svea_fee_fee' => $this->config->get('total_svea_fee_fee_DK'),
-            'total_svea_fee_tax_class' => $this->config->get('total_svea_fee_tax_class_DK'),
-            'total_svea_fee_status' => $this->config->get('total_svea_fee_status_DK'),
-            'total_svea_fee_sort_order' => $this->config->get('total_svea_fee_sort_order_DK')
+            $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_DK'),
+            $this->totalString . 'svea_fee_tax_class' => $this->config->get($this->totalString . 'svea_fee_tax_class_DK'),
+            $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_DK'),
+            $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_DK')
         );
         $cred[] = array(
             "lang" => "NL",
-            'total_svea_fee_fee' => $this->config->get('total_svea_fee_fee_NL'),
-            'total_svea_fee_tax_class' => $this->config->get('total_svea_fee_tax_class_NL'),
-            'total_svea_fee_status' => $this->config->get('total_svea_fee_status_NL'),
-            'total_svea_fee_sort_order' => $this->config->get('total_svea_fee_sort_order_NL')
+            $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_NL'),
+            $this->totalString . 'svea_fee_tax_class' => $this->config->get($this->totalString . 'svea_fee_tax_class_NL'),
+            $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_NL'),
+            $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_NL')
         );
         $cred[] = array(
             "lang" => "DE",
-            'total_svea_fee_fee' => $this->config->get('total_svea_fee_fee_DE'),
-            'total_svea_fee_tax_class' => $this->config->get('total_svea_fee_tax_class_DE'),
-            'total_svea_fee_status' => $this->config->get('total_svea_fee_status_DE'),
-            'total_svea_fee_sort_order' => $this->config->get('total_svea_fee_sort_order_DE')
+            $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_DE'),
+            $this->totalString . 'svea_fee_tax_class' => $this->config->get($this->totalString . 'svea_fee_tax_class_DE'),
+            $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_DE'),
+            $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_DE')
         );
 
         $data['credentials'] = $cred;
 
         /*Sort order*/
-        if (isset($this->request->post['total_svea_fee_sort_order'])) {
-            $data['total_svea_fee_sort_order'] = $this->request->post['total_svea_fee_sort_order'];
+        if (isset($this->request->post[$this->totalString . 'svea_fee_sort_order'])) {
+            $data[$this->totalString . 'svea_fee_sort_order'] = $this->request->post[$this->totalString . 'svea_fee_sort_order'];
         } else {
-            $data['total_svea_fee_sort_order'] = $this->config->get('total_svea_fee_sort_order');
+            $data[$this->totalString . 'svea_fee_sort_order'] = $this->config->get($this->totalString . 'svea_fee_sort_order');
         }
 
         // pass any virtuemart error to template
@@ -116,25 +134,25 @@ class ControllerExtensionTotalSveaFee extends Controller
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true),
+            'href' => $this->url->link('common/dashboard', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true),
             'separator' => false
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_total'),
-            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=total', true),
+            'href' => $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', true),
             'separator' => ' :: '
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/total/svea_fee', 'user_token=' . $this->session->data['user_token'], true),
+            'href' => $this->url->link('extension/total/svea_fee', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true),
             'separator' => ' :: '
         );
 
         // actions urls for the save/cancel buttons
-        $data['action'] = $this->url->link('extension/total/svea_fee', 'user_token=' . $this->session->data['user_token'], true);
-        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=total', true);
+        $data['action'] = $this->url->link('extension/total/svea_fee', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
+        $data['cancel'] = $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', true);
 
 
         $this->load->model('localisation/tax_class');
@@ -188,6 +206,6 @@ class ControllerExtensionTotalSveaFee extends Controller
     //The link function not avaliable in 1.4.x, therefore we need to implement the older way of setting links
     private function getLink($link)
     {
-        return $this->url->link($link, 'user_token=' . $this->session->data['user_token'] . '&type=total', 'SSL');
+        return $this->url->link($link, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', 'SSL');
     }
 }

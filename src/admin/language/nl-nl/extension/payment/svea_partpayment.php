@@ -8,14 +8,6 @@ $_['text_success']       = 'Success: U heeft de module Svea Deelbetalen gewijzig
 $_['text_svea_partpayment']   = '<img src="http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png" alt="Svea Finans" title="Svea Finans" />';
 
 // Entry
-$_['entry_order_status'] = 'Order status:';
-$_['entry_status_order'] = 'Aangemaakt :';
-$_['entry_status_canceled'] = 'Verwijderd /Geannuleerd:';
-$_['entry_status_canceled_text'] = 'Van toepassing voor de bestelling is geleverd/binnengekomen.';
-$_['entry_status_delivered'] = 'Geleverd:';
-$_['entry_status_delivered_text'] = 'Levering van een geplaatste bestelling.';
-$_['entry_status_refunded'] = 'Gecrediteerd:';
-$_['entry_status_refunded_text'] = 'De bestelling moet zijn geleverd/binnengekomen voor creditering.';
 
 $_['entry_geo_zone']     = 'Geo zone:';
 $_['entry_status']       = 'Status:';

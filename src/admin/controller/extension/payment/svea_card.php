@@ -2,11 +2,18 @@
 
 class ControllerExtensionPaymentSveacard extends Controller
 {
-    protected $svea_version = '4.3.3';
+    protected $svea_version = '4.4.0';
     private $error = array();
+
+    private $userTokenString = "user_";
+    private $linkString = "marketplace/extension";
+    private $paymentString ="payment_";
+    private $moduleString = "module_";
+    private $appendString = "_before";
 
     public function index()
     {
+        $this->setVersionStrings();
         $this->load->language('extension/payment/svea_card');
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -16,19 +23,19 @@ class ControllerExtensionPaymentSveacard extends Controller
             //Remove whitespace  from input, outcommented cause do not filter correct
             $inputArray = array();
             foreach ($this->request->post as $k => $i) {
-                $inputArray[$k] = $i;//($k == 'payment_svea_card_sw_test' || 'payment_svea_card_sw_prod') ? str_replace(" ","",$i) : $i;
+                $inputArray[$k] = $i;//($k == $this->paymentString . 'svea_card_sw_test' || $this->paymentString . 'svea_card_sw_prod') ? str_replace(" ","",$i) : $i;
             }
 
             //Save all settings
-            $this->model_setting_setting->editSetting('payment_svea_card', $inputArray);
+            $this->model_setting_setting->editSetting($this->paymentString . 'svea_card', $inputArray);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
+            $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true));
         }
 
-        $data['payment_svea_version_text'] = $this->getSveaVersion();
-        $data['payment_svea_version'] = $this->svea_version;
+        $data[$this->paymentString . 'svea_version_text'] = $this->getSveaVersion();
+        $data[$this->paymentString . 'svea_version'] = $this->svea_version;
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
@@ -56,15 +63,15 @@ class ControllerExtensionPaymentSveacard extends Controller
         $data['entry_sw'] = $this->language->get('entry_sw');
 
         //Definitions settings
-        $data['payment_svea_card_sort_order'] = $this->config->get('payment_svea_card_sort_order');
-        $data['payment_svea_card_testmode'] = $this->config->get('payment_svea_card_testmode');
+        $data[$this->paymentString . 'svea_card_sort_order'] = $this->config->get($this->paymentString . 'svea_card_sort_order');
+        $data[$this->paymentString . 'svea_card_testmode'] = $this->config->get($this->paymentString . 'svea_card_testmode');
 
         $data['version'] = floatval(VERSION);
 
-        $data['value_merchant_test'] = $this->config->get('payment_svea_card_merchant_id_test');
-        $data['value_sw_test'] = $this->config->get('payment_svea_card_sw_test');
-        $data['value_merchant_prod'] = $this->config->get('payment_svea_card_merchant_id_prod');
-        $data['value_sw_prod'] = $this->config->get('payment_svea_card_sw_prod');
+        $data['value_merchant_test'] = $this->config->get($this->paymentString . 'svea_card_merchant_id_test');
+        $data['value_sw_test'] = $this->config->get($this->paymentString . 'svea_card_sw_test');
+        $data['value_merchant_prod'] = $this->config->get($this->paymentString . 'svea_card_merchant_id_prod');
+        $data['value_sw_prod'] = $this->config->get($this->paymentString . 'svea_card_sw_prod');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -72,12 +79,12 @@ class ControllerExtensionPaymentSveacard extends Controller
             $data['error_warning'] = '';
         }
 
-        if (isset($this->request->post['payment_svea_card_logos'])) {
-            $data['payment_svea_card_logos'] = $this->request->post['payment_svea_card_logos'];
-        } elseif ($this->config->get('payment_svea_card_logos')) {
-            $data['payment_svea_card_logos'] = $this->config->get('payment_svea_card_logos');
+        if (isset($this->request->post[$this->paymentString . 'svea_card_logos'])) {
+            $data[$this->paymentString . 'svea_card_logos'] = $this->request->post[$this->paymentString . 'svea_card_logos'];
+        } elseif ($this->config->get($this->paymentString . 'svea_card_logos')) {
+            $data[$this->paymentString . 'svea_card_logos'] = $this->config->get($this->paymentString . 'svea_card_logos');
         } else {
-            $data['payment_svea_card_logos'] = array();
+            $data[$this->paymentString . 'svea_card_logos'] = array();
         }
         $data['card_logos'] = array(
             'MASTERCARD.png' => 'view/image/payment/svea_direct/MASTERCARD.png',
@@ -88,54 +95,54 @@ class ControllerExtensionPaymentSveacard extends Controller
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+            'href' => $this->url->link('common/dashboard', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_extension'),
-            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true)
+            'href' => $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/payment/svea_card', 'user_token=' . $this->session->data['user_token'], true)
+            'href' => $this->url->link('extension/payment/svea_card', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
-        $data['action'] = $this->url->link('extension/payment/svea_card', 'user_token=' . $this->session->data['user_token'], true);
-        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true);
+        $data['action'] = $this->url->link('extension/payment/svea_card', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
+        $data['cancel'] = $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true);
 
-        if (isset($this->request->post['payment_svea_card_geo_zone_id'])) {
-            $data['payment_svea_card_geo_zone_id'] = $this->request->post['payment_svea_card_geo_zone_id'];
+        if (isset($this->request->post[$this->paymentString . 'svea_card_geo_zone_id'])) {
+            $data[$this->paymentString . 'svea_card_geo_zone_id'] = $this->request->post[$this->paymentString . 'svea_card_geo_zone_id'];
         } else {
-            $data['payment_svea_card_geo_zone_id'] = $this->config->get('payment_svea_card_geo_zone_id');
+            $data[$this->paymentString . 'svea_card_geo_zone_id'] = $this->config->get($this->paymentString . 'svea_card_geo_zone_id');
         }
 
         $this->load->model('localisation/geo_zone');
 
         $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
-        if (isset($this->request->post['payment_svea_card_status'])) {
-            $data['payment_svea_card_status'] = $this->request->post['payment_svea_card_status'];
+        if (isset($this->request->post[$this->paymentString . 'svea_card_status'])) {
+            $data[$this->paymentString . 'svea_card_status'] = $this->request->post[$this->paymentString . 'svea_card_status'];
         } else {
-            $data['payment_svea_card_status'] = $this->config->get('payment_svea_card_status');
+            $data[$this->paymentString . 'svea_card_status'] = $this->config->get($this->paymentString . 'svea_card_status');
         }
 
-        if (isset($this->request->post['payment_svea_card_sort_order'])) {
-            $data['payment_svea_card_sort_order'] = $this->request->post['payment_svea_card_sort_order'];
+        if (isset($this->request->post[$this->paymentString . 'svea_card_sort_order'])) {
+            $data[$this->paymentString . 'svea_card_sort_order'] = $this->request->post[$this->paymentString . 'svea_card_sort_order'];
         } else {
-            $data['payment_svea_card_sort_order'] = $this->config->get('payment_svea_card_sort_order');
+            $data[$this->paymentString . 'svea_card_sort_order'] = $this->config->get($this->paymentString . 'svea_card_sort_order');
         }
         //payment info
-        if (isset($this->request->post['payment_svea_card_payment_description'])) {
-            $data['payment_svea_card_payment_description'] = $this->request->post['payment_svea_card_payment_description'];
+        if (isset($this->request->post[$this->paymentString . 'svea_card_payment_description'])) {
+            $data[$this->paymentString . 'svea_card_payment_description'] = $this->request->post[$this->paymentString . 'svea_card_payment_description'];
         } else {
-            $data['payment_svea_card_payment_description'] = $this->config->get('payment_svea_card_payment_description');
+            $data[$this->paymentString . 'svea_card_payment_description'] = $this->config->get($this->paymentString . 'svea_card_payment_description');
         }
 
-        if (isset($this->request->post['payment_svea_card_testmode'])) {
-            $data['payment_svea_card_testmode'] = $this->request->post['payment_svea_card_testmode'];
+        if (isset($this->request->post[$this->paymentString . 'svea_card_testmode'])) {
+            $data[$this->paymentString . 'svea_card_testmode'] = $this->request->post[$this->paymentString . 'svea_card_testmode'];
         } else {
-            $data['payment_svea_card_testmode'] = $this->config->get('payment_svea_card_testmode');
+            $data[$this->paymentString . 'svea_card_testmode'] = $this->config->get($this->paymentString . 'svea_card_testmode');
         }
 
         $data['header'] = $this->load->controller('common/header');
@@ -180,13 +187,35 @@ class ControllerExtensionPaymentSveacard extends Controller
 
     public function install()
     {
+        $this->setVersionStrings();
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('payment_svea_card', array('payment_svea_card_status' => 1));
+        $this->model_setting_setting->editSetting($this->paymentString . 'svea_card', array($this->paymentString . 'svea_card_status' => 1));
+        if (VERSION < 3.0) {
+            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == NULL) {
+                $this->model_extension_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
+            }
+        } else {
+            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == NULL) {
+                $this->model_setting_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
+            }
+        }
     }
 
     public function uninstall()
     {
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('payment_svea_card', array('payment_svea_card_status' => 0));
+        $this->model_setting_setting->editSetting($this->paymentString . 'svea_card', array($this->paymentString . 'svea_card_status' => 0));
+    }
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->userTokenString = "";
+            $this->linkString = "extension/extension";
+            $this->paymentString = "";
+            $this->moduleString = "";
+            $this->appendString = "";
+        }
     }
 }

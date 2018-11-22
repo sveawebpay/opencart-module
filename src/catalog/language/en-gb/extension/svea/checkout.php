@@ -97,3 +97,10 @@ $_['text_basket']                   = 'Shopping Cart';
 $_['text_checkout']                 = 'Checkout';
 $_['text_success']                  = 'Success';
 $_['text_change_postcode']          = 'Change';
+
+$_['paymenttype_card_payment']      = 'Card Payment';
+$_['paymenttype_invoice']           = 'Invoice';
+$_['paymenttype_admininvoice']      = 'Admin Invoice';
+$_['paymenttype_paymentplan']       = 'Payment Plan';
+$_['paymenttype_accountcredit']     = 'Account Credit';
+$_['paymenttype_undefined']         = 'Payment';

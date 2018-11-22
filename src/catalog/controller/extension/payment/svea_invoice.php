@@ -4,6 +4,16 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionPaymentSveainvoice extends SveaCommon {
 
+    //backwards compatability
+    private $paymentString = "payment_";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+        }
+    }
     /**
      * Returns the currency used for an invoice country.
      */
@@ -19,7 +29,9 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
         return $country_currencies[$countryCode];
     }
 
-    public function index() {
+    public function index()
+    {
+        $this->setVersionStrings();
         $this->load->language('extension/payment/svea_invoice');
         $this->load->model('checkout/order');
         //Definitions
@@ -35,13 +47,10 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
         $data['text_initials'] = $this->language->get("text_initials");
         $data['text_vat_no'] = $this->language->get("text_vat_no");
         $data['text_customerreference'] = $this->language->get('text_customerreference');
-        $data['payment_svea_invoice_shipping_billing'] = $this->config->get('payment_svea_invoice_shipping_billing');
+        $data[$this->paymentString . 'svea_invoice_shipping_billing'] = $this->config->get($this->paymentString . 'svea_invoice_shipping_billing');
         $data['text_required'] = $this->language->get('text_required');
-
-
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['button_back'] = $this->language->get('button_back');
-
         $data['continue'] = 'index.php?route=checkout/success';
 
         if ($this->request->get['route'] != 'checkout/guest_step_3') {
@@ -82,6 +91,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
 
     public function confirm() {
 
+        $this->setVersionStrings();
         $this->load->language('extension/payment/svea_invoice');
         $this->load->language('extension/total/svea_fee');
 
@@ -94,9 +104,9 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
-        if($this->config->get('payment_svea_invoice_testmode_'.$countryCode) !== NULL){
-            $conf = ( $this->config->get('payment_svea_invoice_testmode_'.$countryCode) == "1" )
-                    ? new OpencartSveaConfigTest($this->config,'payment_svea_invoice') : new OpencartSveaConfig($this->config,'payment_svea_invoice');
+        if($this->config->get($this->paymentString . 'svea_invoice_testmode_'.$countryCode) !== NULL){
+            $conf = ( $this->config->get($this->paymentString . 'svea_invoice_testmode_'.$countryCode) == "1" )
+                    ? new OpencartSveaConfigTest($this->config,$this->paymentString . 'svea_invoice') : new OpencartSveaConfig($this->config,$this->paymentString . 'svea_invoice');
         }
         else {
             $response = array("error" => $this->responseCodes(40001,"The country is not supported for this paymentmethod"));
@@ -126,7 +136,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
 
         //Seperates the street from the housenumber according to testcases for NL and DE
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
-            $addressArr = \Svea\WebPay\Helper\Helper::splitStreetAddress( $order['payment_address_1'] );
+            $addressArr = \Svea\WebPay\Helper\Helper::splitStreetAddress( $order[$this->paymentString . 'address_1'] );
         }  else {
             $addressArr[1] =  $order['payment_address_1'];
             $addressArr[2] =  "";
@@ -202,7 +212,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                 $sveaOrderAddress = $this->buildPaymentAddressQuery($svea,$countryCode,$order['comment']);
 
                 // if set to enforce shipping = billing, fetch billing address
-                if($this->config->get('payment_svea_invoice_shipping_billing') == '1') {
+                if($this->config->get($this->paymentString . 'svea_invoice_shipping_billing') == '1') {
                     $sveaOrderAddress = $this->buildShippingAddressQuery($svea,$sveaOrderAddress,$countryCode);
                 }
                 $this->model_extension_payment_svea_invoice->updateAddressField($this->session->data['order_id'],$sveaOrderAddress);
@@ -210,7 +220,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                 $response = array();
 
                 //If Auto deliver order is set, DeliverOrder
-                if($this->config->get('payment_svea_invoice_auto_deliver') === '1') {
+                if($this->config->get($this->paymentString . 'svea_invoice_auto_deliver') === '1') {
                     $deliverObj = \Svea\WebPay\WebPay::deliverOrder($conf);
                     //Product rows
                     $deliverObj = $this->addOrderRowsToWebServiceOrder($deliverObj, $products,$currencyValue);
@@ -257,7 +267,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                         $deliverObj = $deliverObj
                             ->setCountryCode($countryCode)
                             ->setOrderId($svea->sveaOrderId)    // match doRequest orderId
-                            ->setInvoiceDistributionType($this->config->get('payment_svea_invoice_distribution_type'))
+                            ->setInvoiceDistributionType($this->config->get($this->paymentString . 'svea_invoice_distribution_type'))
                             ->deliverInvoiceOrder()
                             ->doRequest();
 
@@ -268,7 +278,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
                             $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id '. $svea->sveaOrderId, false);
                             $completeStatus = $this->config->get('config_complete_status');
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea InvoiceId '.$deliverObj->invoiceId);
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea: Order was delivered. Svea invoiceId '.$deliverObj->invoiceId);
                         }
                         //if not, send error codes
                         else {
@@ -310,13 +320,14 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
     }
 
     public function getAddress() {
+        $this->setVersionStrings();
         $this->load->model('extension/payment/svea_invoice');
         $this->load->model('checkout/order');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order['payment_iso_code_2'];
         //Testmode
-        $conf = ( $this->config->get('payment_svea_invoice_testmode_'.$countryCode) == '1' )
-                ? new OpencartSveaConfigTest($this->config,'payment_svea_invoice') : new OpencartSveaConfig($this->config,'payment_svea_invoice');
+        $conf = ( $this->config->get($this->paymentString . 'svea_invoice_testmode_'.$countryCode) == '1' )
+                ? new OpencartSveaConfigTest($this->config,$this->paymentString . 'svea_invoice') : new OpencartSveaConfig($this->config,$this->paymentString . 'svea_invoice');
 
         $svea = \Svea\WebPay\WebPay::getAddresses($conf)
             ->setOrderTypeInvoice()

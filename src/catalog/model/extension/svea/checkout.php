@@ -261,6 +261,36 @@ class ModelExtensionSveaCheckout extends Model
             $data['email'] = $this->db->escape($response['emailaddress']);
         }
 
+        $this->load->language('extension/svea/checkout');
+
+        if (isset($response['paymenttype'])) {
+            if($response['paymenttype'] == "SVEACARDPAY" || $response['paymenttype'] == "SVEACARDPAY_PF")
+            {
+                $response['paymenttype'] = $this->language->get("paymenttype_card_payment");
+            }
+            else if($response['paymenttype'] == "INVOICE")
+            {
+                $response['paymenttype'] = $this->language->get("paymenttype_invoice");
+            }
+            else if($response['paymenttype'] == "ADMININVOICE")
+            {
+                $response['paymenttype'] = $this->language->get("paymenttype_admininvoice");
+            }
+            else if($response['paymenttype'] == "PAYMENTPLAN")
+            {
+                $response['paymenttype'] = $this->language->get("paymenttype_paymentplan");
+            }
+            else if($response['paymenttype'] == "ACCOUNTCREDIT")
+            {
+                $response['paymenttype'] = $this->language->get("paymenttype_accountcredit");
+            }
+            else
+            {
+                $response['paymenttype'] = $this->language->get("paymenttype_undefined");
+            }
+            $data['payment_method'] = $this->db->escape("Svea Checkout " . $response['paymenttype']);
+        }
+
         // Payment data
         if (isset($response['billingaddress']) && is_array($response['billingaddress'])) {
             $billing_address = $response['billingaddress'];
@@ -396,9 +426,9 @@ class ModelExtensionSveaCheckout extends Model
 
         if (isset($response['status'])) {
             $module_sco_order_status_string = strtolower($response['status']);
-            if ($module_sco_order_status_string == 'paymentguaranteed' || $module_sco_order_status_string == 'waitingtobesent' || $module_sco_order_status_string == 'final') {
+            if ($module_sco_order_status_string == 'final') {
                 $oc_order_status_id = $this->config->get('config_order_status_id');
-            } else if ($module_sco_order_status_string == 'cancelled' || $module_sco_order_status_string == 'confirmed') {
+            } else if ($module_sco_order_status_string == 'cancelled') {
                 $oc_order_status_id = 0;
             }
         }

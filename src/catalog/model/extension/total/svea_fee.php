@@ -2,7 +2,15 @@
 
 class ModelExtensionTotalSveaFee extends Model
 {
+    private $totalString = "total_";
 
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->totalString = "";
+        }
+    }
     /**
      * getTotal is triggered to get our contribution to the cart order_total and globals total & taxes
      *
@@ -11,6 +19,7 @@ class ModelExtensionTotalSveaFee extends Model
      */
     public function getTotal($total)
     {
+        $this->setVersionStrings();
         // svea_fee applicable?
         if (($this->cart->getSubTotal() > 0) && // only checks for lower limit
             isset($this->session->data['payment_method']['code']) &&
@@ -36,10 +45,10 @@ class ModelExtensionTotalSveaFee extends Model
             }
 
             // get svea_fee config settings for country
-            $svea_fee_fee = $this->config->get('total_svea_fee_fee' . "_" . $country);
-            $svea_fee_sort_order = $this->config->get('total_svea_fee_sort_order' . "_" . $country);
-            $svea_fee_tax_class_id = $this->config->get('total_svea_fee_tax_class' . "_" . $country);
-            $svea_fee_status = $this->config->get('total_svea_fee_status' . "_" . $country);
+            $svea_fee_fee = $this->config->get($this->totalString . 'svea_fee_fee' . "_" . $country);
+            $svea_fee_sort_order = $this->config->get($this->totalString . 'svea_fee_sort_order' . "_" . $country);
+            $svea_fee_tax_class_id = $this->config->get($this->totalString . 'svea_fee_tax_class' . "_" . $country);
+            $svea_fee_status = $this->config->get($this->totalString . 'svea_fee_status' . "_" . $country);
 
             // svea_fee disabled?
             if ($svea_fee_status == false) {
@@ -51,7 +60,7 @@ class ModelExtensionTotalSveaFee extends Model
             $total['totals'][] = array(
                 'code' => 'svea_fee',
                 'title' => $this->language->get('text_svea_fee') . " (" . $country . ")",
-                'text' => $this->currency->format($svea_fee_fee, $this->session->data['currency']),
+                'text' => '',
                 'value' => $svea_fee_fee,
                 'sort_order' => $svea_fee_sort_order
             );

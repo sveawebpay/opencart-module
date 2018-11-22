@@ -8,9 +8,6 @@ $_['text_success']       = 'Modifisering av Sveas Kortbetalingsmodul var vellykk
 $_['text_svea_directbank']  = '<img src="http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png " alt="Svea Finans" title="Svea Finans" />';
 
 // Entry
-$_['entry_order_status'] = 'Ordrestatus:';
-$_['entry_status_refunded'] = 'Krediter:';
-$_['entry_status_refunded_text'] = 'Ordren må være levert før den krediteres.';
 
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';

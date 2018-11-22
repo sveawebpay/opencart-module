@@ -11,10 +11,19 @@ class OpencartSveaConfigTest implements \Svea\WebPay\Config\ConfigurationProvide
     public $config;
     public $payment_method;
 
+    private $paymentString = "payment_";
+
     public function __construct($config, $payment_method = NULL)
     {
         $this->config = $config;
         $this->payment_method = $payment_method;
+    }
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+        }
     }
 
     public function getEndPoint($type)
@@ -40,9 +49,10 @@ class OpencartSveaConfigTest implements \Svea\WebPay\Config\ConfigurationProvide
 
     public function getMerchantId($type, $country)
     {
-        $card = $this->config->get('payment_svea_card_merchant_id_test');
+        $this->setVersionStrings();
+        $card = $this->config->get($this->paymentString . 'svea_card_merchant_id_test');
         if ($card == "") {
-            return $this->config->get('payment_svea_directbank_merchant_id_test');
+            return $this->config->get($this->paymentString . 'svea_directbank_merchant_id_test');
         } else {
             return $card;
         }
@@ -50,19 +60,21 @@ class OpencartSveaConfigTest implements \Svea\WebPay\Config\ConfigurationProvide
 
     public function getPassword($type, $country)
     {
+        $this->setVersionStrings();
         $country = strtoupper($country);
         $lowertype = strtolower($type);
         if ($lowertype == "paymentplan") {
-            return $this->config->get('payment_svea_partpayment_password_' . $country);
+            return $this->config->get($this->paymentString . 'svea_partpayment_password_' . $country);
         }
-        return $this->config->get('payment_svea_' . $lowertype . '_password_' . $country);
+        return $this->config->get($this->paymentString . 'svea_' . $lowertype . '_password_' . $country);
     }
 
     public function getSecret($type, $country)
     {
-        $secret = $this->config->get('payment_svea_card_sw_test');
+        $this->setVersionStrings();
+        $secret = $this->config->get($this->paymentString . 'svea_card_sw_test');
         if ($secret == "") {
-            return $this->config->get('payment_svea_directbank_sw_test');
+            return $this->config->get($this->paymentString . 'svea_directbank_sw_test');
         } else {
             return $secret;
         }
@@ -70,28 +82,30 @@ class OpencartSveaConfigTest implements \Svea\WebPay\Config\ConfigurationProvide
 
     public function getUsername($type, $country)
     {
+        $this->setVersionStrings();
         $country = strtoupper($country);
         $lowertype = strtolower($type);
         if ($lowertype == "paymentplan") {
-            return $this->config->get('payment_svea_partpayment_username_' . $country);
+            return $this->config->get($this->paymentString . 'svea_partpayment_username_' . $country);
         }
-        return $this->config->get('payment_svea_' . $lowertype . '_username_' . $country);
+        return $this->config->get($this->paymentString. 'svea_' . $lowertype . '_username_' . $country);
 
     }
 
     public function getClientNumber($type, $country)
     {
+        $this->setVersionStrings();
         $country = strtoupper($country);
         $lowertype = strtolower($type);
         if ($lowertype == "paymentplan") {
-            return $this->config->get('payment_svea_partpayment_clientno_' . $country);
+            return $this->config->get($this->paymentString . 'svea_partpayment_clientno_' . $country);
         }
-        return $this->config->get('payment_svea_' . $lowertype . '_clientno_' . $country);
+        return $this->config->get($this->paymentString . 'svea_' . $lowertype . '_clientno_' . $country);
     }
 
     public function getIntegrationCompany()
     {
-        return "Svea Ekonomi : Opencart 2 module";
+        return "Svea Ekonomi AB";
     }
 
     public function getIntegrationPlatform()

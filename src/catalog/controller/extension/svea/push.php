@@ -5,12 +5,26 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionSveaPush extends Controller
 {
+    private $paymentString = "payment_";
+    private $moduleString = "module_";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+            $this->moduleString = "";
+        }
+    }
+    
     public function index()
     {
-        $checkout_order_id = isset($this->request->get['payment_svea_order']) ? trim($this->request->get['payment_svea_order']) : null;
+        $this->setVersionStrings();
+        
+        $checkout_order_id = isset($this->request->get[$this->paymentString . 'svea_order']) ? trim($this->request->get[$this->paymentString . 'svea_order']) : null;
 
         if ($checkout_order_id != null) {
-            $test_mode = $this->config->get('module_sco_test_mode');
+            $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
 
             $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
             if ($test_mode) {
@@ -43,6 +57,7 @@ class ControllerExtensionSveaPush extends Controller
 
     private function updateOrders($response)
     {
+        sleep(3);
         // - update order
         $this->updateOrder($response);
 

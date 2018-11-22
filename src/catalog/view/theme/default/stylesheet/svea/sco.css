@@ -309,7 +309,7 @@ textarea.form-control {
 }
 
 @media (min-width: 767px) {
-    .extension-svea-checkout, .checkout-page-container {
+    .checkout-page-container {
         width: 760px;
         margin: 0 auto;
         padding: 30px 45px 90px 45px; /* Bootstrap add 15 more pixels on left and right side */
@@ -324,7 +324,7 @@ textarea.form-control {
 }
 
 @media (max-width: 767px) {
-    .extension-svea-checkout, .checkout-page-container {
+    .checkout-page-container {
         padding: 30px 15px 90px 15px; /* Bootstrap add 15 more pixels for container element */
         border-radius: 5px;
     }

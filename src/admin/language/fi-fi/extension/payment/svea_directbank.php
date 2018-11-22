@@ -7,11 +7,6 @@ $_['text_payment']       = 'Maksu';
 $_['text_success']       = 'Muutokset Svean korttimaksumoduliin onnistuivat!';
 $_['text_svea_directbank']  = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png" alt="Svea Ekonomi" title="Svea Ekonomi" />';
 
-// Entry
-$_['entry_order_status'] = 'Tilauksen tila:';
-$_['entry_status_refunded'] = 'Hyvitetty:';
-$_['entry_status_refunded_text'] = 'Tilaus pitää olla toimitettu/lunastettu ennen hyvitystä.';
-
 $_['entry_geo_zone']     = 'Maa:';
 $_['entry_status']       = 'Tila:';
 $_['entry_sort_order']   = 'Lajittelujärjestys:';

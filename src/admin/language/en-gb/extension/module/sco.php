@@ -9,16 +9,6 @@ $_['text_success']				    = 'Success: You have modified the Svea Checkout module
 $_['text_edit']					    = 'Edit Svea Checkout';
 $_['text_module_version_info_new']  = 'There is a new version available. Click to download.';
 $_['text_module_version_info']      = 'You have the latest version of the module. Click here to go to the documentation.';
-$_['created_status_order']          = 'Created';
-$_['pending_status_order']          = 'Pending';
-$_['failed_status_order']           = 'Failed';
-
-$_['entry_status_canceled']         = 'Cancelled/Annulled:';
-$_['entry_status_canceled_text']    = 'Applies on orders not yet delivered/captured.';
-$_['entry_status_delivered']        = 'Delivered:';
-$_['entry_status_delivered_text']   = 'Delivers a created order.';
-$_['entry_status_refunded']         = 'Credited:';
-$_['entry_status_refunded_text']    = 'Applies on orders delivered/captured.';
 $_['entry_shop_terms_uri']          = 'Shop terms';
 
 $_['text_show_voucher_on_checkout']	= 'Show Voucher on Checkout page';

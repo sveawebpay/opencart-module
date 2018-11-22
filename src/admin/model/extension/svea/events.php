@@ -2,9 +2,30 @@
 
 class ModelExtensionSveaEvents extends Model
 {
+    private $userTokenString = "user_";
+    private $linkString = "marketplace/extension";
+    private $paymentString ="payment_";
+    private $moduleString = "module_";
+    private $appendString = "_before";
+    private $eventString = "setting/event";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->userTokenString = "";
+            $this->linkString = "extension/extension";
+            $this->paymentString = "";
+            $this->moduleString = "";
+            $this->appendString = "";
+            $this->eventString = "extension/event";
+        }
+    }
+
     public function deleteSveaCustomEvents()
     {
-        $this->load->model('setting/event');
+        $this->setVersionStrings();
+        $this->load->model($this->eventString);
         $payment_methods = $this->getExtensions('payment');
 
         $svea_active_payments_count = 0;
@@ -13,7 +34,7 @@ class ModelExtensionSveaEvents extends Model
         foreach ($payment_methods as $payment_method) {
             if ($this->config->get($payment_method['code'] . '_status')) {
                 $payment_code = $payment_method['code'];
-                if (strpos($payment_code, 'payment_svea') !== false) {
+                if (strpos($payment_code, $this->paymentString . 'svea') !== false) {
                     $svea_active_payments_count++;
                 } else if ($payment_code === 'sco') {
                     $module_sco_active = true;
@@ -22,18 +43,34 @@ class ModelExtensionSveaEvents extends Model
         }
 
         if ($svea_active_payments_count === 0 && $module_sco_active === false) {
-            $this->model_setting_event->deleteEvent('module_sco_edit_order_from_admin_before');
-            $this->model_setting_event->deleteEvent('module_sco_add_history_order_from_admin');
+            if (VERSION < 3.0)
+            {
+                $this->model_extension_event->deleteEvent($this->paymentString . 'sco_edit_order_from_admin' . $this->appendString);
+                $this->model_extension_event->deleteEvent($this->paymentString . 'sco_add_history_order_from_admin'. $this->appendString);
+            }
+            else
+            {
+                $this->model_setting_event->deleteEvent($this->paymentString . 'sco_edit_order_from_admin' . $this->appendString);
+                $this->model_setting_event->deleteEvent($this->paymentString . 'sco_add_history_order_from_admin' . $this->appendString);
+            }
         }
     }
 
     public function addSveaCustomEvent($code, $trigger, $action)
     {
-        $this->load->model('setting/event');
+        $this->setVersionStrings();
+        $this->load->model($this->eventString);
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "event WHERE `code` = '" . $this->db->escape($code) . "'");
 
         if (count($query->rows) === 0) {
-            $this->model_setting_event->addEvent($code, $trigger, $action);
+            if(VERSION < 3.0)
+            {
+                $this->model_extension_event->addEvent($code, $trigger, $action);
+            }
+            else
+            {
+                $this->model_setting_event->addEvent($code, $trigger, $action);
+            }
         }
     }
 

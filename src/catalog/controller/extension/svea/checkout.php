@@ -2,24 +2,38 @@
 
 class ControllerExtensionSveaCheckout extends Controller
 {
+    private $moduleString = "module_";
+    private $totalString = "total_";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->moduleString = "";
+            $this->totalString = "";
+        }
+    }
+    
     private function setCheckoutCountry($country)
     {
+        $this->setVersionStrings();
+        
         if($country == 203)
         {
-            $this->session->data['module_sco_locale'] = "sv-se";
-            $this->session->data['module_sco_currency'] = "SEK";
+            $this->session->data[$this->moduleString . 'sco_locale'] = "sv-se";
+            $this->session->data[$this->moduleString . 'sco_currency'] = "SEK";
             $this->session->data['currency'] = 'SEK';
         }
         else if($country == 160)
         {
-            $this->session->data['module_sco_locale'] = "nn-no";
-            $this->session->data['module_sco_currency'] = "NOK";
+            $this->session->data[$this->moduleString . 'sco_locale'] = "nn-no";
+            $this->session->data[$this->moduleString . 'sco_currency'] = "NOK";
             $this->session->data['currency'] = 'NOK';
         }
         else if($country == 72)
         {
-            $this->session->data['module_sco_locale'] = "fi-fi";
-            $this->session->data['module_sco_currency'] = "EUR";
+            $this->session->data[$this->moduleString . 'sco_locale'] = "fi-fi";
+            $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
             $this->session->data['currency'] = 'EUR';
         }
         else {
@@ -27,11 +41,12 @@ class ControllerExtensionSveaCheckout extends Controller
         }
         $this->load->model('localisation/country');
         $countryCode = $this->model_localisation_country->getCountry($country);
-        $this->session->data['module_sco_country'] = $countryCode['iso_code_2'];
-        $this->session->data['module_sco_country_id'] = $country;
+        $this->session->data[$this->moduleString . 'sco_country'] = $countryCode['iso_code_2'];
+        $this->session->data[$this->moduleString . 'sco_country_id'] = $country;
     }
     public function getCheckoutCountry()
     {
+        $this->setVersionStrings();
 
         if($this->session->data['language'] == "sv-se")
         {
@@ -47,20 +62,21 @@ class ControllerExtensionSveaCheckout extends Controller
         }
         else
         {
-            return $this->config->get('module_sco_checkout_default_country_id');
+            return $this->config->get($this->moduleString . 'sco_checkout_default_country_id');
         }
     }
     public function index()
     {
+        $this->setVersionStrings();
+        
         $this->load->language('extension/svea/checkout');
         $this->load->model('extension/svea/checkout');
-        $this->load->model('setting/extension');
 
         /* Check status - start */
         $status = true;
         $status = (!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) ? false : $status;
         $status = (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout')) ? false : $status;
-        if (!$this->config->get('module_sco_status')) {
+        if (!$this->config->get($this->moduleString . 'sco_status')) {
             $this->response->redirect($this->url->link('checkout/checkout/index'));
         }
 
@@ -77,7 +93,7 @@ class ControllerExtensionSveaCheckout extends Controller
 
         $this->setCheckoutCountry($this->getCheckoutCountry());
 
-        $data['status_default_checkout'] = $this->config->get('module_sco_status_checkout');
+        $data['status_default_checkout'] = $this->config->get($this->moduleString . 'sco_status_checkout');
 
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_postcode'] = $this->language->get('entry_postcode');
@@ -91,24 +107,24 @@ class ControllerExtensionSveaCheckout extends Controller
         $data['text_checkout_into'] = $this->language->get('text_checkout_into');
         $data['text_normal_checkout'] = sprintf($this->language->get('text_normal_checkout'), $this->url->link('checkout/checkout/index'));
 
-//        $this->session->data['module_sco_email'] = '';
-//        $this->session->data['module_sco_postcode'] = '';
+//        $this->session->data[$this->moduleString . 'sco_email'] = '';
+//        $this->session->data[$this->moduleString . 'sco_postcode'] = '';
 
         if ($this->customer->isLogged()) {
             if ($this->customer->getEmail()) {
-                $this->session->data['module_sco_email'] = $this->customer->getEmail();
+                $this->session->data[$this->moduleString . 'sco_email'] = $this->customer->getEmail();
             }
             if ($this->customer->getAddressId()) {
-                $this->session->data['module_sco_postcode'] = $this->model_extension_svea_checkout->getPostcode($this->customer->getAddressId());
+                $this->session->data[$this->moduleString . 'sco_postcode'] = $this->model_extension_svea_checkout->getPostcode($this->customer->getAddressId());
             }
         }
 
-        $data['module_sco_email'] = isset($this->session->data['module_sco_email']) ? $this->session->data['module_sco_email'] : null;
-        $data['module_sco_postcode'] = isset($this->session->data['module_sco_postcode']) ? $this->session->data['module_sco_postcode'] : null;
+        $data[$this->moduleString . 'sco_email'] = isset($this->session->data[$this->moduleString . 'sco_email']) ? $this->session->data[$this->moduleString . 'sco_email'] : null;
+        $data[$this->moduleString . 'sco_postcode'] = isset($this->session->data[$this->moduleString . 'sco_postcode']) ? $this->session->data[$this->moduleString . 'sco_postcode'] : null;
 
-        $data['module_sco_show_coupons'] = $this->config->get('module_sco_show_coupons_on_checkout');
-        $data['module_sco_show_voucher'] = $this->config->get('module_sco_show_voucher_on_checkout');
-        $data['module_sco_show_comment'] = $this->config->get('module_sco_show_order_comment_on_checkout');
+        $data[$this->moduleString . 'sco_show_coupons'] = $this->config->get($this->moduleString . 'sco_show_coupons_on_checkout');
+        $data[$this->moduleString . 'sco_show_voucher'] = $this->config->get($this->moduleString . 'sco_show_voucher_on_checkout');
+        $data[$this->moduleString . 'sco_show_comment'] = $this->config->get($this->moduleString . 'sco_show_order_comment_on_checkout');
 
         $data['order_comment'] = '';
         if (isset($this->session->data['order_id'])) {
@@ -120,7 +136,7 @@ class ControllerExtensionSveaCheckout extends Controller
         }
 
         $data['text_comment'] = $this->language->get('text_comment');
-        $data['status_coupon'] = $this->config->get('total_coupon_status');
+        $data['status_coupon'] = $this->config->get($this->totalString . 'coupon_status');
         $data['text_coupon'] = $this->language->get('text_coupon');
 
         $data['coupon_icon_title'] = $this->language->get('item_coupon');
@@ -130,7 +146,7 @@ class ControllerExtensionSveaCheckout extends Controller
         $data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
 
-        $data['status_voucher'] = $this->config->get('total_voucher_status');
+        $data['status_voucher'] = $this->config->get($this->totalString . 'voucher_status');
         $data['text_voucher'] = $this->language->get('text_voucher');
 
         $data['header'] = $this->load->controller('common/header');

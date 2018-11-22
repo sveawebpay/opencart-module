@@ -8,10 +8,6 @@ $_['text_success']       = 'Modifizierung von Sveas Direktzahlung ist erfolgreic
 $_['text_svea_directbank']  = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png" alt="Svea Ekonomi" title="Svea Ekonomi" />';
 
 // Entry
-$_['entry_order_status'] = 'Order status:';
-$_['entry_status_refunded'] = 'Kreditiert:';
-$_['entry_status_refunded_text'] = 'Gilt für gelieferte Bestellungen.';
-
 $_['entry_geo_zone']     = 'Geographische Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sortierungsordnung:';

@@ -2,8 +2,15 @@
 
 class ControllerExtensionPaymentSveaInvoice extends Controller
 {
-    protected $svea_version = '4.3.3';
+    protected $svea_version = '4.4.0';
     private $error = array();
+
+    //backwards compatability
+    private $userTokenString = "user_";
+    private $linkString = "marketplace/extension";
+    private $paymentString ="payment_";
+    private $moduleString = "module_";
+    private $appendString = "_before";
 
     public function index()
     {
@@ -13,16 +20,18 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
 
         $this->load->model('setting/setting');
 
+        $this->setVersionStrings();
+
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
-            $this->model_setting_setting->editSetting('payment_svea_invoice', $this->request->post);
+            $this->model_setting_setting->editSetting($this->paymentString . 'svea_invoice', $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
+            $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true));
         }
 
-        $data['payment_svea_version_text'] = $this->getSveaVersion();
-        $data['payment_svea_version'] = $this->svea_version;
+        $data[$this->paymentString . 'svea_version_text'] = $this->getSveaVersion();
+        $data[$this->paymentString . 'svea_version'] = $this->svea_version;
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -66,19 +75,19 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
         $data['version'] = floatval(VERSION);
 
         $cred = array();
-        $cred[] = array("lang" => "SE", "value_username" => $this->config->get('payment_svea_invoice_username_SE'), "name_username" => 'payment_svea_invoice_username_SE', "value_password" => $this->config->get('payment_svea_invoice_password_SE'), "name_password" => 'payment_svea_invoice_password_SE', "value_clientno" => $this->config->get('payment_svea_invoice_clientno_SE'), "name_clientno" => 'payment_svea_invoice_clientno_SE', "value_testmode" => $this->config->get('payment_svea_invoice_testmode_SE'), "name_testmode" => 'payment_svea_invoice_testmode_SE');
-        $cred[] = array("lang" => "NO", "value_username" => $this->config->get('payment_svea_invoice_username_NO'), "name_username" => 'payment_svea_invoice_username_NO', "value_password" => $this->config->get('payment_svea_invoice_password_NO'), "name_password" => 'payment_svea_invoice_password_NO', "value_clientno" => $this->config->get('payment_svea_invoice_clientno_NO'), "name_clientno" => 'payment_svea_invoice_clientno_NO', "value_testmode" => $this->config->get('payment_svea_invoice_testmode_NO'), "name_testmode" => 'payment_svea_invoice_testmode_NO');
-        $cred[] = array("lang" => "FI", "value_username" => $this->config->get('payment_svea_invoice_username_FI'), "name_username" => 'payment_svea_invoice_username_FI', "value_password" => $this->config->get('payment_svea_invoice_password_FI'), "name_password" => 'payment_svea_invoice_password_FI', "value_clientno" => $this->config->get('payment_svea_invoice_clientno_FI'), "name_clientno" => 'payment_svea_invoice_clientno_FI', "value_testmode" => $this->config->get('payment_svea_invoice_testmode_FI'), "name_testmode" => 'payment_svea_invoice_testmode_FI');
-        $cred[] = array("lang" => "DK", "value_username" => $this->config->get('payment_svea_invoice_username_DK'), "name_username" => 'payment_svea_invoice_username_DK', "value_password" => $this->config->get('payment_svea_invoice_password_DK'), "name_password" => 'payment_svea_invoice_password_DK', "value_clientno" => $this->config->get('payment_svea_invoice_clientno_DK'), "name_clientno" => 'payment_svea_invoice_clientno_DK', "value_testmode" => $this->config->get('payment_svea_invoice_testmode_DK'), "name_testmode" => 'payment_svea_invoice_testmode_DK');
-        $cred[] = array("lang" => "NL", "value_username" => $this->config->get('payment_svea_invoice_username_NL'), "name_username" => 'payment_svea_invoice_username_NL', "value_password" => $this->config->get('payment_svea_invoice_password_NL'), "name_password" => 'payment_svea_invoice_password_NL', "value_clientno" => $this->config->get('payment_svea_invoice_clientno_NL'), "name_clientno" => 'payment_svea_invoice_clientno_NL', "value_testmode" => $this->config->get('payment_svea_invoice_testmode_NL'), "name_testmode" => 'payment_svea_invoice_testmode_NL');
-        $cred[] = array("lang" => "DE", "value_username" => $this->config->get('payment_svea_invoice_username_DE'), "name_username" => 'payment_svea_invoice_username_DE', "value_password" => $this->config->get('payment_svea_invoice_password_DE'), "name_password" => 'payment_svea_invoice_password_DE', "value_clientno" => $this->config->get('payment_svea_invoice_clientno_DE'), "name_clientno" => 'payment_svea_invoice_clientno_DE', "value_testmode" => $this->config->get('payment_svea_invoice_testmode_DE'), "name_testmode" => 'payment_svea_invoice_testmode_DE');
+        $cred[] = array("lang" => "SE", "value_username" => $this->config->get($this->paymentString . 'svea_invoice_username_SE'), "name_username" => $this->paymentString . 'svea_invoice_username_SE', "value_password" => $this->config->get($this->paymentString . 'svea_invoice_password_SE'), "name_password" => $this->paymentString . 'svea_invoice_password_SE', "value_clientno" => $this->config->get($this->paymentString . 'svea_invoice_clientno_SE'), "name_clientno" => $this->paymentString . 'svea_invoice_clientno_SE', "value_testmode" => $this->config->get($this->paymentString . 'svea_invoice_testmode_SE'), "name_testmode" => $this->paymentString . 'svea_invoice_testmode_SE');
+        $cred[] = array("lang" => "NO", "value_username" => $this->config->get($this->paymentString . 'svea_invoice_username_NO'), "name_username" => $this->paymentString . 'svea_invoice_username_NO', "value_password" => $this->config->get($this->paymentString . 'svea_invoice_password_NO'), "name_password" => $this->paymentString . 'svea_invoice_password_NO', "value_clientno" => $this->config->get($this->paymentString . 'svea_invoice_clientno_NO'), "name_clientno" => $this->paymentString . 'svea_invoice_clientno_NO', "value_testmode" => $this->config->get($this->paymentString . 'svea_invoice_testmode_NO'), "name_testmode" => $this->paymentString . 'svea_invoice_testmode_NO');
+        $cred[] = array("lang" => "FI", "value_username" => $this->config->get($this->paymentString . 'svea_invoice_username_FI'), "name_username" => $this->paymentString . 'svea_invoice_username_FI', "value_password" => $this->config->get($this->paymentString . 'svea_invoice_password_FI'), "name_password" => $this->paymentString . 'svea_invoice_password_FI', "value_clientno" => $this->config->get($this->paymentString . 'svea_invoice_clientno_FI'), "name_clientno" => $this->paymentString . 'svea_invoice_clientno_FI', "value_testmode" => $this->config->get($this->paymentString . 'svea_invoice_testmode_FI'), "name_testmode" => $this->paymentString . 'svea_invoice_testmode_FI');
+        $cred[] = array("lang" => "DK", "value_username" => $this->config->get($this->paymentString . 'svea_invoice_username_DK'), "name_username" => $this->paymentString . 'svea_invoice_username_DK', "value_password" => $this->config->get($this->paymentString . 'svea_invoice_password_DK'), "name_password" => $this->paymentString . 'svea_invoice_password_DK', "value_clientno" => $this->config->get($this->paymentString . 'svea_invoice_clientno_DK'), "name_clientno" => $this->paymentString . 'svea_invoice_clientno_DK', "value_testmode" => $this->config->get($this->paymentString . 'svea_invoice_testmode_DK'), "name_testmode" => $this->paymentString . 'svea_invoice_testmode_DK');
+        $cred[] = array("lang" => "NL", "value_username" => $this->config->get($this->paymentString . 'svea_invoice_username_NL'), "name_username" => $this->paymentString . 'svea_invoice_username_NL', "value_password" => $this->config->get($this->paymentString . 'svea_invoice_password_NL'), "name_password" => $this->paymentString . 'svea_invoice_password_NL', "value_clientno" => $this->config->get($this->paymentString . 'svea_invoice_clientno_NL'), "name_clientno" => $this->paymentString . 'svea_invoice_clientno_NL', "value_testmode" => $this->config->get($this->paymentString . 'svea_invoice_testmode_NL'), "name_testmode" => $this->paymentString . 'svea_invoice_testmode_NL');
+        $cred[] = array("lang" => "DE", "value_username" => $this->config->get($this->paymentString . 'svea_invoice_username_DE'), "name_username" => $this->paymentString . 'svea_invoice_username_DE', "value_password" => $this->config->get($this->paymentString . 'svea_invoice_password_DE'), "name_password" => $this->paymentString . 'svea_invoice_password_DE', "value_clientno" => $this->config->get($this->paymentString . 'svea_invoice_clientno_DE'), "name_clientno" => $this->paymentString . 'svea_invoice_clientno_DE', "value_testmode" => $this->config->get($this->paymentString . 'svea_invoice_testmode_DE'), "name_testmode" => $this->paymentString . 'svea_invoice_testmode_DE');
 
         $data['credentials'] = $cred;
 
 
-        $data['payment_svea_invoice_sort_order'] = $this->config->get('payment_svea_invoice_sort_order');
+        $data[$this->paymentString . 'svea_invoice_sort_order'] = $this->config->get($this->paymentString . 'svea_invoice_sort_order');
 
-        $data['payment_svea_invoice_auto_deliver'] = $this->config->get('payment_svea_invoice_auto_deliver');
+        $data[$this->paymentString . 'svea_invoice_auto_deliver'] = $this->config->get($this->paymentString . 'svea_invoice_auto_deliver');
 
 
         if (isset($this->error['warning'])) {
@@ -91,47 +100,47 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+            'href' => $this->url->link('common/dashboard', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_extension'),
-            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true)
+            'href' => $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/payment/svea_invoice', 'user_token=' . $this->session->data['user_token'], true)
+            'href' => $this->url->link('extension/payment/svea_invoice', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
 
-        $data['action'] = $this->url->link('extension/payment/svea_invoice', 'user_token=' . $this->session->data['user_token'], true);
-        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true);
+        $data['action'] = $this->url->link('extension/payment/svea_invoice', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
+        $data['cancel'] = $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true);
 
         //invoice distribution type
-        if (isset($this->request->post['payment_svea_invoice_distribution_type'])) {
-            $data['payment_svea_invoice_distribution_type'] = $this->request->post['payment_svea_invoice_distribution_type'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_distribution_type'])) {
+            $data[$this->paymentString . 'svea_invoice_distribution_type'] = $this->request->post[$this->paymentString . 'svea_invoice_distribution_type'];
         } else {
-            $data['payment_svea_invoice_distribution_type'] = $this->config->get('payment_svea_invoice_distribution_type');
+            $data[$this->paymentString . 'svea_invoice_distribution_type'] = $this->config->get($this->paymentString . 'svea_invoice_distribution_type');
         }
 
         //shipping billing
-        if (isset($this->request->post['payment_svea_invoice_shipping_billing'])) {
-            $data['payment_svea_invoice_shipping_billing'] = $this->request->post['payment_svea_invoice_shipping_billing'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_shipping_billing'])) {
+            $data[$this->paymentString . 'svea_invoice_shipping_billing'] = $this->request->post[$this->paymentString . 'svea_invoice_shipping_billing'];
         } else {
-            $data['payment_svea_invoice_shipping_billing'] = $this->config->get('payment_svea_invoice_shipping_billing');
+            $data[$this->paymentString . 'svea_invoice_shipping_billing'] = $this->config->get($this->paymentString . 'svea_invoice_shipping_billing');
         }
         //show price on product
-        /*if (isset($this->request->post['payment_svea_invoice_product_price'])) {
-            $data['payment_svea_invoice_product_price'] = $this->request->post['payment_svea_invoice_product_price'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_product_price'])) {
+            $data[$this->paymentString . 'svea_invoice_product_price'] = $this->request->post[$this->paymentString . 'svea_invoice_product_price'];
         } else {
-            $data['payment_svea_invoice_product_price'] = $this->config->get('payment_svea_invoice_product_price');
-        }*/
+            $data[$this->paymentString . 'svea_invoice_product_price'] = $this->config->get($this->paymentString . 'svea_invoice_product_price');
+        }
         //geozone
-        if (isset($this->request->post['payment_svea_invoice_geo_zone_id'])) {
-            $data['payment_svea_invoice_geo_zone_id'] = $this->request->post['payment_svea_invoice_geo_zone_id'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_geo_zone_id'])) {
+            $data[$this->paymentString . 'svea_invoice_geo_zone_id'] = $this->request->post[$this->paymentString . 'svea_invoice_geo_zone_id'];
         } else {
-            $data['payment_svea_invoice_geo_zone_id'] = $this->config->get('payment_svea_invoice_geo_zone_id');
+            $data[$this->paymentString . 'svea_invoice_geo_zone_id'] = $this->config->get($this->paymentString . 'svea_invoice_geo_zone_id');
         }
 
 
@@ -140,37 +149,37 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
         $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
         //invoice status
-        if (isset($this->request->post['payment_svea_invoice_status'])) {
-            $data['payment_svea_invoice_status'] = $this->request->post['payment_svea_invoice_status'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_status'])) {
+            $data[$this->paymentString . 'svea_invoice_status'] = $this->request->post[$this->paymentString . 'svea_invoice_status'];
         } else {
-            $data['payment_svea_invoice_status'] = $this->config->get('payment_svea_invoice_status');
+            $data[$this->paymentString . 'svea_invoice_status'] = $this->config->get($this->paymentString . 'svea_invoice_status');
         }
 
         //sort order
-        if (isset($this->request->post['payment_svea_invoice_sort_order'])) {
-            $data['payment_svea_invoice_sort_order'] = $this->request->post['payment_svea_invoice_sort_order'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_sort_order'])) {
+            $data[$this->paymentString . 'svea_invoice_sort_order'] = $this->request->post[$this->paymentString . 'svea_invoice_sort_order'];
         } else {
-            $data['payment_svea_invoice_sort_order'] = $this->config->get('payment_svea_invoice_sort_order');
+            $data[$this->paymentString . 'svea_invoice_sort_order'] = $this->config->get($this->paymentString . 'svea_invoice_sort_order');
         }
         //payment info
-        if (isset($this->request->post['payment_svea_invoice_payment_description'])) {
-            $data['payment_svea_invoice_payment_description'] = $this->request->post['payment_svea_invoice_payment_description'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_payment_description'])) {
+            $data[$this->paymentString . 'svea_invoice_payment_description'] = $this->request->post[$this->paymentString . 'svea_invoice_payment_description'];
         } else {
-            $data['payment_svea_invoice_payment_description'] = $this->config->get('payment_svea_invoice_payment_description');
+            $data[$this->paymentString . 'svea_invoice_payment_description'] = $this->config->get($this->paymentString . 'svea_invoice_payment_description');
         }
 
         //auto deliver
-        if (isset($this->request->post['payment_svea_invoice_auto_deliver'])) {
-            $data['payment_svea_invoice_auto_deliver'] = $this->request->post['payment_svea_invoice_auto_deliver'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_auto_deliver'])) {
+            $data[$this->paymentString . 'svea_invoice_auto_deliver'] = $this->request->post[$this->paymentString . 'svea_invoice_auto_deliver'];
         } else {
-            $data['payment_svea_invoice_auto_deliver'] = $this->config->get('payment_svea_invoice_auto_deliver');
+            $data[$this->paymentString . 'svea_invoice_auto_deliver'] = $this->config->get($this->paymentString . 'svea_invoice_auto_deliver');
         }
 
         //Distribution type
-        if (isset($this->request->post['payment_svea_invoice_distribution_type'])) {
-            $data['payment_svea_invoice_distribution_type'] = $this->request->post['payment_svea_invoice_distribution_type'];
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_distribution_type'])) {
+            $data[$this->paymentString . 'svea_invoice_distribution_type'] = $this->request->post[$this->paymentString . 'svea_invoice_distribution_type'];
         } else {
-            $data['payment_svea_invoice_distribution_type'] = $this->config->get('payment_svea_invoice_distribution_type');
+            $data[$this->paymentString . 'svea_invoice_distribution_type'] = $this->config->get($this->paymentString . 'svea_invoice_distribution_type');
         }
 
         $data['header'] = $this->load->controller('common/header');
@@ -216,14 +225,35 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
     public function install()
     {
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('payment_svea_invoice', array('payment_svea_invoice_status' => 1));
+        $this->setVersionStrings();
+        $this->model_setting_setting->editSetting($this->paymentString . 'svea_invoice', array($this->paymentString . 'svea_invoice_status' => 1));
+        if (VERSION < 3.0) {
+            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == NULL) {
+                $this->model_extension_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
+            }
+        } else {
+            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == NULL) {
+                $this->model_setting_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
+            }
+        }
     }
 
     public function uninstall()
     {
         $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('payment_svea_invoice', array('payment_svea_invoice_status' => 0));
+        $this->setVersionStrings();
+        $this->model_setting_setting->editSetting($this->paymentString . 'svea_invoice', array($this->paymentString . 'svea_invoice_status' => 0));
     }
 
-
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->userTokenString = "";
+            $this->linkString = "extension/extension";
+            $this->paymentString = "";
+            $this->moduleString = "";
+            $this->appendString = "";
+        }
+    }
 }

@@ -5,10 +5,25 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionSveaSuccess extends Controller
 {
+    private $moduleString = "module_";
+    private $paymentString = "payment_";
+    private $extensionString = "setting/extension";
+    private $totalString = "total_";
 
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+            $this->moduleString = "";
+            $this->extensionString = "extension/extension";
+            $this->totalString = "";
+        }
+    }
     public function index()
     {
-        $module_sco_order_id = isset($this->session->data['module_sco_order_id']) ? $this->session->data['module_sco_order_id'] : null;
+        $this->setVersionStrings();
+        $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
 
         unset($this->session->data['shipping_method']);
         unset($this->session->data['shipping_methods']);
@@ -23,18 +38,17 @@ class ControllerExtensionSveaSuccess extends Controller
         unset($this->session->data['vouchers']);
         unset($this->session->data['totals']);
 
-        unset($this->session->data['module_sco_locale']);
-        unset($this->session->data['module_sco_currency']);
-        unset($this->session->data['module_sco_order_id']);
-        unset($this->session->data['module_sco_cart_hash']);
-        unset($this->session->data['module_sco_email']);
-        unset($this->session->data['module_sco_postcode']);
+        unset($this->session->data[$this->moduleString . 'sco_locale']);
+        unset($this->session->data[$this->moduleString . 'sco_currency']);
+        unset($this->session->data[$this->moduleString . 'sco_order_id']);
+        unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
+        unset($this->session->data[$this->moduleString . 'sco_email']);
+        unset($this->session->data[$this->moduleString . 'sco_postcode']);
 
         // Clear opencart Cart
         $this->cart->clear();
 
         $this->load->language('extension/svea/checkout');
-        $this->load->model('setting/extension');
 
         $data['title'] = $this->config->get('config_meta_title');
 
@@ -48,24 +62,24 @@ class ControllerExtensionSveaSuccess extends Controller
         $data['home'] = $this->url->link('common/home');
         $data['text_continue'] = $this->language->get('text_continue');
 
-        if (isset($this->session->data['payment_svea_last_page']) && $this->session->data['payment_svea_last_page'] === 'extension/svea/success') {
-            unset($this->session->data['payment_svea_last_page']);
-            $module_sco_order_id = $this->session->data['module_sco_success_order_id'];
-        } else if (isset($this->session->data['payment_svea_last_page']) && $this->session->data['payment_svea_last_page'] !== 'extension/svea/success') {
-            $this->session->data['payment_svea_last_page'] = 'extension/svea/success';
+        if (isset($this->session->data[$this->paymentString . 'svea_last_page']) && $this->session->data[$this->paymentString . 'svea_last_page'] === 'extension/svea/success') {
+            unset($this->session->data[$this->paymentString . 'svea_last_page']);
+            $module_sco_order_id = $this->session->data[$this->moduleString . 'sco_success_order_id'];
+        } else if (isset($this->session->data[$this->paymentString . 'svea_last_page']) && $this->session->data[$this->paymentString . 'svea_last_page'] !== 'extension/svea/success') {
+            $this->session->data[$this->paymentString . 'svea_last_page'] = 'extension/svea/success';
         } else {
             $this->response->redirect($this->url->link('checkout/success'));
             return;
         }
 
-        $test_mode = $this->config->get('module_sco_test_mode');
+        $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
         $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
         if ($test_mode) {
             $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
         }
 
         $checkout_entry = \Svea\WebPay\WebPay::checkout($config);
-        $checkout_entry->setCountryCode($this->session->data['module_sco_country']);
+        $checkout_entry->setCountryCode($this->session->data[$this->moduleString . 'sco_country']);
         $checkout_entry->setCheckoutOrderId($module_sco_order_id);
 
         // Get Svea Checkout order

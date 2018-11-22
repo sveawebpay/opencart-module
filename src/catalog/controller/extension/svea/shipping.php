@@ -2,31 +2,50 @@
 
 class ControllerExtensionSveaShipping extends Controller
 {
+    private $moduleString = "module_";
+    private $extensionString = "setting/extension";
+    private $shippingString = "shipping_";
 
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->moduleString = "";
+            $this->extensionString = "extension/extension";
+            $this->shippingString = "";
+        }
+    }
+    
     public function index()
     {
+        $this->setVersionStrings();
         $email = (isset($this->request->post['email'])) ? $this->request->post['email'] : NULL;
         $postcode = (isset($this->request->post['postcode'])) ? $this->request->post['postcode'] : NULL;
 
-        $this->session->data['module_sco_email'] = $email;
-        $this->session->data['module_sco_postcode'] = $postcode;
+        $this->session->data[$this->moduleString . 'sco_email'] = $email;
+        $this->session->data[$this->moduleString . 'sco_postcode'] = $postcode;
 
         $address = array(
             'postcode' => $postcode,
-            'country_id' => isset($this->session->data['module_sco_country_id']) ? strtoupper($this->session->data['module_sco_country_id']) : $this->config->get('config_country_id'),
+            'country_id' => isset($this->session->data[$this->moduleString . 'sco_country_id']) ? strtoupper($this->session->data[$this->moduleString . 'sco_country_id']) : $this->config->get('config_country_id'),
             'zone_id' => $this->config->get('config_zone_id'),
-            'iso_code_2' => isset($this->session->data['module_sco_country']) ? $this->session->data['module_sco_country'] : strtoupper($this->language->get('code')),
+            'iso_code_2' => isset($this->session->data[$this->moduleString . 'sco_country']) ? $this->session->data[$this->moduleString . 'sco_country'] : strtoupper($this->language->get('code')),
         );
 
         $json = array();
         $methods = array();
 
-        $this->load->model('setting/extension');
+        $this->load->model($this->extensionString);
 
-        $results = $this->model_setting_extension->getExtensions('shipping');
-
+        if(VERSION < 3.0)
+        {
+            $results = $this->model_extension_extension->getExtensions('shipping');
+        }
+        else {
+            $results = $this->model_setting_extension->getExtensions('shipping');
+        }
         foreach ($results as $result) {
-            if ($this->config->get('shipping_' .$result['code'] . '_status')) {
+            if ($this->config->get($this->shippingString .$result['code'] . '_status')) {
                 $this->load->model('extension/shipping/' . $result['code']);
                 $quote = $this->{'model_extension_shipping_' . $result['code']}->getQuote($address);
 

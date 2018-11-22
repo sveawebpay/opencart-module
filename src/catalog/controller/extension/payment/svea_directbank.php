@@ -3,7 +3,19 @@ include_once(dirname(__FILE__).'/svea_common.php');
 require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
+
+    private $paymentString = "payment_";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+        }
+    }
+    
     public function index() {
+        $this->setVersionStrings();
         $this->load->model('checkout/order');
 
     	//$data['button_confirm'] = $this->language->get('button_confirm');
@@ -27,7 +39,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         }
 
         $data['logo'] = "";
-        $data['payment_svea_banks_base'] = "admin/view/image/payment/svea_direct/";
+        $data[$this->paymentString . 'svea_banks_base'] = "admin/view/image/payment/svea_direct/";
 
 
         /*
@@ -36,10 +48,10 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         $this->load->language('payment/svea_directbank');
 
        //Testmode
-        $conf = ($this->config->get('payment_svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'payment_svea_directbank')) : new OpencartSveaConfig($this->config, 'payment_svea_directbank');
+        $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
         try {
             $svea = \Svea\WebPay\WebPay::getPaymentMethods($conf);
-            $data['payment_sveaMethods'] = $svea
+            $data[$this->paymentString . 'sveaMethods'] = $svea
             ->setContryCode($order_info['payment_iso_code_2'])
             ->doRequest();
         } catch (Exception $e) {
@@ -52,8 +64,8 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
 
         $data['continue'] = 'index.php?route=extension/payment/svea_directbank/redirectSvea';
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/svea_directbank.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/extension/payment/svea_directbank.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/svea_directbank')) {
+            return $this->load->view($this->config->get('config_template') . '/template/extension/payment/svea_directbank', $data);
         } elseif(floatval(VERSION) >= 2.2) {
             return $this->load->view('extension/payment/svea_directbank', $data);
         } else {
@@ -64,12 +76,14 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
 
     public function redirectSvea(){
 
+        $this->setVersionStrings();
+
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/svea_directbank');
         $this->load->model('localisation/currency');
         $this->load->language('extension/payment/svea_directbank');
 
-        $conf = ($this->config->get('payment_svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'payment_svea_directbank')) : new OpencartSveaConfig($this->config, 'payment_svea_directbank');
+        $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
         $svea = \Svea\WebPay\WebPay::createOrder($conf);
 
         //Get order information
@@ -164,13 +178,14 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
      * This redirects the customer depending on ok or not from Svea
      */
     public function responseSvea(){
+        $this->setVersionStrings();
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/svea_directbank');
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $countryCode = $order_info['payment_iso_code_2'];
-        $conf = ($this->config->get('payment_svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'payment_svea_directbank')) : new OpencartSveaConfig($this->config, 'payment_svea_directbank');
+        $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
 
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf);
         $response = $resp->getResponse();
@@ -180,6 +195,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
             if($this->session->data['comment'] != "") {
                  $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'), 'Customer comment: ' . $this->session->data['comment'], false);
             }
+            $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
                 $this->renderFailure($response);
@@ -193,11 +209,12 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
      * Update order history with status
      */
     public function callbackSvea(){
+        $this->setVersionStrings();
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/svea_directbank');
         $this->load->language('payment/svea_directbank');
 
-        $conf = ($this->config->get('payment_svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, 'payment_svea_directbank')) : new OpencartSveaConfig($this->config, 'payment_svea_directbank');
+        $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
          $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number

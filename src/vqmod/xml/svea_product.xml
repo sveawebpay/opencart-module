@@ -10,6 +10,12 @@
             <search position="before"><![CDATA[  $data['options'] = array(); ]]></search>
             <add><![CDATA[
 
+                    $paymentString = "payment_";
+                    if(VERSION < 3.0)
+                    {
+                        $paymentString = "";
+                    }
+
                     $this->load->model('localisation/country');
                     $this->load->model('extension/payment/svea_partpayment');
                     $this->load->model('extension/payment/svea_invoice');
@@ -108,7 +114,7 @@
                         }
 
                     }
-                    $data['payment_svea_widget'] = $viewProduct;
+                    $data[$paymentString . 'svea_widget'] = $viewProduct;
 
        ]]></add>
         </operation>
@@ -213,7 +219,7 @@
             <add><![CDATA[
 
                         <?php
-                    if (count($svea_widget) > 0) { ?>
+                    if (isset($svea_widget)) { ?>
 
                      <div id="svea_price_box"
                                 style=" width: auto;
@@ -295,6 +301,124 @@
         <!--inserted befort footer in product.tpl -->
         <operation name="svea script ">
             <search position="before"><![CDATA[  <?php echo $footer; ?> ]]></search>
+            <add><![CDATA[
+
+<script type="text/javascript"><!--
+
+               jQuery(document).ready(function () {
+                    jQuery("#svea_price_arrow").hover(function (){
+                        console.log("hover");
+                        jQuery(this).css({"cursor" : "pointer"});
+                    });
+                    jQuery("#svea_product_price_all").click(function (){
+                        console.log("click on price");
+                        jQuery("#svea_product_price_all").slideUp();
+                    });
+
+                    jQuery("#svea_price_arrow").click(
+                        function (){
+                            jQuery("#svea_product_price_all").slideToggle();
+                            jQuery(this).css({"cursor" : "pointer"});
+                            jQuery(".product-info").css({"overflow" : "visible"});
+                        }
+                    );
+
+                });
+
+
+//--></script>
+
+
+            ]]></add>
+        </operation>
+    </file>
+    <file name="catalog/view/theme/*/template/product/product.twig">
+        <operation name="svea widget style and html">
+            <search position="before">
+                <![CDATA[  <div id="product">  ]]> </search>
+            <add><![CDATA[
+
+ {% if payment_svea_widget|length > 0 %}
+
+                     <div id="svea_price_box"
+                                style=" width: auto;
+                                         height: 40px;
+                                         margin: 0 0 15px;
+                                         ">
+                        <div style="position:relative; z-index:1;" >
+                            <div id="svea_product_price_lowest"
+                                style="overflow: hidden;">
+                                <div style="
+                                    float: left;
+                                    width:50px;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                    ">
+                                        <img width="170"
+                                            style="position:absolute;
+                                                  z-index:1;" src="admin/view/image/payment/svea_direct/{{ payment_svea_widget['widget_background'] }}.png" />
+                                </div>
+                                <div id="svea_price_arrow">
+                                    <div id="svea_arrow" style="
+                                                width:auto;
+                                                position:absolute;
+                                                z-index:2;
+                                                left: -2px;
+                                                top:20px;
+                                               margin: 7px -10px 3px 17px;
+                                               ">{{ payment_svea_widget['arrow'] }}
+                                    </div>
+                                    <div style="
+                                          position:absolute;
+                                           z-index:2;
+                                           left:50px;
+                                           top:23px;
+                                          color: #002A46;
+                                          width:auto;
+                                          padding: 3px;
+                                          margin-left: auto;
+                                          margin-right: auto;">
+                                        {{ payment_svea_widget['text_from']~payment_svea_widget['lowest_price'] }}
+                                    </div>
+                                </div>
+
+                                <div id="svea_product_price_all"
+                                    style="
+                                    float: none;
+                                    display:none;
+                                    width: 100% !important;
+                                    max-width: 323px;
+                                    padding: 5px;
+                                    box-shadow: inset 10px 10px 10px -11px #d2d2d2;
+                                    border-radius: 4px 4px 4px 4px;
+                                    -moz-border-radius: 4px 4px 4px 4px;
+                                    -webkit-border-radius: 4px 4px 4px 4px;
+                                    background-color: #ededed;
+                                    border: 0.5px solid #bdbdbd;
+                                    z-index: 1000000;
+                                    position: absolute;
+                                    top:50px;
+                                    padding: 3px 3px 0px 0px !important;
+                                    visibility: visible;
+                                    ">
+
+                               {% for value in payment_svea_widget['price_list'] %}
+ {{ value }}
+ {{ payment_svea_widget['line'] }}
+ {% endfor %}
+
+
+                           </div>
+                       </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            ]]></add>
+        </operation>
+        <!--inserted befort footer in product.tpl -->
+        <operation name="svea script ">
+            <search position="before"><![CDATA[  {{ footer }}  ]]></search>
             <add><![CDATA[
 
 <script type="text/javascript"><!--

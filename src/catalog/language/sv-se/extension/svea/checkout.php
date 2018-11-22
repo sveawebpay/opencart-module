@@ -97,3 +97,10 @@ $_['text_basket']                   = 'Kundvagn';
 $_['text_checkout']                 = 'Kassa';
 $_['text_success']                  = 'Framgång';
 $_['text_change_postcode']          = 'Ändra';
+
+$_['paymenttype_card_payment']      = 'Kortbetalning';
+$_['paymenttype_invoice']           = 'Faktura';
+$_['paymenttype_admininvoice']      = 'Adminfaktura';
+$_['paymenttype_paymentplan']       = 'Delbetalning';
+$_['paymenttype_accountcredit']     = 'Kontokredit';
+$_['paymenttype_undefined']         = 'Betalning';

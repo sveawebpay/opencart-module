@@ -10,7 +10,7 @@ $_['text_svea_card']     = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonom
 
 // Entry
 $_['entry_card_logos'] = 'Card logos';
-$_['entry_payment_svea_description'] = 'Description in checkout:';
+$_['entry_payment_description'] = 'Description in checkout:';
 $_['entry_geo_zone']     = 'Geo Zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Sort Order:';

@@ -2,8 +2,12 @@
 
 class ModelExtensionSveaOrder extends Model
 {
+    private $paymentString ="payment_";
+    private $moduleString = "module_";
+
     public function deliverOrder($config, $paymentMethod, $sveaOrderId, $countryCode)
     {
+        $this->setVersionStrings();
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
         if ($status == "DELIVERED" || $paymentMethod == "svea_directbank") {
@@ -19,7 +23,7 @@ class ModelExtensionSveaOrder extends Model
                 ->setCountryCode($countryCode);
 
             if ($paymentMethod == "svea_invoice") {
-                $response = $response->setInvoiceDistributionType($this->config->get('payment_' . $paymentMethod . '_distribution_type'))
+                $response = $response->setInvoiceDistributionType($this->config->get($this->paymentString . $paymentMethod . '_distribution_type'))
                     ->deliverInvoiceOrder()
                     ->doRequest();
             } else if ($paymentMethod == "svea_partpayment") {
@@ -78,6 +82,7 @@ class ModelExtensionSveaOrder extends Model
 
     public function creditOrder($config, $paymentMethod, $sveaOrderId, $countryCode, $opencartOrderId)
     {
+        $this->setVersionStrings();
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
         if ($status == "CANCELLED" || $status == "CREDITED" || $status == "ERROR") {
@@ -145,7 +150,7 @@ class ModelExtensionSveaOrder extends Model
 
                 if ($paymentMethod == "svea_invoice") {
                     $response = $response->setInvoiceId($this->getDeliverId($paymentMethod, $opencartOrderId, $countryCode))
-                        ->setInvoiceDistributionType($this->config->get('payment_svea_invoice_distribution_type'))
+                        ->setInvoiceDistributionType($this->config->get($this->paymentString . 'svea_invoice_distribution_type'))
                         ->creditInvoiceOrderRows()
                         ->doRequest();
                 } else if ($paymentMethod == "svea_partpayment") {
@@ -153,10 +158,12 @@ class ModelExtensionSveaOrder extends Model
                         ->creditPaymentPlanOrderRows()
                         ->doRequest();
                 } else if ($paymentMethod == "svea_card") {
-                    $response = $response->creditCardOrderRows()
+                    $response = $response->addNumberedOrderRows($this->getNumberedRows($config, $paymentMethod, $sveaOrderId, $countryCode))
+                        ->creditCardOrderRows()
                         ->doRequest();
                 } else if ($paymentMethod == "svea_directbank") {
-                    $response = $response->creditDirectBankOrderRows()
+                    $response = $response->addNumberedOrderRows($this->getNumberedRows($config, $paymentMethod, $sveaOrderId, $countryCode))
+                        ->creditDirectBankOrderRows()
                         ->doRequest();
                 } else if ($paymentMethod == "sco") {
                     if ($this->canOrderBeCreditedByDeliveryRows($sveaOrderId, $countryCode)) {
@@ -375,7 +382,7 @@ class ModelExtensionSveaOrder extends Model
             return "CANCELLED";
         } else if ($status == "DELIVERED" || $status == "SUCCESS") {
             return "DELIVERED";
-        } else if ($status == "CREATED" || $status == "AUTHORIZED" || $status == "OPEN") {
+        } else if ($status == "CREATED" || $status == "AUTHORIZED" || $status == "OPEN" || $status == "CONFIRMED") {
             return "CREATED";
         } else if ($status == "CREDITED" || $status == "CREDSUCCESS") {
             return "CREDITED";
@@ -480,16 +487,56 @@ class ModelExtensionSveaOrder extends Model
 
     public function getConfiguration($paymentMethod, $countryCode)
     {
+        $this->setVersionStrings();
+
         if ($paymentMethod == "sco")
         {
-            $config = ($this->config->get('module_sco_test_mode') == '1') ? new OpencartSveaCheckoutConfigTest($this->config, 'checkout') : new OpencartSveaCheckoutConfig($this->config, 'checkout');
+            $config = ($this->config->get($this->moduleString . 'sco_test_mode') == '1') ? new OpencartSveaCheckoutConfigTest($this->config, 'checkout') : new OpencartSveaCheckoutConfig($this->config, 'checkout');
         } else {
             $configCountryCode = $paymentMethod == "svea_invoice" || $paymentMethod == "svea_partpayment" ? '_' . $countryCode : '';
 
-            if ($this->config->get("payment_" . $paymentMethod . "_testmode" . $configCountryCode) !== NULL) {
-                $config = ($this->config->get("payment_" . $paymentMethod . "_testmode" . $configCountryCode) == "1") ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
+            if ($this->config->get($this->paymentString . $paymentMethod . "_testmode" . $configCountryCode) !== NULL) {
+                $config = ($this->config->get($this->paymentString . $paymentMethod . "_testmode" . $configCountryCode) == "1") ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
             }
         }
         return $config;
+    }
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+            $this->moduleString = "";
+        }
+    }
+
+    public function getNumberedRows($config, $paymentMethod, $transactionId, $countryCode)
+    {
+        try {
+            $response = \Svea\WebPay\WebPayAdmin::queryOrder($config)
+                ->setTransactionId($transactionId)
+                ->setCountryCode($countryCode);
+
+            if ($paymentMethod == "svea_card") {
+                $response = $response->queryCardOrder()
+                    ->doRequest();
+            } else if ($paymentMethod == "svea_directbank") {
+                $response = $response->queryDirectBankOrder()
+                    ->doRequest();
+            }
+            if($response->accepted == 1)
+            {
+                return $response->numberedOrderRows;
+            }
+            else
+            {
+                $this->log->write("getNumberedRows(): Could not fetch transaction.");
+            }
+        }
+        catch (Exception $e)
+        {
+            $this->log->write($e->getMessage());
+        }
     }
 }

@@ -5,10 +5,20 @@ class OpencartSveaCheckoutConfig implements \Svea\WebPay\Config\ConfigurationPro
     public $config;
     public $payment_method;
 
+    private $moduleString = "module_";
+
     public function __construct($config, $payment_method = NULL)
     {
         $this->config = $config;
         $this->payment_method = $payment_method;
+    }
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->moduleString = "";
+        }
     }
 
     public function getEndpoint($type)
@@ -51,9 +61,10 @@ class OpencartSveaCheckoutConfig implements \Svea\WebPay\Config\ConfigurationPro
 
     public function getCheckoutMerchantId($countryCode = NULL)
     {
-        if($this->config->get('module_sco_checkout_merchant_id_' . strtolower($countryCode)) !== NULL)
+        $this->setVersionStrings();
+        if($this->config->get($this->moduleString . 'sco_checkout_merchant_id_' . strtolower($countryCode)) !== NULL)
         {
-            return $this->config->get('module_sco_checkout_merchant_id_' . strtolower($countryCode));
+            return $this->config->get($this->moduleString . 'sco_checkout_merchant_id_' . strtolower($countryCode));
         }
         else
         {
@@ -63,9 +74,10 @@ class OpencartSveaCheckoutConfig implements \Svea\WebPay\Config\ConfigurationPro
 
     public function getCheckoutSecret($countryCode = NULL)
     {
-        if($this->config->get('module_sco_checkout_secret_word_' . strtolower($countryCode)) !== NULL)
+        $this->setVersionStrings();
+        if($this->config->get($this->moduleString . 'sco_checkout_secret_word_' . strtolower($countryCode)) !== NULL)
         {
-            return $this->config->get('module_sco_checkout_secret_word_' . strtolower($countryCode));
+            return $this->config->get($this->moduleString . 'sco_checkout_secret_word_' . strtolower($countryCode));
         }
         else
         {

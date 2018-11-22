@@ -5,10 +5,32 @@ class ControllerExtensionModuleSco extends Controller
     private $error = array();
 
     // Use this name as params prefix (Svea checkout)
-    private $module_version = '4.3.3';
-
+    private $module_version = '4.4.0';
+    
+    //backwards compatability
+    private $userTokenString = "user_";
+    private $linkString = "marketplace/extension";
+    private $paymentString ="payment_";
+    private $moduleString = "module_";
+    private $appendString = "_before";
+    private $eventString = "setting/event";
+    
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->userTokenString = "";
+            $this->linkString = "extension/extension";
+            $this->paymentString = "";
+            $this->moduleString = "";
+            $this->appendString = "";
+            $this->eventString = "extension/event";
+        }
+    }
+    
     public function index()
     {
+        $this->setVersionStrings();
         // get language
         $this->load->language('extension/module/sco');
         $data = array();
@@ -18,19 +40,13 @@ class ControllerExtensionModuleSco extends Controller
 
             // save checkout parameters
             $this->load->model('setting/setting');
-            $this->model_setting_setting->editSetting('module_sco', $this->request->post);
+            $this->model_setting_setting->editSetting($this->moduleString . 'sco', $this->request->post);
 
             // success message
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $status_field_name = 'module_sco_status';
-            $old_status = $this->config->get('module_sco_status');
-            if ($this->request->post[$status_field_name] == '1' && empty($old_status)) {
-                $this->disableOldPaymentTypes();
-            }
-
             // go back to module list
-            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true));
+            $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=module', true));
         }
 
         $this->setCheckoutDBTable();
@@ -45,10 +61,10 @@ class ControllerExtensionModuleSco extends Controller
         $data = array_merge($data, $this->setBreadcrumbs());
 
         // Set action url
-        $data['action'] = $this->url->link('extension/module/sco', 'user_token=' . $this->session->data['user_token'], true);
+        $data['action'] = $this->url->link('extension/module/sco', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
 
         // Set cancel url
-        $data['cancel'] = $this->url->link('extension/module', 'user_token=' . $this->session->data['user_token'], true);
+        $data['cancel'] = $this->url->link('extension/module', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
 
         $this->load->model('localisation/country');
         $fields = array(
@@ -75,21 +91,21 @@ class ControllerExtensionModuleSco extends Controller
             'checkout_default_country_id' => '',
         );
         $data['options_on_checkout_page'] = array(
-            'module_sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
-            'module_sco_show_voucher_on_checkout' => $this->language->get('text_show_voucher_on_checkout'),
-            'module_sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout')
+            $this->moduleString . 'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
+            $this->moduleString . 'sco_show_voucher_on_checkout' => $this->language->get('text_show_voucher_on_checkout'),
+            $this->moduleString . 'sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout')
         );
 
         $data['text_yes'] = $this->language->get('text_yes');
         $data['text_no'] = $this->language->get('text_no');
 
         foreach ($fields as $field => $default) {
-            if (isset($this->request->post['module_sco_' . $field])) {
-                $data['module_sco_' . $field] = $this->request->post['module_sco_' . $field];
-            } elseif ($this->config->has('module_sco_' . $field)) {
-                $data['module_sco_' . $field] = $this->config->get('module_sco_' . $field);
+            if (isset($this->request->post[$this->moduleString . 'sco_' . $field])) {
+                $data[$this->moduleString . 'sco_' . $field] = $this->request->post[$this->moduleString . 'sco_' . $field];
+            } elseif ($this->config->has($this->moduleString . 'sco_' . $field)) {
+                $data[$this->moduleString . 'sco_' . $field] = $this->config->get($this->moduleString . 'sco_' . $field);
             } else {
-                $data['module_sco_' . $field] = $default;
+                $data[$this->moduleString . 'sco_' . $field] = $default;
             }
         }
 
@@ -118,14 +134,15 @@ class ControllerExtensionModuleSco extends Controller
      * */
     protected function validate()
     {
+        $this->setVersionStrings();
         // Validate permission
         if (!$this->user->hasPermission('modify', 'extension/module/sco')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         // Validate authorization data
-        $status_field_name = 'module_sco_status';
-        $test_mode_field_name = 'module_sco_test_mode';
+        $status_field_name = $this->moduleString . 'sco_status';
+        $test_mode_field_name = $this->moduleString . 'sco_test_mode';
 
         $post_fields = $this->request->post;
 
@@ -133,23 +150,23 @@ class ControllerExtensionModuleSco extends Controller
         if ($post_fields[$status_field_name] == '1')
         {
             $data = array(
-                'module_sco_checkout_merchant_id_se',
-                'module_sco_checkout_secret_word_se',
-                'module_sco_checkout_merchant_id_no',
-                'module_sco_checkout_secret_word_no',
-                'module_sco_checkout_merchant_id_fi',
-                'module_sco_checkout_secret_word_fi',);
+                $this->moduleString . 'sco_checkout_merchant_id_se',
+                $this->moduleString . 'sco_checkout_secret_word_se',
+                $this->moduleString . 'sco_checkout_merchant_id_no',
+                $this->moduleString . 'sco_checkout_secret_word_no',
+                $this->moduleString . 'sco_checkout_merchant_id_fi',
+                $this->moduleString . 'sco_checkout_secret_word_fi',);
 
 	        // - if test-mode enabled set test credentials
         	if($post_fields[$test_mode_field_name] == '1')
 	        {
                 $data = array(
-                    'module_sco_checkout_test_merchant_id_se',
-                    'module_sco_checkout_test_secret_word_sweden',
-                    'module_sco_checkout_test_merchant_id_no',
-                    'module_sco_checkout_test_secret_word_norway',
-                    'module_sco_checkout_test_merchant_id_fi',
-                    'module_sco_checkout_test_secret_word_finland',);
+                    $this->moduleString . 'sco_checkout_test_merchant_id_se',
+                    $this->moduleString . 'sco_checkout_test_secret_word_sweden',
+                    $this->moduleString . 'sco_checkout_test_merchant_id_no',
+                    $this->moduleString . 'sco_checkout_test_secret_word_norway',
+                    $this->moduleString . 'sco_checkout_test_merchant_id_fi',
+                    $this->moduleString . 'sco_checkout_test_secret_word_finland',);
 	        }
 
             // - check values
@@ -173,53 +190,42 @@ class ControllerExtensionModuleSco extends Controller
         return !$this->error;
     }
 
-    /**
-     * Disable all old Svea payment types
-     */
-    private function disableOldPaymentTypes()
-    {
-        $svea_payment_statuses = array(
-            'payment_svea_directbank' => 'payment_svea_directbank_status',
-            'payment_svea_card' => 'payment_svea_card_status',
-            'payment_svea_partpayment' => 'payment_svea_partpayment_status',
-            'payment_svea_invoice' => 'payment_svea_invoice_status'
-        );
-
-        $store_id = 0;
-        foreach ($svea_payment_statuses as $code => $value) {
-            $this->db->query("UPDATE " . DB_PREFIX . "setting SET
-                `value` = '0'
-            WHERE   `code` = '" . $this->db->escape($code) . "' AND
-                    `key` = '" . $this->db->escape($value) . "' AND
-                    store_id = '" . (int)$store_id . "'");
-        }
-    }
-
     /*
      * Add event listener for checkout/checkout, and add custom redirect logic
      * when this is called
      * */
     public function install()
     {
+        $this->setVersionStrings();
         // Set custom events
         $this->load->model('extension/svea/events');
 
         $this->model_extension_svea_events->addSveaCustomEvent(
-            'module_sco_edit_checkout_url_before',
+            $this->moduleString . 'sco_edit_checkout_url' . $this->appendString,
             'catalog/controller/checkout/checkout/before',
             'extension/svea/checkout/redirectToScoPage'
         );
-        $this->model_extension_svea_events->addSveaCustomEvent(
-            'module_sco_edit_order_from_admin_before',
-            'catalog/controller/api/order/edit/before',
-            'extension/svea/order/edit'
-        );
 
-        $this->model_extension_svea_events->addSveaCustomEvent(
-            'module_sco_add_history_order_from_admin_before',
-            'catalog/controller/api/order/history/before',
-            'extension/svea/order/history'
-        );
+        if(VERSION < 3.0)
+        {
+            if($this->model_extension_event->getEvent($this->moduleString . 'sco_add_history_order_from_admin' . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == NULL) {
+                $this->model_extension_svea_events->addSveaCustomEvent(
+                    $this->moduleString . 'sco_add_history_order_from_admin' . $this->appendString,
+                    'catalog/controller/api/order/history/before',
+                    'extension/svea/order/history'
+                );
+            }
+        }
+        else
+        {
+            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == NULL) {
+                $this->model_extension_svea_events->addSveaCustomEvent(
+                    $this->moduleString . 'sco_add_history_order_from_admin' . $this->appendString,
+                    'catalog/controller/api/order/history/before',
+                    'extension/svea/order/history'
+                );
+            }
+        }
     }
 
     /*
@@ -227,12 +233,22 @@ class ControllerExtensionModuleSco extends Controller
      * */
     public function uninstall()
     {
+        $this->setVersionStrings();
         $this->load->model('extension/svea/events');
-        $this->load->model('setting/event');
+        $this->load->model($this->eventString);
 
-        $this->model_setting_event->deleteEvent('module_sco_edit_checkout_url_before');
-        $this->model_setting_event->deleteEvent('module_sco_add_history_order_from_admin');
-        $this->model_setting_event->deleteEvent('module_sco_edit_order_from_admin_before');
+        if(VERSION < 3.0)
+        {
+            $this->model_extension_event->deleteEvent($this->moduleString . 'sco_edit_checkout_url' . $this->appendString);
+            $this->model_extension_event->deleteEvent($this->moduleString . 'sco_add_history_order_from_admin');
+            $this->model_extension_event->deleteEvent($this->moduleString . 'sco_edit_order_from_admin' . $this->appendString);
+        }
+        else
+        {
+            $this->model_setting_event->deleteEvent($this->moduleString . 'sco_edit_checkout_url' . $this->appendString);
+            $this->model_setting_event->deleteEvent($this->moduleString . 'sco_add_history_order_from_admin');
+            $this->model_setting_event->deleteEvent($this->moduleString . 'sco_edit_order_from_admin' . $this->appendString);
+        }
         $this->model_extension_svea_events->deleteSveaCustomEvents();
     }
 
@@ -295,23 +311,25 @@ class ControllerExtensionModuleSco extends Controller
 
     private function setBreadcrumbs()
     {
+        $this->setVersionStrings();
+
         $data = array();
 
         $data['breadcrumbs'] = array();
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+            'href' => $this->url->link('common/dashboard', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_extension'),
-            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true)
+            'href' => $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=module', true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/module/sco', 'user_token=' . $this->session->data['user_token'], true)
+            'href' => $this->url->link('extension/module/sco', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
         return $data;

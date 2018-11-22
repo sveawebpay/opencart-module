@@ -5,6 +5,16 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 class SveaCommon extends Controller
 {
 
+    private $totalString = "total_";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->totalString = "";
+        }
+    }
+
     function addOrderRowsToHostedServiceOrder($svea, $products, $currencyValue)
     {
 
@@ -144,8 +154,17 @@ class SveaCommon extends Controller
 
     function addTaxRateToAddons()
     {
+        SveaCommon::setVersionStrings();
         //Get all addons
-        $this->load->model('setting/extension');
+        if(VERSION < 3.0)
+        {
+            $this->load->model('extension/extension');
+        }
+        else
+        {
+            $this->load->model('setting/extension');
+        }
+
         $total_data = array();
 
         $totals = array();
@@ -161,10 +180,18 @@ class SveaCommon extends Controller
 
         $sort_order = array();
 
-        $extensions = $this->model_setting_extension->getExtensions('total');
+        if(VERSION < 3.0)
+        {
+            $extensions = $this->model_extension_extension->getExtensions('total');
+        }
+        else
+        {
+            $extensions = $this->model_setting_extension->getExtensions('total');
+        }
+
 
         foreach ($extensions as $key => $value) {
-            $sort_order[$key] = $this->config->get('total_' . $value['code'] . '_sort_order');
+            $sort_order[$key] = $this->config->get($this->totalString . '' . $value['code'] . '_sort_order');
         }
 
         array_multisort($sort_order, SORT_ASC, $extensions);
@@ -173,7 +200,7 @@ class SveaCommon extends Controller
         foreach ($extensions as $extension) {
 
             //if this result is activated
-            if ($this->config->get('total_' . $extension['code'] . '_status')) {
+            if ($this->config->get($this->totalString . '' . $extension['code'] . '_status')) {
                 $amount = 0;
 
                 foreach ($cartTax as $key => $value) {
@@ -205,7 +232,7 @@ class SveaCommon extends Controller
         }
 
         // for any order totals that are sorted below taxes, set the extension tax rate to zero
-        $tax_sort_order = $this->config->get('total_tax_sort_order');
+        $tax_sort_order = $this->config->get($this->totalString . 'tax_sort_order');
         foreach ($total_data['totals'] as $key => $value) {
             if ($total_data['totals'][$key]['sort_order'] > $tax_sort_order) {
                 $total_data['totals'][$key]['tax_rate'] = 0;

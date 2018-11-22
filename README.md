@@ -5,37 +5,30 @@
     * [1.1 General](#i1-1)
     * [1.2 Checkout](#i1-2)
     * [1.3 Payment modules](#i1-3)
-* [2. OpenCart configuration](#i2)
-    * [2.1 Currency](#i2-1)
-    * [2.2 Geo zones](#i2-2)
-    * [2.3 Tax rates](#i2-3)
-    * [2.4 Tax classes](#i2-4)
-    * [2.5 Additional requirements](#i2-5)
-* [3. Svea module configuration](#i3)
-    * [3.1 Svea invoice fee](#i3-1)
-    * [3.2 Checkout](#i3-2)
-    * [3.3 Svea Invoice](#i3-3)
-    * [3.4 Svea Payment plan](#i3-4)
-    * [3.5 Svea Card payment](#i3-5)
-    * [3.6 Svea Direct payment](#i3-6)
-* [4. Miscellaneous](#i4)
-    * [4.1 Administrating orders](#i4-1)
-    * [4.2 Troubleshooting and recommendations](#i4-2)
-    * [4.3 Product Price Widget](#i4-3)
-    * [4.4 Important information](#i4-4)
+    * [1.4 Additional information](#i1-4)
+* [2. Svea module configuration](#i2)
+    * [2.1 Svea invoice fee](#i2-1)
+    * [2.2 Checkout](#i2-2)
+    * [2.3 Svea Invoice](#i2-3)
+    * [2.4 Svea Payment plan](#i2-4)
+    * [2.5 Svea Card payment](#i2-5)
+    * [2.6 Svea Direct payment](#i2-6)
+* [3. Miscellaneous](#i3)
+    * [3.1 Administrating orders](#i3-1)
+    * [3.2 Troubleshooting and recommendations](#i3-2)
+    * [3.3 Product Price Widget](#i3-3)
+    * [3.4 Important information](#i3-4)
 
 # I. Information
 
-## OpenCart 3.0 - Svea checkout and payment modules
+## OpenCart - Svea checkout and payment modules
 
-* Supports OpenCart 3.0.0.0 - 3.0.2.0 (older and newer versions can be found in the branches)
+* Supports OpenCart 2.3.0.2 - 3.0.2.0 (older versions can be found in the branches)
 * Requires PHP 5.3 or higher (namespace support)
 * Includes Sveas iframe checkout page
 * Includes Svea Checkout with invoices, payment plans, card and direct bank payments
 * Includes Payment modules for invoices, payment plans, card and direct bank payments in Sweden, Finland, Norway, Denmark, Netherlands and Germany.
 * Includes integrated admin functionality that corresponds with Sveas servers, current functions are delivering, confirming, canceling and crediting orders
-
-This module is tested with a clean installation of [OpenCart 3.0.2.0](https://github.com/opencart/opencart/releases/tag/3.0.2.0) with the latest Svea [php-integration](https://github.com/sveawebpay/php-integration) package.
 
 If you are experiencing technical issues with this module, or if you have a feature suggestion, please submit an issue on the GitHub issue list.
 
@@ -63,54 +56,8 @@ The following examples assumes that you have already downloaded and installed Op
 * Navigate to the Extensions/Payments page
 * Install all the modules that you are going to use
 ![Svea payment modules](docs/image/ModulesPayments.png "Svea payment modules")
-* Proceed to [2. OpenCart configuration](#i2)
 
-# 2. OpenCart configuration <a name="i2"></a>
-
-These steps contain general setup information regarding OpenCart, if you already have settings for currencies, geo zones, tax classes and tax rates you can proceed to section [2.5 Additional requirements](#i2-5).
-
-## 2.1 Currency <a name="i2-1"></a>
-* Navigate to System/Localisation/Currencies
-* Click the plus sign in the top-right corner to add a new currency
-* Fill in the [**ISO-code**](https://en.wikipedia.org/wiki/ISO_4217) e.g. "SEK" for Swedish Krona
-* Fill out the rest of fields and click save in the top-right corner
-
-![Currency setup](docs/image/Currencies.png "Currency setup")
-
-* Add as many currencies as you want
-* Press refresh currency values in the top-right corner
-
-## 2.2 Geo zones <a name="i2-2"></a>
-* Navigate to System/Localisation/Geo Zones
-* Click the plus sign in the top-right corner to add a new geo zone
-* Fill out the fields and add a country
-* By not selecting any zone in the table(like in the example below) you will select all zones within the chosen country
-* Save
-
-![Geo zones](docs/image/Geo_zones.png "Geo zones")
-
-## 2.3 Tax rates <a name="i2-3"></a>
-* Navigate to System/Localisation/Taxes/Tax Rates
-* Click the plus sign in the top-right corner to add a new tax rate
-* Fill out the fields and select the geo zone you created in the previous step and save
-
-![Tax rates](docs/image/Tax_rates.png "Tax rates")
-
-## 2.4 Tax classes <a name="i2-4"></a>
-* Navigate to System/Localisation/Taxes/Tax Classes
-* Click the plus sign in the top-right corner to add a new tax rate
-* Fill out the fields and add the tax rate you created in the previous step and save
-
-![Tax classes](docs/image/Tax_classes.png "Tax classes")
-
-## 2.5 Additional requirements <a name="i2-5"></a>
-### Specifying prices
-* The product prices must be given in the default currency if multiple currencies are used.
-* Also, prices must be given excluding any taxes.
-* Currency decimals must be set to two (2) when using Euro currency.
-
-### Customer registration required fields
-* For use in Dutch and German stores the postal code needs to be set to required for customer registrations.
+## 1.4 Additional information <a name="i1-5"></a>
 
 ### Order Total module sort order
 * For use with vouchers, the voucher module sort order must be after taxes.
@@ -118,18 +65,11 @@ These steps contain general setup information regarding OpenCart, if you already
 * Also, the coupon discount amount (in admin, under sales/coupon) must be specified excluding tax. The coupon tax discount will then be calculated in accordance with OpenCart standard behaviour, and is specified in the order history.
 * The recommended order total sort order is: sub-total (lowest), Svea invoice fee, shipping, coupon, taxes, store credit, voucher and total.
 
-### A note on specifying taxes in OpenCart
-If you have your shop set up to sell mainly to Swedish customers, but have a substantial number of sales to a foreign country (here: Norway), you might want to charge Swedish tax for Swedish customers, and Norwegian tax for Norwegian customers. Ask your accountant for the precise sales numbers required, or sales abroad in general.
-
-This is done by specifying a tax class containing two different tax rates, one for Sweden and one for Norway with the appropriate tax rates. The tax rates each contain a geo zone. For the Swedish tax rate, the geo zone should include all countries where Swedish vat should be charged (i.e. typically all countries that you sell to, but excluding Norway). The Norwegian tax rate geo zone should then include the countries where Norwegian vat should be charged (i.e. Norway only).
-
-In the tax class settings, make sure that the Norwegian tax rate applies before the Swedish tax rate, i.e. has a higher priority than the Swedish tax rate, and that all tax rate selections are based on the customer Payment Address. The same procedure applies be used for products and i.e. the Svea invoice fee.
-
-# 3. Svea module configuration <a name="i3"></a>
+# 2. Svea module configuration <a name="i2"></a>
 After configuring the invoice fee in [3.1](#i3-1) go to either [3.2](#i3-2) Checkout or [3.3](#i3-3) Svea Invoice depending on which one you installed above.
 
 ( _The credentials in the pictures is our public test credentials and not from a customer_ )
-## 3.1 Svea Invoice Fee <a name="i3-1"></a>
+## 2.1 Svea Invoice Fee <a name="i2-1"></a>
 If you want to use an invoice fee for the checkout you have to send a request to [support-webpay@sveaekonomi.se](mailto:support-webpay@sveaekonomi.se) with the amount you want B2C customers to pay and the amount you want B2B customers to pay. The integration team will then configure your checkout merchant in Sveas database.
 
 As soon as the team has configured your merchant in the database, the prices will appear automatically on orders where customers select invoice, the team will inform you when the change has been made.
@@ -146,7 +86,7 @@ If you are using the regular Webpay payment methods follow the steps below to se
 
 ![Svea invoice fee](docs/image/Svea_invoice_fee.png "Svea invoice fee")
 
-## 3.2 Checkout  <a name="i3-2"></a>
+## 2.2 Checkout  <a name="i2-2"></a>
 * Navigate to Extensions/Modules and press edit on Svea Checkout
 * First select the Authorization tab and fill out your credentials that you received from Svea after signing an agreement with us
 
@@ -164,7 +104,7 @@ Congratulations, you're all set! You have now configured all the required settin
 
 ![Checkout general](docs/image/Checkout_general.png "Checkout general")
 
-## 3.3 Svea Invoice <a name="i3-3"></a>
+## 2.3 Svea Invoice <a name="i2-3"></a>
 * Navigate to Extensions/Payments
 * Find Svea Invoice in the list and press Edit
 * Set the _geo zone_ and _sort order_ to your preferences
@@ -180,7 +120,7 @@ Congratulations, you're all set! You have now configured all the required settin
 
 ![Svea Invoice](docs/image/SveaInvoice1.png "Svea Invoice")
 
-## 3.4 Svea Payment plan  <a name="i3-4"></a>
+## 2.4 Svea Payment plan  <a name="i2-4"></a>
 * Navigate to Extensions/Payments
 * Find Svea payment plan and press Edit
 * Set the order statuses with the order statuses you want to trigger the corresponding action to Svea admin. When you edit an order and change the order status, an request will be sent to Svea. The actions available for Payment Plan are Deliver, Credit and Cancel order
@@ -190,7 +130,7 @@ Congratulations, you're all set! You have now configured all the required settin
 
 ![Svea Payment plan](docs/image/SveaPaymentplan.png "Svea Payment plan")
 
-## 3.5 Svea Card payment <a name="i3-5"></a>
+## 2.5 Svea Card payment <a name="i2-5"></a>
 Our module supports one Svea merchant id per Opencart installation
 * Navigate to Extensions/Payments
 * Locate Svea card payment in the list, and then press Edit
@@ -201,7 +141,7 @@ Our module supports one Svea merchant id per Opencart installation
 
 ![Svea Card payment](docs/image/SveaCardpayment.png "Svea Card payment")
 
-## 3.6 Svea Direct payment <a name="i3-6"></a>
+## 2.6 Svea Direct payment <a name="i2-6"></a>
 Our module supports one Svea merchant id per Opencart installation.
 * Navigate to Extensions/Payments
 * Locate Svea Direct payment, and then press Edit
@@ -212,9 +152,9 @@ Our module supports one Svea merchant id per Opencart installation.
 
 ![Svea Direct payment](docs/image/SveaDirectpayment.png "Svea direct payment")
 
-# 4. Miscellaneous <a name="i4"></a>
+# 3. Miscellaneous <a name="i4"></a>
 
-## 4.1 Administrating orders <a name="i4-1"></a>
+## 3.1 Administrating orders <a name="i3-1"></a>
 **Important!** The Svea order id information saved in the Comment field must not be changed for the action to work. You may add to the information, but not change or remove it.
 
 To deliver an order just set the order status in the order history to one of the statuses that's configured in System->Settings->Store->Option->Complete Order Status
@@ -232,9 +172,7 @@ Actions available:
 | Card          |   *           |   *           |   *               |                     |
 | Direct bank   |   N/A         |   N/A         |   *               |   N/A               |
 
-** = Not required as direct bank transactions are instant
-
-## 4.2 Troubleshooting and recommendations <a name="i4-2"></a>
+## 3.2 Troubleshooting and recommendations <a name="i3-2"></a>
 Always check that your settings are properly configured before posting issues or contacting our support, go through these steps first:
 
 ### Check your Svea customer credentials
@@ -276,15 +214,16 @@ If you see the "Thank you for your purchase" instead of the checkout iframe, the
 To fix this you have to go in to your database and to the table oc_order and find the latest order. Change the order_id on that order to a much higher number, this will almost always ensure that the range isn't used.
 
 
-## 4.3 Product Price Widget <a name="i4-3"></a>
+## 3.3 Product Price Widget <a name="i3-3"></a>
 
-~~If you set "Show Product Price Widget" to yes in your module options a widget will be displaying the minimum invoice amount to pay on the product page. Note: Only applicable if Svea buys the invoices, and for private customers.
-Only applies in Sweden, Norway, Finland and the Netherlands.
-Note! Requires [vQmod](https://github.com/vqmod).~~
+Enabling the product price widget on either Svea Invoice or Svea Part payment will result in a "price box" appearing on the product page. Clicking the box will show different campaigns that the customer can use to pay.
 
-Product Price Widget is not available in Opencart 3.0 yet, we have are going to rewrite all the code to use events instead of vQMod. This will be done later this year.
+If you set "Show Product Price Widget" to yes in your module options a widget will be displaying the minimum invoice amount to pay on the product page. Note: Only applicable if Svea buys the invoices, and for private customers.
+Only applies in Sweden, Norway, Finland.
 
-## 4.4 Important information <a name="i4-4"></a>
+Note! Requires [vQmod](https://github.com/vqmod).
+
+## 3.4 Important information <a name="i3-4"></a>
 
 The request made from the card and direct payment modules to Sveas systems is made through a redirected form.
 The response of the payment is then returned to the module via POST or GET (selectable in the corresponding Svea admin interface).

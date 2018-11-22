@@ -4,10 +4,23 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionSveaSyncOrder extends Controller
 {
+    private $moduleString = "module_";
+    private $paymentString = "payment_";
     protected $current_order_id;
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+            $this->moduleString = "";
+        }
+    }
 
     public function index()
     {
+        $this->setVersionStrings();
+        
         $this->load->language('extension/svea/sync_order');
         $json = array();
 
@@ -71,8 +84,9 @@ class ControllerExtensionSveaSyncOrder extends Controller
 
     private function getConfiguration()
     {
+        $this->setVersionStrings();
         $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
-        if ($this->config->get('module_sco_test_mode')) {
+        if ($this->config->get($this->moduleString . 'sco_test_mode')) {
             $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
         }
 
@@ -123,6 +137,7 @@ class ControllerExtensionSveaSyncOrder extends Controller
 
     private function getOrderStatusId($checkout_order)
     {
+        $this->setVersionStrings();
         $oc_order_status_id = null;
         $module_sco_status = $checkout_order['orderstatus'];
 
@@ -135,19 +150,19 @@ class ControllerExtensionSveaSyncOrder extends Controller
                 break;
             case 'Delivered':
                 if ($this->isCredited($checkout_order) === true) {
-                    $oc_order_status_id = $this->config->get('module_sco_credited_status_id');
+                    $oc_order_status_id = $this->config->get($this->moduleString . 'sco_credited_status_id');
                 } else {
-                    $oc_order_status_id = $this->config->get('module_sco_delivered_status_id');
+                    $oc_order_status_id = $this->config->get($this->moduleString . 'sco_delivered_status_id');
                 }
                 break;
             case 'Cancelled':
-                $oc_order_status_id = $this->config->get('module_sco_canceled_status_id');
+                $oc_order_status_id = $this->config->get($this->moduleString . 'sco_canceled_status_id');
                 break;
             case 'Pending':
-                $oc_order_status_id = $this->config->get('module_sco_pending_status_id');
+                $oc_order_status_id = $this->config->get($this->moduleString . 'sco_pending_status_id');
                 break;
             case 'Denied':
-                $oc_order_status_id = $this->config->get('module_sco_failed_status_id');
+                $oc_order_status_id = $this->config->get($this->moduleString . 'sco_failed_status_id');
                 break;
         }
 

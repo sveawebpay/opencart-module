@@ -9,14 +9,6 @@ $_['text_svea_invoice']       = '<img src="http://cdn.svea.com/sveafinans/rgb_sv
 
 
 // Entry
-$_['entry_order_status']      = 'Order status:';
-$_['entry_status_order'] = 'Aangemaakt :';
-$_['entry_status_canceled'] = 'Verwijderd /Geannuleerd:';
-$_['entry_status_canceled_text'] = 'Van toepassing voor de bestelling is geleverd/binnengekomen.';
-$_['entry_status_delivered'] = 'Geleverd:';
-$_['entry_status_delivered_text'] = 'Levering van een geplaatste bestelling.';
-$_['entry_status_refunded'] = 'Gecrediteerd:';
-$_['entry_status_refunded_text'] = 'De bestelling moet zijn geleverd/binnengekomen voor creditering.';
 
 $_['entry_order_status_text'] = 'Order status voor de gecreëerde order, maar er is geen factuur gecreëerd. Creëer de factuur van Svea admin.';
 $_['entry_geo_zone']          = 'Geo zone:';

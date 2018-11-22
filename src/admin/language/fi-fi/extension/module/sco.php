@@ -9,16 +9,6 @@ $_['text_success']				    = 'Onnistui!: Olet muokannut Svea Checkout modulia!';
 $_['text_edit']					    = 'Muokkaa Svea Checkoutia';
 $_['text_module_version_info_new']  = 'Uusi versio on saatavilla. Lataa se tästä.';
 $_['text_module_version_info']      = 'Käytössäsi on viimeisin versio. Siirry dokumentaatioon.';
-$_['created_status_order']          = 'Tilaus luotu';
-$_['pending_status_order']          = 'Odottaa hyväksyntää';
-$_['failed_status_order']           = 'Tilaus epäonnistui';
-
-$_['entry_status_canceled']         = 'Peruutettu:';
-$_['entry_status_canceled_text']    = 'Koskee toimittamattomia tilauksia.';
-$_['entry_status_delivered']        = 'Toimitettu:';
-$_['entry_status_delivered_text']   = 'Toimittaa luodun tilauksen.';
-$_['entry_status_refunded']         = 'Hyvitetty:';
-$_['entry_status_refunded_text']    = 'Koskee toimitettuja tilauksia.';
 $_['entry_shop_terms_uri']          = 'Kaupan ehdot';
 
 $_['text_show_voucher_on_checkout']	= 'Näytä Voucher Checkout-sivulla';

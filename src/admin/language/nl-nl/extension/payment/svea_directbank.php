@@ -8,10 +8,6 @@ $_['text_success']       = 'Succes: U heeft de module Svea Directe Bankbetaling 
 $_['text_svea_directbank']  = '<img src="http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png" alt="Svea Finans" title="Svea Finans" />';
 
 // Entry
-$_['entry_order_status'] = 'Order status:';
-$_['entry_status_refunded'] = 'Gecrediteerd:';
-$_['entry_status_refunded_text'] = 'De bestelling moet zijn geleverd/binnengekomen voor creditering.';
-
 $_['entry_geo_zone']     = 'Geo zone:';
 $_['entry_status']       = 'Status:';
 $_['entry_sort_order']   = 'Soort order:';

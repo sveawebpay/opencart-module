@@ -8,16 +8,6 @@ $_['text_success']       = 'Modifiering av Sveas delbetalningsmodul lyckades!';
 $_['text_svea_partpayment']   = '<img src="http://cdn.svea.com/sveaekonomi/rgb_ekonomi_small.png" alt="Svea Ekonomi" title="Svea Ekonomi" />';
 
 // Entry
-$_['entry_order_status'] = 'Order status:';
-$_['entry_status_order'] = 'Skapad:';
-$_['entry_status_canceled'] = 'Makulerad/annulerad:';
-$_['entry_status_canceled_text'] = 'Kan göras innan ordern är levererad/inlöst.';
-$_['entry_status_delivered'] = 'Levererad:';
-$_['entry_status_delivered_text'] = 'Levererar en skapad order.';
-$_['entry_status_refunded'] = 'Krediterad:';
-$_['entry_status_refunded_text'] = 'Ordern måste vara levererad/inlöst innan den krediteras.';
-
-
 $_['entry_geo_zone']     = 'Geozon:';
 $_['entry_status']       = 'Status:';
 

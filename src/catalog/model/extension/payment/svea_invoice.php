@@ -2,14 +2,25 @@
 
 class ModelExtensionPaymentSveaInvoice extends Model
 {
+    private $paymentString = "payment_";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->paymentString = "";
+        }
+    }
+    
     public function getMethod($address, $total)
     {
         $this->load->language('extension/payment/svea_invoice');
 
-        if ($this->config->get('payment_svea_invoice_status')) {
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_svea_invoice_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+        $this->setVersionStrings();
+        if ($this->config->get($this->paymentString . 'svea_invoice_status')) {
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get($this->paymentString . 'svea_invoice_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
-            if (!$this->config->get('payment_svea_invoice_geo_zone_id')) {
+            if (!$this->config->get($this->paymentString . 'svea_invoice_geo_zone_id')) {
                 $status = TRUE;
             } elseif ($query->num_rows) {
                 $status = TRUE;
@@ -25,9 +36,9 @@ class ModelExtensionPaymentSveaInvoice extends Model
         if ($status) {
             $method_data = array(
                 'code' => 'svea_invoice',
-                'title' => $this->language->get('text_title') . ' ' . $this->config->get('payment_svea_invoice_payment_description'),
+                'title' => $this->language->get('text_title') . ' ' . $this->config->get($this->paymentString . 'svea_invoice_payment_description'),
                 'terms' => '',
-                'sort_order' => $this->config->get('payment_svea_invoice_sort_order')
+                'sort_order' => $this->config->get($this->paymentString . 'svea_invoice_sort_order')
             );
         }
 
@@ -59,6 +70,7 @@ class ModelExtensionPaymentSveaInvoice extends Model
 
     public function getCountryIdFromCountryCode($countryCode)
     {
+        $this->setVersionStrings();
         $query = $this->db->query("SELECT country_id, name FROM " . DB_PREFIX . "country WHERE status = '1' AND iso_code_2 = '$countryCode' ORDER BY name ASC");
         $country = $query->rows;
 
@@ -67,7 +79,8 @@ class ModelExtensionPaymentSveaInvoice extends Model
 
     public function getProductPriceMode()
     {
-        return $this->config->get('payment_svea_invoice_product_price');
+        $this->setVersionStrings();
+        return $this->config->get($this->paymentString . 'svea_invoice_product_price');
     }
 
     /**
@@ -76,6 +89,7 @@ class ModelExtensionPaymentSveaInvoice extends Model
      */
     public function getProductPriceModeMin()
     {
-        return $this->config->get('payment_svea_invoice_product_price_min');
+        $this->setVersionStrings();
+        return $this->config->get($this->paymentString . 'svea_invoice_product_price_min');
     }
 }
