@@ -14,6 +14,8 @@ $_['entry_shop_terms_uri']          = 'Shop terms';
 $_['text_show_voucher_on_checkout']	= 'Show Voucher on Checkout page';
 $_['text_show_coupons_on_checkout']	= 'Show Coupon on Checkout page';
 $_['text_show_order_comment_on_checkout']   = 'Show Message on Checkout page';
+$_['text_show_widget_on_product_page'] = 'Show product price widget on product page';
+$_['text_show_widget_on_product_page_tooltip'] = 'The lowest price of the campaign available for part payment will be displayed on the product page. Using this option require you to have VQMod installed.';
 
 $_['item_voucher']					= 'Voucher';
 $_['item_coupon']					= 'Coupon';

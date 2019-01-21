@@ -13,11 +13,16 @@
                 {% set flag = true %}
                 {{ '<div class="form-group">' }}
                 {% for p in paymentOptions %}
+                    {% if p.paymentPlanType == "InterestAndAmortizationFree" %}
+                        {% set p = p|merge({'price_per_month': ''}) %}
+                    {% else %}
+                        {% set p = p|merge({'price_per_month': ': '~p.price_per_month}) %}
+                    {% endif %}
                     {{'<div class="col-sm-9">
                     <input name="svea_partpayment_alt" type="radio" value="%s" %s >
                     %s
                     </input>
-                    </div>'|format(p.campaignCode, flag ? 'checked' :  '', p.description~': '~p.price_per_month)}}
+                    </div>'|format(p.campaignCode, flag ? 'checked' :  '', p.description~p.price_per_month)}}
                 {% set flag = false %}
                 {% endfor %}
                 {{ '</div>' }}
@@ -93,12 +98,12 @@
     {% if countryCode  ==  "SE"  or  countryCode  ==  "DK" %}
     <div class="buttons">
         <div class="pull-right">
-            <a id="getPlan" class="btn btn-primary"><span>{{ text_get_address }}</span></a>
+            <button id="getPlan" class="btn btn-primary">{{ text_get_address }}</button>
                     </div>
                     </div>
 
                     <script type="text/javascript">
-                    $("a#checkout").hide();
+                    $("#checkout").hide();
     //--></script>
                     {% endif %}
 
@@ -115,7 +120,7 @@
 
                         <div class="buttons">
                         <div class="pull-right">
-                        <a id="checkout"  class="btn btn-primary"><span>{{ button_confirm }}</span></a>
+                        <button id="checkout"  class="btn btn-primary">{{ button_confirm }}</button>
                     </div>
                     </div>
 
@@ -145,10 +150,10 @@
                     //Loader
                     var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
                     var runningCheckout = false;
-                    //$("a#checkout").hide();
+                    //$("#checkout").hide();
                     $('#svea_partpayment_tr').hide();
 
-                    $('a#checkout').click(function(event) {
+                    $('#checkout').click(function(event) {
 
                         // we don't accept multiple confirmations of one order
                         if(runningCheckout){
@@ -249,7 +254,7 @@
                                             //$("#svea_partpaymentalt_tr").show();
 
                                             $("#svea_partpayment_err").hide();
-                                            $("a#checkout").show();
+                                            $("#checkout").show();
                                         }
 
                                         $('#sveaLoading').remove();
@@ -277,10 +282,10 @@ $(document).ready(function () {
             data: { email: email },
             statusCode: {
                 201: function (response) {
-                    $('a#checkout').removeClass('disabled');
+                    $('#checkout').removeClass('disabled');
                 },
                 401: function (response) {
-                    $('a#checkout').addClass('disabled');
+                    $('#checkout').addClass('disabled');
                     $("#svea_error_sending_mail").modal();
 
                 }

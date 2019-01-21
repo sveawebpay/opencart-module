@@ -14,6 +14,8 @@ $_['entry_shop_terms_uri']          = 'Kaupan ehdot';
 $_['text_show_voucher_on_checkout']	= 'Näytä Voucher Checkout-sivulla';
 $_['text_show_coupons_on_checkout']	= 'Näytä Coupon Checkout-sivulla';
 $_['text_show_order_comment_on_checkout']   = 'Näytä viesti Checkout-sivulla';
+$_['text_show_widget_on_product_page'] = 'Näytä tuotteen hinta -widget';
+$_['text_show_widget_on_product_page_tooltip'] = 'Alin mahdollinen hinta erämaksukampanjalla näytetään tuote-sivulla. Tämä edellyttää että VQMod on asennettu.';
 
 $_['item_voucher']					= 'Voucher';
 $_['item_coupon']					= 'Coupon';

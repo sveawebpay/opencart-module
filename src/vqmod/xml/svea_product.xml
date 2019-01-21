@@ -172,6 +172,8 @@
                                     $pair[$key] = $val;
                                 }
 
+                                if($key == 'paymentPlanType')
+                                    $pair[$key] = $val;
                                 }
                                 array_push($values, $pair);
                               }
@@ -337,8 +339,7 @@
             <search position="before">
                 <![CDATA[  <div id="product">  ]]> </search>
             <add><![CDATA[
-
- {% if payment_svea_widget|length > 0 %}
+ {% if payment_svea_widget is defined and payment_svea_widget is not null %}
 
                      <div id="svea_price_box"
                                 style=" width: auto;

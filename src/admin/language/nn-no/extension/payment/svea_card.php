@@ -19,6 +19,7 @@ $_['entry_sw']           = 'Hemmelig ord:';
 
 $_['entry_test']         = "PRODUKSJON";
 $_['entry_prod']         = "TEST";
-
+$_['entry_auto_deliver'] = "Auto deliver:";
+$_['entry_auto_deliver_description'] = "Aktiver om du vil at kort transaksjonene skal godkjennes, så fort de er akseptert av Svea.";
 // Error
 $_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å endre Svea Kortbetalingsmodul'; 

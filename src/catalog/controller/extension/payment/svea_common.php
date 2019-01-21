@@ -168,7 +168,7 @@ class SveaCommon extends Controller
         $total_data = array();
 
         $totals = array();
-        $taxes = array();
+        $taxes = $this->cart->getTaxes();
         $total = 0;
 
         $total_data['totals'] = &$totals;
@@ -203,9 +203,6 @@ class SveaCommon extends Controller
             if ($this->config->get($this->totalString . '' . $extension['code'] . '_status')) {
                 $amount = 0;
 
-                foreach ($cartTax as $key => $value) {
-                    $taxes[$key] = 0;
-                }
                 $this->load->model('extension/total/' . $extension['code']);
 
                 $this->{'model_extension_total_' . $extension['code']}->getTotal($total_data);
@@ -214,7 +211,16 @@ class SveaCommon extends Controller
                     $amount += $value;
                 }
 
-                $svea_tax[$extension['code']] = $amount;
+                if(empty($svea_tax))
+                {
+                    $prev = $amount;
+                }
+                else
+                {
+                    $prev = end($svea_tax);
+                }
+
+                $svea_tax[$extension['code']] = $amount - $prev;
             }
         }
 

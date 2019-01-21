@@ -23,7 +23,7 @@
 
 ## OpenCart - Svea checkout and payment modules
 
-* Supports OpenCart 2.3.0.2 - 3.0.2.0 (older versions can be found in the branches)
+* Supports OpenCart 2.3.0.2 - 3.1.0.0_a1 (older versions can be found in the branches)
 * Requires PHP 5.3 or higher (namespace support)
 * Includes Sveas iframe checkout page
 * Includes Svea Checkout with invoices, payment plans, card and direct bank payments
@@ -216,12 +216,15 @@ To fix this you have to go in to your database and to the table oc_order and fin
 
 ## 3.3 Product Price Widget <a name="i3-3"></a>
 
-Enabling the product price widget on either Svea Invoice or Svea Part payment will result in a "price box" appearing on the product page. Clicking the box will show different campaigns that the customer can use to pay.
+Enabling the product price widget on either Svea Checkout, Svea Invoice or Svea Part payment will result in a "price box" appearing on the product page.
 
-If you set "Show Product Price Widget" to yes in your module options a widget will be displaying the minimum invoice amount to pay on the product page. Note: Only applicable if Svea buys the invoices, and for private customers.
-Only applies in Sweden, Norway, Finland.
+Only applicable in Sweden, Norway, Finland.
 
 Note! Requires [vQmod](https://github.com/vqmod).
+
+Example:
+
+![Product price widget](docs/image/widget.png "Product price widget")
 
 ## 3.4 Important information <a name="i3-4"></a>
 

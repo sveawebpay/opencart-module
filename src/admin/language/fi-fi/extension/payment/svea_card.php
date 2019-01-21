@@ -19,6 +19,8 @@ $_['entry_testmode']     = 'Testitila';
 $_['entry_sw']           = 'Salasana';
 $_['entry_test']         = "TESTI";
 $_['entry_prod']         = "TUOTANTO";
+$_['entry_auto_deliver'] = "Auto deliver:";
+$_['entry_auto_deliver_description'] = "Ota käyttöön, mikäli haluat tallentaa korttitapahtuman heti kun Svea on hyväksynyt sen.";
 
 // Error
 $_['error_permission']   = 'Varoitus: Sinulla ei ole oikeuksia muuttaa Svea!';

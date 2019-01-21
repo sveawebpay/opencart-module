@@ -13,7 +13,9 @@ $_['entry_shop_terms_uri']          = 'Butikkens vilkår';
 
 $_['text_show_voucher_on_checkout']	= 'Vis kupong på Checkout siden';
 $_['text_show_coupons_on_checkout']	= 'Vis kupong på Checkout siden';
-$_['text_show_order_comment_on_checkout']   = 'Show Message on Checkout page';
+$_['text_show_order_comment_on_checkout']   = 'Vis medling på Checkout siden';
+$_['text_show_widget_on_product_page'] = 'Vis produktpris widget';
+$_['text_show_widget_on_product_page_tooltip'] = 'Den laveste prisen for kampanjen som er tilgjengelig for delbetaling, vises på produktsiden. Ved bruk av dette alternativet må du ha VQMod installert.';
 
 $_['item_voucher']					= 'Gavekort';
 $_['item_coupon']					= 'Rabatkod';

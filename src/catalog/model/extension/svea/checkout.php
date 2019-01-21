@@ -284,6 +284,10 @@ class ModelExtensionSveaCheckout extends Model
             {
                 $response['paymenttype'] = $this->language->get("paymenttype_accountcredit");
             }
+            else if($response['paymenttype'] == "TRUSTLY")
+            {
+                $response['paymenttype'] = $this->language->get("paymenttype_trustly");
+            }
             else
             {
                 $response['paymenttype'] = $this->language->get("paymenttype_undefined");

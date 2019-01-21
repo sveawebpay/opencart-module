@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveacard extends Controller
 {
-    protected $svea_version = '4.4.1';
+    protected $svea_version = '4.5.0';
     private $error = array();
 
     private $userTokenString = "user_";
@@ -54,6 +54,9 @@ class ControllerExtensionPaymentSveacard extends Controller
         //Credentials
         $data['entry_test'] = $this->language->get('entry_test');
         $data['entry_prod'] = $this->language->get('entry_prod');
+
+        $data['entry_auto_deliver'] = $this->language->get('entry_auto_deliver');
+        $data['entry_auto_deliver_description'] = $this->language->get('entry_auto_deliver_description');
 
         //Definitions lang
         $data['entry_testmode'] = $this->language->get('entry_testmode');
@@ -145,9 +148,17 @@ class ControllerExtensionPaymentSveacard extends Controller
             $data[$this->paymentString . 'svea_card_testmode'] = $this->config->get($this->paymentString . 'svea_card_testmode');
         }
 
+        if (isset($this->request->post[$this->paymentString . 'svea_card_auto_deliver'])) {
+            $data[$this->paymentString . 'svea_card_auto_deliver'] = $this->request->post[$this->paymentString . 'svea_card_auto_deliver'];
+        } else {
+            $data[$this->paymentString . 'svea_card_auto_deliver'] = $this->config->get($this->paymentString . 'svea_card_auto_deliver');
+        }
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+
+        $data['version'] = VERSION;
 
         $this->response->setOutput($this->load->view('extension/payment/svea_card', $data));
     }
@@ -173,7 +184,7 @@ class ControllerExtensionPaymentSveacard extends Controller
         $json = file_get_contents($url);
         $data = json_decode($json);
 
-        if ($data->module_version > $this->svea_version) {
+        if ($data->module_version <= $this->svea_version) {
             return "You have the latest " . $this->svea_version . " version.";
         } else {
             return $this->svea_version . '<br />

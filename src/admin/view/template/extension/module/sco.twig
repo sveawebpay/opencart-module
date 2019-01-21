@@ -1,6 +1,299 @@
 {{ header }}
 {{ column_left }}
 
+{% if version > 3.0 %} // Thank you OC 3.1
+
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="float-right">
+                <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fas fa-check-circle"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-light"><i class="fas fa-reply"></i></a></div>
+            <h1>{{ heading_title }}</h1>
+            <ol class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                    <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="container-fluid">
+            {% if error_warning %}
+                <div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> {{ error_warning }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-pencil-alt"></i> {{ text_edit }}</div>
+                <div class="card-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-filter" class="form-module">
+
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a class="nav-link active" href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab-authorization" data-toggle="tab">{{ tab_authorization }}</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <!-- GENERAL -->
+                        <div class="tab-pane container active" id="tab-general" style="max-width:1600px;">
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-status">Module version</label>
+                                <div class="col-sm-10" class="form-control">
+                                    <div>{{ module_version }}</div>
+                                    <a href="{{ module_repo_url }}">{{ module_version_info }}</a>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-status">{{ entry_status }}</label>
+                                <div class="col-sm-10">
+                                    <select name="module_sco_status" id="input-status" class="form-control">
+                                        {% if module_sco_status %}
+                                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                                            <option value="0">{{ text_disabled }}</option>
+                                         {% else %}
+                                        <option value="1">{{ text_enabled }}</option>
+                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-test_mode">{{ entry_test_mode }}</label>
+                                <div class="col-sm-10">
+                                    <select name="module_sco_test_mode" id="input-test_mode" class="form-control">
+                                        {% if module_sco_test_mode %}
+                                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                                            <option value="0">{{ text_disabled }}</option>
+                                        {% else %}
+                                        <option value="1">{{ text_enabled }}</option>
+                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-status_checkout">{{ entry_status_checkout }}</label>
+                                <div class="col-sm-10">
+                                    <select name="module_sco_status_checkout" id="input-status_checkout" class="form-control">
+                                        {% if module_sco_status_checkout %}
+                                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                                            <option value="0">{{ text_disabled }}</option>
+                                        {% else %}
+                                        <option value="1">{{ text_enabled }}</option>
+                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-checkout_terms_uri">{{ entry_shop_terms_uri }}</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">{{ entry_shop_terms_uri_example }}</span>
+                                        </div>
+                                        <input type="text" name="module_sco_checkout_terms_uri" id="input-checkout_terms_uri" class="form-control" value="{{ module_sco_checkout_terms_uri }}" placeholder="terms url">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {% for option_name, option_title in options_on_checkout_page %}
+                                    <label class="col-sm-2 col-form-label" for="input-process-status">{{ option_title }}</label>
+                                    <div class="col-sm-10" style="padding-top:15px">
+                                        <label class="radio-inline">
+                                            {% if _context[option_name] == 1 %}
+                                                <input type="radio" name="{{ option_name }}" value="1" checked="checked" />
+                                                {{ text_yes }}
+                                             {% else %}
+                                            <input type="radio" name="{{ option_name }}" value="1" />
+                                            {{ text_yes }}
+                                            {% endif %}
+                                        </label>
+                                        <label class="radio-inline">
+                                            {% if _context[option_name] != 1 %}
+                                                <input type="radio" name="{{ option_name }}" value="0" checked="checked" />
+                                                {{ text_no }}
+                                             {% else %}
+                                            <input type="radio" name="{{ option_name }}" value="0" />
+                                            {{ text_no }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label" for="input-process-widget">
+                                    <span data-toggle="tooltip" title="{{ entry_module_sco_show_widget_on_product_page_tooltip }}"> {{ entry_module_sco_show_widget_on_product_page }} </span>
+                                </label>
+                                <div class="col-sm-10" style="padding-top:15px">
+                                    <label class="radio-inline">
+                                        {% if module_sco_show_widget_on_product_page == 1 %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="1" />
+                                            {{ text_yes }}
+                                        {% endif %}
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_show_widget_on_product_page != 1 %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Authorization -->
+                        <div class="tab-pane container fade" id="tab-authorization" style="max-width:1600px;">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">
+                                    <span data-toggle="tooltip" title="{{ entry_checkout_default_country_text }}">{{ entry_checkout_default_country }}</span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <select name="module_sco_checkout_default_country_id" class="form-control">
+                                        {% for country in countries %}
+                                        {% if country.country_id  ==  module_sco_checkout_default_country_id %}
+                                        <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
+                                         {% else %}
+                                        <option value="{{ country.country_id }}">{{ country.name }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- TABS -->
+                            <div class="panel-body">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item"><a class="nav-link active" href="#test_merchant_settings" data-toggle="tab">{{ tab_authorization_test}}</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#prod_merchant_settings" data-toggle="tab">{{ tab_authorization_prod}}</a></li>
+                                    </ul>
+
+                                    <!-- tabs content -->
+                                    <div class="tab-content">
+
+                                        <!-- Test Authorization -->
+                                        <div class="tab-pane active" id="test_merchant_settings">
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="input-checkout-test-merchant-id-sweden">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_sweden }}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="module_sco_checkout_test_merchant_id_se" id="input-checkout-test-merchant-id-sweden" class="form-control"
+                                                       value="{{ module_sco_checkout_test_merchant_id_se }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="input-checkout-secret-word-sweden">{{ entry_checkout_secret ~ ' | ' ~ entry_sweden }}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="module_sco_checkout_test_secret_word_se" id="input-checkout-test-secret-word-sweden" class="form-control"
+                                                       value="{{ module_sco_checkout_test_secret_word_se }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="input-checkout-test-merchant-id-norway">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_norway }}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="module_sco_checkout_test_merchant_id_no" id="input-checkout-test-merchant-id-norway" class="form-control"
+                                                       value="{{ module_sco_checkout_test_merchant_id_no }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="input-checkout-secret-word-norway">{{ entry_checkout_secret ~ ' | ' ~ entry_norway }}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="module_sco_checkout_test_secret_word_no" id="input-checkout-test-secret-word-norway" class="form-control"
+                                                       value="{{ module_sco_checkout_test_secret_word_no }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="input-checkout-test-merchant-id-finland">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_finland }}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="module_sco_checkout_test_merchant_id_fi" id="input-checkout-test-merchant-id-finland" class="form-control"
+                                                       value="{{ module_sco_checkout_test_merchant_id_fi }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="input-checkout-secret-word-finland">{{ entry_checkout_secret ~ ' | ' ~ entry_finland }}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="module_sco_checkout_test_secret_word_fi" id="input-checkout-test-secret-word-finland" class="form-control"
+                                                       value="{{ module_sco_checkout_test_secret_word_fi }}">
+                                            </div>
+                                        </div>
+                                        </div>
+
+                                        <!-- Prod Authorization -->
+                                        <div class="tab-pane" id="prod_merchant_settings">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="input-checkout-merchant-id-sweden">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_sweden }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="module_sco_checkout_merchant_id_se" id="input-checkout-merchant-id-sweden" class="form-control"
+                                                           value="{{ module_sco_checkout_merchant_id_se }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="input-checkout-secret-word-sweden">{{ entry_checkout_secret ~ ' | ' ~ entry_sweden }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="module_sco_checkout_secret_word_se" id="input-checkout-secret-word-sweden" class="form-control"
+                                                           value="{{ module_sco_checkout_secret_word_se }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="input-checkout-merchant-id-norway">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_norway }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="module_sco_checkout_merchant_id_no" id="input-checkout-merchant-id-norway" class="form-control"
+                                                           value="{{ module_sco_checkout_merchant_id_no }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="input-checkout-secret-word-norway">{{ entry_checkout_secret ~ ' | ' ~ entry_norway }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="module_sco_checkout_secret_word_no" id="input-checkout-secret-word-norway" class="form-control"
+                                                           value="{{ module_sco_checkout_secret_word_no }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="input-checkout-merchant-id-finland">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_finland }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="module_sco_checkout_merchant_id_fi" id="input-checkout-merchant-id-finland" class="form-control"
+                                                           value="{{ module_sco_checkout_merchant_id_fi }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label" for="input-checkout-secret-word-finland">{{ entry_checkout_secret ~ ' | ' ~ entry_finland }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="module_sco_checkout_secret_word_fi" id="input-checkout-secret-word-finland" class="form-control"
+                                                           value="{{ module_sco_checkout_secret_word_fi }}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div><!-- end of tabs content -->
+
+                            </div><!-- END OF TABS -->
+
+                        </div><!-- end of authorization -->
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% else %}
+
 <div id="content">
 
     <div class="page-header">
@@ -65,9 +358,9 @@
                                         {% if module_sco_status %}
                                             <option value="1" selected="selected">{{ text_enabled }}</option>
                                             <option value="0">{{ text_disabled }}</option>
-                                         {% else %}
-                                        <option value="1">{{ text_enabled }}</option>
-                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                        {% else %}
+                                            <option value="1">{{ text_enabled }}</option>
+                                            <option value="0" selected="selected">{{ text_disabled }}</option>
                                         {% endif %}
                                     </select>
                                 </div>
@@ -81,8 +374,8 @@
                                             <option value="1" selected="selected">{{ text_enabled }}</option>
                                             <option value="0">{{ text_disabled }}</option>
                                         {% else %}
-                                        <option value="1">{{ text_enabled }}</option>
-                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                            <option value="1">{{ text_enabled }}</option>
+                                            <option value="0" selected="selected">{{ text_disabled }}</option>
                                         {% endif %}
                                     </select>
                                 </div>
@@ -96,8 +389,8 @@
                                             <option value="1" selected="selected">{{ text_enabled }}</option>
                                             <option value="0">{{ text_disabled }}</option>
                                         {% else %}
-                                        <option value="1">{{ text_enabled }}</option>
-                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                            <option value="1">{{ text_enabled }}</option>
+                                            <option value="0" selected="selected">{{ text_disabled }}</option>
                                         {% endif %}
                                     </select>
                                 </div>
@@ -115,165 +408,190 @@
 
                             <div class="form-group">
                                 {% for option_name, option_title in options_on_checkout_page %}
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-process-status">{{ option_title }}</label>
-                                    <div class="col-sm-10">
-                                        <label class="radio-inline">
-                                            {% if _context[option_name] == 1 %}
-                                                <input type="radio" name="{{ option_name }}" value="1" checked="checked" />
-                                                {{ text_yes }}
-                                             {% else %}
-                                            <input type="radio" name="{{ option_name }}" value="1" />
-                                            {{ text_yes }}
-                                            {% endif %}
-                                        </label>
-                                        <label class="radio-inline">
-                                            {% if _context[option_name] != 1 %}
-                                                <input type="radio" name="{{ option_name }}" value="0" checked="checked" />
-                                                {{ text_no }}
-                                             {% else %}
-                                            <input type="radio" name="{{ option_name }}" value="0" />
-                                            {{ text_no }}
-                                            {% endif %}
-                                        </label>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-process-status">{{ option_title }}</label>
+                                        <div class="col-sm-10">
+                                            <label class="radio-inline">
+                                                {% if _context[option_name] == 1 %}
+                                                    <input type="radio" name="{{ option_name }}" value="1" checked="checked" />
+                                                    {{ text_yes }}
+                                                {% else %}
+                                                    <input type="radio" name="{{ option_name }}" value="1" />
+                                                    {{ text_yes }}
+                                                {% endif %}
+                                            </label>
+                                            <label class="radio-inline">
+                                                {% if _context[option_name] != 1 %}
+                                                    <input type="radio" name="{{ option_name }}" value="0" checked="checked" />
+                                                    {{ text_no }}
+                                                {% else %}
+                                                    <input type="radio" name="{{ option_name }}" value="0" />
+                                                    {{ text_no }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
                                 {% endfor %}
                             </div>
-
-                        <!-- Authorization -->
-                        <div class="tab-pane" id="tab-authorization">
-                                    <!-- tabs content -->
-                                    <div class="tab-pane" id="tab-authorization">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <span data-toggle="tooltip" title="{{ entry_checkout_default_country_text }}">{{ entry_checkout_default_country }}</span>
+                                <label class="col-sm-2 control-label" for="input-process-widget">
+                                    <span data-toggle="tooltip" title="{{ entry_module_sco_show_widget_on_product_page_tooltip }}"> {{ entry_module_sco_show_widget_on_product_page }} </span>
                                 </label>
-                                <div class="col-sm-10">
-                                    <select name="module_sco_checkout_default_country_id" class="form-control">
-                                        {% for country in countries %}
-                                        {% if country.country_id  ==  module_sco_checkout_default_country_id %}
-                                        <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
-                                         {% else %}
-                                        <option value="{{ country.country_id }}">{{ country.name }}</option>
+                                <div class="col-sm-10" style="padding-top:15px">
+                                    <label class="radio-inline">
+                                        {% if module_sco_show_widget_on_product_page == 1 %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="1" />
+                                            {{ text_yes }}
                                         {% endif %}
-                                        {% endfor %}
-                                    </select>
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_show_widget_on_product_page != 1 %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_show_widget_on_product_page" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
                                 </div>
                             </div>
-                            <!-- TABS -->
-                            <div class="panel-body">
-                                    <ul class="nav nav-tabs">
-                                        <li class="active"><a href="#test_merchant_settings" data-toggle="tab">{{ tab_authorization_test}}</a></li>
-                                        <li><a href="#prod_merchant_settings" data-toggle="tab">{{ tab_authorization_prod}}</a></li>
-                                    </ul>
+                        </div>
+                            <!-- Authorization -->
+                            <div class="tab-pane" id="tab-authorization">
+                                <!-- tabs content -->
+                                <div class="tab-pane" id="tab-authorization">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            <span data-toggle="tooltip" title="{{ entry_checkout_default_country_text }}">{{ entry_checkout_default_country }}</span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select name="module_sco_checkout_default_country_id" class="form-control">
+                                                {% for country in countries %}
+                                                    {% if country.country_id  ==  module_sco_checkout_default_country_id %}
+                                                        <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
+                                                    {% else %}
+                                                        <option value="{{ country.country_id }}">{{ country.name }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- TABS -->
+                                    <div class="panel-body">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active"><a href="#test_merchant_settings" data-toggle="tab">{{ tab_authorization_test}}</a></li>
+                                            <li><a href="#prod_merchant_settings" data-toggle="tab">{{ tab_authorization_prod}}</a></li>
+                                        </ul>
 
-                                    <!-- tabs content -->
-                                    <div class="tab-content">
+                                        <!-- tabs content -->
+                                        <div class="tab-content">
 
-                                        <!-- Test Authorization -->
-                                        <div class="tab-pane active" id="test_merchant_settings">
+                                            <!-- Test Authorization -->
+                                            <div class="tab-pane active" id="test_merchant_settings">
 
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="input-checkout-test-merchant-id-sweden">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_sweden }}</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="module_sco_checkout_test_merchant_id_se" id="input-checkout-test-merchant-id-sweden" class="form-control"
-                                                       value="{{ module_sco_checkout_test_merchant_id_se }}">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="input-checkout-secret-word-sweden">{{ entry_checkout_secret ~ ' | ' ~ entry_sweden }}</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="module_sco_checkout_test_secret_word_se" id="input-checkout-test-secret-word-sweden" class="form-control"
-                                                       value="{{ module_sco_checkout_test_secret_word_se }}">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="input-checkout-test-merchant-id-norway">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_norway }}</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="module_sco_checkout_test_merchant_id_no" id="input-checkout-test-merchant-id-norway" class="form-control"
-                                                       value="{{ module_sco_checkout_test_merchant_id_no }}">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="input-checkout-secret-word-norway">{{ entry_checkout_secret ~ ' | ' ~ entry_norway }}</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="module_sco_checkout_test_secret_word_no" id="input-checkout-test-secret-word-norway" class="form-control"
-                                                       value="{{ module_sco_checkout_test_secret_word_no }}">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="input-checkout-test-merchant-id-finland">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_finland }}</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="module_sco_checkout_test_merchant_id_fi" id="input-checkout-test-merchant-id-finland" class="form-control"
-                                                       value="{{ module_sco_checkout_test_merchant_id_fi }}">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="input-checkout-secret-word-finland">{{ entry_checkout_secret ~ ' | ' ~ entry_finland }}</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="module_sco_checkout_test_secret_word_fi" id="input-checkout-test-secret-word-finland" class="form-control"
-                                                       value="{{ module_sco_checkout_test_secret_word_fi }}">
-                                            </div>
-                                        </div>
-                                        </div>
-
-                                        <!-- Prod Authorization -->
-                                        <div class="tab-pane" id="prod_merchant_settings">
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label" for="input-checkout-merchant-id-sweden">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_sweden }}</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="module_sco_checkout_merchant_id_se" id="input-checkout-merchant-id-sweden" class="form-control"
-                                                           value="{{ module_sco_checkout_merchant_id_se }}">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-test-merchant-id-sweden">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_sweden }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_test_merchant_id_se" id="input-checkout-test-merchant-id-sweden" class="form-control"
+                                                               value="{{ module_sco_checkout_test_merchant_id_se }}">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label" for="input-checkout-secret-word-sweden">{{ entry_checkout_secret ~ ' | ' ~ entry_sweden }}</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="module_sco_checkout_secret_word_se" id="input-checkout-secret-word-sweden" class="form-control"
-                                                           value="{{ module_sco_checkout_secret_word_se }}">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-secret-word-sweden">{{ entry_checkout_secret ~ ' | ' ~ entry_sweden }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_test_secret_word_se" id="input-checkout-test-secret-word-sweden" class="form-control"
+                                                               value="{{ module_sco_checkout_test_secret_word_se }}">
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label" for="input-checkout-merchant-id-norway">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_norway }}</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="module_sco_checkout_merchant_id_no" id="input-checkout-merchant-id-norway" class="form-control"
-                                                           value="{{ module_sco_checkout_merchant_id_no }}">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-test-merchant-id-norway">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_norway }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_test_merchant_id_no" id="input-checkout-test-merchant-id-norway" class="form-control"
+                                                               value="{{ module_sco_checkout_test_merchant_id_no }}">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label" for="input-checkout-secret-word-norway">{{ entry_checkout_secret ~ ' | ' ~ entry_norway }}</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="module_sco_checkout_secret_word_no" id="input-checkout-secret-word-norway" class="form-control"
-                                                           value="{{ module_sco_checkout_secret_word_no }}">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-secret-word-norway">{{ entry_checkout_secret ~ ' | ' ~ entry_norway }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_test_secret_word_no" id="input-checkout-test-secret-word-norway" class="form-control"
+                                                               value="{{ module_sco_checkout_test_secret_word_no }}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-test-merchant-id-finland">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_finland }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_test_merchant_id_fi" id="input-checkout-test-merchant-id-finland" class="form-control"
+                                                               value="{{ module_sco_checkout_test_merchant_id_fi }}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-secret-word-finland">{{ entry_checkout_secret ~ ' | ' ~ entry_finland }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_test_secret_word_fi" id="input-checkout-test-secret-word-finland" class="form-control"
+                                                               value="{{ module_sco_checkout_test_secret_word_fi }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label" for="input-checkout-merchant-id-finland">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_finland }}</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="module_sco_checkout_merchant_id_fi" id="input-checkout-merchant-id-finland" class="form-control"
-                                                           value="{{ module_sco_checkout_merchant_id_fi }}">
+                                            <!-- Prod Authorization -->
+                                            <div class="tab-pane" id="prod_merchant_settings">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-merchant-id-sweden">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_sweden }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_merchant_id_se" id="input-checkout-merchant-id-sweden" class="form-control"
+                                                               value="{{ module_sco_checkout_merchant_id_se }}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-secret-word-sweden">{{ entry_checkout_secret ~ ' | ' ~ entry_sweden }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_secret_word_se" id="input-checkout-secret-word-sweden" class="form-control"
+                                                               value="{{ module_sco_checkout_secret_word_se }}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-merchant-id-norway">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_norway }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_merchant_id_no" id="input-checkout-merchant-id-norway" class="form-control"
+                                                               value="{{ module_sco_checkout_merchant_id_no }}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-secret-word-norway">{{ entry_checkout_secret ~ ' | ' ~ entry_norway }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_secret_word_no" id="input-checkout-secret-word-norway" class="form-control"
+                                                               value="{{ module_sco_checkout_secret_word_no }}">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-merchant-id-finland">{{ entry_checkout_merchant_id ~ ' | ' ~ entry_finland }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_merchant_id_fi" id="input-checkout-merchant-id-finland" class="form-control"
+                                                               value="{{ module_sco_checkout_merchant_id_fi }}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-checkout-secret-word-finland">{{ entry_checkout_secret ~ ' | ' ~ entry_finland }}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="module_sco_checkout_secret_word_fi" id="input-checkout-secret-word-finland" class="form-control"
+                                                               value="{{ module_sco_checkout_secret_word_fi }}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label" for="input-checkout-secret-word-finland">{{ entry_checkout_secret ~ ' | ' ~ entry_finland }}</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="module_sco_checkout_secret_word_fi" id="input-checkout-secret-word-finland" class="form-control"
-                                                           value="{{ module_sco_checkout_secret_word_fi }}">
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                    </div><!-- end of tabs content -->
+                                        </div><!-- end of tabs content -->
 
-                            </div><!-- END OF TABS -->
+                                    </div><!-- END OF TABS -->
 
-                        </div><!-- end of authorization -->
-                    </div>
+                                </div><!-- end of authorization -->
+                            </div>
                 </form>
             </div>
 
@@ -281,5 +599,7 @@
 
     </div>
 </div>
+
+{% endif %}
 
 {{ footer }}

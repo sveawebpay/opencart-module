@@ -4,7 +4,7 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionPaymentSveapartpayment extends Controller
 {
-    protected $svea_version = '4.4.1';
+    protected $svea_version = '4.5.0';
     private $error = array();
 
     private $userTokenString = "user_";
@@ -165,6 +165,8 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+
+        $data['version'] = VERSION;
 
         $this->response->setOutput($this->load->view('extension/payment/svea_partpayment', $data));
 
@@ -331,7 +333,7 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         $json = file_get_contents($url);
         $data = json_decode($json);
 
-        if ($data->module_version > $this->svea_version) {
+        if ($data->module_version <= $this->svea_version) {
             return "You have the latest " . $this->svea_version . " version.";
         } else {
             return $this->svea_version . '<br />

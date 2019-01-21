@@ -42,10 +42,11 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
 
         $data['cardLogos']  = "";
         $svea_card_logos = $this->config->get($this->paymentString . 'svea_card_logos');
-        foreach ($svea_card_logos as $logo) {
-            $data['cardLogos']  .= "<img src='admin/view/image/payment/svea_direct/" . $logo . "'>";
+        if(!empty($svea_card_logos)) {
+            foreach ($svea_card_logos as $logo) {
+                $data['cardLogos'] .= "<img src='admin/view/image/payment/svea_direct/" . $logo . "'>";
+            }
         }
-
         $data['continue'] = 'index.php?route=extension/payment/svea_card/redirectSvea';
 
         $this->load->model('checkout/order');
@@ -169,12 +170,6 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
                 $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
-//                $error = $this->responseCodes($response->resultcode, $response->errormessage);
-////                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE);
-//                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,$error,FALSE);//void it. Won't show upp in order history, but won't cause trouble
-//                //adds comments to edit order comment field to use when edit order
-//                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
-
                 $this->renderFailure($response);
             }
         }else{
@@ -195,15 +190,30 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
-        $clean_clientOrderNumber = str_replace('annelitest', '',$clean_clientOrderNumber);//bugfix for gateway concatinating ".err" on number
 
             if ($response->accepted === 1){
                 $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId,true);
-            }else{
-                $error = $this->responseCodes($response->resultcode, $response->errormessage);
-                  $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,$error,FALSE);//void it. Won't show upp in order history, but won't cause trouble
-                //adds comments to edit order comment field to use when edit order
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
+                if($this->config->get($this->paymentString . 'svea_card_auto_deliver') == 1)
+                {
+                    $order_info = $this->model_checkout_order->getOrder($clean_clientOrderNumber);
+                    $countryCode = $order_info['payment_iso_code_2'];
+
+                    $deliver_object = \Svea\WebPay\WebPay::deliverOrder($conf)
+                        ->setCountryCode($countryCode)
+                        ->setTransactionId($response->transactionId)
+                        ->setOrderDate(date('c'))
+                        ->deliverCardOrder()
+                        ->doRequest();
+
+                    if($deliver_object->accepted === 1)
+                    {
+                        $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_complete_status')[0], 'Svea: Order was captured automatically.',false);
+                    }
+                    else
+                    {
+                        $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber, $this->config->get('config_order_status_id'), 'Svea: Unable to capture transaction automatically. Reason: ' . $deliver_object->errormessage, false);
+                    }
+                }
             }
     }
 

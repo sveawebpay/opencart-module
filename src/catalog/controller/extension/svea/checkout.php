@@ -44,19 +44,20 @@ class ControllerExtensionSveaCheckout extends Controller
         $this->session->data[$this->moduleString . 'sco_country'] = $countryCode['iso_code_2'];
         $this->session->data[$this->moduleString . 'sco_country_id'] = $country;
     }
+
     public function getCheckoutCountry()
     {
         $this->setVersionStrings();
 
-        if($this->session->data['language'] == "sv-se")
+        if($this->request->cookie['language'] == "sv-se")
         {
             return 203;
         }
-        else if($this->session->data['language'] == "nn-no")
+        else if($this->request->cookie['language'] == "nn-no")
         {
             return 160;
         }
-        else if($this->session->data['language'] == "fi-fi")
+        else if($this->request->cookie['language'] == "fi-fi")
         {
             return 72;
         }

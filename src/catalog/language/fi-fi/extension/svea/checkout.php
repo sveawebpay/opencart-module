@@ -104,3 +104,7 @@ $_['paymenttype_admininvoice']      = 'Hallinnoitu lasku';
 $_['paymenttype_paymentplan']       = 'Erämaksu';
 $_['paymenttype_accountcredit']     = 'Ostoluotto';
 $_['paymenttype_undefined']         = 'Maksu';
+$_['paymenttype_trustly']           = 'Trustly';
+
+$_['widget_pay_monthly']              = 'Maksa alkaen';
+$_['widget_month']                  = 'kuukaudessa';

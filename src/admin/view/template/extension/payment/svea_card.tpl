@@ -101,7 +101,22 @@
                       <textarea rows="2" cols="30" name="svea_card_payment_description"><?php echo $svea_card_payment_description; ?></textarea>
                     </div>
                 </div>
-
+            <div class="form-group">
+                <label for="svea_card_auto_deliver" class="col-sm-3 control-label">
+                    <span data-toggle="tooltip" title="<?php echo entry_auto_deliver_description; ?>"><?php echo $entry_auto_deliver; ?></span>
+                </label>
+                <div class="col-sm-9">
+                    <select name="svea_card_auto_deliver">
+                        <?php if ($svea_card_auto_deliver) { ?>
+                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                        <option value="0"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                        <option value="1"><?php echo $text_enabled; ?></option>
+                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
         <!-- Mode specific -->
         <div class="tab-content">
             <ul class="nav nav-tabs" id="svea_merchant">

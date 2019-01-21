@@ -14,6 +14,9 @@ $_['entry_shop_terms_uri']          = 'Butikens köpvillkor';
 $_['text_show_voucher_on_checkout']	= 'Visa Presentkort på checkoutsidan';
 $_['text_show_coupons_on_checkout']	= 'Visa Rabattkod på checkoutsidan';
 $_['text_show_order_comment_on_checkout']   = 'Visa Meddelande på checkoutsidan';
+$_['text_show_widget_on_product_page'] = 'Visa delbetalningswidget';
+$_['text_show_widget_on_product_page_tooltip'] = 'Visar ut det lägsta delbetalningspriset för delbetalningskampanjer som passar produktpriset. Om du vill använda denna feature måste du ha VQMod installerat.';
+
 
 $_['item_voucher']					= 'Presentkort';
 $_['item_coupon']					= 'Rabattkod';

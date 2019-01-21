@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveaInvoice extends Controller
 {
-    protected $svea_version = '4.4.1';
+    protected $svea_version = '4.5.0';
     private $error = array();
 
     //backwards compatability
@@ -186,6 +186,8 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
+        $data['version'] = VERSION;
+
         $this->response->setOutput($this->load->view('extension/payment/svea_invoice', $data));
     }
 
@@ -210,7 +212,7 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
         $json = file_get_contents($url);
         $data = json_decode($json);
 
-        if ($data->module_version > $this->svea_version) {
+        if ($data->module_version <= $this->svea_version) {
             return "You have the latest " . $this->svea_version . " version.";
         } else {
             return $this->svea_version . '<br />

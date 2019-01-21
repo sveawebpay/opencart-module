@@ -104,3 +104,7 @@ $_['paymenttype_admininvoice']      = 'Admin Invoice';
 $_['paymenttype_paymentplan']       = 'Payment Plan';
 $_['paymenttype_accountcredit']     = 'Account Credit';
 $_['paymenttype_undefined']         = 'Payment';
+$_['paymenttype_trustly']           = 'Trustly';
+
+$_['widget_pay_monthly']              = 'Pay monthly from';
+$_['widget_month']                  = 'month';

@@ -127,11 +127,11 @@ class ControllerExtensionSveaSuccess extends Controller
 
     private function updateOrders($response)
     {
-        // - update order
-        $this->updateOrder($response);
-
         // - update sco order
         $this->updateCheckoutOrder($response);
+
+        // - update order
+        $this->updateOrder($response);
     }
 
     private function updateOrder($response)

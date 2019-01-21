@@ -19,6 +19,8 @@ $_['entry_testmode']     = 'Testläge:';
 $_['entry_sw']           = 'Hemligt ord:';
 $_['entry_test']         = "PRODUKTION";
 $_['entry_prod']         = "TEST";
+$_['entry_auto_deliver'] = "Auto leverans av transaktion:";
+$_['entry_auto_deliver_description'] = "Slå på denna inställning om du vill att korttransaktioner ska dras direkt istället för att bara reserveras.";
 
 // Error
 $_['error_permission']   = 'Varning: Du har inte tillåtelse att ändra Svea Kortbetalningsmodul';

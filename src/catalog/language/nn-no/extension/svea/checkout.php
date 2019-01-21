@@ -105,3 +105,7 @@ $_['paymenttype_admininvoice']      = 'Adminfaktura';
 $_['paymenttype_paymentplan']       = 'Delbetaling';
 $_['paymenttype_accountcredit']     = 'Kontokreditt';
 $_['paymenttype_undefined']         = 'Betaling';
+$_['paymenttype_trustly']           = 'Trustly';
+
+$_['widget_pay_monthly']              = 'Delbetal fra';
+$_['widget_month']                  = 'måned';

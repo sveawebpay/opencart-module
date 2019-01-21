@@ -24,7 +24,7 @@
 {% if countryCode  ==  "SE"  or  countryCode  ==  "DK"  or  countryCode  ==  "NO" %}
     <div class="buttons">
         <div class="pull-right">
-            <a id="getSSN" class="btn btn-primary"><span>{{ text_get_address }}</span></a>
+            <button id="getSSN" class="btn btn-primary">{{ text_get_address }}</button>
         </div>
     </div>
 {% endif %}
@@ -97,7 +97,7 @@
 <div id="svea_invoice_err" style="color:red; margin-bottom:10px"></div>
 <div class="buttons">
     <div class="pull-right">
-        <a id="checkout" class="btn btn-primary"><span>{{ button_confirm }}</span></a>
+        <button id="checkout" class="btn btn-primary">{{ button_confirm }}</button>
     </div>
 </div>
 
@@ -107,7 +107,7 @@
 
 <script type="text/javascript"><!--
 {% if countryCode  ==  "SE"  or  countryCode  ==  "DK"%}{# || $countryCode == "NO"){  #}
-    $("a#checkout").hide();
+    $("#checkout").hide();
 {% endif %}
 {# If norway, hide getAddress for selected private
  #}
@@ -136,7 +136,7 @@ $("#svea_invoice_company").change(function(){
 
         //if norway hide confirm
                  {% if countryCode  ==  "NO"%}
-            $("a#checkout").hide();
+            $("#checkout").hide();
         {% endif %}
 
     } else {
@@ -150,7 +150,7 @@ $("#svea_invoice_company").change(function(){
          //if norway hide get address
         {% if countryCode  ==  "NO"%}
             $("#getSSN").hide();
-            $("a#checkout").show();
+            $("#checkout").show();
             $("#svea_invoice_div").hide();
         {% else %}
             $('#getSSN').show();
@@ -162,7 +162,7 @@ $("#svea_invoice_company").change(function(){
 //Loader
 var sveaLoading = '<img src="catalog/view/theme/default/image/loading.gif" id="sveaLoading" />';
 var runningCheckout = false;
-$('a#checkout').click(function(event) {
+$('#checkout').click(function(event) {
 
     // we don't accept multiple confirmations of one order
     if(runningCheckout){
@@ -279,7 +279,7 @@ $('#getSSN').click(function() {
                     $("#svea_invoice_address_div").show();
                     $("#svea_invoice_div").show();
                     $("#svea_invoice_err").hide();
-                    $("a#checkout").show();
+                    $("#checkout").show();
 
                 }
 

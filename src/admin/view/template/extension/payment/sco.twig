@@ -1,8 +1,40 @@
 {{ header }}
 {{ column_left }}
+{% if version > 3.0 %} // Thank you OC 3.1
 
 <div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="float-right">
+				<button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fas fa-check-circle"></i></button>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-light"><i class="fas fa-reply"></i></a></div>
+			<h1>{{ heading_title }}</h1>
+			<ol class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+					<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+			</ol>
+		</div>
+		<div class="container-fluid">
+            {% if error_warning %}
+				<div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> {{ error_warning }}
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+				</div>
+            {% endif %}
 
+			<div class="card">
+				<div class="card-header"><i class="fas fa-pencil-alt"></i> {{ text_edit }}</div>
+				<div class="card-body">
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-filter" class="form-module">
+						<p class="text-center">{{ text_no_settings }}</p>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% else %}
+<div id="content">
 	<div class="page-header">
 		<div class="container-fluid">
 
@@ -35,7 +67,7 @@
 		</div>
 
 	</div>
-
+	</div>
 </div>
-
+{% endif %}
 {{ footer }}

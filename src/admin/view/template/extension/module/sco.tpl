@@ -128,11 +128,34 @@
                                             <?php } ?>
                                         </label>
                                     </div>
-
                                 </div>
                                 <?php } ?>
                             </div>
-
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-process-status">
+                                    <span data-toggle="tooltip" title="<?php echo $entry_sco_show_widget_on_product_page; ?>"><?php echo $entry_sco_show_widget_on_product_page; ?></span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($sco_show_widget_on_product_page === '1') { ?>
+                                        <input type="radio" name="sco_show_widget_on_product_page" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_show_widget_on_product_page" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if ($sco_show_widget_on_product_page !== '1') { ?>
+                                        <input type="radio" name="sco_show_widget_on_product_page" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_show_widget_on_product_page" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-checkout-terms-uri"><?php echo $entry_shop_terms_uri; ?></label>
                                 <div class="col-sm-10">
