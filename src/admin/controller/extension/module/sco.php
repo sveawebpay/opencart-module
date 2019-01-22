@@ -170,11 +170,11 @@ class ControllerExtensionModuleSco extends Controller
 	        {
                 $data = array(
                     $this->moduleString . 'sco_checkout_test_merchant_id_se',
-                    $this->moduleString . 'sco_checkout_test_secret_word_sweden',
+                    $this->moduleString . 'sco_checkout_test_secret_word_se',
                     $this->moduleString . 'sco_checkout_test_merchant_id_no',
-                    $this->moduleString . 'sco_checkout_test_secret_word_norway',
+                    $this->moduleString . 'sco_checkout_test_secret_word_no',
                     $this->moduleString . 'sco_checkout_test_merchant_id_fi',
-                    $this->moduleString . 'sco_checkout_test_secret_word_finland',);
+                    $this->moduleString . 'sco_checkout_test_secret_word_fi',);
 	        }
 
             // - check values
@@ -359,8 +359,6 @@ class ControllerExtensionModuleSco extends Controller
             $this->db->query("CREATE TABLE `" . DB_PREFIX . "order_sco` (
                                 `order_id`				int(11) unsigned NOT NULL AUTO_INCREMENT,
                                 `checkout_id`           int(11) unsigned DEFAULT NULL, 
-                                `gender`                varchar(20) DEFAULT NULL,
-                                `date_of_birth`         varchar(20) DEFAULT NULL,
                                 `locale` 				varchar(10) DEFAULT NULL,
                                 `country` 				varchar(8) DEFAULT NULL,
                                 `currency` 				varchar(4) DEFAULT NULL, 

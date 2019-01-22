@@ -197,6 +197,8 @@ class SveaCommon extends Controller
         array_multisort($sort_order, SORT_ASC, $extensions);
 
 
+        $prev = null;
+
         foreach ($extensions as $extension) {
 
             //if this result is activated
@@ -211,16 +213,13 @@ class SveaCommon extends Controller
                     $amount += $value;
                 }
 
-                if(empty($svea_tax))
+                if($prev == null)
                 {
                     $prev = $amount;
                 }
-                else
-                {
-                    $prev = end($svea_tax);
-                }
 
                 $svea_tax[$extension['code']] = $amount - $prev;
+                $prev = $amount;
             }
         }
 
