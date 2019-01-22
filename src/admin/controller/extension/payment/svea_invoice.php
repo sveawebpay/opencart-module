@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveaInvoice extends Controller
 {
-    protected $svea_version = '4.5.0';
+    protected $svea_version = '4.5.1';
     private $error = array();
 
     //backwards compatability
