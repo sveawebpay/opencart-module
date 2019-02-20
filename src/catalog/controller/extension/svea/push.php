@@ -77,20 +77,11 @@ class ControllerExtensionSveaPush extends Controller
 
         $country = $this->model_extension_svea_checkout->getCountry($response['countrycode']);
 
-        $date_of_birth = null;
-        if (isset($response['customer']['dateofbirth']) && !empty($response['customer']['dateofbirth'])) {
-            $date_of_birth =  $response['customer']['dateofbirth'];
-        }
-
         $data = array(
             'order_id' => $response['clientordernumber'],
             'checkout_id' => $response['orderid'],
             'status' => isset($response['status']) ? $response['status'] : null,
-
             'type' => isset($response['customer']['iscompany']) ? ($response['customer']['iscompany'] ? 'company' : 'person') : 'person',
-            'gender' => isset($response['customer']['ismale']) ? ($response['customer']['ismale'] ? 'male' : 'female') : null,
-            'date_of_birth' => $date_of_birth,
-
             'locale' => isset($response['locale']) ? $response['locale'] : null,
             'currency' => isset($response['currency']) ? $response['currency'] : null,
             'country' => $country['name'],

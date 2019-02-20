@@ -402,10 +402,15 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
             // for private individuals, if firstName, lastName is not set in GetAddresses response, we put the entire getAddress LegalName in lastName
             if( isset($svea->customerIdentity->fullName))
             {
-                $paymentAddress["payment_firstname"] = "";
-                $paymentAddress["payment_lastname"] = $svea->customerIdentity->fullName;
-                $paymentAddress["firstName"] = "";
-                $paymentAddress["lastName"] = $svea->customerIdentity->fullName;
+                $fullName = $svea->customerIdentity->fullName;
+                $fullName = str_replace(",", "", $fullName);
+                $fullName = explode(" ", $fullName, 2);
+
+
+                $paymentAddress["payment_firstname"] = isset($fullName[1]) ? $fullName[1] : "";
+                $paymentAddress["payment_lastname"] = isset($fullName[0]) ? $fullName[0] : "";
+                $paymentAddress["firstName"] = isset($fullName[1]) ? $fullName[1] : "";
+                $paymentAddress["lastName"] = isset($fullName[0]) ? $fullName[0] : "";
             }
 
             if( isset($svea->customerIdentity->street)){ $paymentAddress["payment_address_1"] = $svea->customerIdentity->street; }
@@ -447,8 +452,12 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
             if( isset($svea->customerIdentity->lastName)){ $shippingAddress["shipping_lastname"] = $svea->customerIdentity->lastName; }
             if( isset($svea->customerIdentity->fullName))
             {
-                $shippingAddress["shipping_firstname"] = "";
-                $shippingAddress["shipping_lastname"] = $svea->customerIdentity->fullName;
+                $fullName = $svea->customerIdentity->fullName;
+                $fullName = str_replace(",", "", $fullName);
+                $fullName = explode(" ", $fullName, 2);
+
+                $shippingAddress["shipping_firstname"] = isset($fullName[1]) ? $fullName[1] : "";
+                $shippingAddress["shipping_lastname"] = isset($fullName[0]) ? $fullName[0] : "";
             }
             if( isset($svea->customerIdentity->street)){ $shippingAddress["shipping_address_1"] = $svea->customerIdentity->street; }
             if( isset($svea->customerIdentity->coAddress)){ $shippingAddress["shipping_address_2"] = $svea->customerIdentity->coAddress; }

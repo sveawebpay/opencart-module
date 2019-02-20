@@ -489,24 +489,6 @@ class ModelExtensionSveaCheckout extends Model
 				   LIMIT 1";
 
         $this->db->query($query);
-
-        /*$this->db->query("UPDATE `" . DB_PREFIX . "order_sco`
-						  SET
-								checkout_id 	= '" . $this->db->escape($data['checkout_id']) . "',
-								reservation 	= '" . $this->db->escape($data['reservation']) . "',
-								reference 		= '" . $this->db->escape($data['reference']) . "',
-								status 			= 'created',
-								type 			= '" . $this->db->escape($data['type']) . "',
-								date_of_birth 	= '" . $this->db->escape($data['date_of_birth']) . "',
-								gender 			= '" . $this->db->escape($data['gender']) . "',
-								country			= '" . $this->db->escape($data['country']) . "',
-								currency		= '" . $this->db->escape($data['currency']) . "',
-								locale			= '" . $this->db->escape($data['locale']) . "',
-								date_created 	= NOW(),
-								date_modified 	= NOW()
-			  			  WHERE order_id = '" . (int)$data['order_id'] . "'
-						  LIMIT 1");*/
-
         return true;
     }
 

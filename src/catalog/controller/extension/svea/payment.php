@@ -27,6 +27,36 @@ class ControllerExtensionSveaPayment extends SveaCommon
         unset( $this->session->data[$this->paymentString . 'svea_last_page'] );
         unset( $this->session->data[$this->moduleString . 'sco_success_order_id'] );
 
+        $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
+
+
+        $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
+        if ($this->config->get($this->moduleString . 'sco_test_mode')) {
+            $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
+        }
+
+        if(isset($this->session->data[$this->moduleString . 'sco_order_id']))
+        {
+            $status_check = \Svea\WebPay\WebPay::checkout($config);
+            $status_check->setCheckoutOrderId($module_sco_order_id);
+            try{
+                $status_check_response = $status_check->getOrder();
+                if($status_check_response['Status'] != 'Created')
+                {
+                    unset($this->session->data['order_id']);
+                    unset($this->session->data[$this->moduleString . 'sco_order_id']);
+                    unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
+                    unset($module_sco_order_id);
+                }
+            }
+            catch (\Exception $e) {
+                unset($this->session->data['order_id']);
+                unset($this->session->data[$this->moduleString . 'sco_order_id']);
+                unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
+                unset($module_sco_order_id);
+            }
+        }
+
         $forceCreate = (isset($this->request->get['create']) && $this->request->get['create'] === 'true') ? true : false;
         if ($forceCreate === true) {
             unset($this->session->data['order_id']);
@@ -62,9 +92,14 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $products = $this->cart->getProducts();
 
-        $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
-        if ($this->config->get($this->moduleString . 'sco_test_mode')) {
-            $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
+        if(empty($products))
+        {
+            $this->load->language('common/cart');
+            header('HTTP/1.1 500 PHP Library Error');
+            header('Content-Type: application/json; charset=UTF-8');
+            $er = array();
+            $er['message'] = $this->language->get('text_empty');
+            die(json_encode($er));
         }
 
         $checkout_order_entry = \Svea\WebPay\WebPay::checkout($config);
@@ -80,28 +115,6 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $add_ons = $this->addTaxRateToAddons();
         $this->addAddonRowsToSveaOrder($order_builder, $add_ons, $currency_value);
-
-        $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
-
-        if(isset($this->session->data[$this->moduleString . 'sco_order_id']))
-        {
-           $status_check = \Svea\WebPay\WebPay::checkout($config);
-           $status_check->setCheckoutOrderId($module_sco_order_id);
-           try{
-                $status_check_response = $status_check->getOrder();
-                if($status_check_response['Status'] != 'Created')
-                {
-                    unset($this->session->data[$this->moduleString . 'sco_order_id']);
-                    unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
-                    unset($module_sco_order_id);
-                }
-            }
-           catch (\Exception $e) {
-                unset($this->session->data[$this->moduleString . 'sco_order_id']);
-                unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
-                unset($module_sco_order_id);
-           }
-        }
 
         $isScoUpdate = false;
         $isChangedState = $this->isChangedState();

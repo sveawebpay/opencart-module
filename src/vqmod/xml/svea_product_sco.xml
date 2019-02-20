@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
     <id>Svea Checkout Product Price</id>
-    <version>4.5.1</version>
+    <version>4.5.2</version>
     <vqmver>2.6.3</vqmver>
     <author>Fredrik Sundell / Svea Ekonomi AB, Svea WebPay</author>
     <file name="catalog/controller/product/product.php">
@@ -70,9 +70,10 @@
                                 $lowestCampaign = $value;
                             }
                         }
-                    }
                         $data['sco_svea_widget'] =  '<p class="sco-product-widget">
                                                     <img style="width:80px; height:40px;" src="'. $logoImg . '"><span style="font-size:15px">' . $this->language->get('widget_pay_monthly') . ' ' . $symbolLeft . ceil($lowestCampaign['pricePerMonth']) . $symbolRight . "/" . $this->language->get('widget_month'). "</span>";
+
+                    }
 
                     }
        ]]></add>

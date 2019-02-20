@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveacard extends Controller
 {
-    protected $svea_version = '4.5.1';
+    protected $svea_version = '4.5.2';
     private $error = array();
 
     private $userTokenString = "user_";
