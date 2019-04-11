@@ -1,4 +1,4 @@
-This branch is no long updated by Svea, the master branch has support for OC 2.3+
+# This branch is no long updated by Svea, the master branch has support for OC 2.3+
 
 # Index <a name="index"></a>
 
