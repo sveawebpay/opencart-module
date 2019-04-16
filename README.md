@@ -1,3 +1,5 @@
+# This branch is no long updated by Svea, the master branch has support for OC 2.3+
+
 # OpenCart - Svea payment module
 
 * Supports OpenCart 1.4.9 or higher
