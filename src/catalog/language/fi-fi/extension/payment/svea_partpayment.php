@@ -47,4 +47,14 @@ $_['response_error'] = "Virhe: ";
 
 $_['unit']           = 'kpl';
 $_['month']          = 'kuukausi';
-$_['initial_fee']    = 'Perustamiskulu lisätään';
+$_['initialFee']    = 'Käsittelykulu';
+$_['notificationFee']= 'Avausmaksu';
+$_['interestRatePercent'] = 'Korko';
+$_['contractLengthInMonths'] = 'Maksuaika kuukausina';
+$_['numberOfInterestFreeMonths'] = 'Korottomat kuukaudet';
+$_['numberOfPaymentFreeMonths'] = 'Maksuvapaat kuukaudet';
+$_['totalAmountToPay'] = 'Luoton kokonaissumma';
+$_['termsOfService1'] = 'Tekemällä tämän ostoksen hyväksyn ';
+$_['termsOfService2'] = ' erämaksun ';
+$_['termsOfService3'] = 'yleiset ehdot';
+$_['effectiveInterestRate'] = 'Todellinen vuosikorko';

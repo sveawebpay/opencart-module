@@ -134,6 +134,26 @@
                          </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="svea_invoice_peppol" class="col-sm-3 control-label">
+                       <?php echo $entry_show_peppol_field; ?>
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="col-sm-4">
+                            <?php if ($svea_invoice_peppol) { ?>
+                            <input type="radio" name="svea_invoice_peppol" value="1" checked="checked" />
+                            <?php echo $entry_yes; ?>
+                            <input type="radio" name="svea_invoice_peppol" value="0" />
+                            <?php echo $entry_no; ?>
+                            <?php } else { ?>
+                            <input type="radio" name="svea_invoice_peppol" value="1" />
+                            <?php echo $entry_yes; ?>
+                            <input type="radio" name="svea_invoice_peppol" value="0" checked="checked" />
+                            <?php echo $entry_no; ?>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
             <!-- Countrycode specific -->
             <div class="tab-content" id="tab-invoice" >
                 <ul class="nav nav-tabs" id="svea_country">

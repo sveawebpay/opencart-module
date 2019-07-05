@@ -54,6 +54,7 @@ $_['text_override_tax']				= 'Moms';
 $_['text_override_total']			= 'Totalt (inkl.moms)';
 
 $_['text_order_comment']			= 'Godkänd reservation skapad hos Svea: %s';
+$_['text_sco_subscribe_to_newsletter'] = 'Prenumerera på nyhetsbrev?';
 
 $_['item_voucher']					= 'Presentkort';
 $_['item_coupon']					= 'Rabattkod';
@@ -108,3 +109,5 @@ $_['paymenttype_trustly']           = 'Trustly';
 
 $_['widget_pay_monthly']              = 'Delbetala från';
 $_['widget_month']                  = 'månad';
+
+$_['sco_invoice_fee']               = 'Fakturaavgift(exkl. moms)';

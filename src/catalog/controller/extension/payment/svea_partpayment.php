@@ -2,6 +2,8 @@
 include_once(dirname(__FILE__).'/svea_common.php');
 require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
+use \Svea\WebPay\Helper\PaymentPlanHelper\PaymentPlanCalculator;
+
 class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
 
     private $paymentString = "payment_";
@@ -69,6 +71,28 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
 
         // we show the available payment plans w/monthly amounts as radiobuttons under the logo
         $data['paymentOptions'] = $this->getPaymentOptions();
+
+        if($data['countryCode'] == "SE")
+        {
+            $termsLink = 'https://cdn.svea.com/webpay/sv-SE/terms_paymentplan_payment_20161005.pdf';
+            $companyName = 'Svea Ekonomis';
+        }
+        elseif($data['countryCode'] == "NO")
+        {
+            $termsLink = 'https://betaling.sveafinans.no/dokumenter/Vilkaar_Svea_Checkout.pdf';
+            $companyName = 'Svea Finans';
+        }
+        elseif($data['countryCode'] == "FI")
+        {
+            $termsLink = 'https://www.svea.com/globalassets/sweden/foretag/betallosningar/e-handel/integrationspaket-logos-and-doc.-integration-test-instructions-webpay/villkorstexter_fd_finland.pdf';
+            $companyName = 'Svea Ekonomi AB (publ), Filial i Finlandin';
+        }
+
+        $data['termsLink'] = $termsLink;
+        $data['companyName'] = $companyName;
+        $data['termsOfService1'] = $this->language->get('termsOfService1');
+        $data['termsOfService2'] = $this->language->get('termsOfService2');
+        $data['termsOfService3'] = $this->language->get('termsOfService3');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/svea_partpayment')) {
             return $this->load->view($this->config->get('config_template') . '/template/extension/payment/svea_partpayment', $data);
@@ -192,14 +216,13 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
                                 ->deliverPaymentPlanOrder()
                                 ->doRequest();
 
-                        //If DeliverOrder returns true, send true to veiw
+                        //If DeliverOrder returns true, send true to view
                         if ($deliverObj->accepted == 1) {
                             $response = array("success" => true);
                             //update order status for delivered
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id: '. $svea->sveaOrderId, false);
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id: '. $svea->sveaOrderId, true);
                             $completeStatus = $this->config->get('config_complete_status');
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea: Order was delivered. Svea contractNumber '.$deliverObj->contractNumber);
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea: Order was delivered. Svea contractNumber '.$deliverObj->contractNumber, true);
                          } else {
                             $response = array("error" => $this->responseCodes($deliverObj->resultcode, $deliverObj->errormessage));
                         }
@@ -215,7 +238,7 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
                 } else {
                     $response = array("success" => true);
                     //update order status for created
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id: '. $svea->sveaOrderId);
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id: '. $svea->sveaOrderId, true);
                 }
 
                 //else send errors to view
@@ -257,7 +280,7 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
         }
 
         if ($svea->accepted != TRUE) {
-            $result = array("error" => $svea->errormessage);
+            $result = $this->handleGetAddressesError($svea);
         } else {
             foreach ($svea->customerIdentity as $ci) {
 
@@ -272,6 +295,27 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
         }
         return $result;
         // echo json_encode($result);
+    }
+
+    private function handleGetAddressesError($getAddressesResult)
+    {
+        $this->load->language('extension/payment/svea_partpayment');
+        if($getAddressesResult->resultcode == "NoSuchEntity")
+        {
+            return array("error" => $this->language->get('response_error') . $this->language->get('response_nosuchentity'));
+        }
+        elseif($getAddressesResult->errormessage = "Invalid checkdigit") // We have to match exact message because there are several error with the same resultcode
+            {
+            return array("error" => $this->language->get('response_error') . $this->language->get('response_checkdigit'));
+        }
+        elseif($getAddressesResult->errormessage = "Must be exactly ten digits") // We have to match exact message because there are several error with the same resultcode
+            {
+            return array("error" => $this->language->get('response_error') . $this->language->get('response_invalidlength'));
+        }
+        else
+        {
+                return array("error" => $getAddressesResult->errormessage);
+        }
     }
 
 
@@ -313,21 +357,42 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
                     }
                 }
             }
-            /*
-             *  format( $number,
-             *          $currency,
-             *          $value = '',
-             *          $format = true)
-             */
-            $formattedPrice = round($this->currency->format(($order['total']), $currency, false, false), 2);
-            $campaigns = \Svea\WebPay\WebPay::paymentPlanPricePerMonth($formattedPrice, $svea);
-            foreach ($campaigns->values as $cc)
-                $result[] = array("campaignCode" => $cc['campaignCode'],
-                    "description" => $cc['description'],
-                    "price_per_month" => (string) round($cc['pricePerMonth'], $decimals) . " " . $currency . "/" . $this->language->get('month'),
-                    "paymentPlanType" => $cc['paymentPlanType']);
-        }
+            $formattedPrice = round($this->currency->format(($order['total']), $currency, false, false), $decimals);
+            try
+            {
+                $campaigns = PaymentPlanCalculator::getAllCalculationsFromCampaigns($formattedPrice, $svea->campaignCodes, false, $decimals);
+                foreach($campaigns as $campaign)
+                {
+                    foreach($svea->campaignCodes as $cc)
+                    {
+                        if($campaign['campaignCode'] == $cc->campaignCode)
+                        {
+                            $result[] = array(
+                                "campaignCode" => $campaign['campaignCode'],
+                                "description" => $campaign['description'],
+                                "monthlyAmountToPay" => $campaign['monthlyAmountToPay'] . " " . $currency . "/" . $this->language->get('month'),
+                                "paymentPlanType" => $campaign['paymentPlanType'],
+                                "contractLengthInMonths" => $this->language->get('contractLengthInMonths') . ": " . $campaign['contractLengthInMonths'] . " " . $this->language->get('unit'),
+                                "monthlyAnnuityFactor" => $campaign['monthlyAnnuityFactor'],
+                                "initialFee" => $this->language->get('initialFee') . ": " . $campaign['initialFee'] . " " . $currency,
+                                "notificationFee" => $this->language->get('notificationFee') . ": " . $campaign['notificationFee'] . " " . $currency,
+                                "interestRatePercent" => $this->language->get('interestRatePercent') . ": " . $campaign['interestRatePercent'] . "%",
+                                "numberOfInterestFreeMonths" => $campaign['numberOfInterestFreeMonths'] != 0 ? $this->language->get('numberOfInterestFreeMonths') . ": " . $campaign['numberOfInterestFreeMonths'] . " " . $this->language->get('unit') : 0,
+                                "numberOfPaymentFreeMonths" => $campaign['numberOfPaymentFreeMonths'] != 0 ? $this->language->get('numberOfPaymentFreeMonths') . ": " . $campaign['numberOfPaymentFreeMonths'] . " " . $this->language->get('unit') : 0,
+                                "totalAmountToPay" => $this->language->get('totalAmountToPay') . ": " . $campaign['totalAmountToPay'] . " " . $currency,
+                                "effectiveInterestRate" => $this->language->get('effectiveInterestRate') . ": " . $campaign['effectiveInterestRate'] . "%"
+                            );
+                                break;
+                        }
+                    }
+                }
+            }
+            catch(Exception $exception)
+            {
+                $this->log->write('Svea: Unable to fetch calculations for campaigns. Exception: ' . $exception->getMessage());
+            }
 
+        }
         return $result;
     }
 
@@ -405,8 +470,6 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
             $paymentAddress["payment_country"] = $countryId['country_name'];
             $paymentAddress["payment_method"] = $this->language->get('text_title');
 //        }
-
-        $paymentAddress["comment"] = $order_comment . "\nSvea order id: ".$svea->sveaOrderId;
 
         return $paymentAddress;
     }

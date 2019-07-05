@@ -7,7 +7,7 @@ class ControllerExtensionModuleSco extends Controller
     private $error = array();
 
     // Use this name as params prefix (Svea checkout)
-    private $module_version = '4.5.2';
+    private $module_version;
     
     //backwards compatability
     private $userTokenString = "user_";
@@ -32,6 +32,7 @@ class ControllerExtensionModuleSco extends Controller
     
     public function index()
     {
+        $this->module_version = $this->getModuleVersion();
         $this->setVersionStrings();
         // get language
         $this->load->language('extension/module/sco');
@@ -43,6 +44,9 @@ class ControllerExtensionModuleSco extends Controller
             // save checkout parameters
             $this->load->model('setting/setting');
             $this->model_setting_setting->editSetting($this->moduleString . 'sco', $this->request->post);
+
+            $this->load->model('extension/svea/upgrade');
+            $this->model_extension_svea_upgrade->upgradeDatabase('sco');
 
             if($this->request->post[$this->moduleString . 'sco_show_widget_on_product_page'] == 1)
             {
@@ -72,6 +76,14 @@ class ControllerExtensionModuleSco extends Controller
 
         // Set cancel url
         $data['cancel'] = $this->url->link('extension/module', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
+        if(VERSION < 3.0)
+        {
+            $data['token'] = $this->session->data['token'];
+        }
+        else
+        {
+            $data['user_token'] = $this->session->data['user_token'];
+        }
 
         $this->load->model('localisation/country');
         $fields = array(
@@ -81,12 +93,16 @@ class ControllerExtensionModuleSco extends Controller
             'checkout_secret_word_no' => null,
             'checkout_merchant_id_fi' => null,
             'checkout_secret_word_fi' => null,
+            'checkout_merchant_id_dk' => null,
+            'checkout_secret_word_dk' => null,
             'checkout_test_merchant_id_se' => null,
             'checkout_test_secret_word_se' => null,
             'checkout_test_merchant_id_no' => null,
             'checkout_test_secret_word_no' => null,
             'checkout_test_merchant_id_fi' => null,
             'checkout_test_secret_word_fi' => null,
+            'checkout_test_merchant_id_dk' => null,
+            'checkout_test_secret_word_dk' => null,
             'status' => '0',
             'test_mode' => '1',
             'status_checkout' => '0',
@@ -97,11 +113,23 @@ class ControllerExtensionModuleSco extends Controller
             'show_widget_on_product_page' => '0',
             'checkout_terms_uri' => '',
             'checkout_default_country_id' => '',
+            'iframe_hide_not_you' => 0,
+            'iframe_hide_anonymous' => 0,
+            'iframe_hide_change_address' => 0,
+            'force_flow' => 0,
+            'force_b2b' => 0,
+            'gather_newsletter_consent' => 0
         );
         $data['options_on_checkout_page'] = array(
             $this->moduleString . 'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
             $this->moduleString . 'sco_show_voucher_on_checkout' => $this->language->get('text_show_voucher_on_checkout'),
-            $this->moduleString . 'sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout'),
+            $this->moduleString . 'sco_show_order_comment_on_checkout' => $this->language->get('text_show_order_comment_on_checkout')
+        );
+
+        $data['identity_flags'] = array(
+            $this->moduleString . 'sco_iframe_hide_not_you' => $this->language->get('text_iframe_hide_not_you'),
+            $this->moduleString . 'sco_iframe_hide_anonymous' => $this->language->get('text_iframe_hide_anonymous'),
+            $this->moduleString . 'sco_iframe_hide_change_address' => $this->language->get('text_iframe_hide_change_address')
         );
 
         $data['text_yes'] = $this->language->get('text_yes');
@@ -124,14 +152,16 @@ class ControllerExtensionModuleSco extends Controller
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-        // Add countries sweden, norway, finland
+        // Add countries sweden, norway, finland, denmark
         $data['countries'] = array();
-        array_push($data['countries'],$this->model_localisation_country->getCountry(203),$this->model_localisation_country->getCountry(160),$this->model_localisation_country->getCountry(72));
+        array_push($data['countries'],$this->model_localisation_country->getCountry(203),$this->model_localisation_country->getCountry(160),$this->model_localisation_country->getCountry(72),$this->model_localisation_country->getCountry(57));
 
         // Load common controllers
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+
+        $data['file_link'] = $this->url->link('extension/module/sco', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
 
         // set response
         $this->response->setOutput($this->load->view('extension/module/sco', $data));
@@ -163,7 +193,9 @@ class ControllerExtensionModuleSco extends Controller
                 $this->moduleString . 'sco_checkout_merchant_id_no',
                 $this->moduleString . 'sco_checkout_secret_word_no',
                 $this->moduleString . 'sco_checkout_merchant_id_fi',
-                $this->moduleString . 'sco_checkout_secret_word_fi',);
+                $this->moduleString . 'sco_checkout_secret_word_fi',
+                $this->moduleString . 'sco_checkout_merchant_id_dk',
+                $this->moduleString . 'sco_checkout_secret_word_dk');
 
 	        // - if test-mode enabled set test credentials
         	if($post_fields[$test_mode_field_name] == '1')
@@ -174,7 +206,9 @@ class ControllerExtensionModuleSco extends Controller
                     $this->moduleString . 'sco_checkout_test_merchant_id_no',
                     $this->moduleString . 'sco_checkout_test_secret_word_no',
                     $this->moduleString . 'sco_checkout_test_merchant_id_fi',
-                    $this->moduleString . 'sco_checkout_test_secret_word_fi',);
+                    $this->moduleString . 'sco_checkout_test_secret_word_fi',
+                    $this->moduleString . 'sco_checkout_test_merchant_id_dk',
+                    $this->moduleString . 'sco_checkout_test_secret_word_dk');
 	        }
 
             // - check values
@@ -188,7 +222,7 @@ class ControllerExtensionModuleSco extends Controller
                 next($data);
             }
 
-            if($empty_field_count == 6)
+            if($empty_field_count == 8)
             {
                 $this->error['warning'] = $this->language->get('error_authorization_data');
             }
@@ -196,6 +230,34 @@ class ControllerExtensionModuleSco extends Controller
         }
 
         return !$this->error;
+    }
+
+    public function getNewsletterConsentList()
+    {
+        if (!$this->user->hasPermission('modify', 'extension/module/sco')) {
+            http_response_code(401);
+            return;
+        }
+
+        $this->load->model('extension/svea/newsletter');
+
+        $list = $this->model_extension_svea_newsletter->getUsersConsentingToNewsletter();
+
+        $formattedString = null;
+
+        foreach($list as $key)
+        {
+            $formattedString = $formattedString . $key['email'] . "\n";
+        }
+
+        //$this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput($formattedString);
+    }
+
+    protected function getModuleVersion()
+    {
+        $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
+        return $jsonData['version'];
     }
 
     /*
@@ -265,45 +327,75 @@ class ControllerExtensionModuleSco extends Controller
         $this->setVersionStrings();
         $data = array();
 
-        // Set title
+        // Heading
         $data['heading_title'] = $this->language->get('heading_title');
         $this->document->setTitle($data['heading_title']);
 
+        // Misc
         $data['text_edit'] = $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
-
-        $data['entry_test_mode'] = $this->language->get('entry_test_mode');
-        $data['entry_status_checkout'] = $this->language->get('entry_status_checkout');
-        $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
-        $data['entry_show_options_on_checkout'] = $this->language->get('entry_show_options_on_checkout');
-
-        $data['entry_shop_terms_uri'] = $this->language->get('entry_shop_terms_uri');
-        $data['entry_shop_terms_uri_example'] = $_SERVER['HTTP_HOST'] . str_replace("admin", "", rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\'));
-
-        $data['entry_checkout_merchant_id'] = $this->language->get('entry_checkout_merchant_id');
-        $data['entry_checkout_secret'] = $this->language->get('entry_checkout_secret');
-
-        $data['entry_product_option'] = $this->language->get('entry_product_option');
-
-        $data['tab_general'] = $this->language->get('tab_general');
-        $data['tab_authorization'] = $this->language->get('tab_authorization');
-        $data['entry_checkout_default_country'] = $this->language->get('entry_checkout_default_country');
-        $data['entry_checkout_default_country_text'] = $this->language->get('entry_checkout_default_country_text');
-        $data['tab_authorization_test'] = $this->language->get('tab_authorization_test');
-        $data['tab_authorization_prod'] = $this->language->get('tab_authorization_prod');
-        $data['entry_sweden'] = $this->language->get('entry_sweden');
-        $data['entry_norway'] = $this->language->get('entry_norway');
-        $data['entry_finland'] = $this->language->get('entry_finland');
-
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
+        // Tabs
+        $data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_authorization'] = $this->language->get('tab_authorization');
+        $data['tab_checkout_page_settings'] = $this->language->get('tab_checkout_page_settings');
+        $data['tab_iframe_settings'] = $this->language->get('tab_iframe_settings');
+
+        // General
+        $data['version'] = VERSION;
+        $data['text_module_version'] = $this->language->get('text_module_version');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_status_tooltip'] = $this->language->get('entry_status_tooltip');
         $data['entry_' . $this->moduleString . 'sco_show_widget_on_product_page'] = $this->language->get('text_show_widget_on_product_page');
         $data['entry_' . $this->moduleString . 'sco_show_widget_on_product_page_tooltip'] = $this->language->get('text_show_widget_on_product_page_tooltip');
 
-        $data['version'] = VERSION;
+
+        // Authorization
+        $data['entry_checkout_default_country'] = $this->language->get('entry_checkout_default_country');
+        $data['entry_checkout_default_country_tooltip'] = $this->language->get('entry_checkout_default_country_tooltip');
+        $data['entry_test_mode'] = $this->language->get('entry_test_mode');
+        $data['entry_test_mode_tooltip'] = $this->language->get('entry_test_mode_tooltip');
+
+        $data['entry_sweden'] = $this->language->get('entry_sweden');
+        $data['entry_norway'] = $this->language->get('entry_norway');
+        $data['entry_finland'] = $this->language->get('entry_finland');
+        $data['entry_denmark'] = $this->language->get('entry_denmark');
+
+        $data['entry_stage_environment'] = $this->language->get('entry_stage_environment');
+        $data['entry_prod_environment'] = $this->language->get('entry_prod_environment');
+        $data['entry_checkout_merchant_id'] = $this->language->get('entry_checkout_merchant_id');
+        $data['entry_checkout_secret'] = $this->language->get('entry_checkout_secret');
+
+        // Checkout page settings
+        $data['entry_status_checkout'] = $this->language->get('entry_status_checkout');
+        $data['entry_status_checkout_tooltip'] = $this->language->get('entry_status_checkout_tooltip');
+        //Options on checkout page on line 109
+        $data[$this->moduleString . 'sco_show_coupons_on_checkout_tooltip'] = $this->language->get('text_show_coupons_on_checkout_tooltip');
+        $data[$this->moduleString . 'sco_show_voucher_on_checkout_tooltip'] = $this->language->get('text_show_voucher_on_checkout_tooltip');
+        $data[$this->moduleString . 'sco_show_order_comment_on_checkout_tooltip'] = $this->language->get('text_show_order_comment_on_checkout_tooltip');
+        $data['entry_' . $this->moduleString . 'sco_gather_newsletter_consent'] = $this->language->get('text_gather_newsletter_consent');
+        $data['entry_' . $this->moduleString . 'sco_gather_newsletter_consent_tooltip'] = $this->language->get('text_gather_newsletter_consent_tooltip');
+        $data['entry_' . $this->moduleString . 'sco_download_newsletter_list'] = $this->language->get('text_download_newsletter_list');
+        $data['entry_' . $this->moduleString . 'sco_newsletter_consent_list'] = $this->language->get('text_newsletter_consent_list');
+        $data['entry_' . $this->moduleString . 'sco_close'] = $this->language->get('text_close');
+        $data['entry_' . $this->moduleString . 'sco_copy_all_to_clipboard'] = $this->language->get('text_copy_all_to_clipboard');
+        $data['entry_' . $this->moduleString . 'sco_error_fetching_newsletter_consent_list'] = $this->language->get('text_error_fetching_newsletter_consent_list');
+
+
+        // Iframe settings
+        $data['entry_shop_terms_uri'] = $this->language->get('entry_shop_terms_uri');
+        $data['entry_shop_terms_uri_tooltip'] = $this->language->get('entry_shop_terms_uri_tooltip');
+        $data['entry_shop_terms_uri_example'] = $_SERVER['HTTP_HOST'] . str_replace("admin", "", rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\'));
+        //Identity flags on line 115
+        $data[$this->moduleString . 'sco_iframe_hide_not_you_tooltip'] = $this->language->get('text_iframe_hide_not_you_tooltip');
+        $data[$this->moduleString . 'sco_iframe_hide_anonymous_tooltip'] = $this->language->get('text_iframe_hide_anonymous_tooltip');
+        $data[$this->moduleString . 'sco_iframe_hide_change_address_tooltip'] = $this->language->get('text_iframe_hide_change_address_tooltip');
+        $data['entry_' . $this->moduleString . 'sco_force_flow'] = $this->language->get('text_force_flow');
+        $data['entry_' . $this->moduleString . 'sco_force_flow_tooltip'] = $this->language->get('text_force_flow_tooltip');
+
 
         $module_info_data_url = $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
         $json_info = file_get_contents($module_info_data_url);
@@ -364,7 +456,8 @@ class ControllerExtensionModuleSco extends Controller
                                 `currency` 				varchar(4) DEFAULT NULL, 
                                 `status` 				varchar(30) DEFAULT NULL,
                                 `type` 					varchar(20) DEFAULT NULL, 
-                                `notes` 	        	text DEFAULT NULL,  
+                                `notes` 	        	text DEFAULT NULL,
+                                `newsletter` 	        bool DEFAULT 0,  
             					`date_added` 			datetime DEFAULT NULL, 
             					`date_modified` 		datetime DEFAULT NULL,
                               PRIMARY KEY (`order_id`)
@@ -382,7 +475,7 @@ class ControllerExtensionModuleSco extends Controller
                 `description` VARCHAR( 100 ) NOT NULL ,
                 `fromAmount` DOUBLE NOT NULL ,
                 `initialFee` DOUBLE NOT NULL ,
-                `interestRatePercent` INT NOT NULL ,
+                `interestRatePercent` DOUBLE NOT NULL ,
                 `monthlyAnnuityFactor` DOUBLE NOT NULL ,
                 `notificationFee` DOUBLE NOT NULL ,
                 `numberOfInterestFreeMonths` INT NOT NULL ,
@@ -399,7 +492,7 @@ class ControllerExtensionModuleSco extends Controller
 
         $testMode = $this->model_setting_setting->getSettingValue($this->moduleString . 'sco_test_mode');
 
-        $config = ($testMode == "1") ? new OpencartSveaCheckoutConfigTest($this->config) : new OpencartSveaCheckoutConfig($this->config);
+        $config = ($testMode == "1") ? new OpencartSveaCheckoutConfigTest($this) : new OpencartSveaCheckoutConfig($this);
         $testString = ($testMode == "1") ? "'" . $this->moduleString . "sco_checkout_test_merchant_id_%'" : "'" . $this->moduleString . "sco_checkout_merchant_id_%'";
 
         $countriesQuery = $this->db->query("SELECT `key`, `value` FROM " . DB_PREFIX . "setting WHERE `key` LIKE " . $testString . ";");
@@ -416,7 +509,14 @@ class ControllerExtensionModuleSco extends Controller
                 $request->setCountryCode(strtoupper(substr($val['key'], -2)))
                     ->addPresetValue($presetValueIsCompany);
 
-                $response = $request->getAvailablePartPaymentCampaigns();
+                try
+                {
+                    $response = $request->getAvailablePartPaymentCampaigns();
+                }
+                catch (Exception $e)
+                {
+                    $this->log->write("Unable to fetch campaigns for countryCode '" . substr($val['key'], -2) . "' Reason: " . $e->getMessage());
+                }
 
                 if ($response == null) {
 

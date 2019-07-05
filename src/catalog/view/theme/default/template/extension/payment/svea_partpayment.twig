@@ -11,25 +11,52 @@
                 {{ '<div id="svea_partpayment_render_err" style="color:red; clear:both; margin-top:15px;">%s</div>'|format(paymentOptions.error) }}
             {% else %}
                 {% set flag = true %}
-                {{ '<div class="form-group">' }}
+                {{ '<div class="form-group payment-campaigns">' }}
                 {% for p in paymentOptions %}
                     {% if p.paymentPlanType == "InterestAndAmortizationFree" %}
-                        {% set p = p|merge({'price_per_month': ''}) %}
+                        {% set p = p|merge({'monthlyAmountToPay': ''}) %}
                     {% else %}
-                        {% set p = p|merge({'price_per_month': ': '~p.price_per_month}) %}
+                        {% set p = p|merge({'monthlyAmountToPay': ': '~p.monthlyAmountToPay}) %}
                     {% endif %}
-                    {{'<div class="col-sm-9">
+                    {{'<div class="col-sm-9 payment-campaign-option">
                     <input name="svea_partpayment_alt" type="radio" value="%s" %s >
                     %s
-                    </input>
-                    </div>'|format(p.campaignCode, flag ? 'checked' :  '', p.description~p.price_per_month)}}
+                    </input>'|format(p.campaignCode, flag ? 'checked' :  '', p.description~p.monthlyAmountToPay)}}
+                    <ul id="{{ p.campaignCode }}" class="campaign-item" style="display:none">
+                        <li>{{ p.notificationFee }}</li>
+                        <li>{{ p.initialFee }}</li>
+                        <li>{{ p.interestRatePercent}} </li>
+                        <li>{{ p.effectiveInterestRate }}</li>
+                        <li>{{ p.contractLengthInMonths }}</li>
+                        {% if p.numberOfPaymentFreeMonths != '0' %}
+                        <li>{{ p.numberOfPaymentFreeMonths }}</li>
+                        {% endif %}
+                        {% if p.numberOfInterestFreeMonths != '0' %}
+                        <li>{{ p.numberOfInterestFreeMonths }}</li>
+                        {% endif %}
+                        <li>{{ p.totalAmountToPay }}</li>
+                    </ul>
+                    </div>
                 {% set flag = false %}
                 {% endfor %}
-                {{ '</div>' }}
+                </div>
+                <script>
+                    $(document).ready(function(){
+                        $('.payment-campaigns input[type="radio"]').click(function(){
+                            var campaign = $(this).val();
+                            $("ul.campaign-item").hide();
+                            $("#"+campaign).show();
+                        });
+                        $( '.payment-campaign-option input[type="radio"]:first').click();
+                    });
+                </script>
             {% endif %}
     {% endif %}
-    </div>
 <br />
+<br />
+    <div style="display:inline-block;">
+    <p>{{ termsOfService1 }} <a href="{{ termsLink }}">{{ companyName }} {{ termsOfService2 }} </a> {{ termsOfService3 }}</p>
+    </div>
 
 {% if countryCode  ==  "SE"  or  countryCode  ==  "DK"  or  countryCode  ==  "NO"  or  countryCode  ==  "FI"  or  countryCode  ==  "NL"  or  countryCode  ==  "DE" %}
 
@@ -109,7 +136,7 @@
 
                     <div class="content" id="svea_partpayment_tr" style="clear:both; margin-top:15px;margin-left:15px;display:inline-block;">
                         {{ text_invoice_address }}
-                    {% if svea_partpayment_shipping_billing  ==  '1'%}
+                    {% if payment_svea_partpayment_shipping_billing  ==  '1'%}
                     {{ ' / '~text_shipping_address }}
                     {% endif %}
                     :<br />
@@ -249,7 +276,7 @@
                                                 $("#svea_partpayment_tr").show();
                                             }
                                             //$.each(data.paymentOptions,function(key,value){
-                                            //    $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.price_per_month+')</option>');
+                                            //    $("#svea_partpayment_alt").append('<option value="'+value.campaignCode+'">'+value.description+' ('+value.pricePerMonth+')</option>');
                                             //});
                                             //$("#svea_partpaymentalt_tr").show();
 

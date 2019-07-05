@@ -142,7 +142,7 @@ Note! Requires [vQmod](https://github.com/vqmod).
 
 Example:
 
-![Product price widget](docs/image/widget.png "Product price widget")
+![Product price widget](docs/image/Widget.png "Product price widget")
 
 ## 2.4 Important information <a name="i2-4"></a>
 
@@ -155,4 +155,4 @@ Our recommendation to solve this is to check the PHP configuration of the server
 
 #### When using POST response
 As our servers are using SSL-certificates and when using POST to get the response from a payment the users browser prompts the user with a question whether to continue or not, if the receiving site does not have a certificate.
-Would the customer then click cancel, the process does not continue.  This does not occur if your server holds a certificate. To solve this we recommend that you purchase a SSL-certificate from your provider or get one for free through Let's Encrypt.
+Would the customer then click cancel, the process does not continue.  This does not occur if your server holds a certificate. To solve this we recommend that you purchase a SSL-certificate from your hosting provider or get one for free through Let's Encrypt.

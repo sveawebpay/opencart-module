@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveaInvoice extends Controller
 {
-    protected $svea_version = '4.5.2';
+    protected $svea_version;
     private $error = array();
 
     //backwards compatability
@@ -14,6 +14,7 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
 
     public function index()
     {
+        $this->svea_version = $this->getModuleVersion();
         $this->load->language('extension/payment/svea_invoice');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -65,6 +66,7 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
         $data['entry_testmode'] = $this->language->get('entry_testmode');
         $data['entry_auto_deliver'] = $this->language->get('entry_auto_deliver');
         $data['entry_auto_deliver_text'] = $this->language->get('entry_auto_deliver_text');
+        $data['entry_show_peppol_field'] = $this->language->get('entry_show_peppol_field');
         $data['entry_distribution_type'] = $this->language->get('entry_distribution_type');
         $data['entry_post'] = $this->language->get('entry_post');
         $data['entry_email'] = $this->language->get('entry_email');
@@ -135,6 +137,12 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
             $data[$this->paymentString . 'svea_invoice_product_price'] = $this->request->post[$this->paymentString . 'svea_invoice_product_price'];
         } else {
             $data[$this->paymentString . 'svea_invoice_product_price'] = $this->config->get($this->paymentString . 'svea_invoice_product_price');
+        }
+        //show peppol field
+        if (isset($this->request->post[$this->paymentString . 'svea_invoice_peppol'])) {
+            $data[$this->paymentString . 'svea_invoice_peppol'] = $this->request->post[$this->paymentString . 'svea_invoice_peppol'];
+        } else {
+            $data[$this->paymentString . 'svea_invoice_peppol'] = $this->config->get($this->paymentString . 'svea_invoice_peppol');
         }
         //geozone
         if (isset($this->request->post[$this->paymentString . 'svea_invoice_geo_zone_id'])) {
@@ -219,9 +227,13 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
                 There is a new version available.<br />
                 <a href="' . $docs_url . '" title="Go to release notes on github">View version details</a> or <br />
                 <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
-
         }
+    }
 
+    protected function getModuleVersion()
+    {
+        $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
+        return $jsonData['version'];
     }
 
     public function install()

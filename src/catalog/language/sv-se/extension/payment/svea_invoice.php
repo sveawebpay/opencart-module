@@ -15,7 +15,8 @@ $_['text_initials']           = 'Initialer';
 $_['text_product_invoice'] 		= 'Lägsta belopp att betala';
 $_['text_customerreference']	= 'Er referens';
 $_['text_required']             = 'Obligatoriskt fält';
-
+$_['text_peppolid']             = 'Peppol-ID';
+$_['text_peppol_invalid_format'] = 'Ditt angivna Peppol-ID är felformaterat, var god att se över formatet och prova igen.';
 
 //Error responses
 $_['response_20000'] = "Ordern är stängd.";
@@ -40,6 +41,9 @@ $_['response_40004'] = "Det gick ej att hitta några adresser för den här kund
 
 $_['response_50000'] = "Kunden är ej godkänd för denna metod.";
 $_['response_error'] = "Fel: ";
+$_['response_nosuchentity'] = "Ingen adress hittades kopplat till det angivna personnumret/organisationnumret.";
+$_['response_checkdigit'] = "Felaktig kontrollsiffra, dubbelkolla att du har angett korrekt personnummer/organisationsnummer.";
+$_['response_invalidlength'] = "Personnummer/organisationsnummer måste vara exakt 10 tecken.";
 
 //Order definitions
 $_['text_svea_fee']   = 'Svea Fakturaavgift';

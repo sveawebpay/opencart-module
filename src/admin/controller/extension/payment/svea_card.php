@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentSveacard extends Controller
 {
-    protected $svea_version = '4.5.2';
+    protected $svea_version;
     private $error = array();
 
     private $userTokenString = "user_";
@@ -13,6 +13,7 @@ class ControllerExtensionPaymentSveacard extends Controller
 
     public function index()
     {
+        $this->svea_version = $this->getModuleVersion();
         $this->setVersionStrings();
         $this->load->language('extension/payment/svea_card');
         $this->document->setTitle($this->language->get('heading_title'));
@@ -193,7 +194,12 @@ class ControllerExtensionPaymentSveacard extends Controller
                 <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
 
         }
+    }
 
+    protected function getModuleVersion()
+    {
+        $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
+        return $jsonData['version'];
     }
 
     public function install()

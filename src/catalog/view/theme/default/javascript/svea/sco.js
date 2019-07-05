@@ -15,6 +15,7 @@ $(document).ready(function () {
   var snippetContainerEl = $('#sco-snippet-section');
   var changePostcodeEl = $('.change-postcode');
   var snippetLoaderEl = $('#sco-snippet-loader');
+
   snippetLoaderEl.hide();
 
   setTimeout(function () {
@@ -159,6 +160,7 @@ $(document).ready(function () {
     });
   });
 
+
   $(document).on('click', '#sco-coupon-add', function () {
     $.ajax({
       url: 'index.php?route=extension/svea/coupon/add',
@@ -286,7 +288,9 @@ $(document).ready(function () {
       $.ajax({
         type: 'POST',
         url: url,
-        data: $('#sco-form input'),
+        data: {
+          postcode: postCodeEl.val(),
+          sco_newsletter: $('input[name=sco-newsletter]').prop("checked")},
         dataType: 'html',
         beforeSend: function () {
         },

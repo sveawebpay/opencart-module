@@ -192,10 +192,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
         if ($response->accepted === 1){
-            if($this->session->data['comment'] != "") {
-                 $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'), 'Customer comment: ' . $this->session->data['comment'], false);
-            }
-            $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+            //$this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
                 $this->renderFailure($response);
@@ -223,10 +220,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
                 $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId,true);
             }else{
                 $error = $this->responseCodes($response->resultcode, $response->errormessage);
-//                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,10,$error,FALSE); //status 10 equals failed
-                  $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,$error,FALSE);//void it. Won't show upp in order history, but won't cause trouble
-                //adds comments to edit order comment field to use when edit order
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = 'Payment failed. ".$error);
+                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,"Payment failed: " . $error,FALSE);
             }
     }
 

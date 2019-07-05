@@ -7,7 +7,8 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
 
     private $moduleString = "module_";
 
-    public function __construct($config, $payment_method = NULL) {
+    public function __construct($config, $payment_method = NULL)
+    {
         $this->config = $config;
         $this->payment_method = $payment_method;
     }
@@ -61,26 +62,56 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
     public function getCheckoutMerchantId($country = NULL)
     {
         $this->setVersionStrings();
-        if($this->config->get($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country)) !== NULL)
+        if(VERSION < 3.0)
         {
-            return $this->config->get($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country));
+            if($this->config->config->get($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country)) !== NULL)
+            {
+                return $this->config->config->get($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country));
+            }
+            else
+            {
+                throw new Exception('Could not fetch Merchant Id. CountryCode: ' . $country . ' Environment: Stage');
+            }
         }
         else
         {
-            throw new Exception('Could not fetch Merchant Id');
+            $this->config->load->model('setting/setting');
+            if ($this->config->model_setting_setting->getSettingValue($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country)) !== NULL)
+            {
+                return $this->config->model_setting_setting->getSettingValue($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country));
+            }
+            else
+            {
+                throw new Exception('Could not fetch Merchant Id. CountryCode: ' . $country . ' Environment: Stage');
+            }
         }
     }
 
     public function getCheckoutSecret($country = NULL)
     {
         $this->setVersionStrings();
-        if($this->config->get($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country)) !== NULL)
+        if(VERSION < 3.0)
         {
-            return $this->config->get($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country));
+            if($this->config->config->get($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country)) !== NULL)
+            {
+                return $this->config->config->get($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country));
+            }
+            else
+            {
+                throw new Exception('Could not fetch secret word. CountryCode: ' . $country . ' Environment: Stage');
+            }
         }
         else
         {
-            throw new Exception('Could not fetch secret word');
+            $this->config->load->model('setting/setting');
+            if ($this->config->model_setting_setting->getSettingValue($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country)) !== NULL)
+            {
+                return $this->config->model_setting_setting->getSettingValue($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country));
+            }
+            else
+            {
+                throw new Exception('Could not fetch secret word. CountryCode: ' . $country . ' Environment: Stage');
+            }
         }
     }
 }

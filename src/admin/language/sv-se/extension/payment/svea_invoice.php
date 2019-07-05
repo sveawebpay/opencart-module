@@ -20,12 +20,13 @@ $_['entry_username']     = 'Användarnamn:';
 $_['entry_password']     = 'Lösenord:';
 $_['entry_clientno']     = 'Klientnr:';
 
-$_['entry_yes']          = 'ja';
-$_['entry_no']           = 'nej';
+$_['entry_yes']          = 'Ja';
+$_['entry_no']           = 'Nej';
 $_['entry_testmode']     = 'Testläge:';
 
 $_['entry_auto_deliver'] = 'Leverera automatiskt:';
 $_['entry_auto_deliver_text'] = 'Om aktiverad levereras fakturan automatiskt vid skapandet av ordern. Annars görs detta via Sveas admin.';
+$_['entry_show_peppol_field'] = 'Visa Peppol-ID fält för företagskunder i kassan:';
 $_['entry_distribution_type'] = 'Distributionsform för faktura (Enligt överenskommelse med Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';

@@ -163,11 +163,7 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
         if($response->resultcode !== '0'){
             if ($response->accepted === 1){
-                if($this->session->data['comment'] != "") {
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'), 'Customer comment: ' . $this->session->data['comment']);
-                }
-                   //sets orderhistory
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+                //$this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
             }else{
                 $this->renderFailure($response);

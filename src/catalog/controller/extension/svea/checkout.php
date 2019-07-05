@@ -36,6 +36,12 @@ class ControllerExtensionSveaCheckout extends Controller
             $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
             $this->session->data['currency'] = 'EUR';
         }
+        else if($country == 57)
+        {
+            $this->session->data[$this->moduleString . 'sco_locale'] = "da-dk";
+            $this->session->data[$this->moduleString . 'sco_currency'] = "DKK";
+            $this->session->data['currency'] = 'DKK';
+        }
         else {
 
         }
@@ -60,6 +66,10 @@ class ControllerExtensionSveaCheckout extends Controller
         else if($this->request->cookie['language'] == "fi-fi")
         {
             return 72;
+        }
+        else if($this->request->cookie['language'] == "da-dk")
+        {
+            return 57;
         }
         else
         {
@@ -106,6 +116,7 @@ class ControllerExtensionSveaCheckout extends Controller
         $data['heading_payment'] = $this->language->get('heading_payment');
 
         $data['text_checkout_into'] = $this->language->get('text_checkout_into');
+        $data['text_subscribe_to_newsletter'] = $this->language->get('text_sco_subscribe_to_newsletter');
         $data['text_normal_checkout'] = sprintf($this->language->get('text_normal_checkout'), $this->url->link('checkout/checkout/index'));
 
 //        $this->session->data[$this->moduleString . 'sco_email'] = '';
@@ -126,6 +137,7 @@ class ControllerExtensionSveaCheckout extends Controller
         $data[$this->moduleString . 'sco_show_coupons'] = $this->config->get($this->moduleString . 'sco_show_coupons_on_checkout');
         $data[$this->moduleString . 'sco_show_voucher'] = $this->config->get($this->moduleString . 'sco_show_voucher_on_checkout');
         $data[$this->moduleString . 'sco_show_comment'] = $this->config->get($this->moduleString . 'sco_show_order_comment_on_checkout');
+        $data[$this->moduleString . 'sco_gather_newsletter_consent'] = $this->config->get($this->moduleString . 'sco_gather_newsletter_consent');
 
         $data['order_comment'] = '';
         if (isset($this->session->data['order_id'])) {

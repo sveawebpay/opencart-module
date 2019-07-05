@@ -491,7 +491,7 @@ class ModelExtensionSveaOrder extends Model
 
         if ($paymentMethod == "sco")
         {
-            $config = ($this->config->get($this->moduleString . 'sco_test_mode') == '1') ? new OpencartSveaCheckoutConfigTest($this->config, 'checkout') : new OpencartSveaCheckoutConfig($this->config, 'checkout');
+            $config = ($this->config->get($this->moduleString . 'sco_test_mode') == '1') ? new OpencartSveaCheckoutConfigTest($this, 'checkout') : new OpencartSveaCheckoutConfig($this, 'checkout');
         } else {
             $configCountryCode = $paymentMethod == "svea_invoice" || $paymentMethod == "svea_partpayment" ? '_' . $countryCode : '';
 

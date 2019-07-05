@@ -133,6 +133,24 @@
                            {% endif %}
                     </div>
                 </div>
+            <div class="form-group row">
+                <label for="payment_svea_invoice_peppol" class="col-sm-2 col-form-label">
+                    {{ entry_show_peppol_field }}
+                </label>
+                <div class="col-sm-9" style="padding-top:15px;">
+                    {% if payment_svea_invoice_peppol %}
+                        <input type="radio" name="payment_svea_invoice_peppol" value="1" checked="checked" />
+                        {{ entry_yes }}
+                        <input type="radio" name="payment_svea_invoice_peppol" value="0" />
+                        {{ entry_no }}
+                    {% else %}
+                        <input type="radio" name="payment_svea_invoice_peppol" value="1" />
+                        {{ entry_yes }}
+                        <input type="radio" name="payment_svea_invoice_peppol" value="0" checked="checked" />
+                        {{ entry_no }}
+                    {% endif %}
+                </div>
+            </div>
             <!-- Countrycode specific -->
             <div class="panel-body" id="tab-invoice" >
                 <ul class="nav nav-tabs" id="payment_svea_country">
@@ -317,6 +335,24 @@
                                         <input type="radio" name="payment_svea_invoice_product_price" value="0" checked="checked" />
                                         {{ entry_no }}
                                     {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment_svea_invoice_peppol" class="col-sm-2 control-label">
+                                {{ entry_show_peppol_field }}
+                            </label>
+                            <div class="col-sm-9" style="padding-top:15px;">
+                                {% if payment_svea_invoice_peppol %}
+                                    <input type="radio" name="payment_svea_invoice_peppol" value="1" checked="checked" />
+                                    {{ entry_yes }}
+                                    <input type="radio" name="payment_svea_invoice_peppol" value="0" />
+                                    {{ entry_no }}
+                                {% else %}
+                                    <input type="radio" name="payment_svea_invoice_peppol" value="1" />
+                                    {{ entry_yes }}
+                                    <input type="radio" name="payment_svea_invoice_peppol" value="0" checked="checked" />
+                                    {{ entry_no }}
+                                {% endif %}
                             </div>
                         </div>
                         <!-- Countrycode specific -->

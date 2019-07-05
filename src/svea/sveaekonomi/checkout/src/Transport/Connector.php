@@ -183,7 +183,7 @@ class Connector
         } catch (SveaApiException $e) {
             throw $e;
         } catch (Exception $e) {
-            throw new SveaApiException('API communication error', 1010, $e);
+            throw new SveaApiException('API communication error: ' . $e->getMessage(), 1010, $e);
         }
     }
 

@@ -21,8 +21,29 @@ class ValidateCreateOrderData extends ValidationService
         $this->validateMerchant($data);
         $this->validateOrderCart($data);
         $this->validateClientOrderNumber($data);
+        $this->validateMerchantData($data);
     }
 
+    /**
+     * @param array $data
+     * @throws SveaInputValidationException
+     */
+    private function validateMerchantData($data)
+    {
+        $fieldTitle = "merchantData";
+
+        if(isset($data['merchantData']))
+        {
+            $this->lengthMustBeBetween($data['merchantData'], 0, 6000, $fieldTitle);
+        }
+        foreach($data['cart']['items'] as $item)
+        {
+            if(isset($item['merchantData']))
+            {
+                $this->lengthMustBeBetween($item['merchantData'], 0, 255, $fieldTitle);
+            }
+        }
+    }
     /**
      * @param array $data
      * @throws SveaInputValidationException

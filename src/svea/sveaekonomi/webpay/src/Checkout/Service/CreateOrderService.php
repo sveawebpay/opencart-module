@@ -96,6 +96,16 @@ class CreateOrderService extends CheckoutService
             $data['partnerKey'] = $order->getPartnerKey();
         }
 
+        if ($order->getIdentityFlags() != null)
+        {
+            foreach ($order->getIdentityFlags() as $key => $identityFlag)
+            {
+                $data['identityFlags'][$identityFlag] = true;
+            }
+        }
+
+        $data['merchantData'] = $order->getMerchantData();
+
         return $data;
     }
 }

@@ -30,9 +30,9 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
 
 
-        $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
+        $config = new OpencartSveaCheckoutConfig($this, 'checkout');
         if ($this->config->get($this->moduleString . 'sco_test_mode')) {
-            $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
+            $config = new OpencartSveaCheckoutConfigTest($this, 'checkout');
         }
 
         if(isset($this->session->data[$this->moduleString . 'sco_order_id']))
@@ -92,7 +92,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $products = $this->cart->getProducts();
 
-        if(empty($products))
+        if(empty($products) && empty($this->session->data['vouchers']))
         {
             $this->load->language('common/cart');
             header('HTTP/1.1 500 PHP Library Error');
@@ -113,12 +113,15 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $this->addPresetValues($order_builder);
 
+        $this->addIdentityFlags($order_builder);
+
+        $this->setMerchantData($order_builder);
+
         $add_ons = $this->addTaxRateToAddons();
         $this->addAddonRowsToSveaOrder($order_builder, $add_ons, $currency_value);
 
         $isScoUpdate = false;
         $isChangedState = $this->isChangedState();
-
 
         try {
             if (isset($module_sco_order_id)) {
@@ -174,18 +177,26 @@ class ControllerExtensionSveaPayment extends SveaCommon
         unset($session_copy[$this->paymentString . 'svea_last_page']);
         unset($session_copy[$this->moduleString . 'sco_success_order_id']);
 
+        if(isset($this->request->post['sco_newsletter']))
+        {
+            return md5(serialize($session_copy) . serialize($products) . serialize($this->request->post['sco_newsletter']));
+        }
+
         return md5(serialize($session_copy) . serialize($products));
     }
+
     private function getHashOfOldState()
     {
         $this->setVersionStrings();
         return isset($this->session->data[$this->moduleString . 'sco_cart_hash']) ? $this->session->data[$this->moduleString . 'sco_cart_hash'] : null;
     }
+
     private function saveHashOfCurrentState()
     {
         $this->setVersionStrings();
         $this->session->data[$this->moduleString . 'sco_cart_hash'] = $this->getHashOfCurrentState();
     }
+
     private function isChangedState()
     {
         return $this->getHashOfOldState() !== $this->getHashOfCurrentState();
@@ -432,7 +443,6 @@ class ControllerExtensionSveaPayment extends SveaCommon
         return (int)$order_id;
     }
 
- 
     private function updateCheckoutRow($order_id, $response)
     {
         if (!is_array($response)) {
@@ -458,12 +468,12 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $this->model_extension_svea_checkout->updateCheckoutOrder($data);
     }
 
-
     private function addPresetValues($order_builder)
     {
         $email = isset($this->request->post['email']) ? $this->request->post['email'] : null;
         $postcode = isset($this->request->post['postcode']) ? $this->request->post['postcode'] : null;
-        $phone_number = $this->customer->isLogged() ? $this->customer->getTelephone() : null;
+        $phoneNumber = $this->customer->isLogged() ? $this->customer->getTelephone() : null;
+        $isCompany = $this->config->get($this->moduleString . 'sco_force_flow') ? $this->config->get($this->moduleString . 'sco_force_b2b') : null;
 
         if(!is_null($email)){
             $presetEmail = \Svea\WebPay\WebPayItem::presetValue()
@@ -483,15 +493,57 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $order_builder->addPresetValue($presetPostalCode);
         }
 
-        if(!is_null($phone_number)){
+        if(!is_null($phoneNumber)){
             $presetPhoneNumber = \Svea\WebPay\WebPayItem::presetValue()
                 ->setTypeName(\Svea\WebPay\Checkout\Model\PresetValue::PHONE_NUMBER)
-                ->setValue($phone_number)
+                ->setValue($phoneNumber)
                 ->setIsReadonly(false);
 
             $order_builder->addPresetValue($presetPhoneNumber);
         }
 
+        if(!is_null($isCompany)){
+            $presetIsCompany = \Svea\WebPay\WebPayItem::presetValue()
+                ->setTypeName(\Svea\WebPay\Checkout\Model\PresetValue::IS_COMPANY)
+                ->setValue((bool)$isCompany) // cast to boolean since integration package requires it
+                ->setIsReadonly(true);
+
+            $order_builder->addPresetValue($presetIsCompany);
+        }
+    }
+
+    private function addIdentityFlags($order_builder)
+    {
+        $hideNotYou = $this->config->get($this->moduleString . 'sco_iframe_hide_not_you');
+        $hideAnonymous = $this->config->get($this->moduleString . 'sco_iframe_hide_anonymous');
+        $hideChangeAddress = $this->config->get($this->moduleString . 'sco_iframe_hide_change_address');
+
+        if(isset($hideNotYou) && $hideNotYou == 1)
+        {
+            $order_builder->addIdentityFlag(\Svea\WebPay\Checkout\Model\IdentityFlags::HIDENOTYOU);
+        }
+
+        if(isset($hideAnonymous) && $hideAnonymous == 1)
+        {
+            $order_builder->addIdentityFlag(\Svea\WebPay\Checkout\Model\IdentityFlags::HIDEANONYMOUS);
+        }
+
+        if(isset($hideChangeAddress) && $hideChangeAddress == 1)
+        {
+            $order_builder->addIdentityFlag(\Svea\WebPay\Checkout\Model\IdentityFlags::HIDECHANGEADDRESS);
+        }
+    }
+
+    private function setMerchantData($order_builder)
+    {
+        if(isset($this->request->post['sco_newsletter']) && $this->request->post['sco_newsletter'] == "true")
+        {
+            $order_builder->setMerchantData("{\"newsletter\":\"true\"}");
+        }
+        else
+        {
+            $order_builder->setMerchantData("{\"newsletter\":\"false\"}");
+        }
     }
 
     private function createUrl($route, $secure) {
@@ -499,5 +551,4 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $url .= $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/' . $route;
         return $url;
     }
-
 }

@@ -117,10 +117,13 @@
                             <?php } ?>
                         </div>
                     </div>
-                    <!-- Miscellaneous section (coupons, vouchers, comment ...) - start -->
-
+                    <?php if($sco_gather_newsletter_consent == 1) { ?>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="sco-newsletter" name="sco-newsletter">
+                        <label class="sco-newsletter" for="sco-newsletter"><?php echo $text_subscribe_to_newsletter; ?></label>
+                    </div>
+                    <?php } ?>
                 </div>
-
                 <div class="col-sm-12 sco-form step-2">
                     <div class="cover-layer"></div>
                     <h3><?php echo $heading_shipping; ?></h3>

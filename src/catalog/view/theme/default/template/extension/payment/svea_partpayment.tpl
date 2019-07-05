@@ -15,29 +15,57 @@
                 printf( "<div id=\"svea_partpayment_render_err\" style=\"color:red; clear:both; margin-top:15px;\">%s</div>",  $paymentOptions['error'] );
             }else{
                 $flag = true;
-                printf("<div class=\"form-group\">");
+                printf("<div class=\"form-group payment-campaigns\">");
                 foreach( $paymentOptions as $p )
                 {
                     if($p['paymentPlanType'] == "InterestAndAmortizationFree")
                     {
-                        $p['price_per_month'] = "";
+                        $p['monthlyAmountToPay'] = "";
                     }
                     else
                     {
-                        $p['price_per_month'] = ": " . $p['price_per_month'];
+                        $p['monthlyAmountToPay'] = ": " . $p['monthlyAmountToPay'];
                     }
-                    printf(   "<div class=\"col-sm-9\"><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input></div>",
-                                    $p['campaignCode'], $flag ? 'checked' : '', $p['description'] . $p['price_per_month'] );
+                    printf(   "<div class=\"col-sm-9 payment-campaign-option\"><input name=\"svea_partpayment_alt\" type=\"radio\" value=\"%s\" %s > %s </input>",
+                                    $p['campaignCode'], $flag ? 'checked' : '', $p['description'] . $p['monthlyAmountToPay'] );
+                    ?><ul id="<?php echo $p['campaignCode'] ?>" class="campaign-item" style="">
+                        <li><?php echo $p['notificationFee'] ?></li>
+                        <li><?php echo $p['initialFee'] ?></li>
+                        <li><?php echo $p['interestRatePercent'] ?></li>
+                        <li><?php echo $p['effectiveInterestRate'] ?></li>
+                        <li><?php echo $p['contractLengthInMonths'] ?></li>
+                        <?php
+                         if($p['numberOfPaymentFreeMonths'] != "0")
+                         { ?>
+                        <li><?php echo $p['numberOfPaymentFreeMonths'] ?></li>
+                        <?php }
+                         if($p['numberOfInterestFreeMonths'] != "0")
+                         { ?>
+                        <li><?php echo $p['numberOfInterestFreeMonths'] ?></li>
+                        <?php } ?>
+                        <li><?php echo $p['totalAmountToPay'] ?></li>
+                    </ul>
+                </div> <?php
                     $flag = false;
                 }
-                 printf("</div>");
+                 ?></div>
+                <script>
+                    $(document).ready(function(){
+                        $('.payment-campaigns input[type="radio"]').click(function(){
+                            var campaign = $(this).val();
+                            $("ul.campaign-item").hide();
+                            $("#"+campaign).show();
+                        });
+                        $( '.payment-campaign-option input[type="radio"]:first').click();
+                    });
+                </script> <?php
             }
-
-
         } ?>
     </div>
     <br />
-
+    <div style="display:inline-block;">
+        <p> <?php echo $termsOfService1 ?><a href="<?php echo $termsLink ?>"> <?php echo $companyName . $termsOfService2 ?> </a> <?php echo $termsOfService3 ?></p>
+    </div>
     <?php
     if($countryCode == "SE" || $countryCode == "DK" || $countryCode == "NO" || $countryCode == "FI" || $countryCode == "NL" || $countryCode == "DE")
     { ?>

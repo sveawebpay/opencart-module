@@ -15,6 +15,7 @@ $_['text_initials']           = 'Initialen';
 $_['text_product_invoice'] 		= 'Laagst te betalen bedrag';
 $_['text_customerreference']	= 'Uw referentie';
 $_['text_required']             = 'Verplicht veld';
+$_['text_peppolid']             = 'Peppol-ID';
 
 //Error responses
 $_['response_20000'] = "De order is gesloten";

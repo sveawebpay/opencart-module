@@ -84,12 +84,10 @@ class SveaCommon extends Controller
     function addAddonRowsToSveaOrder($svea, $addons, $currencyValue)
     {
         //purchased vouchers
-        $vouchers = $this->db->query(
-            "SELECT `code`, `description`, `amount`
-        FROM `" . DB_PREFIX . "order_voucher`
-        WHERE `order_id` = " . (int)$this->session->data['order_id']);
-        if ($vouchers->num_rows >= 1) {
-            foreach ($vouchers->rows as $voucher) {
+        $vouchers = isset($this->session->data['vouchers']) ? $this->session->data['vouchers'] : null;
+
+        if (!empty($vouchers)) {
+            foreach ($vouchers as $voucher) {
                 if (mb_strlen($voucher['description']) > 40) {
                     $voucher['description'] = mb_substr($voucher['description'], 0, 37) . "...";
                 }
@@ -98,12 +96,12 @@ class SveaCommon extends Controller
                         ->setQuantity(1)
                         ->setAmountIncVat(floatval($voucher['amount']))
                         ->setVatPercent(0)//no vat when buying a voucher
-                        ->setArticleNumber($voucher['code'])
                         ->setDescription($voucher['description'])
                         ->setName($voucher['description'])
                     );
             }
         }
+
         foreach ($addons as $addon) {
             if (isset($addon['title']) && mb_strlen($addon['title']) > 40) {
                 $addon['title'] = mb_substr($addon['title'], 0, 37) . "...";

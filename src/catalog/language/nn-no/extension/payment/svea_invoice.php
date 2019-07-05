@@ -15,6 +15,8 @@ $_['text_initials']           = 'Initialer';
 $_['text_product_invoice'] 		= 'Minstebeløp å betale';
 $_['text_customerreference']	= 'Deres referanse';
 $_['text_required']             = 'Obligatorisk felt';
+$_['text_peppolid']             = 'Peppol-ID';
+$_['text_peppol_invalid_format'] = 'Peppol-ID har feil format, vennligst rett opp og forsøk igjen!';
 
 //Error responses
 $_['response_20000'] = "Ordren er stengt";

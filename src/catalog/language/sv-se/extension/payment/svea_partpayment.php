@@ -45,7 +45,20 @@ $_['response_40004'] = "Det gick ej att hitta några adresser för den här kund
 
 $_['response_50000'] = "Kunden är ej godkänd för denna metod";
 $_['response_error'] = "Fel: ";
+$_['response_nosuchentity'] = "Ingen adress hittades kopplat till det angivna personnumret/organisationnumret.";
+$_['response_checkdigit'] = "Felaktig kontrollsiffra, dubbelkolla att du har angett korrekt personnummer/organisationsnummer.";
+$_['response_invalidlength'] = "Personnummer/organisationsnummer måste vara exakt 10 tecken.";
 
 $_['unit']           = 'st';
 $_['month']          = 'månad';
-$_['initial_fee']    = 'Uppläggningsavgift tillkommer';
+$_['initialFee']    = 'Uppläggningsavgift';
+$_['notificationFee']= 'Aviavgift';
+$_['interestRatePercent'] = 'Årsränta';
+$_['contractLengthInMonths'] = 'Antal månader';
+$_['numberOfInterestFreeMonths'] = 'Antal räntefria månader';
+$_['numberOfPaymentFreeMonths'] = 'Antal betalfria månader';
+$_['totalAmountToPay'] = 'Totalbelopp att betala';
+$_['termsOfService1'] = 'Genom att slutföra köpet godkänner jag ';
+$_['termsOfService2'] = ' villkor ';
+$_['termsOfService3'] = 'för delbetalningar';
+$_['effectiveInterestRate'] = 'Effektiv ränta';

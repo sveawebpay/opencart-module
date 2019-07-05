@@ -77,7 +77,7 @@ class ApiClient
         $this->httpClient->close();
 
         if ($errorNumber > 0) {
-            throw new Exception($httpError, ExceptionCodeList::COMMUNICATION_ERROR);
+            throw new Exception(" Curl error " . $errorNumber . " " . $httpError, ExceptionCodeList::COMMUNICATION_ERROR);
         }
 
         $responseHandler = new ResponseHandler($httpResponse, $httpCode);

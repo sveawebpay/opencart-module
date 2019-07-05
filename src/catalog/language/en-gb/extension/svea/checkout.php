@@ -54,6 +54,7 @@ $_['text_override_tax']				= 'Tax';
 $_['text_override_total']			= 'Total (incl. VAT)';
 
 $_['text_order_comment']			= 'Approved authorization created in Svea: %s';
+$_['text_sco_subscribe_to_newsletter'] = 'Subscribe to newsletter?';
 
 $_['item_voucher']					= 'Voucher';
 $_['item_coupon']					= 'Coupon';
@@ -106,5 +107,7 @@ $_['paymenttype_accountcredit']     = 'Account Credit';
 $_['paymenttype_undefined']         = 'Payment';
 $_['paymenttype_trustly']           = 'Trustly';
 
-$_['widget_pay_monthly']              = 'Pay monthly from';
+$_['widget_pay_monthly']            = 'Pay monthly from';
 $_['widget_month']                  = 'month';
+
+$_['sco_invoice_fee']               = 'Invoice Fee(excl. tax)';

@@ -15,6 +15,7 @@ $_['text_initials']           = 'Initialer';
 $_['text_product_invoice'] 		= 'Mindste beløb til at betale';
 $_['text_customerreference']	= 'Din reference';
 $_['text_required']             = 'Påkrævet område';
+$_['text_peppolid']             = 'Peppol-ID';
 
 //Error responses
 $_['response_20000'] = 'Ordre lukket';

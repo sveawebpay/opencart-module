@@ -4,7 +4,7 @@ require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class ControllerExtensionPaymentSveapartpayment extends Controller
 {
-    protected $svea_version = '4.5.2';
+    protected $svea_version;
     private $error = array();
 
     private $userTokenString = "user_";
@@ -15,6 +15,7 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
 
     public function index()
     {
+        $this->svea_version = $this->getModuleVersion();
         $this->setVersionStrings();
         $this->load->language('extension/payment/svea_partpayment');
 
@@ -25,6 +26,8 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
 
             $this->model_setting_setting->editSetting($this->paymentString . 'svea_partpayment', $this->request->post);
+            $this->load->model('extension/svea/upgrade');
+            $this->model_extension_svea_upgrade->upgradeDatabase('svea_partpayment');
             //get latest PaymentPlan params from Svea when saving settings
             $this->loadPaymentPlanParams();
 
@@ -172,7 +175,6 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
 
     }
 
-
     private function validate()
     {
         if (!$this->user->hasPermission('modify', 'extension/payment/svea_partpayment')) {
@@ -186,13 +188,14 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         }
     }
 
-
     /**
      * Svea: Create table if does not exists, call Svea API, load with params values for specific countrycode
      * Called whenever saving payment plan module settings, will update stored campaigns in table svea_params_table.
      */
     private function loadPaymentPlanParams()
     {
+        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . 'svea_params_table');
+
         $this->setVersionStrings();
         $countryCode = array("SE", "NO", "FI", "DK", "NL", "DE");
         for ($i = 0; $i < sizeof($countryCode); $i++) {
@@ -340,13 +343,17 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
             There is a new version available.<br />
             <a href="' . $docs_url . '" title="Go to release notes on github">View version details</a> or <br />
             <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
-
         }
+    }
 
+    protected function getModuleVersion()
+    {
+        $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
+        return $jsonData['version'];
     }
 
     /**
-     * Create Svea params talbe if not exists
+     * Create Svea params table if not exists
      */
     public function install()
     {
@@ -359,7 +366,7 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
                 `monthlyAnnuityFactor` DOUBLE NOT NULL ,
                 `initialFee` DOUBLE NOT NULL ,
                 `notificationFee` DOUBLE NOT NULL ,
-                `interestRatePercent` INT NOT NULL ,
+                `interestRatePercent` DOUBLE NOT NULL ,
                 `numberOfInterestFreeMonths` INT NOT NULL ,
                 `numberOfPaymentFreeMonths` INT NOT NULL ,
                 `fromAmount` DOUBLE NOT NULL ,

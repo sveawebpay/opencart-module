@@ -142,7 +142,8 @@ textarea.form-control {
 
 .table-products > tbody > tr > td {
     padding: 15px 0;
-    font-size: 13px;
+    font-size: 16px;
+    font-weight: 400;
     border-top: 0;
     border-bottom: 1px solid #ddd;
 }
@@ -153,12 +154,13 @@ textarea.form-control {
 
 .table-totals > tbody > tr > td {
     padding: 2px 0;
-    font-size: 12px;
+    font-size: 16px;
+    font-weight: 400;
     border: 0;
 }
 
 .table-totals .td-title {
-    font-weight: 700;
+    font-weight: 400;
 }
 
 .table-totals .td-value,
@@ -168,7 +170,8 @@ textarea.form-control {
 
 .table-totals tr:last-child td {
     /*color: #00AECE;*/
-    font-size: 15px;
+    font-size: 16px;
+    font-weight: 700;
 }
 
 .table-products > tbody > tr > td.td-name {
@@ -242,6 +245,7 @@ textarea.form-control {
 
 .allow-classic-checkout {
     text-align: center;
+    font-size:16px;
 }
 
 #sco-email {
@@ -257,9 +261,17 @@ textarea.form-control {
 .sco-input,
 #sco-shipping,
 #sco-email,
-#sco-postcode {
+#sco-postcode,
+#sco-comment{
     height: 42px;
     line-height: 28px;
+    font-size:16px !important;
+    font-weight:400 !important;
+}
+
+#sco-comment textarea.form-control {
+    font-size:16px !important;
+    font-weight:400 !important;
 }
 
 .sco-input.form-control {
@@ -292,7 +304,7 @@ textarea.form-control {
 
 .sco-change-cart {
     color: #00AECE;
-    font-size: 11px;
+    font-size: 16px;
     display: block;
     text-align: right;
 }
@@ -320,6 +332,7 @@ textarea.form-control {
 
     .action-icons {
         padding: 0 20%;
+        font-size: 16px;
     }
 }
 
@@ -334,6 +347,7 @@ textarea.form-control {
     display: flex;
     justify-content: space-around;
     margin: 45px 0 15px 0;
+    font-size: 16px;
 }
 
 .sco-checkout-extra-options {
@@ -347,6 +361,10 @@ textarea.form-control {
     text-decoration: none;
 }
 
+.sco-newsletter {
+    font-size:16px;
+}
+
 .sco-checkout-extra-options i {
     font-size: 30px;
     opacity: 1;
@@ -354,6 +372,7 @@ textarea.form-control {
 
 .sco-checkout-extra-options a span {
     display: block;
+    padding-top: 7px;
 }
 
 .addon .change-postcode {

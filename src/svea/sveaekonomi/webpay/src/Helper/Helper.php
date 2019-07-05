@@ -168,23 +168,19 @@ class Helper
         return $properties_json;
     }
 
-    /**
-     * Parses the src/docs/info.json file and returns associative array containing Svea integration package (library) name, version et al.
-     * array contains keys "library_name" and "library_version"
-     */
     static function getSveaLibraryProperties()
     {
-        /*if (!defined('SVEA_REQUEST_DIR')) {
+        if (!defined('SVEA_REQUEST_DIR')) {
             define('SVEA_REQUEST_DIR', dirname(__FILE__));
         }
-        $info_json = file_get_contents(SVEA_REQUEST_DIR . "/docs/info.json");
-        $library_properties = json_decode($info_json, true);
-        */
+        $composerFile = file_get_contents(SVEA_REQUEST_DIR . "/../../composer.json");
+        $composerFile= json_decode($composerFile, true);
+
 
         // @todo change this to properly defined information
         $library_properties = array(
             'library_name' => 'PHP Integration Package',
-            'library_version' => '3.6.6',
+            'library_version' => $composerFile['version'],
         );
 
         return $library_properties;
@@ -304,14 +300,16 @@ class Helper
      * the flag is set to false or left out, the values array will not include
      * such amounts, which may result in an empty values array in the result.
      *
+     * @deprecated Use Svea\WebPay\Helper\PaymentPlanHelper instead, will be removed in the future
      * @param float $price
      * @param $paymentPlanParamsResponseObject
      * @param boolean $ignoreMaxAndMinFlag ; optional, defaults to false
+     * @param int $decimals ; optional, defaults to 0
      * @return PaymentPlanPricePerMonth
      */
-    public static function paymentPlanPricePerMonth($price, $paymentPlanParamsResponseObject, $ignoreMaxAndMinFlag = false)
+    public static function paymentPlanPricePerMonth($price, $paymentPlanParamsResponseObject, $ignoreMaxAndMinFlag = false, $decimals = 0)
     {
-        return new PaymentPlanPricePerMonth($price, $paymentPlanParamsResponseObject, $ignoreMaxAndMinFlag);
+        return new PaymentPlanPricePerMonth($price, $paymentPlanParamsResponseObject, $ignoreMaxAndMinFlag, $decimals);
     }
 
     public static function getCardPayCurrencies()
@@ -338,5 +336,49 @@ class Helper
             }
         }
         return false;
+    }
+
+    public static function isValidPeppolId($peppolId)
+    {
+
+        if(is_numeric(substr($peppolId,0,4)) == false ) // First 4 characters must be numeric
+        {
+            return false;
+        }
+
+        if(substr($peppolId,4,1) != ":") // Fifth character must be ':'.
+        {
+            return false;
+        }
+
+        if(ctype_alnum(substr($peppolId,6)) == false) // Rest of the characters must be alphanumeric
+        {
+            return false;
+        }
+
+        if(strlen($peppolId) > 55) // String cannot be longer 55 characters
+        {
+            return false;
+        }
+
+        if(strlen($peppolId) < 6) // String must be longer than 5 characters
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static function objectToArray($data)
+    {
+        if (is_array($data) || is_object($data))
+        {
+            $result = array();
+            foreach ($data as $key => $value)
+            {
+                $result[$key] = Helper::objectToArray($value);
+            }
+            return $result;
+        }
+        return $data;
     }
 }

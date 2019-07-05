@@ -22,12 +22,13 @@ $_['entry_password']     = 'Passord:';
 $_['entry_clientno']     = 'Klientnr:';
 $_['entry_min_amount']  	= 'Produktets minstepris:';
 
-$_['entry_yes']               = 'ja';
-$_['entry_no']                = 'nei';
+$_['entry_yes']               = 'Ja';
+$_['entry_no']                = 'Nei';
 $_['entry_testmode']     = 'Testmodus:';
 
 $_['entry_auto_deliver'] = 'Levere automatisk:';
 $_['entry_auto_deliver_text'] = 'Om aktivert levereres fakturaen automatiskt ved opprettelse av ordren. Ellers gjøres dette via Sveas admin.';
+$_['entry_show_peppol_field'] = 'Vis Peppol-ID-felt for bedriftskunder:';
 $_['entry_distribution_type'] = 'Distribusjonsform for faktura (Etter avtale med Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';

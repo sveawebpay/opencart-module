@@ -27,6 +27,7 @@ $_['entry_testmode']          = 'Testitila:';
 
 $_['entry_auto_deliver']      = 'Automaattinen toimitus:';
 $_['entry_auto_deliver_text'] = 'Mikäli aktivoitu toimitetaan lasku automaattisesti tilauksen luonnin yhteydessä. Muussa tapauksessa laskun toimitus suoritetaan Svean adminissä.';
+$_['entry_show_peppol_field'] = 'Näytä PEPPOL-tunnuksen kenttä yritysasiakkaille:';
 $_['entry_distribution_type'] = 'Laskun jakelutapa (Svean kanssa sovitun mukaan):';
 $_['entry_post'] = 'Posti';
 $_['entry_email'] = 'Sähköposti';

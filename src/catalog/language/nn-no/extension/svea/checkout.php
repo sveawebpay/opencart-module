@@ -54,6 +54,7 @@ $_['text_override_tax']				= 'Moms';
 $_['text_override_total']			= 'Totalt (Inkl. moms)';
 
 $_['text_order_comment']			= 'Approved authorization created in Svea: %s';
+$_['text_sco_subscribe_to_newsletter'] = 'Motta nyhetsbrev?';
 
 $_['item_voucher']					= 'Gavekort';
 $_['item_coupon']					= 'Rabatkod';
@@ -107,5 +108,7 @@ $_['paymenttype_accountcredit']     = 'Kontokreditt';
 $_['paymenttype_undefined']         = 'Betaling';
 $_['paymenttype_trustly']           = 'Trustly';
 
-$_['widget_pay_monthly']              = 'Delbetal fra';
+$_['widget_pay_monthly']            = 'Delbetal fra';
 $_['widget_month']                  = 'måned';
+
+$_['sco_invoice_fee']               = 'Fakturagebyr(eks moms)';

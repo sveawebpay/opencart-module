@@ -55,11 +55,10 @@ class ControllerExtensionSveaCart extends Controller
             foreach ($this->session->data['vouchers'] as $key => $voucher) {
 
                 $voucher['amount'] = $this->currency->format($voucher['amount'], $this->session->data['currency']);
-                $voucher['amount'] = $voucher['amount'];
 
                 $data['vouchers'][] = array(
                     'key' => $key,
-                    'description' => $this->language->get('item_voucher'),
+                    'description' => $this->language->get('item_voucher') . " (" . $voucher['to_name'] . ")",
                     'amount' => $voucher['amount'],
                 );
             }

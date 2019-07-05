@@ -25,6 +25,35 @@ class ControllerExtensionSveaSuccess extends Controller
         $this->setVersionStrings();
         $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
 
+        if($module_sco_order_id != null)
+        {
+            $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
+            $config = new OpencartSveaCheckoutConfig($this, 'checkout');
+            if ($test_mode) {
+                $config = new OpencartSveaCheckoutConfigTest($this, 'checkout');
+            }
+
+            $checkout_entry = \Svea\WebPay\WebPay::checkout($config);
+            $checkout_entry->setCountryCode($this->session->data[$this->moduleString . 'sco_country']);
+            $checkout_entry->setCheckoutOrderId($module_sco_order_id);
+
+            try {
+                $response = $checkout_entry->getOrder();
+                $response = lowerArrayKeys($response);
+                if ($response['status'] != 'Final') {
+                    $this->response->redirect($this->url->link('extension/svea/checkout'));
+                    return;
+                }
+            } catch (Exception $e) {
+                die($e->getMessage());
+            }
+        }
+        else
+        {
+            $this->response->redirect($this->url->link('extension/svea/checkout'));
+            return;
+        }
+
         unset($this->session->data['shipping_method']);
         unset($this->session->data['shipping_methods']);
         unset($this->session->data['payment_method']);
@@ -70,24 +99,6 @@ class ControllerExtensionSveaSuccess extends Controller
         } else {
             $this->response->redirect($this->url->link('checkout/success'));
             return;
-        }
-
-        $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
-        $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
-        if ($test_mode) {
-            $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
-        }
-
-        $checkout_entry = \Svea\WebPay\WebPay::checkout($config);
-        $checkout_entry->setCountryCode($this->session->data[$this->moduleString . 'sco_country']);
-        $checkout_entry->setCheckoutOrderId($module_sco_order_id);
-
-        // Get Svea Checkout order
-        try {
-            $response = $checkout_entry->getOrder();
-            $response = lowerArrayKeys($response);
-        } catch (Exception $e) {
-            die($e->getMessage());
         }
 
         $this->updateOrders($response);

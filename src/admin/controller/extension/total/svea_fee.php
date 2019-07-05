@@ -2,7 +2,7 @@
 
 class ControllerExtensionTotalSveaFee extends Controller
 {
-    protected $total_svea_version = '4.5.2';
+    protected $total_svea_version;
     private $error = array();
 
     private $userTokenString = "user_";
@@ -23,6 +23,8 @@ class ControllerExtensionTotalSveaFee extends Controller
 
     public function index()
     {
+        $this->total_svea_version = $this->getModuleVersion();
+
         $this->load->language('extension/total/svea_fee');
 
         $this->setVersionStrings();
@@ -191,7 +193,7 @@ class ControllerExtensionTotalSveaFee extends Controller
         $json = file_get_contents($url);
         $data = json_decode($json);
 
-        if ($data->module_version == $this->total_svea_version) {
+        if ($data->module_version <= $this->total_svea_version) {
             return "You have the latest " . $this->total_svea_version . " version.";
         } else {
             return $this->total_svea_version . '<br />
@@ -203,9 +205,9 @@ class ControllerExtensionTotalSveaFee extends Controller
 
     }
 
-    //The link function not avaliable in 1.4.x, therefore we need to implement the older way of setting links
-    private function getLink($link)
+    protected function getModuleVersion()
     {
-        return $this->url->link($link, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', 'SSL');
+        $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
+        return $jsonData['version'];
     }
 }

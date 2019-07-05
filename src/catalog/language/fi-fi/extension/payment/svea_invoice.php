@@ -15,6 +15,8 @@ $_['text_initials']           = 'Tunnukset';
 $_['text_product_invoice'] 		= 'Vähintään maksettava';
 $_['text_customerreference']	= 'Viitteenne';
 $_['text_required']             = 'Vaadittu kenttä';
+$_['text_peppolid']             = 'PEPPOL-tunnus';
+$_['text_peppol_invalid_format'] = 'PEPPOL-tunnus on väärässä muodossa, yritä uudelleen.';
 
 //Error responses
 $_['response_20000'] = "Tilaus suljettu";

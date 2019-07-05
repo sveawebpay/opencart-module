@@ -117,10 +117,13 @@
                             {% endif %}
                         </div>
                     </div>
-                    <!-- Miscellaneous section (coupons, vouchers, comment ...) - start -->
-
+                    {% if module_sco_gather_newsletter_consent == 1 %}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="sco-newsletter" name="sco-newsletter">
+                        <label class="sco-newsletter" for="sco-newsletter">{{ text_subscribe_to_newsletter }}</label>
+                    </div>
+                    {% endif %}
                 </div>
-
                 <div class="col-sm-12 sco-form step-2">
                     <div class="cover-layer"></div>
                     <h3>{{ heading_shipping }}</h3>

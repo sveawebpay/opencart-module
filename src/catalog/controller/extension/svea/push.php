@@ -26,9 +26,9 @@ class ControllerExtensionSveaPush extends Controller
         if ($checkout_order_id != null) {
             $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
 
-            $config = new OpencartSveaCheckoutConfig($this->config, 'checkout');
+            $config = new OpencartSveaCheckoutConfig($this, 'checkout');
             if ($test_mode) {
-                $config = new OpencartSveaCheckoutConfigTest($this->config, 'checkout');
+                $config = new OpencartSveaCheckoutConfigTest($this, 'checkout');
             }
             $this->load->model('extension/svea/checkout');
             $checkout_entry = \Svea\WebPay\WebPay::checkout($config);
@@ -77,6 +77,19 @@ class ControllerExtensionSveaPush extends Controller
 
         $country = $this->model_extension_svea_checkout->getCountry($response['countrycode']);
 
+        if(isset($response['merchantdata']))
+        {
+            $merchantData = json_decode($response['merchantdata']);
+            if($merchantData->newsletter == "true")
+            {
+                $newsletterConsent = true;
+            }
+            else
+            {
+                $newsletterConsent = false;
+            }
+        }
+
         $data = array(
             'order_id' => $response['clientordernumber'],
             'checkout_id' => $response['orderid'],
@@ -85,6 +98,7 @@ class ControllerExtensionSveaPush extends Controller
             'locale' => isset($response['locale']) ? $response['locale'] : null,
             'currency' => isset($response['currency']) ? $response['currency'] : null,
             'country' => $country['name'],
+            'newsletter' => isset($newsletterConsent) ? $newsletterConsent : 0
         );
 
         $this->model_extension_svea_checkout->updateCheckoutOrder($data);

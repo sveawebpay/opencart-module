@@ -2,6 +2,8 @@
 include_once(dirname(__FILE__).'/svea_common.php');
 require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
+use \Svea\WebPay\Helper\Helper;
+
 class ControllerExtensionPaymentSveainvoice extends SveaCommon {
 
     //backwards compatability
@@ -47,7 +49,9 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
         $data['text_initials'] = $this->language->get("text_initials");
         $data['text_vat_no'] = $this->language->get("text_vat_no");
         $data['text_customerreference'] = $this->language->get('text_customerreference');
+        $data['text_peppolid'] = $this->language->get('text_peppolid');
         $data[$this->paymentString . 'svea_invoice_shipping_billing'] = $this->config->get($this->paymentString . 'svea_invoice_shipping_billing');
+        $data[$this->paymentString . 'svea_invoice_peppol'] = $this->config->get($this->paymentString . 'svea_invoice_peppol');
         $data['text_required'] = $this->language->get('text_required');
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['button_back'] = $this->language->get('button_back');
@@ -90,6 +94,17 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
     }
 
     public function confirm() {
+        $this->load->language('extension/payment/svea_invoice');
+        if(isset($_GET['peppolid']) && $_GET['peppolid'] != "")
+        {
+            if(!Helper::isValidPeppolId($_GET['peppolid']))
+            {
+                $response = array("error" => $this->language->get("text_peppol_invalid_format"));
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($response));
+                return;
+            }
+        }
 
         $this->setVersionStrings();
         $this->load->language('extension/payment/svea_invoice');
@@ -168,6 +183,10 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
             $svea = $svea->addCustomerDetails($item);
             if(isset( $_GET['customerreference']) ) {
                   $svea = $svea->setCustomerReference($_GET['customerreference']);
+            }
+            if(isset($_GET['peppolid']) && $_GET['peppolid'] != "")
+            {
+                $svea = $svea->setPeppolId($_GET['peppolid']);
             }
 
 
@@ -275,10 +294,9 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                         if($deliverObj->accepted == 1){
                             $response = array("success" => true);
                             //update order status for delivered
-                            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), comment = '".$sveaOrderAddress['comment']."' WHERE order_id = '" . (int)$this->session->data['order_id'] . "'");
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id '. $svea->sveaOrderId, false);
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id '. $svea->sveaOrderId, true);
                             $completeStatus = $this->config->get('config_complete_status');
-                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea: Order was delivered. Svea invoiceId '.$deliverObj->invoiceId);
+                            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $completeStatus[0], 'Svea: Order was delivered. Svea invoiceId '.$deliverObj->invoiceId, true);
                         }
                         //if not, send error codes
                         else {
@@ -298,7 +316,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                 else {
                     $response = array("success" => true);
                     //update order status for created
-                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id '. $svea->sveaOrderId);
+                    $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'),'Svea order id '. $svea->sveaOrderId, true);
                 }
 
             // not accepted, send errors to view
@@ -316,6 +334,27 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
             $response = array("error" => $this->responseCodes(0,$e->getMessage()));
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($response));
+        }
+    }
+
+    private function handleGetAddressesError($getAddressesResult)
+    {
+        $this->load->language('extension/payment/svea_invoice');
+        if($getAddressesResult->resultcode == "NoSuchEntity")
+        {
+            return array("error" => $this->language->get('response_error') . $this->language->get('response_nosuchentity'));
+        }
+        elseif($getAddressesResult->errormessage = "Invalid checkdigit") // We have to match exact message because there are several error with the same resultcode
+        {
+            return array("error" => $this->language->get('response_error') . $this->language->get('response_checkdigit'));
+        }
+        elseif($getAddressesResult->errormessage = "Must be exactly ten digits") // We have to match exact message because there are several error with the same resultcode
+        {
+            return array("error" => $this->language->get('response_error') . $this->language->get('response_invalidlength'));
+        }
+        else
+        {
+            return array("error" => $getAddressesResult->errormessage);
         }
     }
 
@@ -346,7 +385,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
 
             $result = array();
             if ($svea->accepted != TRUE) {
-                $result = array("error" => $svea->errormessage);
+                $result = $this->handleGetAddressesError($svea);
             }
             else {
                 foreach ($svea->customerIdentity as $ci)
@@ -422,8 +461,6 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
             $paymentAddress["payment_country"] = $countryId['country_name'];
             $paymentAddress["payment_method"] = $this->language->get('text_title');
         }
-
-        $paymentAddress["comment"] = $order_comment . "\nSvea order id: ".$svea->sveaOrderId;
 
         return $paymentAddress;
     }

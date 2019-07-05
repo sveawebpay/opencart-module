@@ -204,12 +204,18 @@ class ResponseHandler
      */
     public function getContent()
     {
-        $result = json_decode($this->body, true);
-
+        $result = json_decode($this->removeBOM($this->body), true);
         if ($result === null && $this->body !== '') {
             throw new SveaApiException('Response format is not valid, JSON decode error', 1000);
         }
 
         return $result;
+    }
+
+    private function removeBOM($data) {
+        if (0 === strpos(bin2hex($data), 'efbbbf')) {
+            return substr($data, 3);
+        }
+        return $data;
     }
 }

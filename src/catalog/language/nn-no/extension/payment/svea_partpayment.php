@@ -47,4 +47,14 @@ $_['response_error'] = "Feil: ";
 
 $_['unit']           = 'st';
 $_['month']          = 'måned';
-$_['initial_fee']    = 'Innledende avgift vil bli lagt til';
+$_['initialFee']    = 'Etableringsgebyr';
+$_['notificationFee']= 'Termingebyr';
+$_['interestRatePercent'] = 'Årsrente';
+$_['contractLengthInMonths'] = 'Antall måneder';
+$_['numberOfInterestFreeMonths'] = 'Antall rentefrie måneder';
+$_['numberOfPaymentFreeMonths'] = 'Antall gratis måneder';
+$_['totalAmountToPay'] = 'Samlet beløp som skal betales';
+$_['termsOfService1'] = 'Ved å sluttføre kjøpet godkjenner jeg ';
+$_['termsOfService2'] = ' vilkår ';
+$_['termsOfService3'] = 'for delbetaling/kontokreditt';
+$_['effectiveInterestRate'] = 'Effektiv rente';

@@ -26,6 +26,7 @@ $_['entry_testmode']          = 'Testmode:';
 
 $_['entry_auto_deliver']      = 'Auto deliver order:';
 $_['entry_auto_deliver_text'] = 'If enabled the invoice will automatically be delivered when creating an order. If disabled, deliver the invoice from Svea admin.';
+$_['entry_show_peppol_field'] = 'Show Peppol-ID field for company customers:';
 $_['entry_distribution_type'] = 'Invoice distribution type (As agreed with Svea):';
 $_['entry_post'] = 'Post';
 $_['entry_email'] = 'Email';

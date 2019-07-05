@@ -54,6 +54,7 @@ $_['text_override_tax']				= 'Verot';
 $_['text_override_total']			= 'Yhteensä (sis.alv.)';
 
 $_['text_order_comment']			= 'Varmennus on hyväksytty: %s';
+$_['text_sco_subscribe_to_newsletter'] = 'Tilaa uutiskirje?';
 
 $_['item_voucher']					= 'Lahjakortti';
 $_['item_coupon']					= 'Alennuskoodi';
@@ -108,3 +109,5 @@ $_['paymenttype_trustly']           = 'Trustly';
 
 $_['widget_pay_monthly']              = 'Maksa alkaen';
 $_['widget_month']                  = 'kuukaudessa';
+
+$_['sco_invoice_fee']               = 'Laskutuslisä (ei alv)';

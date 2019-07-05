@@ -15,6 +15,8 @@ $_['text_initials']           = 'Initials';
 $_['text_product_invoice'] 		= 'Minimum amount to pay';
 $_['text_customerreference']	= 'Your reference';
 $_['text_required']             = 'Required field';
+$_['text_peppolid']             = 'Peppol-ID';
+$_['text_peppol_invalid_format'] = 'Peppol-ID has an invalid format, please correct it and try again.';
 
 //Error responses
 $_['response_20000'] = "Order closed";

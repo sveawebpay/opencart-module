@@ -23,6 +23,16 @@
         <label for="customerreference"><?php echo $text_customerreference; ?>:</label><br />
         <input type="text" id="customerreference" name="customerreference" size="32" maxlength="32" />
     </div>
+    <?php
+    if($svea_invoice_peppol == '1')
+    { ?>
+    <div id="svea_peppolid_div" style="display:none;">
+        <label for="peppolid"><?php echo $text_peppolid; ?>:</label><br />
+        <input type="text" id="peppolid" name="peppolid" size="55" maxlength="55" />
+    </div>
+    <?php
+    }
+    ?>
 </div>
 
 <?php
@@ -139,6 +149,7 @@ $("#svea_invoice_company").change(function(){
         $('#svea_private_text').hide();
         $('#svea_business_text').show();
         $('#svea_customerreference_div').show();
+        $('#svea_peppolid_div').show();
 
         //if norway show get address
             $('#getSSN').show();
@@ -158,6 +169,7 @@ $("#svea_invoice_company").change(function(){
         $('#svea_private_text').show();
         $('#svea_business_text').hide();
         $('#svea_customerreference_div').hide();
+        $('#svea_peppolid_div').hide();
 
          //if norway hide get address
          <?php
@@ -197,6 +209,7 @@ $('a#checkout').click(function(event) {
     var vatNo = $('#vatno').val();
     var company = $("#svea_invoice_company").val();
     var customerreference = $("#customerreference").val();
+    var peppolid = $("#peppolid").val();
     //validate empty field
     if(ssnNo == ''){
         $("#svea_invoice_err").empty().addClass("attention").show().append('<br>*Required');
@@ -217,7 +230,8 @@ $('a#checkout').click(function(event) {
             birthMonth: birthMonth,
             birthYear: birthYear,
             vatno: vatNo,
-            customerreference: customerreference
+            customerreference: customerreference,
+            peppolid: peppolid
         },
         url: 'index.php?route=extension/payment/svea_invoice/confirm',
         success: function(data) {
