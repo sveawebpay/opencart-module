@@ -27,14 +27,14 @@
         <!--general settings -->
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveainvoice" class="form-horizontal">
                 <div class="form-group">
-                    <div class="col-sm-3 control-label">Version</div>
+                    <div class="col-sm-2 control-label">Version</div>
                     <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
                     <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_invoice_version" id="svea_invoice_version" />
                 </div>
                 <div class="form-group">
-                    <label for="svea_invoice_geo_zone_id" class="col-sm-3 control-label"><?php echo $entry_geo_zone; ?></label>
+                    <label for="svea_invoice_geo_zone_id" class="col-sm-2 control-label"><?php echo $entry_geo_zone; ?></label>
                     <div class="col-sm-9">
-                        <select name="svea_invoice_geo_zone_id">
+                        <select class="form-control" name="svea_invoice_geo_zone_id">
                             <option value="0"><?php echo $text_all_zones; ?></option>
                             <?php foreach ($geo_zones as $geo_zone) { ?>
                             <?php if ($geo_zone['geo_zone_id'] == $svea_invoice_geo_zone_id) { ?>
@@ -47,9 +47,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="svea_invoice_status" class="col-sm-3 control-label"><?php echo $entry_status; ?></label>
+                    <label for="svea_invoice_status" class="col-sm-2 control-label"><?php echo $entry_status; ?></label>
                     <div class="col-sm-9">
-                        <select name="svea_invoice_status">
+                        <select class="form-control" name="svea_invoice_status">
                             <?php if ($svea_invoice_status) { ?>
                             <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                             <option value="0"><?php echo $text_disabled; ?></option>
@@ -61,20 +61,20 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="svea_invoice_sort_order" class="col-sm-3 control-label"><?php echo $entry_sort_order; ?></label>
+                    <label for="svea_invoice_sort_order" class="col-sm-2 control-label"><?php echo $entry_sort_order; ?></label>
                     <div class="col-sm-9">
-                       <input type="text" name="svea_invoice_sort_order" value="<?php echo $svea_invoice_sort_order; ?>" size="1" />
+                       <input class="form-control" type="text" name="svea_invoice_sort_order" value="<?php echo $svea_invoice_sort_order; ?>" size="1" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="svea_invoice_payment_description" class="col-sm-3 control-label"><?php echo $entry_payment_description; ?></label>
+                    <label for="svea_invoice_payment_description" class="col-sm-2 control-label"><?php echo $entry_payment_description; ?></label>
                     <div class="col-sm-9">
-                     <textarea rows="2" cols="30" name="svea_invoice_payment_description"><?php echo $svea_invoice_payment_description; ?></textarea>
+                     <textarea class="form-control" rows="2" cols="30" name="svea_invoice_payment_description"><?php echo $svea_invoice_payment_description; ?></textarea>
                     </div>
                 </div>
                     <!--shipping billing-->
                     <div class="form-group">
-                        <label for="svea_invoice_shipping_billing" class="col-sm-3 control-label">
+                        <label for="svea_invoice_shipping_billing" class="col-sm-2 control-label">
                             <span data-toggle="tooltip" title="<?php echo $entry_shipping_billing_text; ?>"><?php echo $entry_shipping_billing; ?></span>
                         </label>
                          <div class="col-sm-9">
@@ -93,29 +93,29 @@
                     </div>
                     <!-- autodeliver -->
                     <div class="form-group">
-                        <label for="svea_invoice_auto_deliver" class="col-sm-3 control-label">
+                        <label for="svea_invoice_auto_deliver" class="col-sm-2 control-label">
                             <span data-toggle="tooltip" title="<?php echo $entry_auto_deliver_text; ?>"><?php echo $entry_auto_deliver; ?></span>
                         </label>
                          <div class="col-sm-9">
-                            <select name="svea_invoice_auto_deliver">
+                            <select class="form-control" name="svea_invoice_auto_deliver">
                                 <option value="0" <?php if($svea_invoice_auto_deliver == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
                                 <option value="1" <?php if($svea_invoice_auto_deliver == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
                             </select>
                          </div>
                     </div>
                     <div class="form-group">
-                        <label for="entry_distribution_type" class="col-sm-3 control-label">
+                        <label for="entry_distribution_type" class="col-sm-2 control-label">
                             <?php echo $entry_distribution_type; ?>
                         </label>
                         <div class="col-sm-9">
-                            <select name="svea_invoice_distribution_type">
+                            <select class="form-control" name="svea_invoice_distribution_type">
                                 <option value="Post" <?php if($svea_invoice_distribution_type == 'Post'){ echo 'selected="selected"';}?> ><?php echo $entry_post; ?></option>
                                 <option value="Email" <?php if($svea_invoice_distribution_type == 'Email'){ echo 'selected="selected"';}?> ><?php echo $entry_email; ?></option>
                             </select>
                          </div>
                     </div>
                     <div class="form-group">
-                        <label for="svea_invoice_product_price" class="col-sm-3 control-label">
+                        <label for="svea_invoice_product_price" class="col-sm-2 control-label">
                             <span data-toggle="tooltip" title="<?php echo $entry_product_text; ?>"><?php echo $entry_product; ?></span>
                         </label>
                         <div class="col-sm-9">
@@ -135,7 +135,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="svea_invoice_peppol" class="col-sm-3 control-label">
+                    <label for="svea_invoice_peppol" class="col-sm-2 control-label">
                        <?php echo $entry_show_peppol_field; ?>
                     </label>
                     <div class="col-sm-9">
@@ -165,32 +165,32 @@
                 <?php foreach($credentials as $code){ ?>
                     <div class="tab-pane" id="tab-<?php echo $code['lang']; ?>">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="<?php echo $code['name_testmode']; ?>"><?php echo $entry_testmode; ?></label>
+                            <label class="col-sm-2 control-label" for="<?php echo $code['name_testmode']; ?>"><?php echo $entry_testmode; ?></label>
                             <div class="col-sm-9">
-                                <select name="<?php echo $code['name_testmode']; ?>">
+                                <select class="form-control" name="<?php echo $code['name_testmode']; ?>">
                                     <option value="1" <?php if($code['value_testmode'] == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
                                     <option value="0" <?php if($code['value_testmode'] == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="<?php echo $code['name_username']; ?>"><?php echo $entry_username; ?></label>
+                            <label class="col-sm-2 control-label" for="<?php echo $code['name_username']; ?>"><?php echo $entry_username; ?></label>
                             <div class="col-sm-9">
-                                  <input name="<?php echo $code['name_username']; ?>" type="text"
+                                  <input class="form-control" name="<?php echo $code['name_username']; ?>" type="text"
                                            value="<?php echo $code['value_username']; ?>" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="<?php echo $code['name_password']; ?>"><?php echo $entry_password; ?></label>
+                            <label class="col-sm-2 control-label" for="<?php echo $code['name_password']; ?>"><?php echo $entry_password; ?></label>
                             <div class="col-sm-9">
-                                 <input name="<?php echo $code['name_password']; ?>" type="text"
+                                 <input class="form-control" name="<?php echo $code['name_password']; ?>" type="text"
                                            value="<?php echo $code['value_password']; ?>" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="<?php echo $code['name_clientno']; ?>"><?php echo $entry_clientno; ?></label>
+                            <label class="col-sm-2 control-label" for="<?php echo $code['name_clientno']; ?>"><?php echo $entry_clientno; ?></label>
                             <div class="col-sm-9">
-                                 <input name="<?php echo $code['name_clientno']; ?>" type="text"
+                                 <input class="form-control" name="<?php echo $code['name_clientno']; ?>" type="text"
                                            value="<?php echo $code['value_clientno']; ?>" />
                             </div>
                         </div>

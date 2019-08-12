@@ -27,23 +27,23 @@
         <!--general settings -->
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveadirectbank" class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-3 control-label">Version</div>
-                    <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
+                <div class="col-sm-2 control-label">Version</div>
+                    <div class="col-sm-9 "><?php echo $svea_version_text; ?></div>
                     <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_directbank_version" id="svea_directbank_version" />
             </div>
               <div class="form-group">
-                    <label for="svea_directbank_testmode" class="col-sm-3 control-label"><?php echo $entry_testmode; ?></label>
+                    <label for="svea_directbank_testmode" class="col-sm-2 control-label"><?php echo $entry_testmode; ?></label>
                     <div class="col-sm-9">
-                        <select name="svea_directbank_testmode">
+                        <select class="form-control" name="svea_directbank_testmode">
                             <option value="1" <?php if($svea_directbank_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
                             <option value="0" <?php if($svea_directbank_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
                         </select>
                     </div>
                 </div>
               <div class="form-group">
-                    <label for="svea_geo_zone_id" class="col-sm-3 control-label"><?php echo $entry_geo_zone; ?></label>
+                    <label for="svea_geo_zone_id" class="col-sm-2 control-label"><?php echo $entry_geo_zone; ?></label>
                     <div class="col-sm-9">
-                         <select name="svea_geo_zone_id">
+                         <select class="form-control" name="svea_geo_zone_id">
                             <option value="0"><?php echo $text_all_zones; ?></option>
                             <?php foreach ($geo_zones as $geo_zone) { ?>
                                 <?php if ($geo_zone['geo_zone_id'] == $svea_directbank_geo_zone_id) { ?>
@@ -56,9 +56,9 @@
                     </div>
                 </div>
               <div class="form-group">
-                    <label for="svea_directbank_status" class="col-sm-3 control-label"><?php echo $entry_status; ?></label>
+                    <label for="svea_directbank_status" class="col-sm-2 control-label"><?php echo $entry_status; ?></label>
                     <div class="col-sm-9">
-                        <select name="svea_directbank_status">
+                        <select class="form-control" name="svea_directbank_status">
                             <?php if ($svea_directbank_status) { ?>
                             <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                             <option value="0"><?php echo $text_disabled; ?></option>
@@ -70,15 +70,15 @@
                     </div>
                 </div>
               <div class="form-group">
-                    <label for="svea_directbank_sort_order" class="col-sm-3 control-label"><?php echo $entry_sort_order; ?></label>
+                    <label for="svea_directbank_sort_order" class="col-sm-2 control-label"><?php echo $entry_sort_order; ?></label>
                     <div class="col-sm-9">
-                       <input type="text" name="svea_directbank_sort_order" value="<?php echo $svea_directbank_sort_order; ?>" size="1" />
+                       <input class="form-control" type="text" name="svea_directbank_sort_order" value="<?php echo $svea_directbank_sort_order; ?>" size="1" />
                     </div>
                 </div>
               <div class="form-group">
-                    <label for="svea_directbank_payment_description" class="col-sm-3 control-label"><?php echo $entry_payment_description; ?></label>
+                    <label for="svea_directbank_payment_description" class="col-sm-2 control-label"><?php echo $entry_payment_description; ?></label>
                     <div class="col-sm-9">
-                      <textarea rows="2" cols="30" name="svea_directbank_payment_description"><?php echo $svea_directbank_payment_description; ?></textarea>
+                      <textarea class="form-control" rows="2" cols="30" name="svea_directbank_payment_description"><?php echo $svea_directbank_payment_description; ?></textarea>
                     </div>
                 </div>
 
@@ -92,16 +92,16 @@
                   <!--Test -->
                 <div class="tab-pane" id="tab-directbanktest">
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_directbank_merchant_id_test"><?php echo $entry_merchant_id; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_directbank_merchant_id_test"><?php echo $entry_merchant_id; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_directbank_merchant_id_test" type="text"
+                            <input class="form-control" name="svea_directbank_merchant_id_test" type="text"
                                     value="<?php echo $value_merchant_test; ?>" />
                         </div>
                     </div>
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_directbank_sw_test"><?php echo $entry_sw; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_directbank_sw_test"><?php echo $entry_sw; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_directbank_sw_test" type="text"
+                            <input class="form-control" name="svea_directbank_sw_test" type="text"
                                     value="<?php echo $value_sw_test; ?>" />
                         </div>
                     </div>
@@ -109,16 +109,16 @@
                 <!--Prod -->
                 <div class="tab-pane" id="tab-directbankprod">
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_directbank_merchant_id_prod"><?php echo $entry_merchant_id; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_directbank_merchant_id_prod"><?php echo $entry_merchant_id; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_directbank_merchant_id_prod" type="text"
+                            <input class="form-control" name="svea_directbank_merchant_id_prod" type="text"
                                     value="<?php echo $value_merchant_prod; ?>" />
                         </div>
                     </div>
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_directbank_sw_prod"><?php echo $entry_sw; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_directbank_sw_prod"><?php echo $entry_sw; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_directbank_sw_prod" type="text"
+                            <input class="form-control" name="svea_directbank_sw_prod" type="text"
                                     value="<?php echo $value_sw_prod; ?>" />
                         </div>
                     </div>

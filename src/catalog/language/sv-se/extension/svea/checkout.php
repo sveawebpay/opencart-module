@@ -111,3 +111,4 @@ $_['widget_pay_monthly']              = 'Delbetala från';
 $_['widget_month']                  = 'månad';
 
 $_['sco_invoice_fee']               = 'Fakturaavgift(exkl. moms)';
+$_['text_tax_class']                = 'Momsklass';

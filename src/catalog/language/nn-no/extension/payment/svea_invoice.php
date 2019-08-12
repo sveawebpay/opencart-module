@@ -46,3 +46,5 @@ $_['response_error'] = "Feil: ";
 //Order definitions
 $_['text_svea_fee']   = 'SVEA Faktureringsavgift';
 $_['unit']            = 'st';
+
+$_['text_tax_class']                = 'Skatteklasse';

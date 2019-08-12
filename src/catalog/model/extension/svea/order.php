@@ -465,6 +465,30 @@ class ModelExtensionSveaOrder extends Model
             }
             else
             {
+                $sveaOrderId = $this->getSveaOrderId($paymentMethod, $opencartOrderId);
+                $order = \Svea\WebPay\WebpayAdmin::queryOrder($this->getConfiguration($paymentMethod, $countryCode))
+                    ->setCountryCode($countryCode)
+                    ->setOrderId($sveaOrderId);
+                switch($paymentMethod)
+                {
+                    case "svea_invoice":
+                        $response = $order->queryInvoiceOrder()->doRequest();
+                        if($response->accepted == 1)
+                        {
+                            return $response->numberedOrderRows[0]->invoiceId;
+                        }
+                        break;
+                    case "svea_partpayment":
+                        $response = $order->queryPaymentPlanOrder()->doRequest();
+                        if($response->accepted == 1)
+                        {
+                            return $response->paymentPlanDetailsContractNumber;
+                        }
+                        break;
+                    default:
+                        return 0;
+                        break;
+                }
                 return 0;
             }
         }

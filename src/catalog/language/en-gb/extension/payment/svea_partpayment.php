@@ -57,3 +57,5 @@ $_['termsOfService1'] = 'By confirming the purchase I agree to ';
 $_['termsOfService2'] = ' terms ';
 $_['termsOfService3'] = 'for partial payments';
 $_['effectiveInterestRate'] = 'Effective interest rate';
+
+$_['text_tax_class']                = 'Tax Class';

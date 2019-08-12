@@ -111,3 +111,4 @@ $_['widget_pay_monthly']              = 'Maksa alkaen';
 $_['widget_month']                  = 'kuukaudessa';
 
 $_['sco_invoice_fee']               = 'Laskutuslisä (ei alv)';
+$_['text_tax_class']                = 'Tax class';

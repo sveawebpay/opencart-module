@@ -112,3 +112,4 @@ $_['widget_pay_monthly']            = 'Delbetal fra';
 $_['widget_month']                  = 'måned';
 
 $_['sco_invoice_fee']               = 'Fakturagebyr(eks moms)';
+$_['text_tax_class']                = 'Skatteklasse';

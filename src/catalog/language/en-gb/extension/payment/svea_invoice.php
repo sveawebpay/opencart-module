@@ -46,3 +46,5 @@ $_['response_error'] = "Error: ";
 //Order definitions
 $_['text_svea_fee']   = 'Svea Invoice fee';
 $_['unit']            = 'pcs';
+
+$_['text_tax_class']                = 'Tax Class';

@@ -46,3 +46,5 @@ $_['response_error'] = "Virhe: ";
 //Order definitions
 $_['unit']           = 'kpl';
 $_['text_svea_fee']   = 'SVEA laskutus maksu';
+
+$_['text_tax_class']                = 'Tax class';

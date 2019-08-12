@@ -18,3 +18,5 @@ $_['response_123']   = 'Borttappat kort';
 $_['response_127']   = 'Kundrefernsnummer redan använt i en annan transaktion';
 $_['response_129']   = 'Mer än en transaktion hittad för angivet kundreferensnummer';
 $_['response_error'] = "Fel: ";
+
+$_['text_tax_class']                = 'Momsklass';

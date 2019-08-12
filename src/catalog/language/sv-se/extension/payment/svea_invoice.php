@@ -48,3 +48,5 @@ $_['response_invalidlength'] = "Personnummer/organisationsnummer måste vara exa
 //Order definitions
 $_['text_svea_fee']   = 'Svea Fakturaavgift';
 $_['unit']            = 'st';
+
+$_['text_tax_class']                = 'Momsklass';

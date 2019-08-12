@@ -441,64 +441,40 @@ class ControllerExtensionModuleSco extends Controller
         return $data;
     }
 
-
     private function setCheckoutDBTable()
     {
-        $result = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "order_sco'");
+        $this->load->model('extension/svea/campaigns');
 
-        if (!$result->num_rows) {
+        $result = $this->model_extension_svea_campaigns->checkIfOrderScoTableExists();
 
-            $this->db->query("CREATE TABLE `" . DB_PREFIX . "order_sco` (
-                                `order_id`				int(11) unsigned NOT NULL AUTO_INCREMENT,
-                                `checkout_id`           int(11) unsigned DEFAULT NULL, 
-                                `locale` 				varchar(10) DEFAULT NULL,
-                                `country` 				varchar(8) DEFAULT NULL,
-                                `currency` 				varchar(4) DEFAULT NULL, 
-                                `status` 				varchar(30) DEFAULT NULL,
-                                `type` 					varchar(20) DEFAULT NULL, 
-                                `notes` 	        	text DEFAULT NULL,
-                                `newsletter` 	        bool DEFAULT 0,  
-            					`date_added` 			datetime DEFAULT NULL, 
-            					`date_modified` 		datetime DEFAULT NULL,
-                              PRIMARY KEY (`order_id`)
-                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8; ");
+        if (!$result->num_rows)
+        {
+            $this->model_extension_svea_campaigns->createOrderScoTable();
         }
     }
+
     private function updateCampaigns()
     {
         $this->setVersionStrings();
 
-        $this->db->query('CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . $this->moduleString .'sco_campaigns`
-                (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `campaignCode` VARCHAR( 100 ) NOT NULL,
-                `contractLengthInMonths` INT NOT NULL ,
-                `description` VARCHAR( 100 ) NOT NULL ,
-                `fromAmount` DOUBLE NOT NULL ,
-                `initialFee` DOUBLE NOT NULL ,
-                `interestRatePercent` DOUBLE NOT NULL ,
-                `monthlyAnnuityFactor` DOUBLE NOT NULL ,
-                `notificationFee` DOUBLE NOT NULL ,
-                `numberOfInterestFreeMonths` INT NOT NULL ,
-                `numberOfPaymentFreeMonths` INT NOT NULL ,
-                `paymentPlanType` VARCHAR( 100 ) NOT NULL ,
-                `toAmount` DOUBLE NOT NULL ,
-                `timestamp` INT UNSIGNED NOT NULL,
-                `countryCode` VARCHAR( 100 ) NOT NULL,
-                `productionEnvironment` INT NOT NULL
-            )   ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
-            ');
+        $this->load->model('extension/svea/campaigns');
 
-        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . $this->moduleString .'sco_campaigns');
+        //Create table for SCO campaigns if it doesn't exist
+        $this->model_extension_svea_campaigns->createScoCampaignsTableIfNotExist();
+        //Truncate table every time the campaigns are updated
+        $this->model_extension_svea_campaigns->truncateScoCampaignsTable();
 
-        $testMode = $this->model_setting_setting->getSettingValue($this->moduleString . 'sco_test_mode');
+        $testMode = $this->config->get($this->moduleString . 'sco_test_mode');
 
         $config = ($testMode == "1") ? new OpencartSveaCheckoutConfigTest($this) : new OpencartSveaCheckoutConfig($this);
         $testString = ($testMode == "1") ? "'" . $this->moduleString . "sco_checkout_test_merchant_id_%'" : "'" . $this->moduleString . "sco_checkout_merchant_id_%'";
 
-        $countriesQuery = $this->db->query("SELECT `key`, `value` FROM " . DB_PREFIX . "setting WHERE `key` LIKE " . $testString . ";");
+        $countries = $this->model_extension_svea_campaigns->fetchScoCountries($testString);
 
-        foreach ($countriesQuery->rows as $val) {
-            if ($val['value'] != "") {
+        foreach ($countries->rows as $country)
+        {
+            if ($country['value'] != "")
+            {
                 $request = \Svea\WebPay\WebPay::checkout($config);
 
                 $presetValueIsCompany = \Svea\WebPay\WebPayItem::presetValue()
@@ -506,7 +482,7 @@ class ControllerExtensionModuleSco extends Controller
                     ->setValue(false)
                     ->setIsReadonly(true);
 
-                $request->setCountryCode(strtoupper(substr($val['key'], -2)))
+                $request->setCountryCode(strtoupper(substr($country['key'], -2)))
                     ->addPresetValue($presetValueIsCompany);
 
                 try
@@ -515,50 +491,12 @@ class ControllerExtensionModuleSco extends Controller
                 }
                 catch (Exception $e)
                 {
-                    $this->log->write("Unable to fetch campaigns for countryCode '" . substr($val['key'], -2) . "' Reason: " . $e->getMessage());
+                    $this->log->write("Unable to fetch campaigns for countryCode '" . substr($country['key'], -2) . "' Reason: " . $e->getMessage());
                 }
 
-                if ($response == null) {
-
-                } else {
-                    foreach ($response as $responseResultItem) {
-                        try {
-                            $campaignCode = (isset($responseResultItem['CampaignCode'])) ? $responseResultItem['CampaignCode'] : "";
-                            $description = (isset($responseResultItem['Description'])) ? $responseResultItem['Description'] : "";
-                            $paymentPlanType = (isset($responseResultItem['PaymentPlanType'])) ? $responseResultItem['PaymentPlanType'] : "";
-                            $contractLength = (isset($responseResultItem['ContractLengthInMonths'])) ? $responseResultItem['ContractLengthInMonths'] : "";
-                            $monthlyAnnuityFactor = (isset($responseResultItem['MonthlyAnnuityFactor'])) ? $responseResultItem['MonthlyAnnuityFactor'] : "";
-                            $initialFee = (isset($responseResultItem['InitialFee'])) ? $responseResultItem['InitialFee'] : "";
-                            $notificationFee = (isset($responseResultItem['NotificationFee'])) ? $responseResultItem['NotificationFee'] : "";
-                            $interestRatePercentage = (isset($responseResultItem['InterestRatePercent'])) ? $responseResultItem['InterestRatePercent'] : "";
-                            $interestFreeMonths = (isset($responseResultItem['NumberOfInterestFreeMonths'])) ? $responseResultItem['NumberOfInterestFreeMonths'] : "";
-                            $paymentFreeMonths = (isset($responseResultItem['NumberOfPaymentFreeMonths'])) ? $responseResultItem['NumberOfPaymentFreeMonths'] : "";
-                            $fromAmount = (isset($responseResultItem['FromAmount'])) ? $responseResultItem['FromAmount'] : "";
-                            $toAmount = (isset($responseResultItem['ToAmount'])) ? $responseResultItem['ToAmount'] : "";
-
-                            try {
-                                $this->db->query("INSERT INTO " . DB_PREFIX . $this->moduleString ."sco_campaigns SET
-                                    campaignCode = '" . $this->db->escape($campaignCode) . "',
-                                    contractLengthInMonths = '" . $this->db->escape($contractLength) . "',
-                                    description = '" . $this->db->escape($description) . "',
-                                    fromAmount = '" . $this->db->escape($fromAmount) . "',
-                                    initialFee = '" . $this->db->escape($initialFee) . "',
-                                    interestRatePercent = '" . $this->db->escape($interestRatePercentage) . "',
-                                    monthlyAnnuityFactor = '" . $this->db->escape($monthlyAnnuityFactor) . "',
-                                    notificationFee = '" . $this->db->escape($notificationFee) . "',
-                                    numberOfInterestFreeMonths = '" . $this->db->escape($interestFreeMonths) . "',
-                                    numberOfPaymentFreeMonths = '" . $this->db->escape($paymentFreeMonths) . "',
-                                    paymentPlanType = '" . $this->db->escape($paymentPlanType) . "',
-                                    toAmount = '" . $this->db->escape($toAmount) . "',
-                                    timestamp = '" . $this->db->escape(time()) . "',
-                                    countryCode = '" . $this->db->escape(strtoupper(substr($val['key'], -2))) . "'");
-                            } catch (Exception $e) {
-                                $this->log->write($e->getMessage());
-                            }
-                        } catch (Exception $e) {
-                            $this->log->write($e->getMessage());
-                        }
-                    }
+                if ($response != null)
+                {
+                    $this->model_extension_svea_campaigns->insertScoCampaignsToTable($response, $country);
                 }
             }
         }

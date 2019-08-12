@@ -14,3 +14,5 @@ $_['response_114']   = 'Pankin aikakatkaisu';
 $_['response_127']   = 'Tilausnumero käytetty jo toisessa tapahtumassa';
 $_['response_129']   = 'MEnemmän kuin yksi tapahtuma löydetty samalla tilausnumerolla';
 $_['response_error'] = "Error: ";
+
+$_['text_tax_class']                = 'Tax class';

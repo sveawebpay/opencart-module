@@ -470,7 +470,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
     private function addPresetValues($order_builder)
     {
-        $email = isset($this->request->post['email']) ? $this->request->post['email'] : null;
+        $email = $this->customer->isLogged() ? $this->customer->getEmail() : null;
         $postcode = isset($this->request->post['postcode']) ? $this->request->post['postcode'] : null;
         $phoneNumber = $this->customer->isLogged() ? $this->customer->getTelephone() : null;
         $isCompany = $this->config->get($this->moduleString . 'sco_force_flow') ? $this->config->get($this->moduleString . 'sco_force_b2b') : null;

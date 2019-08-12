@@ -58,3 +58,5 @@ $_['termsOfService1'] = 'Ved å sluttføre kjøpet godkjenner jeg ';
 $_['termsOfService2'] = ' vilkår ';
 $_['termsOfService3'] = 'for delbetaling/kontokreditt';
 $_['effectiveInterestRate'] = 'Effektiv rente';
+
+$_['text_tax_class']                = 'Skatteklasse';

@@ -62,3 +62,5 @@ $_['termsOfService1'] = 'Genom att slutföra köpet godkänner jag ';
 $_['termsOfService2'] = ' villkor ';
 $_['termsOfService3'] = 'för delbetalningar';
 $_['effectiveInterestRate'] = 'Effektiv ränta';
+
+$_['text_tax_class']                = 'Momsklass';

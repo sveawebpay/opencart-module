@@ -27,23 +27,23 @@
         <!--general settings -->
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveacard" class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-3 control-label">Version</div>
+                <div class="col-sm-2 control-label">Version</div>
                 <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
                 <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_card_version" id="svea_card_version" />
             </div>
               <div class="form-group">
-                    <label for="svea_card_testmode" class="col-sm-3 control-label"><?php echo $entry_testmode; ?></label>
+                    <label for="svea_card_testmode" class="col-sm-2 control-label"><?php echo $entry_testmode; ?></label>
                     <div class="col-sm-9">
-                        <select name="svea_card_testmode">
+                        <select name="svea_card_testmode" class="form-control">
                             <option value="1" <?php if($svea_card_testmode == '1'){ echo 'selected="selected"';}?> ><?php echo $text_enabled; ?></option>
                             <option value="0" <?php if($svea_card_testmode == '0'){ echo 'selected="selected"';}?> ><?php echo $text_disabled; ?></option>
                         </select>
                     </div>
                 </div>
               <div class="form-group">
-                    <label for="svea_geo_zone_id" class="col-sm-3 control-label"><?php echo $entry_geo_zone; ?></label>
+                    <label for="svea_geo_zone_id" class="col-sm-2 control-label"><?php echo $entry_geo_zone; ?></label>
                     <div class="col-sm-9">
-                         <select name="svea_geo_zone_id">
+                         <select name="svea_geo_zone_id"  class="form-control">
                             <option value="0"><?php echo $text_all_zones; ?></option>
                             <?php foreach ($geo_zones as $geo_zone) { ?>
                                 <?php if ($geo_zone['geo_zone_id'] == $svea_card_geo_zone_id) { ?>
@@ -56,9 +56,9 @@
                     </div>
                 </div>
               <div class="form-group">
-                    <label for="svea_card_status" class="col-sm-3 control-label"><?php echo $entry_status; ?></label>
+                    <label for="svea_card_status" class="col-sm-2 control-label"><?php echo $entry_status; ?></label>
                     <div class="col-sm-9">
-                        <select name="svea_card_status">
+                        <select name="svea_card_status"  class="form-control">
                             <?php if ($svea_card_status) { ?>
                             <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                             <option value="0"><?php echo $text_disabled; ?></option>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label" for="input-process-status"><?php echo $entry_card_logos; ?></label>
+                <label class="col-sm-2 control-label" for="input-process-status"><?php echo $entry_card_logos; ?></label>
                 <div class="col-sm-9">
                     <div class="well well-sm" style="height: 120px; overflow: auto;">
                         <?php foreach ($card_logos as $card_name => $card_logo) { ?>
@@ -90,23 +90,23 @@
                 </div>
             </div>
               <div class="form-group">
-                    <label for="svea_card_sort_order" class="col-sm-3 control-label"><?php echo $entry_sort_order; ?></label>
+                    <label for="svea_card_sort_order" class="col-sm-2 control-label"><?php echo $entry_sort_order; ?></label>
                     <div class="col-sm-9">
-                       <input type="text" name="svea_card_sort_order" value="<?php echo $svea_card_sort_order; ?>" size="1" />
+                       <input class="form-control" type="text" name="svea_card_sort_order" value="<?php echo $svea_card_sort_order; ?>" size="1" />
                     </div>
                 </div>
               <div class="form-group">
-                    <label for="svea_card_payment_description" class="col-sm-3 control-label"><?php echo $entry_payment_description; ?></label>
+                    <label for="svea_card_payment_description" class="col-sm-2 control-label"><?php echo $entry_payment_description; ?></label>
                     <div class="col-sm-9">
-                      <textarea rows="2" cols="30" name="svea_card_payment_description"><?php echo $svea_card_payment_description; ?></textarea>
+                      <textarea class="form-control" rows="2" cols="30" name="svea_card_payment_description"><?php echo $svea_card_payment_description; ?></textarea>
                     </div>
                 </div>
             <div class="form-group">
-                <label for="svea_card_auto_deliver" class="col-sm-3 control-label">
+                <label for="svea_card_auto_deliver" class="col-sm-2 control-label">
                     <span data-toggle="tooltip" title="<?php echo entry_auto_deliver_description; ?>"><?php echo $entry_auto_deliver; ?></span>
                 </label>
                 <div class="col-sm-9">
-                    <select name="svea_card_auto_deliver">
+                    <select name="svea_card_auto_deliver"  class="form-control">
                         <?php if ($svea_card_auto_deliver) { ?>
                         <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                         <option value="0"><?php echo $text_disabled; ?></option>
@@ -127,16 +127,16 @@
                   <!--Test -->
                 <div class="tab-pane" id="tab-cardtest">
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_merchant_id_test"><?php echo $entry_merchant_id; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_card_merchant_id_test"><?php echo $entry_merchant_id; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_card_merchant_id_test" type="text"
+                            <input class="form-control" name="svea_card_merchant_id_test" type="text"
                                     value="<?php echo $value_merchant_test; ?>" />
                         </div>
                     </div>
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_sw_test"><?php echo $entry_sw; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_card_sw_test"><?php echo $entry_sw; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_card_sw_test" type="text"
+                            <input class="form-control" name="svea_card_sw_test" type="text"
                                     value="<?php echo $value_sw_test; ?>" />
                         </div>
                     </div>
@@ -144,16 +144,16 @@
                 <!--Prod -->
                 <div class="tab-pane" id="tab-cardprod">
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_merchant_id_prod"><?php echo $entry_merchant_id; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_card_merchant_id_prod"><?php echo $entry_merchant_id; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_card_merchant_id_prod" type="text"
+                            <input class="form-control" name="svea_card_merchant_id_prod" type="text"
                                     value="<?php echo $value_merchant_prod; ?>" />
                         </div>
                     </div>
                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="svea_card_sw_prod"><?php echo $entry_sw; ?></label>
+                        <label class="col-sm-2 control-label" for="svea_card_sw_prod"><?php echo $entry_sw; ?></label>
                         <div class="col-sm-9">
-                            <input name="svea_card_sw_prod" type="text"
+                            <input class="form-control" name="svea_card_sw_prod" type="text"
                                     value="<?php echo $value_sw_prod; ?>" />
                         </div>
                     </div>

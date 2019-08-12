@@ -58,3 +58,5 @@ $_['termsOfService1'] = 'Tekemällä tämän ostoksen hyväksyn ';
 $_['termsOfService2'] = ' erämaksun ';
 $_['termsOfService3'] = 'yleiset ehdot';
 $_['effectiveInterestRate'] = 'Todellinen vuosikorko';
+
+$_['text_tax_class']                = 'Tax class';

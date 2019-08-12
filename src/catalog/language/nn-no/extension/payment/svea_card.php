@@ -18,3 +18,5 @@ $_['response_123']   = 'Mistet kort';
 $_['response_127']   = 'Kundefeferansenummer er allerede benyttet i en annan transaktion';
 $_['response_129']   = 'Mer enn en transaktion er funnet for angitt kundereferansenummer';
 $_['response_error'] = "Feil: ";
+
+$_['text_tax_class']                = 'Skatteklasse';

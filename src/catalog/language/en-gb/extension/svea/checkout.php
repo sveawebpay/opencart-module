@@ -111,3 +111,4 @@ $_['widget_pay_monthly']            = 'Pay monthly from';
 $_['widget_month']                  = 'month';
 
 $_['sco_invoice_fee']               = 'Invoice Fee(excl. tax)';
+$_['text_tax_class']                = 'Tax class';

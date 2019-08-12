@@ -129,17 +129,11 @@ class SveaCommon extends Controller
                         ->setDescription(isset($addon['text']) ? $addon['text'] : "")
                     );
             } //discounts (-)
-            else {
-                $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100);
+            else
+            {
+                $vat = round(($addon['value'] * $currencyValue) * ($addon['tax_rate'] / 100), 2, PHP_ROUND_HALF_DOWN);
 
-                $discountRows = \Svea\WebPay\Helper\Helper::splitMeanAcrossTaxRates(
-                    ((abs($addon['value']) * $currencyValue) + abs($vat)),
-                    $addon['tax_rate'],
-                    $addon['title'],
-                    array_key_exists('text', $addon) ? $addon['text'] : "",
-                    \Svea\WebPay\Helper\Helper::getTaxRatesInOrder($svea),
-                    false) // discount rows will use amountIncVat
-                ;
+                $discountRows = $this->splitDiscount($svea->orderRows, ((abs($addon['value']) * $currencyValue) + abs($vat)), $addon['title'] , array_key_exists('text', $addon) ? $addon['text'] : "");
                 foreach ($discountRows as $row) {
                     $svea = $svea->addDiscount($row);
                 }
@@ -148,6 +142,55 @@ class SveaCommon extends Controller
 
 
         return $svea;
+    }
+
+    private function splitDiscount($orderRows, $discountAmount, $discountName, $discountDescription)
+    {
+        $orderTotal = null;
+
+        $splitPercent = array();
+
+        foreach($orderRows as $row)
+        {
+            $orderTotal = $orderTotal + $row->amountIncVat;
+        }
+
+        foreach($orderRows as $row)
+        {
+            $vatPercentFound = false;
+            foreach($splitPercent as $key => $val)
+            {
+                if(isset($splitPercent[$key]['vatPercent']) && $splitPercent[$key]['vatPercent']  == $row->vatPercent)
+                {
+                    $vatPercentFound = true;
+                    $splitPercent[$key]['amountIncVat'] = $splitPercent[$key]['amountIncVat'] + $row->amountIncVat / $orderTotal;
+                }
+            }
+            if($vatPercentFound == false)
+            {
+                array_push($splitPercent,
+                    array(
+                        "amountIncVat" => $row->amountIncVat / $orderTotal,
+                        "vatPercent" => $row->vatPercent));
+            }
+        }
+
+        $discountRows = array();
+
+        foreach($splitPercent as $val)
+        {
+            if($val['amountIncVat'] > 0) {
+                $rowName = mb_substr($discountName . " " . $this->language->get('text_tax_class') . ":" . $val['vatPercent'] . '%', 0, 40);
+                array_push($discountRows, \Svea\Webpay\WebpayItem::fixedDiscount()
+                    ->setAmountIncVat($discountAmount * $val['amountIncVat'])
+                    ->setVatPercent($val['vatPercent'])
+                    ->setName(isset($rowName) ? $rowName : "")
+                    ->setDescription((isset($discountDescription) ? $discountDescription : ""))
+                );
+            }
+        }
+
+        return $discountRows;
     }
 
     function addTaxRateToAddons()
@@ -225,7 +268,7 @@ class SveaCommon extends Controller
             if (isset($svea_tax[$value['code']])) {
                 if ($svea_tax[$value['code']]) {
                     // round and cast, or may get i.e. 24.9999, which shows up as 25f in debugger & written to screen, but converts to 24i
-                    $total_data['totals'][$key]['tax_rate'] = (int)round($svea_tax[$value['code']] / $value['value'] * 100);
+                    $total_data['totals'][$key]['tax_rate'] = ($svea_tax[$value['code']] / $value['value']) * 100;
                 } else {
                     $total_data['totals'][$key]['tax_rate'] = 0;
                 }

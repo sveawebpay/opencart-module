@@ -194,7 +194,8 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
      */
     private function loadPaymentPlanParams()
     {
-        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . 'svea_params_table');
+        $this->load->model('extension/svea/campaigns');
+        $this->model_extension_svea_campaigns->truncateSveaParamsTable();
 
         $this->setVersionStrings();
         $countryCode = array("SE", "NO", "FI", "DK", "NL", "DE");
@@ -234,7 +235,7 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
                         $formatted_params = $this->sveaFormatParams($svea_params);
 
                         if ($formatted_params != NULL) {
-                            $this->insertPaymentPlanParams($formatted_params, $countryCode[$i]);
+                            $this->model_extension_svea_campaigns->insertSveaCampaignsToTable($formatted_params, $countryCode[$i]);
                         }
                     }
                 }
@@ -286,47 +287,6 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         return $result;
     }
 
-    protected function insertPaymentPlanParams($params, $countryCode)
-    {
-
-        $error_flag = false;
-
-        foreach ($params as $param) {
-            //$query = $db->getQuery(true);
-            $q = "INSERT INTO `" . DB_PREFIX . "svea_params_table`
-                    (   `campaignCode` ,
-                        `description`,
-                        `paymentPlanType`,
-                        `contractLengthInMonths`,
-                        `monthlyAnnuityFactor`,
-                        `initialFee`,
-                        `notificationFee`,
-                        `interestRatePercent`,
-                        `numberOfInterestFreeMonths`,
-                        `numberOfPaymentFreeMonths`,
-                        `fromAmount`,
-                        `toAmount`,
-                        `timestamp`,
-                        `countryCode`)
-                        VALUES(";
-            foreach ($param as $key => $value)
-                $q .= "'" . $value . "',";
-
-            $q .= time() . ",";
-            $q .= "'" . $countryCode . "'";
-            $q .= ")";
-            try {
-                $this->db->query($q);
-            } catch (Exception $e) {
-                $this->log->write("Failed to update PaymentPlanParams " . $e->getMessage());
-                $error_flag = true;
-            }
-        }
-
-        if ($error_flag == false) {
-            $this->log->write("Successfully updated PaymentPlanParams");
-        }
-    }
 
     protected function getSveaVersion()
     {
@@ -357,25 +317,9 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
      */
     public function install()
     {
-        $q = ' CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . 'svea_params_table`
-                (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `campaignCode` VARCHAR( 100 ) NOT NULL,
-                `description` VARCHAR( 100 ) NOT NULL ,
-                `paymentPlanType` VARCHAR( 100 ) NOT NULL ,
-                `contractLengthInMonths` INT NOT NULL ,
-                `monthlyAnnuityFactor` DOUBLE NOT NULL ,
-                `initialFee` DOUBLE NOT NULL ,
-                `notificationFee` DOUBLE NOT NULL ,
-                `interestRatePercent` DOUBLE NOT NULL ,
-                `numberOfInterestFreeMonths` INT NOT NULL ,
-                `numberOfPaymentFreeMonths` INT NOT NULL ,
-                `fromAmount` DOUBLE NOT NULL ,
-                `toAmount` DOUBLE NOT NULL ,
-                `timestamp` INT UNSIGNED NOT NULL,
-                `countryCode` VARCHAR( 100 ) NOT NULL
-            )   ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
-            ';
-        $this->db->query($q);
+        $this->load->model('extension/svea/campaigns');
+        $this->model_extension_svea_campaigns->createSveaParamsTable();
+
         $this->setVersionStrings();
 
         $this->load->model('setting/setting');
