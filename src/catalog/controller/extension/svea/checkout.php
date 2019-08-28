@@ -115,7 +115,6 @@ class ControllerExtensionSveaCheckout extends Controller
         $data['heading_misc'] = $this->language->get('heading_misc');
         $data['heading_payment'] = $this->language->get('heading_payment');
 
-        $data['text_checkout_into'] = $this->language->get('text_checkout_into');
         $data['text_subscribe_to_newsletter'] = $this->language->get('text_sco_subscribe_to_newsletter');
         $data['text_normal_checkout'] = sprintf($this->language->get('text_normal_checkout'), $this->url->link('checkout/checkout/index'));
 

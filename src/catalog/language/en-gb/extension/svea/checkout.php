@@ -1,7 +1,6 @@
 <?php
 
 $_['text_normal_checkout']			= '<a href="%s">Click here to go to default checkout!</a>';
-$_['text_checkout_into']			= 'Please enter your E-Mail and Postal Code to continue with Svea Ekonomi Checkout.';
 
 $_['entry_email']					= 'E-mail';
 $_['entry_password']				= 'Password';

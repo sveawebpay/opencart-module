@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']              = 'Svea WebPay Rechnung';
+$_['text_title']              = 'Svea Rechnung';
 $_['text_invoice']        = 'Rechnung';
 $_['text_ssn']                = 'Sozialversicherungsnummer ';
 $_['text_private_or_company'] = 'Art';

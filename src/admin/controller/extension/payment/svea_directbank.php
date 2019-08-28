@@ -65,6 +65,9 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
 
         $data['tab_general'] = $this->language->get('tab_general');
 
+        $data['entry_hide_svea_comments'] = $this->language->get('entry_hide_svea_comments');
+        $data['entry_hide_svea_comments_tooltip'] = $this->language->get('entry_hide_svea_comments_tooltip');
+
         //Credentials
         $data['entry_test'] = $this->language->get('entry_test');
         $data['entry_prod'] = $this->language->get('entry_prod');
@@ -142,6 +145,12 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
             $data[$this->paymentString . 'svea_directbank_testmode'] = $this->request->post[$this->paymentString . 'svea_directbank_testmode'];
         } else {
             $data[$this->paymentString . 'svea_directbank_testmode'] = $this->config->get($this->paymentString . 'svea_directbank_testmode');
+        }
+
+        if (isset($this->request->post[$this->paymentString . 'svea_directbank_hide_svea_comments'])) {
+            $data[$this->paymentString . 'svea_directbank_hide_svea_comments'] = $this->request->post[$this->paymentString . 'svea_directbank_hide_svea_comments'];
+        } else {
+            $data[$this->paymentString . 'svea_directbank_hide_svea_comments'] = $this->config->get($this->paymentString . 'svea_directbank_hide_svea_comments');
         }
 
         $data['header'] = $this->load->controller('common/header');

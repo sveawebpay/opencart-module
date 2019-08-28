@@ -2,17 +2,18 @@
     <!-- Coupon successful - start -->
     <div class="input-group">
         <span class="sco-input-label"><?php echo $item_coupon; ?></span>
-        <div class="form-control sco-input" style="line-height: 35px;">
-            <b><?php echo $coupon['code']; ?></b>
+        <div id="sco-coupon-input" class="form-control sco-input" style="line-height: 35px;">
+            <?php echo $coupon['code']; ?>
         </div>
         <span class="input-group-btn">
                 <button class="btn btn-danger sco-btn-danger" id="sco-coupon-remove">
-                    <i class="glyphicon glyphicon-trash"></i>
+                    <i id="sco-coupon-button-icon" class="glyphicon glyphicon-trash"></i>
                 </button>
             </span>
     </div>
     <script>
       $('#coupon-toggle-btn').addClass('used');
+      $('#sco-coupon-input').addClass('sco-input-applied');
     </script>
     <!-- Coupon successful - end -->
     <?php } else { ?>
@@ -21,12 +22,13 @@
         <input type="text" class="form-control sco-input" name="coupon" placeholder="<?php echo $item_coupon; ?>"/>
         <span class="input-group-btn">
                     <button class="btn sco-primary-btn" id="sco-coupon-add" type="button">
-                        <i class="glyphicon glyphicon-plus"></i>
+                        <i id="sco-coupon-button-icon" class="glyphicon glyphicon-plus"></i>
                     </button>
                 </span>
     </div>
     <script>
       $('#coupon-toggle-btn').removeClass('used');
+      $('#sco-coupon-input').removeClass('sco-input-applied');
     </script>
     <!-- Coupon unsuccessfully - end -->
 <?php } ?>

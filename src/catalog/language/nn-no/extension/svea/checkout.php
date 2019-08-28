@@ -1,7 +1,6 @@
 <?php
 
 $_['text_normal_checkout']			= '<a href="%s">Klikk her for å gå til default checkout!</a>';
-$_['text_checkout_into']			= 'Skriv inn din e-postadresse og postnummer for å fortsette med Svea Finans Checkout';
 
 $_['entry_email']					= 'E-post';
 $_['entry_password']				= 'Passord';

@@ -118,7 +118,8 @@ class ControllerExtensionModuleSco extends Controller
             'iframe_hide_change_address' => 0,
             'force_flow' => 0,
             'force_b2b' => 0,
-            'gather_newsletter_consent' => 0
+            'gather_newsletter_consent' => 0,
+            'hide_svea_comments' => 0
         );
         $data['options_on_checkout_page'] = array(
             $this->moduleString . 'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
@@ -351,7 +352,8 @@ class ControllerExtensionModuleSco extends Controller
         $data['entry_status_tooltip'] = $this->language->get('entry_status_tooltip');
         $data['entry_' . $this->moduleString . 'sco_show_widget_on_product_page'] = $this->language->get('text_show_widget_on_product_page');
         $data['entry_' . $this->moduleString . 'sco_show_widget_on_product_page_tooltip'] = $this->language->get('text_show_widget_on_product_page_tooltip');
-
+        $data['entry_' . $this->moduleString . 'sco_hide_svea_comments'] = $this->language->get('text_hide_svea_comments');
+        $data['entry_' . $this->moduleString . 'sco_hide_svea_comments_tooltip'] = $this->language->get('text_hide_svea_comments_tooltip');
 
         // Authorization
         $data['entry_checkout_default_country'] = $this->language->get('entry_checkout_default_country');
@@ -383,7 +385,6 @@ class ControllerExtensionModuleSco extends Controller
         $data['entry_' . $this->moduleString . 'sco_close'] = $this->language->get('text_close');
         $data['entry_' . $this->moduleString . 'sco_copy_all_to_clipboard'] = $this->language->get('text_copy_all_to_clipboard');
         $data['entry_' . $this->moduleString . 'sco_error_fetching_newsletter_consent_list'] = $this->language->get('text_error_fetching_newsletter_consent_list');
-
 
         // Iframe settings
         $data['entry_shop_terms_uri'] = $this->language->get('entry_shop_terms_uri');

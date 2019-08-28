@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']               = 'Svea WebPay Delbetal';
+$_['text_title']               = 'Svea Delbetal';
 $_['text_paymentplan']        = 'Delbetal';
 $_['text_ssn']                = 'Cpr.nr.';
 $_['text_get_address']        = 'Adresse';

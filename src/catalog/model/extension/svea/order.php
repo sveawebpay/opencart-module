@@ -5,13 +5,52 @@ class ModelExtensionSveaOrder extends Model
     private $paymentString ="payment_";
     private $moduleString = "module_";
 
+    private function hideSveaComment($paymentMethod)
+    {
+        switch($paymentMethod)
+        {
+            case "sco":
+                {
+                    $hideComment = $this->config->get($this->moduleString . 'sco_hide_svea_comments');
+                    break;
+                }
+            case "svea_card":
+                {
+                    $hideComment = $this->config->get($this->paymentString . 'svea_card_hide_svea_comments');
+                    break;
+                }
+            case "svea_directbank":
+                {
+                    $hideComment = $this->config->get($this->paymentString . 'svea_directbank_hide_svea_comments');
+                    break;
+                }
+            case "svea_invoice":
+                {
+                    $hideComment = $this->config->get($this->paymentString . 'svea_invoice_hide_svea_comments');
+                    break;
+                }
+            case "svea_partpayment":
+                {
+                    $hideComment = $this->config->get($this->paymentString . 'svea_partpayment_hide_svea_comments');
+                    break;
+                }
+            default:
+                $hideComment = false;
+                break;
+        }
+        return $hideComment;
+    }
+
     public function deliverOrder($config, $paymentMethod, $sveaOrderId, $countryCode)
     {
         $this->setVersionStrings();
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
-        if ($status == "DELIVERED" || $paymentMethod == "svea_directbank") {
-            $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order has already been delivered at Svea, no request was sent to the server.";
+        if ($status == "DELIVERED" || $paymentMethod == "svea_directbank"){
+            if($this->hideSveaComment($paymentMethod) == false)
+            {
+                $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order has already been delivered at Svea, no request was sent to the server.";
+            }
             return;
         }
 
@@ -52,16 +91,22 @@ class ModelExtensionSveaOrder extends Model
                 } else if ($paymentMethod == "svea_partpayment") {
                     $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was delivered. " . "Svea contractNumber: " . $response->contractNumber;
                 } else {
-                    $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was delivered.";
+                    if($this->hideSveaComment($paymentMethod) == false) {
+                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was delivered.";
+                    }
                 }
             } else {
                 if ($this->request->post['override'] == 1) {
                     if(isset($response->errormessage)) {
-                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
+                        if($this->hideSveaComment($paymentMethod) == false) {
+                            $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
+                        }
                     }
                     else
                     {
-                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. However it was overridden.";
+                        if($this->hideSveaComment($paymentMethod) == false) {
+                            $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. However it was overridden.";
+                        }
                     }
                 } else {
                     $json['error'] = "Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " Override the status if you still want to change it.";
@@ -69,7 +114,9 @@ class ModelExtensionSveaOrder extends Model
             }
         } catch (Exception $e) {
             if ($this->request->post['override'] == 1) {
-                $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
+                if($this->hideSveaComment($paymentMethod) == false) {
+                    $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
+                }
             } else {
                 $json['error'] = "Svea: An error occurred. Error: " . $e->getMessage() . ". Override the status if you still want to change it.";
             }
@@ -86,7 +133,9 @@ class ModelExtensionSveaOrder extends Model
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
         if ($status == "CANCELLED" || $status == "CREDITED" || $status == "ERROR") {
-            $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order is already credited or cancelled at Svea, no request was sent to the server.";
+            if($this->hideSveaComment($paymentMethod) == false) {
+                $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order is already credited or cancelled at Svea, no request was sent to the server.";
+            }
         } else if ($status == "ERROR") {
             $json['error'] = "Svea: An error occurred. Status was not recognized. No request was sent.";
         }
@@ -119,10 +168,14 @@ class ModelExtensionSveaOrder extends Model
                 }
 
                 if ($response->accepted == 1) {
-                    $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was cancelled at Svea.";
+                    if($this->hideSveaComment($paymentMethod) == false) {
+                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was cancelled at Svea.";
+                    }
                 } else {
                     if ($this->request->post['override'] == 1) {
-                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
+                        if($this->hideSveaComment($paymentMethod) == false) {
+                            $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
+                        }
                     } else {
                         if(isset($response->errormessage)) {
                             $json['error'] = "Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " Override the status if you still want to change it.";
@@ -135,7 +188,9 @@ class ModelExtensionSveaOrder extends Model
 
             } catch (Exception $e) {
                 if ($this->request->post['override'] == 1) {
-                    $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
+                    if($this->hideSveaComment($paymentMethod) == false) {
+                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
+                    }
                 } else {
                     $json['error'] = "Svea: An error occurred. Error: " . $e->getMessage() . ". Override the status if you still want to change it.";
                 }
@@ -198,17 +253,23 @@ class ModelExtensionSveaOrder extends Model
                 }
 
                 if ($response->accepted == 1) {
-                    $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was credited.";
+                    if($this->hideSveaComment($paymentMethod) == false) {
+                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was credited.";
+                    }
                 }
                 else
                 {
                     if ($this->request->post['override'] == 1) {
                         if(isset($response->errormessage)) {
-                            $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
+                            if($this->hideSveaComment($paymentMethod) == false) {
+                                $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
+                            }
                         }
                         else
                         {
-                            $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. However it was overridden.";
+                            if($this->hideSveaComment($paymentMethod) == false) {
+                                $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. However it was overridden.";
+                            }
                         }
                     } else {
                         if(isset($response->errormessage)) {
@@ -221,7 +282,9 @@ class ModelExtensionSveaOrder extends Model
                 }
             } catch (Exception $e) {
                 if ($this->request->post['override'] == 1) {
-                    $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
+                    if($this->hideSveaComment($paymentMethod) == false) {
+                        $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
+                    }
                 } else {
                     $json['error'] = "Svea: An error occurred. Error: " . $e->getMessage() . ". Override the status if you still want to change it.";
                 }

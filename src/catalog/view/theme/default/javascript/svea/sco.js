@@ -38,6 +38,11 @@ $(document).ready(function () {
   continueBtnStep1.on('click', function () {
     var postcode = postCodeEl.val().replace(/\D/g, '');
     if (postcode && postcode.length >= postCodeLength && postcode >= postCodeEl.val()) {
+      //addSpinner('continue-step-1');
+      if(document.getElementById("continue-step-1"))
+      {
+        addSpinner('change-postcode');
+      }
       $.ajax({
         type: 'POST',
         url: 'index.php?route=extension/svea/shipping',
@@ -66,6 +71,10 @@ $(document).ready(function () {
           $('#sco-details').show("fast", function () {
             stepOneFormEl.addClass('passed');
             postCodeEl.prop('disabled', true);
+            if(document.getElementById('change-postcode-spinner'))
+            {
+              removeSpinner('change-postcode');
+            }
             changePostcodeEl.show();
             continueBtnStep1.attr('id', 'continue-step-2');
             continueBtnStep2 = $('#continue-step-2');
@@ -76,6 +85,9 @@ $(document).ready(function () {
                 continueBtnStep2.click();
             }
           });
+        },
+        complete: function() {
+          //removeSpinner('continue-step-1');
         }
       });
     }
@@ -98,6 +110,7 @@ $(document).ready(function () {
 
   $(document).on('click', '#continue-step-2', function () {
     if (continueBtnStep2.hasClass('sco-back-btn')) {
+      addSpinner('change-postcode');
       stepTwoFormEl.removeClass('passed');
       continueBtnStep2.text(continueBtnText);
       continueBtnStep2.removeClass('sco-back-btn');
@@ -145,6 +158,7 @@ $(document).ready(function () {
   });
 
   $('#comment').on('blur', function (event) {
+    addSpinner('comment');
     $.ajax({
       type: 'POST',
       url: 'index.php?route=extension/svea/comment',
@@ -156,12 +170,68 @@ $(document).ready(function () {
         } else {
           $('#comment-toggle-btn').removeClass('used');
         }
+      },
+      complete: function() {
+        removeSpinner('comment');
       }
     });
   });
 
 
+  function addSpinner(addonType)
+  {
+    if(addonType === 'coupon')
+    {
+      let couponIconEl = $('#sco-coupon-button-icon');
+      couponIconEl.removeClass("glyphicon glyphicon-plus");
+      couponIconEl.addClass('fa fa-spinner fa-spin');
+    }
+    else if(addonType === 'voucher')
+    {
+      let voucherIconEl = $('#sco-voucher-button-icon');
+      voucherIconEl.removeClass("glyphicon glyphicon-plus");
+      voucherIconEl.addClass('fa fa-spinner fa-spin');
+    }
+    else if(addonType === 'comment')
+    {
+      let commentIconEl = $('#sco-comment-button-icon');
+      commentIconEl.removeClass("glyphicon glyphicon-plus");
+      commentIconEl.addClass('fa fa-spinner fa-spin');
+    }
+    else if(addonType === 'change-postcode')
+    {
+      $("#sco-postcode").before("<span id=\"change-postcode-spinner\"><i class=\"fa fa-spinner fa-spin sco-change-postcode\"></i></span>");
+    }
+  }
+
+  function removeSpinner(addonType)
+  {
+    if(addonType === 'coupon')
+    {
+      let couponIconEl = $('#sco-coupon-button-icon');
+      couponIconEl.addClass("glyphicon glyphicon-plus");
+      couponIconEl.removeClass('fa fa-spinner fa-spin');
+    }
+    else if(addonType === 'voucher')
+    {
+      let voucherIconEl = $('#sco-voucher-button-icon');
+      voucherIconEl.addClass("glyphicon glyphicon-plus");
+      voucherIconEl.removeClass('fa fa-spinner fa-spin');
+    }
+    else if(addonType === 'comment')
+    {
+      let commentIconEl = $('#sco-comment-button-icon');
+      commentIconEl.addClass("glyphicon glyphicon-plus");
+      commentIconEl.removeClass('fa fa-spinner fa-spin');
+    }
+    else if(addonType === 'change-postcode')
+    {
+     $("#change-postcode-spinner").remove();
+    }
+  }
+
   $(document).on('click', '#sco-coupon-add', function () {
+    addSpinner('coupon');
     $.ajax({
       url: 'index.php?route=extension/svea/coupon/add',
       type: 'post',
@@ -185,11 +255,15 @@ $(document).ready(function () {
           couponEl.load('index.php?route=extension/svea/coupon');
           updateCartInformation();
         }
+      },
+      complete: function() {
+        removeSpinner('coupon');
       }
     });
   });
 
   $(document).on('click', '#sco-coupon-remove', function () {
+    addSpinner('coupon');
     $.ajax({
       url: 'index.php?route=extension/svea/coupon/remove',
       type: 'post',
@@ -200,11 +274,15 @@ $(document).ready(function () {
       success: function () {
         couponEl.load('index.php?route=extension/svea/coupon');
         updateCartInformation();
+      },
+      complete: function() {
+        removeSpinner('coupon');
       }
     });
   });
 
   $(document).on('click', '#sco-voucher-add', function () {
+    addSpinner('voucher');
     $.ajax({
       url: 'index.php?route=extension/svea/voucher/add',
       type: 'post',
@@ -228,11 +306,15 @@ $(document).ready(function () {
           voucherEl.load('index.php?route=extension/svea/voucher');
           updateCartInformation();
         }
+      },
+      complete: function() {
+        removeSpinner('voucher');
       }
     });
   });
 
   $(document).on('click', '#sco-voucher-remove', function () {
+    addSpinner('voucher');
     $.ajax({
       url: 'index.php?route=extension/svea/voucher/remove',
       type: 'post',
@@ -243,6 +325,9 @@ $(document).ready(function () {
       success: function (json) {
         voucherEl.load('index.php?route=extension/svea/voucher');
         updateCartInformation();
+      },
+      complete: function() {
+        removeSpinner('voucher');
       }
     });
   });

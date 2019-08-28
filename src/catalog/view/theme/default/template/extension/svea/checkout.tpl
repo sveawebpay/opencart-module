@@ -107,7 +107,9 @@
                             <div class="input-group">
                                 <textarea class="form-control" name="comment" id="comment"><?php echo $order_comment; ?></textarea>
                                 <span class="input-group-btn">
-                                    <button class="btn sco-primary-btn" id="sco-comment-add" type="button"><i class="glyphicon glyphicon-plus"></i></button>
+                                    <button class="btn sco-primary-btn" id="sco-comment-add" type="button">
+                                        <i id="sco-comment-button-icon" class="glyphicon glyphicon-plus"></i>
+                                    </button>
                                 </span>
                             </div>
                             <?php if (!empty($order_comment)) { ?>

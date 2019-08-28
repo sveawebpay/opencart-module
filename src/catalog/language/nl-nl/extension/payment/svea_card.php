@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']     = 'Svea WebPay Betalen met betaalpas/creditcard';
+$_['text_title']     = 'Svea Betalen met betaalpas/creditcard';
 $_['unit']           = 'st';
 
 //Error responses

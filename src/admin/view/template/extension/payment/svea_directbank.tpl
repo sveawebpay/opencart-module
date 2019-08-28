@@ -81,7 +81,22 @@
                       <textarea class="form-control" rows="2" cols="30" name="svea_directbank_payment_description"><?php echo $svea_directbank_payment_description; ?></textarea>
                     </div>
                 </div>
-
+            <div class="form-group">
+                <label for="svea_directbank_hide_svea_comments" class="col-sm-2 control-label">
+                    <span data-toggle="tooltip" title="<?php echo $entry_hide_svea_comments_tooltip; ?>"><?php echo $entry_hide_svea_comments; ?></span>
+                </label>
+                <div class="col-sm-9">
+                    <select name="svea_directbank_hide_svea_comments"  class="form-control">
+                        <?php if ($svea_directbank_hide_svea_comments) { ?>
+                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                        <option value="0"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                        <option value="1"><?php echo $text_enabled; ?></option>
+                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
         <!-- Mode specific -->
         <div class="tab-content">
             <ul class="nav nav-tabs" id="svea_merchant_db">

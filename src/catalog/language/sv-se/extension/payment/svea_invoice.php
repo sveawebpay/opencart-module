@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']              = 'Svea Webpay Faktura';
+$_['text_title']              = 'Svea Faktura';
 $_['text_invoice']        = 'Faktura';
 $_['text_ssn']                = 'Personnummer';
 $_['text_private_or_company'] = 'Typ';

@@ -59,6 +59,9 @@ class ControllerExtensionPaymentSveacard extends Controller
         $data['entry_auto_deliver'] = $this->language->get('entry_auto_deliver');
         $data['entry_auto_deliver_description'] = $this->language->get('entry_auto_deliver_description');
 
+        $data['entry_hide_svea_comments'] = $this->language->get('entry_hide_svea_comments');
+        $data['entry_hide_svea_comments_tooltip'] = $this->language->get('entry_hide_svea_comments_tooltip');
+
         //Definitions lang
         $data['entry_testmode'] = $this->language->get('entry_testmode');
         $data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
@@ -153,6 +156,12 @@ class ControllerExtensionPaymentSveacard extends Controller
             $data[$this->paymentString . 'svea_card_auto_deliver'] = $this->request->post[$this->paymentString . 'svea_card_auto_deliver'];
         } else {
             $data[$this->paymentString . 'svea_card_auto_deliver'] = $this->config->get($this->paymentString . 'svea_card_auto_deliver');
+        }
+
+        if (isset($this->request->post[$this->paymentString . 'svea_card_hide_svea_comments'])) {
+            $data[$this->paymentString . 'svea_card_hide_svea_comments'] = $this->request->post[$this->paymentString . 'svea_card_hide_svea_comments'];
+        } else {
+            $data[$this->paymentString . 'svea_card_hide_svea_comments'] = $this->config->get($this->paymentString . 'svea_card_hide_svea_comments');
         }
 
         $data['header'] = $this->load->controller('common/header');

@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']     = 'Svea WebPay Kort';
+$_['text_title']     = 'Svea Kort';
 $_['unit']           = 'st';
 
 //Error responses

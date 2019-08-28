@@ -122,7 +122,22 @@
                         <?php } ?>
                      </div>
                 </div>
-
+                <div class="form-group">
+                    <label for="svea_partpayment_hide_svea_comments" class="col-sm-2 control-label">
+                        <span data-toggle="tooltip" title="<?php echo $entry_hide_svea_comments_tooltip; ?>"><?php echo $entry_hide_svea_comments; ?></span>
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="svea_partpayment_hide_svea_comments"  class="form-control">
+                            <?php if ($svea_partpayment_hide_svea_comments) { ?>
+                            <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                            <option value="0"><?php echo $text_disabled; ?></option>
+                            <?php } else { ?>
+                            <option value="1"><?php echo $text_enabled; ?></option>
+                            <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
          <!-- Countrycode specific -->
                      <div class="tab-content" id="tab-partpayment" >
                 <ul class="nav nav-tabs" id="svea_country">

@@ -74,6 +74,9 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         $data['entry_no'] = $this->language->get('entry_no');
         $data['entry_min_amount'] = $this->language->get('entry_min_amount');
 
+        $data['entry_hide_svea_comments'] = $this->language->get('entry_hide_svea_comments');
+        $data['entry_hide_svea_comments_tooltip'] = $this->language->get('entry_hide_svea_comments_tooltip');
+
         $data['version'] = floatval(VERSION);
 
         //As you might notice the word we're really looking for is "country" not "lang". Leaving it like that so it won't ruin anything though.
@@ -163,6 +166,13 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
             $data[$this->paymentString . 'svea_partpayment_product_price'] = $this->request->post[$this->paymentString . 'svea_partpayment_product_price'];
         } else {
             $data[$this->paymentString . 'svea_partpayment_product_price'] = $this->config->get($this->paymentString . 'svea_partpayment_product_price');
+        }
+
+        //hide svea comments
+        if (isset($this->request->post[$this->paymentString . 'svea_partpayment_hide_svea_comments'])) {
+            $data[$this->paymentString . 'svea_partpayment_hide_svea_comments'] = $this->request->post[$this->paymentString . 'svea_partpayment_hide_svea_comments'];
+        } else {
+            $data[$this->paymentString . 'svea_partpayment_hide_svea_comments'] = $this->config->get($this->paymentString . 'svea_partpayment_hide_svea_comments');
         }
 
         $data['header'] = $this->load->controller('common/header');

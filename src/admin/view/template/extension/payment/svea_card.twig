@@ -105,22 +105,38 @@
                       <textarea rows="2" cols="30" name="payment_svea_card_payment_svea_description" class="form-control">{{ payment_svea_card_payment_svea_description }}</textarea>
                     </div>
                 </div>
-                    <div class="form-group row">
-                        <label for="payment_svea_card_auto_deliver" class="col-sm-2 col-form-label">
-                            <span data-toggle="tooltip" title="{{ entry_auto_deliver_description }}">{{ entry_auto_deliver }}</span>
-                        </label>
-                        <div class="col-sm-9">
-                            <select name="payment_svea_card_auto_deliver" class="form-control">
-                                {% if payment_svea_card_auto_deliver %}
-                                    <option value="1" selected="selected">{{ text_enabled }}</option>
-                                    <option value="0">{{ text_disabled }}</option>
-                                {% else %}
-                                    <option value="1">{{ text_enabled }}</option>
-                                    <option value="0" selected="selected">{{ text_disabled }}</option>
-                                {% endif %}
-                            </select>
-                        </div>
+                <div class="form-group row">
+                    <label for="payment_svea_card_auto_deliver" class="col-sm-2 col-form-label">
+                        <span data-toggle="tooltip" title="{{ entry_auto_deliver_description }}">{{ entry_auto_deliver }}</span>
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="payment_svea_card_auto_deliver" class="form-control">
+                            {% if payment_svea_card_auto_deliver %}
+                                <option value="1" selected="selected">{{ text_enabled }}</option>
+                                <option value="0">{{ text_disabled }}</option>
+                            {% else %}
+                                <option value="1">{{ text_enabled }}</option>
+                                <option value="0" selected="selected">{{ text_disabled }}</option>
+                            {% endif %}
+                        </select>
                     </div>
+                </div>
+                <div class="form-group row">
+                    <label for="payment_svea_card_hide_svea_comments" class="col-sm-2 col-form-label">
+                        <span data-toggle="tooltip" title="{{ entry_hide_svea_comments_tooltip }}">{{ entry_hide_svea_comments }}</span>
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="payment_svea_card_hide_svea_comments" class="form-control">
+                            {% if payment_svea_card_hide_svea_comments %}
+                                <option value="1" selected="selected">{{ text_enabled }}</option>
+                                <option value="0">{{ text_disabled }}</option>
+                            {% else %}
+                                <option value="1">{{ text_enabled }}</option>
+                                <option value="0" selected="selected">{{ text_disabled }}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
         <!-- Mode specific -->
         <div class="panel-body">
             <ul class="nav nav-tabs" id="payment_svea_merchant">
@@ -284,6 +300,22 @@
                             <div class="col-sm-9">
                                 <select name="payment_svea_card_auto_deliver" class="form-control">
                                     {% if payment_svea_card_auto_deliver %}
+                                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                                        <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                        <option value="1">{{ text_enabled }}</option>
+                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment_svea_card_hide_svea_comments" class="col-sm-2 control-label">
+                                <span data-toggle="tooltip" title="{{ entry_hide_svea_comments_tooltip }}">{{ entry_hide_svea_comments }}</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select name="payment_svea_card_hide_svea_comments" class="form-control">
+                                    {% if payment_svea_card_hide_svea_comments %}
                                         <option value="1" selected="selected">{{ text_enabled }}</option>
                                         <option value="0">{{ text_disabled }}</option>
                                     {% else %}

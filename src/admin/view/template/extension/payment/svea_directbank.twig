@@ -73,6 +73,22 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="payment_svea_directbank_hide_svea_comments" class="col-sm-2 col-form-label">
+                                <span data-toggle="tooltip" title="{{ entry_hide_svea_comments_tooltip }}">{{ entry_hide_svea_comments }}</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select name="payment_svea_directbank_hide_svea_comments" class="form-control">
+                                    {% if payment_svea_directbank_hide_svea_comments %}
+                                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                                        <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                        <option value="1">{{ text_enabled }}</option>
+                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="payment_svea_directbank_sort_order" class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
                             <div class="col-sm-9">
                                 <input class="form-control" type="text" name="payment_svea_directbank_sort_order" value="{{ payment_svea_directbank_sort_order }}" size="1" />
@@ -221,7 +237,22 @@
                                 <textarea class="form-control" rows="2" cols="30" name="payment_svea_directbank_payment_description">{{ payment_svea_directbank_payment_description }}</textarea>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label for="payment_svea_directbank_hide_svea_comments" class="col-sm-2 control-label">
+                                <span data-toggle="tooltip" title="{{ entry_hide_svea_comments_tooltip }}">{{ entry_hide_svea_comments }}</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select name="payment_svea_directbank_hide_svea_comments" class="form-control">
+                                    {% if payment_svea_directbank_hide_svea_comments %}
+                                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                                        <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                        <option value="1">{{ text_enabled }}</option>
+                                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
                         <!-- Mode specific -->
                         <div class="tab-content">
                             <ul class="nav nav-tabs" id="payment_svea_merchant_db">

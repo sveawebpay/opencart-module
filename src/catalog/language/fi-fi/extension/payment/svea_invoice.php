@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']              = 'Svea WebPay Lasku';
+$_['text_title']              = 'Svea Lasku';
 $_['text_invoice']        = 'Lasku';
 $_['text_ssn']                = 'Henkilötunnus';
 $_['text_private_or_company'] = 'Tyyppi';

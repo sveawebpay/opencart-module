@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']              = 'Svea WebPay Delbetaling';
+$_['text_title']              = 'Svea Delbetaling';
 $_['text_paymentplan']        = 'Delbetaling';
 $_['text_ssn']                = 'Fødselsnummer';
 $_['text_get_payment_options'] = 'Hente betalingsalternativer';
@@ -26,7 +26,7 @@ $_['response_20006'] = "Summen av alle ordrelinjer kan ikke være null eller neg
 $_['response_20013'] = "Ordren er på vent";
 
 $_['response_27000'] = "Den medfølgende kampanjekode beløpets kombinasjon samsvarer ikke med noen kampanje kode knyttet til denne klienten";
-$_['response_27001'] = "Kan ikke levere ordren siden den angitte pdf malen mangler, Kontakt Svea WebPay for mer informasjon";
+$_['response_27001'] = "Kan ikke levere ordren siden den angitte pdf malen mangler, Kontakt Svea for mer informasjon";
 $_['response_27002'] = "Kan ikke delvis levere en betalingsplan";
 $_['response_27003'] = "Kan ikke blande en kampanjekode med ett fast månedlig beløp.";
 $_['response_27004'] = "Kan ikke finne en passende kampanjekode for det månedlige beløpet";

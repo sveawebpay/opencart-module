@@ -21,6 +21,8 @@ $_['entry_status']				    = 'Status';
 $_['entry_status_tooltip']          = 'Enable/Disable Svea Checkout';
 $_['text_show_widget_on_product_page'] = 'Show product price widget on product page';
 $_['text_show_widget_on_product_page_tooltip'] = 'The lowest price of the campaign available for part payment will be displayed on the product page. Using this option require you to have VQMod installed.';
+$_['text_hide_svea_comments'] = 'Hide Svea comments';
+$_['text_hide_svea_comments_tooltip'] = 'Hides any comments that is added by the module on the order history so that only the customer and admin comments are visible. Does not apply to previously administrated orders. Read readme.md for more information.';
 
 // Authorization
 $_['entry_checkout_default_country']= 'Default checkout country';

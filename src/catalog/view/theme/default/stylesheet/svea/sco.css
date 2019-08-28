@@ -261,17 +261,34 @@ textarea.form-control {
 .sco-input,
 #sco-shipping,
 #sco-email,
-#sco-postcode,
-#sco-comment{
+#sco-postcode {
     height: 42px;
     line-height: 28px;
     font-size:16px !important;
     font-weight:400 !important;
 }
 
+#sco-comment {
+    line-height: 28px;
+    font-size:16px !important;
+    font-weight:400 !important;
+}
+
+.sco-input-applied
+{
+    background-color: #e9ecef;
+    border-radius: 5px !important;
+}
+
 #sco-comment textarea.form-control {
     font-size:16px !important;
     font-weight:400 !important;
+}
+
+.sco-change-postcode
+{
+    left:auto !important;
+    right: 0 !important;
 }
 
 .sco-input.form-control {
@@ -290,8 +307,7 @@ textarea.form-control {
 }
 
 #sco-coupon,
-#sco-voucher,
-#sco-comment {
+#sco-voucher {
     margin-bottom: 25px;
 }
 

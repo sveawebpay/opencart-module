@@ -75,6 +75,9 @@ If you are using the regular the standalone Svea Invoice payment method, follow 
 * Also, the coupon discount amount (in admin, under sales/coupon) must be specified excluding tax. The coupon tax discount will then be calculated in accordance with OpenCart standard behaviour, and is specified in the order history.
 * The recommended order total sort order is: sub-total (lowest), Svea invoice fee, shipping, coupon, taxes, store credit, voucher and total.
 
+### Hide Svea comments 
+It's possible to hide the comments added by the module by enabling "Hide Svea comments" on the administration page of the payment method. This will however not hide messages that contain critical information, for example invoiceIds or contractNumbers.
+
 # 2. Miscellaneous <a name="i2"></a>
 
 ## 2.1 Administrating orders <a name="i2-1"></a>

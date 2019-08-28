@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']     = 'Svea WebPay Card Payment';
+$_['text_title']     = 'Svea Card Payment';
 $_['unit']           = 'pcs';
 
 //Error responses

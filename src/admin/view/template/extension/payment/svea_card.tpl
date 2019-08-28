@@ -103,11 +103,27 @@
                 </div>
             <div class="form-group">
                 <label for="svea_card_auto_deliver" class="col-sm-2 control-label">
-                    <span data-toggle="tooltip" title="<?php echo entry_auto_deliver_description; ?>"><?php echo $entry_auto_deliver; ?></span>
+                    <span data-toggle="tooltip" title="<?php echo $entry_auto_deliver_description; ?>"><?php echo $entry_auto_deliver; ?></span>
                 </label>
                 <div class="col-sm-9">
                     <select name="svea_card_auto_deliver"  class="form-control">
                         <?php if ($svea_card_auto_deliver) { ?>
+                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                        <option value="0"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                        <option value="1"><?php echo $text_enabled; ?></option>
+                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="svea_card_hide_svea_comments" class="col-sm-2 control-label">
+                    <span data-toggle="tooltip" title="<?php echo $entry_hide_svea_comments_tooltip; ?>"><?php echo $entry_hide_svea_comments; ?></span>
+                </label>
+                <div class="col-sm-9">
+                    <select name="svea_card_hide_svea_comments"  class="form-control">
+                        <?php if ($svea_card_hide_svea_comments) { ?>
                         <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                         <option value="0"><?php echo $text_disabled; ?></option>
                         <?php } else { ?>

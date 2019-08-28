@@ -1,7 +1,6 @@
 <?php
 
 $_['text_normal_checkout']			= '<a href="%s">Paina tästä päästäksesi kassalle!</a>';
-$_['text_checkout_into']			= 'Syötä sähköpostiosoitteesi ja postinumerosi jatkaaksesi Svea Ekonomin Checkoutiin.';
 
 $_['entry_email']					= 'Sähköposti';
 $_['entry_password']				= 'Salasana';
