@@ -398,10 +398,10 @@ class ControllerExtensionModuleSco extends Controller
         $data['entry_' . $this->moduleString . 'sco_force_flow_tooltip'] = $this->language->get('text_force_flow_tooltip');
 
 
-        $module_info_data_url = $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
+        $module_info_data_url = $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/src/svea/version.json";
         $json_info = file_get_contents($module_info_data_url);
         $decoded_data = json_decode($json_info);
-        $latest_version = $decoded_data->module_version;
+        $latest_version = $decoded_data->version;
 
 
         $data['module_version'] = $this->module_version;

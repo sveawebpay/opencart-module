@@ -226,11 +226,11 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
     {
         $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
         $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
-        $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/docs/info.json";
+        $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/src/svea/version.json";
         $json = file_get_contents($url);
         $data = json_decode($json);
 
-        if ($data->module_version <= $this->svea_version) {
+        if ($data->version <= $this->svea_version) {
             return "You have the latest " . $this->svea_version . " version.";
         } else {
             return $this->svea_version . '<br />
