@@ -17,7 +17,6 @@ class SveaCommon extends Controller
 
     function addOrderRowsToHostedServiceOrder($svea, $products, $currencyValue)
     {
-
         foreach ($products as $product) {
             $product['name'] = $this->db->escape($product['name']);
             if (mb_strlen($product['name']) > 40) {
@@ -30,16 +29,16 @@ class SveaCommon extends Controller
                 ->setArticleNumber($product['model'])//->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
             ;
 
-            $productPriceExVat = $product['price'] * $currencyValue;
-            $taxPercent = 0;
-            //Get the tax, difference in version 1.4.x
             $tax = $this->tax->getRates($product['price'], $product['tax_class_id']);
+            $taxPercent = 0;
+            $taxAmount = 0;
             foreach ($tax as $key => $value) {
                 $taxPercent = $value['rate'];
+                $taxAmount = $value['amount'];
             }
 
             $item = $item
-                ->setAmountExVat(floatval($productPriceExVat))
+                ->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
                 ->setVatPercent(intval($taxPercent));
 
             $svea = $svea->addOrderRow($item);
@@ -160,18 +159,22 @@ class SveaCommon extends Controller
             $vatPercentFound = false;
             foreach($splitPercent as $key => $val)
             {
-                if(isset($splitPercent[$key]['vatPercent']) && $splitPercent[$key]['vatPercent']  == $row->vatPercent)
+                if((isset($row->amountIncVat) && $row->amountIncVat != 0) || (isset($row->amountExVat) && $row->amountExVat !=0))
                 {
-                    $vatPercentFound = true;
-                    $splitPercent[$key]['amountIncVat'] = $splitPercent[$key]['amountIncVat'] + $row->amountIncVat / $orderTotal;
+                    if(isset($splitPercent[$key]['vatPercent']) && $splitPercent[$key]['vatPercent']  == $row->vatPercent)
+                    {
+                        $vatPercentFound = true;
+                        $splitPercent[$key]['amountIncVat'] = $splitPercent[$key]['amountIncVat'] + $row->amountIncVat / $orderTotal;
+                    }
                 }
             }
-            if($vatPercentFound == false)
-            {
-                array_push($splitPercent,
-                    array(
-                        "amountIncVat" => $row->amountIncVat / $orderTotal,
-                        "vatPercent" => $row->vatPercent));
+            if((isset($row->amountIncVat) && $row->amountIncVat != 0) || (isset($row->amountExVat) && $row->amountExVat !=0)) {
+                if ($vatPercentFound == false) {
+                    array_push($splitPercent,
+                        array(
+                            "amountIncVat" => $row->amountIncVat / $orderTotal, //
+                            "vatPercent" => $row->vatPercent));
+                }
             }
         }
 
