@@ -2,8 +2,27 @@
 
 class ControllerExtensionPaymentSco extends Controller
 {
+    private $userTokenString = "user_";
+    private $linkString = "marketplace/extension";
+    private $paymentString ="payment_";
+    private $moduleString = "module_";
+    private $appendString = "_before";
+
+    public function setVersionStrings()
+    {
+        if(VERSION < 3.0)
+        {
+            $this->userTokenString = "";
+            $this->linkString = "extension/extension";
+            $this->paymentString = "";
+            $this->moduleString = "";
+            $this->appendString = "";
+        }
+    }
+
     public function index()
     {
+        $this->setVersionStrings();
         $this->load->language('extension/payment/sco');
 
         $data = array();
@@ -12,7 +31,7 @@ class ControllerExtensionPaymentSco extends Controller
         $data = array_merge($data, $this->setBreadcrumbs());
 
         // Set cancel url
-        $data['cancel'] = $this->url->link('marketplace/payment', 'user_token=' . $this->session->data['user_token'], true);
+        $data['cancel'] = $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true);
 
         // Load common controllers
         $data['header'] = $this->load->controller('common/header');
@@ -32,17 +51,17 @@ class ControllerExtensionPaymentSco extends Controller
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true),
+            'href' => $this->url->link('common/dashboard', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_extension'),
-            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true),
+            'href' => $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketplace/payment/sco', 'user_token=' . $this->session->data['user_token'], true)
+            'href' => $this->url->link('extension/payment/svea_directbank', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
         return $data;

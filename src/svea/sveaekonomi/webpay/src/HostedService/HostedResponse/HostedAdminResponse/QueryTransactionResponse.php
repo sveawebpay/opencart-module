@@ -283,6 +283,7 @@ class QueryTransactionResponse extends HostedAdminResponse
                     $newrow
                         ->setName((string)$orderrow['name'])
                         ->setAmountExVat(floatval(($orderrow['amount'] - $orderrow['vat'])) / 100)
+                        ->setAmountIncVat(floatval($orderrow['amount'])/100)
                         ->setDescription((string)$orderrow['description'])
                         ->setQuantity(floatval((string)$orderrow['quantity']))
                         ->setArticleNumber((string)$orderrow['sku'])
@@ -305,7 +306,7 @@ class QueryTransactionResponse extends HostedAdminResponse
     function calculateVatPercentFromVatAndAmount($vat, $amount)
     {
         $amountExVat = ($amount - $vat);
-        $unroundedVatPercent = ($amountExVat > 0) ? ($vat / $amountExVat) : 0.00; // catch potential divide by zero
+        $unroundedVatPercent = ($amountExVat != 0) ? ($vat / $amountExVat) : 0.00; // catch potential divide by zero
         $vatPercent = Helper::bround($unroundedVatPercent, 2) * 100; // OrderRow has vatpercent as int.
         return $vatPercent;
     }
