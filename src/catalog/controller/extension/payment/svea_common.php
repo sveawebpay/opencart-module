@@ -39,7 +39,7 @@ class SveaCommon extends Controller
 
             $item = $item
                 ->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
-                ->setVatPercent(intval($taxPercent));
+                ->setVatPercent(round($taxPercent));
 
             $svea = $svea->addOrderRow($item);
         }
@@ -72,7 +72,7 @@ class SveaCommon extends Controller
 
             $item = $item
                 ->setAmountIncVat(($product['price'] + $taxAmount) * $currencyValue)
-                ->setVatPercent(intval($taxPercent));
+                ->setVatPercent(round($taxPercent));
 
             $svea = $svea->addOrderRow($item);
         }

@@ -252,12 +252,12 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                     //extra charge addons like shipping and invoice fee
                     foreach ($addons as $addon) {
                         if($addon['value'] >= 0){
-                            $vat = floatval($addon['value'] * $currencyValue) * (intval($addon['tax_rate']) / 100 );
+                            $vat = floatval($addon['value'] * $currencyValue) * (round($addon['tax_rate']) / 100 );
                             $deliverObj = $deliverObj
                                 ->addOrderRow(\Svea\WebPay\WebPayItem::orderRow()
                                 ->setQuantity(1)
                                 ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
-                                ->setVatPercent(intval($addon['tax_rate']))
+                                ->setVatPercent(round($addon['tax_rate']))
                                 ->setName(isset($addon['title']) ? $addon['title'] : "")
                                 ->setArticleNumber($addon['code'])
                                 ->setDescription(isset($addon['text']) ? $addon['text'] : "")
