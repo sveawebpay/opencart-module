@@ -2,7 +2,7 @@
 // Heading
 $_['heading_title']      = 'Svea Teilzahlung';
 
-// Text
+// Logo
 $_['text_payment']            = 'Zahlung';
 $_['text_success']            = 'Modifizierung von Sveas Teilzahlung ist erfolgreich!';
 $_['text_svea_partpayment']   = '<svg style="fill: #002c50;" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="94" height="35" version="1.1" viewBox="0 0 2540 930" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -15,31 +15,6 @@ $_['text_svea_partpayment']   = '<svg style="fill: #002c50;" xmlns="http://www.w
  </g>
 </svg>';
 
-// Entry
-$_['entry_geo_zone']     = 'Geozone:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sortierreihenfolge:';
-$_['entry_payment_description']   = 'Beschreibung in der Kasse:';
-$_['entry_shipping_billing']   = 'Lieferungsadresse gleich Rechnungsadresse:';
-$_['entry_shipping_billing_text']   = 'Wenn wir die Adresse in der Kasse aufrufen, überschreiben wir immer die Rechnungsadresse.
-									Diese Einstellung überschreibt ebenso die Lieferungsadresse. Wichtig! Setzten Sie die Einstellung auf ja,
-									Wenn in Ihrem Vertrag mit Svea nichts Anderes steht:';
-$_['entry_username']          = 'Anwendername:';
-$_['entry_password']          = 'Passwort:';
-$_['entry_clientno']          = 'Klient-Nr:';
-$_['entry_min_amount']   	  = 'Min. betrag:';
-
-$_['entry_yes']               = 'ja';
-$_['entry_no']                = 'nein';
-$_['entry_testmode']          = 'Testmode:';
-
-$_['entry_auto_deliver']      = 'Automatische Lieferungen:';
-$_['entry_auto_deliver_text'] = ' Wenn aktiviert wird Lieferung von Rechnung automatisch gehen wenn Erstellung von Order. Sonst wird es in Sveas Admin gemacht.';
-$_['entry_distribution_type'] = 'Distributionsform für Rechnung (Nach Zustimmung mit Svea):';
-$_['entry_post'] = 'Post';
-$_['entry_email'] = 'E-Post';
+// Svea Part payment specific translations
 $_['entry_product_text'] = 'Zeigen Teilzahlung Preis an Produktseite';
-$_['entry_product'] = 'Product Price Widget:';
-
-// Error
-$_['error_permission']        = 'Achtung: Sie sind nicht genehmigt in Svea Teilzahlung Zahlungsmodul zu ändern!';
+$_['entry_min_amount']   	  = 'Produkt der Mindestpreis:';

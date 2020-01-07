@@ -2,9 +2,7 @@
 // Heading
 $_['heading_title']      = 'Svea Direktzahlung';
 
-// Text
-$_['text_payment']       = 'Zahlung';
-$_['text_success']       = 'Modifizierung von Sveas Direktzahlung ist erfolgreich!';
+// Logo
 $_['text_svea_directbank']  = '<svg style="fill: #002c50;" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="94" height="35" version="1.1" viewBox="0 0 2540 930" xmlns:xlink="http://www.w3.org/1999/xlink">
  <g>
   <path d="M403 256l-172 0c-62,0 -70,-31 -70,-55 0,-49 25,-69 88,-69l334 0 0 -135 -353 0c-157,0 -230,64 -230,202 0,130 69,190 219,190l154 0c60,0 80,14 80,59 0,37 -14,57 -89,57l-338 0 0 135 359 0c156,0 229,-63 229,-198 0,-133 -61,-187 -210,-187z"></path>
@@ -14,17 +12,3 @@ $_['text_svea_directbank']  = '<svg style="fill: #002c50;" xmlns="http://www.w3.
   <path id="streck-underline" style="fill: #00aece;" d="M2496 931l-2445 0c-17,0 -31,-14 -31,-31l0 -106c0,-17 14,-31 31,-31l2445 0c17,0 31,14 31,31l0 106c0,17 -14,31 -31,31z"></path>
  </g>
 </svg>';
-
-// Entry
-$_['entry_geo_zone']     = 'Geographische Zone:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sortierungsordnung:';
-$_['entry_payment_description']   = 'Beschreibung in der Kasse:';
-$_['entry_merchant_id']  = 'Händlers ID';
-$_['entry_testmode']     = 'Testmode';
-$_['entry_sw']           = 'eheimnis Wort';
-$_['entry_test']         = "PRODUKTION";
-$_['entry_prod']         = "TEST";
-
-// Error
-$_['error_permission']   = 'Achtung: Sie sind nicht genehmigt in Svea Direktzahlung zu ändern!';

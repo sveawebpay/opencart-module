@@ -3,8 +3,6 @@
 $_['heading_title']      = 'Svea Kortbetalning';
 
 // Text
-$_['text_payment']       = 'Betalning';
-$_['text_success']       = 'Modifiering av Sveas Kortbetalningsmodul lyckades!';
 $_['text_svea_card']     = '<svg style="fill: #002c50;" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="94" height="35" version="1.1" viewBox="0 0 2540 930" xmlns:xlink="http://www.w3.org/1999/xlink">
  <g>
   <path d="M403 256l-172 0c-62,0 -70,-31 -70,-55 0,-49 25,-69 88,-69l334 0 0 -135 -353 0c-157,0 -230,64 -230,202 0,130 69,190 219,190l154 0c60,0 80,14 80,59 0,37 -14,57 -89,57l-338 0 0 135 359 0c156,0 229,-63 229,-198 0,-133 -61,-187 -210,-187z"></path>
@@ -15,20 +13,6 @@ $_['text_svea_card']     = '<svg style="fill: #002c50;" xmlns="http://www.w3.org
  </g>
 </svg>';
 
-// Entry
-$_['entry_card_logos'] = 'Kort logotyper';
-
-$_['entry_geo_zone']     = 'Geozon:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sorteringsordning:';
-$_['entry_payment_description']   = 'Beskrivning i kassan:';
-$_['entry_merchant_id']  = 'Butiks id:';
-$_['entry_testmode']     = 'Testläge:';
-$_['entry_sw']           = 'Hemligt ord:';
-$_['entry_test']         = "PRODUKTION";
-$_['entry_prod']         = "TEST";
+$_['entry_card_logos'] = 'Kort logotyper:';
 $_['entry_auto_deliver'] = "Auto leverans av transaktion:";
 $_['entry_auto_deliver_description'] = "Slå på denna inställning om du vill att korttransaktioner ska dras direkt istället för att bara reserveras.";
-
-// Error
-$_['error_permission']   = 'Varning: Du har inte tillåtelse att ändra Svea Kortbetalningsmodul';

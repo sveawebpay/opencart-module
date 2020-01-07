@@ -107,6 +107,10 @@
                         {
                             return 57;
                         }
+                        else if($this->request->cookie['language'] == "de-de")
+                        {
+                            return 81;
+                        }
                         else
                         {
                             return $this->config->get($moduleString . 'sco_checkout_default_country_id');

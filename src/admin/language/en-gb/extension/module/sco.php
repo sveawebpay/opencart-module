@@ -34,6 +34,7 @@ $_['entry_sweden']                  = 'Sweden';
 $_['entry_norway']                  = 'Norway';
 $_['entry_finland']                 = 'Finland';
 $_['entry_denmark']                 = 'Denmark';
+$_['entry_germany']                 = 'Germany';
 
 $_['entry_stage_environment']       = 'Stage/test credentials:';
 $_['entry_prod_environment']        = 'Live/Production credentials:';

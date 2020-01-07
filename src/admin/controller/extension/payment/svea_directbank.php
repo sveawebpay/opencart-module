@@ -28,6 +28,7 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         $this->svea_version = $this->getModuleVersion();
         $this->setVersionStrings();
         $this->load->language('extension/payment/svea_directbank');
+        $this->load->language('extension/payment/svea_shared');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -184,7 +185,7 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         $data = json_decode($json);
 
         if ($data->version <= $this->svea_version) {
-            return "You have the latest " . $this->svea_version . " version.";
+            return $this->svea_version . "<br/> You have the latest version.";
         } else {
             return $this->svea_version . '<br />
                 There is a new version available.<br />

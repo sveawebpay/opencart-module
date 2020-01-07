@@ -57,7 +57,7 @@ class ControllerExtensionSveaPush extends Controller
 
     private function updateOrders($response)
     {
-        sleep(3);
+        sleep(10); // Mitigate race condition, a more permanent solution needs to be found
         // - update order
         $this->updateOrder($response);
 

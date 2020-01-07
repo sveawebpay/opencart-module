@@ -2,9 +2,7 @@
 // Heading
 $_['heading_title']      = 'Svea Direktbanksbetalning';
 
-// Text
-$_['text_payment']       = 'Betalning';
-$_['text_success']       = 'Modifiering av Sveas direktbanksmodul lyckades!';
+// Logo
 $_['text_svea_directbank']  = '<svg style="fill: #002c50;" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="94" height="35" version="1.1" viewBox="0 0 2540 930" xmlns:xlink="http://www.w3.org/1999/xlink">
  <g>
   <path d="M403 256l-172 0c-62,0 -70,-31 -70,-55 0,-49 25,-69 88,-69l334 0 0 -135 -353 0c-157,0 -230,64 -230,202 0,130 69,190 219,190l154 0c60,0 80,14 80,59 0,37 -14,57 -89,57l-338 0 0 135 359 0c156,0 229,-63 229,-198 0,-133 -61,-187 -210,-187z"></path>
@@ -14,18 +12,3 @@ $_['text_svea_directbank']  = '<svg style="fill: #002c50;" xmlns="http://www.w3.
   <path id="streck-underline" style="fill: #00aece;" d="M2496 931l-2445 0c-17,0 -31,-14 -31,-31l0 -106c0,-17 14,-31 31,-31l2445 0c17,0 31,14 31,31l0 106c0,17 -14,31 -31,31z"></path>
  </g>
 </svg>';
-
-// Entry
-
-$_['entry_geo_zone']     = 'Geozon:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sorteringsordning:';
-$_['entry_payment_description']   = 'Beskrivning i kassan:';
-$_['entry_merchant_id']  = 'Butiks id:';
-$_['entry_testmode']     = 'Testläge:';
-$_['entry_sw']           = 'Hemligt ord:';
-$_['entry_test']         = "PRODUKTION";
-$_['entry_prod']         = "TEST";
-
-// Error
-$_['error_permission']   = 'Varning: Du har inte tillåtelse att ändra Svea Direktbetalningsmodul';

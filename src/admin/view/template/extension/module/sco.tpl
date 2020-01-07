@@ -167,6 +167,7 @@
                                         <li><a href="#merchant_settings_norway" data-toggle="tab"><?php echo $entry_norway ?></a></li>
                                         <li><a href="#merchant_settings_finland" data-toggle="tab"><?php echo $entry_finland ?></a></li>
                                         <li><a href="#merchant_settings_denmark" data-toggle="tab"><?php echo $entry_denmark ?></a></li>
+                                        <li><a href="#merchant_settings_germany" data-toggle="tab"><?php echo $entry_germany ?></a></li>
                                     </ul>
 
                                     <!-- tabs content -->
@@ -320,6 +321,44 @@
                                                 <div class="col-sm-10">
                                                     <input type="text" name="sco_checkout_secret_word_dk" id="input-checkout-secret-word-denmark" class="form-control"
                                                            value="<?php echo $sco_checkout_secret_word_dk; ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Germany -->
+                                        <div class="tab-pane" id="merchant_settings_germany">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label"><?php echo $entry_stage_environment; ?></label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="input-checkout-test-merchant-id-germany"><?php echo $entry_checkout_merchant_id; ?></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="sco_checkout_test_merchant_id_de" id="input-checkout-test-merchant-id-germany" class="form-control"
+                                                           value="<?php echo $sco_checkout_test_merchant_id_de; ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="input-checkout-test-secret-word-germany"><?php echo $entry_checkout_secret; ?></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="sco_checkout_test_secret_word_de" id="input-checkout-test-secret-word-germany" class="form-control"
+                                                           value="<?php echo $sco_checkout_test_secret_word_de; ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label"><?php echo $entry_prod_environment; ?></label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="input-checkout-merchant-id-germany"><?php echo $entry_checkout_merchant_id; ?></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="sco_checkout_merchant_id_de" id="input-checkout-merchant-id-germany" class="form-control"
+                                                           value="<?php echo $sco_checkout_merchant_id_de; ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="input-checkout-secret-word-germany"><?php echo $entry_checkout_secret; ?></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="sco_checkout_secret_word_de" id="input-checkout-secret-word-germany" class="form-control"
+                                                           value="<?php echo $sco_checkout_secret_word_de; ?>">
                                                 </div>
                                             </div>
                                         </div>

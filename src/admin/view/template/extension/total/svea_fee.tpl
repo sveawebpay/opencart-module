@@ -31,12 +31,6 @@
                         <label class="col-sm-3 control-label">Version</label>
                         <div class="col-sm-9"><?php echo $svea_version; ?></div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="svea_fee_sort_order" value="<?php echo $svea_fee_sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
-                        </div>
-                    </div>
                     <!-- Countrycode specific -->
                     <div class="tab-content" id="tab-invoice" >
                         <ul class="nav nav-tabs" id="svea_country">

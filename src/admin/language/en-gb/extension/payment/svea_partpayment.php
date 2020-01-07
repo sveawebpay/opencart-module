@@ -2,10 +2,7 @@
 // Heading
 $_['heading_title']      = 'Svea Part payment';
 
-// Text
-$_['text_payment']       = 'Payment';
-$_['text_extension']	 = 'Extensions';
-$_['text_success']       = 'Success: You have modified Svea Part payment module!';
+// Logo
 $_['text_svea_partpayment']   = '<svg style="fill: #002c50;" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="94" height="35" version="1.1" viewBox="0 0 2540 930" xmlns:xlink="http://www.w3.org/1999/xlink">
  <g>
   <path d="M403 256l-172 0c-62,0 -70,-31 -70,-55 0,-49 25,-69 88,-69l334 0 0 -135 -353 0c-157,0 -230,64 -230,202 0,130 69,190 219,190l154 0c60,0 80,14 80,59 0,37 -14,57 -89,57l-338 0 0 135 359 0c156,0 229,-63 229,-198 0,-133 -61,-187 -210,-187z"></path>
@@ -16,34 +13,6 @@ $_['text_svea_partpayment']   = '<svg style="fill: #002c50;" xmlns="http://www.w
  </g>
 </svg>';
 
-$_['entry_geo_zone']     = 'Geo Zone:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sort Order:';
-$_['entry_payment_description']   = 'Description in checkout:';
-$_['entry_shipping_billing']   = 'Shipping same as billing:';
-$_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
-
-
-$_['entry_username']     = 'Username:';
-$_['entry_password']     = 'Password:';
-$_['entry_clientno']     = 'Client No:';
-$_['entry_min_amount']   = 'Min. amount:';
-
-$_['entry_yes']          = 'yes';
-$_['entry_no']           = 'no';
-$_['entry_testmode']     = 'Testmode';
-
-$_['entry_auto_deliver'] = 'Auto deliver order:';
-$_['entry_auto_deliver_text'] = 'If enabled the invoice will automatically be delivered when creating an order.If disabled, deliver the invoice from Svea admin.';
-$_['entry_distribution_type'] = 'Invoice distribution type (As agreed with Svea):';
-$_['entry_post'] = 'Post';
-$_['entry_email'] = 'Email';
-$_['entry_product_text'] = 'Show payment plan price on product display';
-$_['entry_product'] = 'Product Price Widget:';
-
-$_['entry_hide_svea_comments'] = "Hide Svea comments:";
-$_['entry_hide_svea_comments_tooltip'] = "Hides any comments that is added by the module on the order history so that only the customer and admin comments are visible. Does not apply to previously administrated orders. Read readme.md for more information.";
-
-
-// Error
-$_['error_permission']   = 'Warning: You do not have permission to modify Svea Part payment module!';
+// Svea Part payment specific translations
+$_['entry_product_text'] = 'Show payment plan price examples on product page';
+$_['entry_min_amount']   = 'Minimum price to display payment method:';

@@ -3,37 +3,15 @@
 $_['heading_title']      = 'Svea Faktura';
 
 // Text
-$_['text_payment']       = 'Betaling';
-$_['text_success']       = 'Modifisering av Sveas Kortbetalingsmodul var velykket!';
-$_['text_svea_invoice']       = '<img src="http://cdn.svea.com/sveafinans/rgb_svea-finans_small.png " alt="Svea Finans" title="Svea Finans" />';
+$_['text_svea_invoice']       = '<svg style="fill: #002c50;" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="94" height="35" version="1.1" viewBox="0 0 2540 930" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <g>
+  <path d="M403 256l-172 0c-62,0 -70,-31 -70,-55 0,-49 25,-69 88,-69l334 0 0 -135 -353 0c-157,0 -230,64 -230,202 0,130 69,190 219,190l154 0c60,0 80,14 80,59 0,37 -14,57 -89,57l-338 0 0 135 359 0c156,0 229,-63 229,-198 0,-133 -61,-187 -210,-187z"></path>
+  <polygon points="1137,-3 955,438 777,-3 602,-3 883,641 1034,641 1303,-3 "></polygon>
+  <path d="M1572 129l226 0 0 -133 -229 0c-207,0 -304,106 -304,333 0,117 33,200 100,254 66,53 130,57 201,57l232 0 0 -133 -226 0c-94,0 -131,-35 -135,-127l361 0 0 -133 -360 0c8,-81 51,-119 133,-119z"></path>
+  <path d="M2097 358l73 -191 76 191 -149 0zm1 -361l-273 644 165 0 55 -148 252 0 57 148 172 0 -275 -644 -154 0z"></path>
+  <path id="streck-underline" style="fill: #00aece;" d="M2496 931l-2445 0c-17,0 -31,-14 -31,-31l0 -106c0,-17 14,-31 31,-31l2445 0c17,0 31,14 31,31l0 106c0,17 -14,31 -31,31z"></path>
+ </g>
+</svg>';
 
-// Entry
-
-$_['entry_geo_zone']     = 'Geozon:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sorteringsordning:';
-$_['entry_payment_description']   = 'Beskrivelse i kassen:';
-$_['entry_shipping_billing']   = 'Shipping same as billing:';
-$_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
-
-
-$_['entry_username']     = 'Brukernavn:';
-$_['entry_password']     = 'Passord:';
-$_['entry_clientno']     = 'Klientnr:';
 $_['entry_min_amount']  	= 'Produktets minstepris:';
-
-$_['entry_yes']               = 'Ja';
-$_['entry_no']                = 'Nei';
-$_['entry_testmode']     = 'Testmodus:';
-
-$_['entry_auto_deliver'] = 'Levere automatisk:';
-$_['entry_auto_deliver_text'] = 'Om aktivert levereres fakturaen automatiskt ved opprettelse av ordren. Ellers gjøres dette via Sveas admin.';
-$_['entry_show_peppol_field'] = 'Vis Peppol-ID-felt for bedriftskunder:';
-$_['entry_distribution_type'] = 'Distribusjonsform for faktura (Etter avtale med Svea):';
-$_['entry_post'] = 'Post';
-$_['entry_email'] = 'Email';
-$_['entry_product_text'] = 'Minstebeløp å betale. Vis på produktsiden';
-$_['entry_product'] = 'Product Price Widget:';
-
-// Error
-$_['error_permission']   = 'Advarsel: Du har ikke tillatelse til å modifisere Svea Faktura betalingsmodul!';
+$_['entry_product_text']    = 'Minstebeløp å betale. Vis på produktsiden';

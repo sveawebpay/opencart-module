@@ -50,7 +50,6 @@ class ControllerExtensionTotalSveaFee extends Controller
         }
 
         $data[$this->totalString . 'svea_version'] = $this->getSveaVersion();
-        // localisation of i.e. virtuemart gui elements
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_enabled'] = $this->language->get('text_enabled');
@@ -68,7 +67,7 @@ class ControllerExtensionTotalSveaFee extends Controller
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
-        // create & fill array of config cred(entials) for each country
+        // create & fill array of config credentials for each country
         $cred = array();
 
         $cred[] = array(
@@ -117,21 +116,12 @@ class ControllerExtensionTotalSveaFee extends Controller
 
         $data['credentials'] = $cred;
 
-        /*Sort order*/
-        if (isset($this->request->post[$this->totalString . 'svea_fee_sort_order'])) {
-            $data[$this->totalString . 'svea_fee_sort_order'] = $this->request->post[$this->totalString . 'svea_fee_sort_order'];
-        } else {
-            $data[$this->totalString . 'svea_fee_sort_order'] = $this->config->get($this->totalString . 'svea_fee_sort_order');
-        }
-
-        // pass any virtuemart error to template
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
         } else {
             $data['error_warning'] = '';
         }
 
-        // pass virtuemart breadcrumbs to template
         $data['breadcrumbs'] = array();
 
         $data['breadcrumbs'][] = array(
@@ -194,7 +184,8 @@ class ControllerExtensionTotalSveaFee extends Controller
         $data = json_decode($json);
 
         if ($data->version <= $this->total_svea_version) {
-            return "You have the latest " . $this->total_svea_version . " version.";
+            return $this->total_svea_version . "<br />
+            You have the latest version.";
         } else {
             return $this->total_svea_version . '<br />
                 There is a new version available.<br />

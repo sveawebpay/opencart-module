@@ -95,6 +95,8 @@ class ControllerExtensionModuleSco extends Controller
             'checkout_secret_word_fi' => null,
             'checkout_merchant_id_dk' => null,
             'checkout_secret_word_dk' => null,
+            'checkout_merchant_id_de' => null,
+            'checkout_secret_word_de' => null,
             'checkout_test_merchant_id_se' => null,
             'checkout_test_secret_word_se' => null,
             'checkout_test_merchant_id_no' => null,
@@ -103,6 +105,8 @@ class ControllerExtensionModuleSco extends Controller
             'checkout_test_secret_word_fi' => null,
             'checkout_test_merchant_id_dk' => null,
             'checkout_test_secret_word_dk' => null,
+            'checkout_test_merchant_id_de' => null,
+            'checkout_test_secret_word_de' => null,
             'status' => '0',
             'test_mode' => '1',
             'status_checkout' => '0',
@@ -153,9 +157,9 @@ class ControllerExtensionModuleSco extends Controller
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-        // Add countries sweden, norway, finland, denmark
+        // Add countries Sweden, Norway, Finland, Denmark and Germany
         $data['countries'] = array();
-        array_push($data['countries'],$this->model_localisation_country->getCountry(203),$this->model_localisation_country->getCountry(160),$this->model_localisation_country->getCountry(72),$this->model_localisation_country->getCountry(57));
+        array_push($data['countries'],$this->model_localisation_country->getCountry(203),$this->model_localisation_country->getCountry(160),$this->model_localisation_country->getCountry(72),$this->model_localisation_country->getCountry(57),$this->model_localisation_country->getCountry(81));
 
         // Load common controllers
         $data['header'] = $this->load->controller('common/header');
@@ -196,7 +200,10 @@ class ControllerExtensionModuleSco extends Controller
                 $this->moduleString . 'sco_checkout_merchant_id_fi',
                 $this->moduleString . 'sco_checkout_secret_word_fi',
                 $this->moduleString . 'sco_checkout_merchant_id_dk',
-                $this->moduleString . 'sco_checkout_secret_word_dk');
+                $this->moduleString . 'sco_checkout_secret_word_dk',
+                $this->moduleString . 'sco_checkout_merchant_id_de',
+                $this->moduleString . 'sco_checkout_secret_word_de'
+                );
 
 	        // - if test-mode enabled set test credentials
         	if($post_fields[$test_mode_field_name] == '1')
@@ -209,7 +216,10 @@ class ControllerExtensionModuleSco extends Controller
                     $this->moduleString . 'sco_checkout_test_merchant_id_fi',
                     $this->moduleString . 'sco_checkout_test_secret_word_fi',
                     $this->moduleString . 'sco_checkout_test_merchant_id_dk',
-                    $this->moduleString . 'sco_checkout_test_secret_word_dk');
+                    $this->moduleString . 'sco_checkout_test_secret_word_dk',
+                    $this->moduleString . 'sco_checkout_test_merchant_id_de',
+                    $this->moduleString . 'sco_checkout_test_secret_word_de'
+                );
 	        }
 
             // - check values
@@ -365,6 +375,7 @@ class ControllerExtensionModuleSco extends Controller
         $data['entry_norway'] = $this->language->get('entry_norway');
         $data['entry_finland'] = $this->language->get('entry_finland');
         $data['entry_denmark'] = $this->language->get('entry_denmark');
+        $data['entry_germany'] = $this->language->get('entry_germany');
 
         $data['entry_stage_environment'] = $this->language->get('entry_stage_environment');
         $data['entry_prod_environment'] = $this->language->get('entry_prod_environment');

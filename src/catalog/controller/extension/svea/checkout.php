@@ -42,7 +42,14 @@ class ControllerExtensionSveaCheckout extends Controller
             $this->session->data[$this->moduleString . 'sco_currency'] = "DKK";
             $this->session->data['currency'] = 'DKK';
         }
-        else {
+        else if($country == 81)
+        {
+            $this->session->data[$this->moduleString . 'sco_locale'] = "de-de";
+            $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
+            $this->session->data['currency'] = 'EUR';
+        }
+        else
+        {
 
         }
         $this->load->model('localisation/country');
@@ -70,6 +77,10 @@ class ControllerExtensionSveaCheckout extends Controller
         else if($this->request->cookie['language'] == "da-dk")
         {
             return 57;
+        }
+        else if($this->request->cookie['language'] == "de-de")
+        {
+            return 81;
         }
         else
         {
@@ -161,9 +172,9 @@ class ControllerExtensionSveaCheckout extends Controller
         $data['status_voucher'] = $this->config->get($this->totalString . 'voucher_status');
         $data['text_voucher'] = $this->language->get('text_voucher');
 
-        $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
-
+        $data['header'] = $this->load->controller('common/header');
+        
         $this->response->setOutput($this->load->view('extension/svea/checkout', $data));
     }
 
