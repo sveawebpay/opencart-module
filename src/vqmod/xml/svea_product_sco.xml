@@ -46,8 +46,8 @@
                     $q = "SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
                                                 `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
                                                 `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
-                                                FROM `" . DB_PREFIX . $moduleString . "sco_campaigns`
-                                                WHERE `timestamp`=(SELECT MAX(timestamp) FROM `" . DB_PREFIX . $moduleString . "sco_campaigns` WHERE `countryCode` = '" . $country['iso_code_2'] . "')
+                                                FROM `" . DB_PREFIX . "svea_sco_campaigns`
+                                                WHERE `timestamp`=(SELECT MAX(timestamp) FROM `" . DB_PREFIX . "svea_sco_campaigns` WHERE `countryCode` = '" . $country['iso_code_2'] . "')
                                                 AND `countryCode` = '" . $country['iso_code_2'] . "'
                                                 ORDER BY `monthlyAnnuityFactor` ASC";
 

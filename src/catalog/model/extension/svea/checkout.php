@@ -17,7 +17,7 @@ class ModelExtensionSveaCheckout extends Model
     public function getCountryCode($checkout_order_id)
     {
         $checkout_order_id = (int)$checkout_order_id;
-        $query = $this->db->query("SELECT currency FROM " . DB_PREFIX . "order_sco WHERE checkout_id = '" . $checkout_order_id . "'");
+        $query = $this->db->query("SELECT currency FROM " . DB_PREFIX . "svea_sco_order WHERE checkout_id = '" . $checkout_order_id . "'");
         if($query->num_rows !== 0) {
             if ($query->row['currency'] == "NOK") {
                 return "NO";
@@ -28,7 +28,7 @@ class ModelExtensionSveaCheckout extends Model
             } elseif ($query->row['currency'] == "DKK") {
                 return "DK";
             } else {
-                $this->log->write("Svea Error: Could not fetch currency from table order_sco in database.");
+                $this->log->write("Svea Error: Could not fetch currency from table svea_sco_order in database.");
                 return NULL;
             }
         }
@@ -458,7 +458,7 @@ class ModelExtensionSveaCheckout extends Model
 
     public function addCheckoutOrder($order_id, $locale)
     {
-        $this->db->query("INSERT INTO `" . DB_PREFIX . "order_sco` 
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "svea_sco_order` 
 						  SET
 								order_id 		= '" . (int)$order_id . "',
 								locale 			= '" . $this->db->escape($locale) . "',
@@ -476,7 +476,7 @@ class ModelExtensionSveaCheckout extends Model
     {
         $order_id = (int)$data['order_id'];
 
-        $query = "UPDATE `" . DB_PREFIX . "order_sco` 
+        $query = "UPDATE `" . DB_PREFIX . "svea_sco_order` 
 				   SET ";
 
         foreach ($data as $key => $val) {
@@ -538,7 +538,7 @@ class ModelExtensionSveaCheckout extends Model
         $order_id = (int)$order_id;
 
         $query = $this->db->query("SELECT * 
-								   FROM `" . DB_PREFIX . "order_sco` 
+								   FROM `" . DB_PREFIX . "svea_sco_order` 
 								   WHERE order_id = '" . $order_id . "' 
 								   LIMIT 1");
 

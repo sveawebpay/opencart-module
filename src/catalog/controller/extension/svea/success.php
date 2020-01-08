@@ -157,6 +157,18 @@ class ControllerExtensionSveaSuccess extends Controller
 
         $country = $this->model_extension_svea_checkout->getCountry($response['countrycode']);
 
+        if(isset($response['merchantdata']))
+        {
+            $merchantData = json_decode($response['merchantdata']);
+            if($merchantData->newsletter == "true")
+            {
+                $newsletterConsent = true;
+            }
+            else
+            {
+                $newsletterConsent = false;
+            }
+        }
 
         $data = array(
             'order_id' => $response['clientordernumber'],
@@ -165,7 +177,8 @@ class ControllerExtensionSveaSuccess extends Controller
             'type' => isset($response['customer']['iscompany']) ? ($response['customer']['iscompany'] ? 'company' : 'person') : 'person',
             'locale' => isset($response['locale']) ? $response['locale'] : null,
             'currency' => isset($response['currency']) ? $response['currency'] : null,
-            'country' => $country['name']
+            'country' => $country['name'],
+            'newsletter' => isset($newsletterConsent) ? $newsletterConsent : 0
         );
 
         $this->model_extension_svea_checkout->updateCheckoutOrder($data);

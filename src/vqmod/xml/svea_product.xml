@@ -21,7 +21,7 @@
                     $this->load->language('extension/payment/svea_partpayment');
                     $this->load->language('extension/svea/checkout');
 
-                    $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
+                    $svea_country = $this->model_localisation_country->getCountry($this->getCheckoutCountry());
                     $svea_show_paymentplan = $this->model_extension_payment_svea_partpayment->getProductPriceMode();
 
                     $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
@@ -39,8 +39,8 @@
                             $q = "SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
                                                         `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,
                                                         `numberOfInterestFreeMonths`,`numberOfPaymentFreeMonths`,`fromAmount`,`toAmount`
-                                                        FROM `" . DB_PREFIX . "svea_params_table`
-                                                        WHERE `timestamp`=(SELECT MAX(timestamp) FROM `" . DB_PREFIX . "svea_params_table` WHERE `countryCode` = '" . $svea_country['iso_code_2'] . "')
+                                                        FROM `" . DB_PREFIX . "svea_wp_campaigns`
+                                                        WHERE `timestamp`=(SELECT MAX(timestamp) FROM `" . DB_PREFIX . "svea_wp_campaigns` WHERE `countryCode` = '" . $svea_country['iso_code_2'] . "')
                                                         AND `countryCode` = '" . $svea_country['iso_code_2'] . "'
                                                         ORDER BY `monthlyAnnuityFactor` ASC";
 

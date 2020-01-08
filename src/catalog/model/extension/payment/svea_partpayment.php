@@ -53,7 +53,7 @@ class ModelExtensionPaymentsveapartpayment extends Model
     public function getPaymentPlanParams($countryCode)
     {
         $this->setVersionStrings();
-        $table_name = DB_PREFIX . "svea_params_table";
+        $table_name = DB_PREFIX . "svea_wp_campaigns";
 
         $query = "SELECT `campaignCode`,`description`,`paymentPlanType`,`contractLengthInMonths`,
                 `monthlyAnnuityFactor`,`initialFee`, `notificationFee`,`interestRatePercent`,

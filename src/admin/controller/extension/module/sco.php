@@ -183,63 +183,6 @@ class ControllerExtensionModuleSco extends Controller
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        // Validate authorization data
-        $status_field_name = $this->moduleString . 'sco_status';
-        $test_mode_field_name = $this->moduleString . 'sco_test_mode';
-
-        $post_fields = $this->request->post;
-
-	    // - if status enabled
-        if ($post_fields[$status_field_name] == '1')
-        {
-            $data = array(
-                $this->moduleString . 'sco_checkout_merchant_id_se',
-                $this->moduleString . 'sco_checkout_secret_word_se',
-                $this->moduleString . 'sco_checkout_merchant_id_no',
-                $this->moduleString . 'sco_checkout_secret_word_no',
-                $this->moduleString . 'sco_checkout_merchant_id_fi',
-                $this->moduleString . 'sco_checkout_secret_word_fi',
-                $this->moduleString . 'sco_checkout_merchant_id_dk',
-                $this->moduleString . 'sco_checkout_secret_word_dk',
-                $this->moduleString . 'sco_checkout_merchant_id_de',
-                $this->moduleString . 'sco_checkout_secret_word_de'
-                );
-
-	        // - if test-mode enabled set test credentials
-        	if($post_fields[$test_mode_field_name] == '1')
-	        {
-                $data = array(
-                    $this->moduleString . 'sco_checkout_test_merchant_id_se',
-                    $this->moduleString . 'sco_checkout_test_secret_word_se',
-                    $this->moduleString . 'sco_checkout_test_merchant_id_no',
-                    $this->moduleString . 'sco_checkout_test_secret_word_no',
-                    $this->moduleString . 'sco_checkout_test_merchant_id_fi',
-                    $this->moduleString . 'sco_checkout_test_secret_word_fi',
-                    $this->moduleString . 'sco_checkout_test_merchant_id_dk',
-                    $this->moduleString . 'sco_checkout_test_secret_word_dk',
-                    $this->moduleString . 'sco_checkout_test_merchant_id_de',
-                    $this->moduleString . 'sco_checkout_test_secret_word_de'
-                );
-	        }
-
-            // - check values
-	        $empty_field_count = 0;
-	        for($i = 0; $i < count($data); $i++)
-            {
-                if(empty($post_fields[current($data)]))
-                {
-                    $empty_field_count++;
-                }
-                next($data);
-            }
-
-            if($empty_field_count == 8)
-            {
-                $this->error['warning'] = $this->language->get('error_authorization_data');
-            }
-
-        }
-
         return !$this->error;
     }
 

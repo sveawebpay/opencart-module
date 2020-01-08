@@ -201,7 +201,7 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
 
     /**
      * Svea: Create table if does not exists, call Svea API, load with params values for specific countrycode
-     * Called whenever saving payment plan module settings, will update stored campaigns in table svea_params_table.
+     * Called whenever saving payment plan module settings, will update stored campaigns in table svea_wp_campaigns.
      */
     private function loadPaymentPlanParams()
     {

@@ -26,7 +26,7 @@ class ModelExtensionSveaCampaigns extends Model
     public function createScoCampaignsTableIfNotExist()
     {
         $this->setVersionStrings();
-        $this->db->query('CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . $this->moduleString .'sco_campaigns`
+        $this->db->query('CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . 'svea_sco_campaigns`
                 (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `campaignCode` VARCHAR( 100 ) NOT NULL,
                 `contractLengthInMonths` INT NOT NULL ,
@@ -50,7 +50,7 @@ class ModelExtensionSveaCampaigns extends Model
     public function truncateScoCampaignsTable()
     {
         $this->setVersionStrings();
-        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . $this->moduleString .'sco_campaigns');
+        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . 'svea_sco_campaigns');
     }
 
     public function fetchScoCountries($countryString)
@@ -81,7 +81,7 @@ class ModelExtensionSveaCampaigns extends Model
 
                 try
                 {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . $this->moduleString ."sco_campaigns SET
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "svea_sco_campaigns SET
                                     campaignCode = '" . $this->db->escape($campaignCode) . "',
                                     contractLengthInMonths = '" . $this->db->escape($contractLength) . "',
                                     description = '" . $this->db->escape($description) . "',
@@ -111,13 +111,13 @@ class ModelExtensionSveaCampaigns extends Model
 
     public function checkIfOrderScoTableExists()
     {
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "order_sco'");
+        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_sco_order'");
         return $query;
     }
 
     public function createOrderScoTable()
     {
-        $this->db->query("CREATE TABLE `" . DB_PREFIX . "order_sco` (
+        $this->db->query("CREATE TABLE `" . DB_PREFIX . "svea_sco_order` (
                                 `order_id`				int(11) unsigned NOT NULL AUTO_INCREMENT,
                                 `checkout_id`           int(11) unsigned DEFAULT NULL, 
                                 `locale` 				varchar(10) DEFAULT NULL,
@@ -135,12 +135,12 @@ class ModelExtensionSveaCampaigns extends Model
 
     public function truncateSveaParamsTable()
     {
-        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . 'svea_params_table');
+        $this->db->query('TRUNCATE TABLE ' . DB_PREFIX . 'svea_wp_campaigns');
     }
 
     public function createSveaParamsTable()
     {
-        $this->db->query(' CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . 'svea_params_table`
+        $this->db->query(' CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . 'svea_wp_campaigns`
                 (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `campaignCode` VARCHAR( 100 ) NOT NULL,
                 `description` VARCHAR( 100 ) NOT NULL ,
@@ -167,7 +167,7 @@ class ModelExtensionSveaCampaigns extends Model
 
         foreach ($params as $param) {
             //$query = $db->getQuery(true);
-            $q = "INSERT INTO `" . DB_PREFIX . "svea_params_table`
+            $q = "INSERT INTO `" . DB_PREFIX . "svea_wp_campaigns`
                     (   `campaignCode` ,
                         `description`,
                         `paymentPlanType`,

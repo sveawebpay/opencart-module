@@ -34,7 +34,7 @@ For release history, see [**github release tags**](https://github.com/sveawebpay
 # 1. Installation <a name="i1"></a>
 Before installing, we recommend that you set up a test environment and make a backup of your existing site, database and settings.
 
-The following examples assumes that you have already downloaded and installed OpenCart, if you are upgrading from a previous version of the module disable and uninstall the module from the OpenCart backend before installing.
+The following examples assumes that you have already downloaded and installed OpenCart, if you are upgrading from a previous version of the module disable and uninstall the module from the OpenCart backend before installing and delete the vqcache folder if you're using VQMod.
 
 ## 1.1 General <a name="i1-1"></a>
 * Download the latest version of the module from repository

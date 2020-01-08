@@ -48,7 +48,11 @@ class ModelExtensionSveaUpgrade extends Model
             switch($module)
             {
                 case 'svea_partpayment':
-                    $this->db->query("ALTER TABLE " . DB_PREFIX . "svea_params_table MODIFY interestRatePercent DOUBLE NOT NULL  ");
+                    $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_params_table'");
+                    if($tableExists->num_rows)
+                    {
+                        $this->db->query("ALTER TABLE " . DB_PREFIX . "svea_params_table MODIFY interestRatePercent DOUBLE NOT NULL  ");
+                    }
                     break;
                 case 'sco':
                     $this->db->query('CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . $this->moduleString .'sco_campaigns`
@@ -71,10 +75,41 @@ class ModelExtensionSveaUpgrade extends Model
             )   ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
             ');
                     $this->db->query("ALTER TABLE " . DB_PREFIX . $this->moduleString . "sco_campaigns MODIFY interestRatePercent DOUBLE NOT NULL  ");
-                    $this->db->query("ALTER TABLE " . DB_PREFIX . "order_sco ADD COLUMN newsletter boolean DEFAULT 0");
+                    $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "order_sco'");
+                    if($tableExists->num_rows)
+                    {
+                        $this->db->query("ALTER TABLE " . DB_PREFIX . "order_sco ADD COLUMN newsletter boolean DEFAULT 0");
+                    }
                     break;
             }
             $this->db->query("UPDATE " . DB_PREFIX . "svea_version SET version=1 WHERE module='$module'");
+        }
+        if($version < 2)
+        {
+            switch($module)
+            {
+                case 'svea_partpayment':
+                    $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_params_table'");
+                    if($tableExists->num_rows)
+                    {
+                        $this->db->query("ALTER TABLE " . DB_PREFIX . "svea_params_table RENAME TO " . DB_PREFIX . "svea_wp_campaigns");
+                    }
+                    break;
+
+                case 'sco':
+                    $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "order_sco'");
+                    if($tableExists->num_rows)
+                    {
+                        $this->db->query("ALTER TABLE " . DB_PREFIX . "order_sco RENAME TO " . DB_PREFIX . "svea_sco_order");
+                    }
+                    $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . $this->moduleString . "sco_campaigns'");
+                    if($tableExists->num_rows)
+                    {
+                        $this->db->query("ALTER TABLE " . DB_PREFIX . $this->moduleString . "sco_campaigns RENAME TO " . DB_PREFIX . "svea_sco_campaigns");
+                    }
+                    break;
+            }
+            $this->db->query("UPDATE " . DB_PREFIX . "svea_version SET version=2 WHERE module='$module'");
         }
     }
 }
