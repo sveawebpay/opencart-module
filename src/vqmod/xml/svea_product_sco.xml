@@ -91,23 +91,23 @@
                             $moduleString = "";
                         }
 
-                        if($this->request->cookie['language'] == "sv-se")
+                        if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "sv-se")
                         {
                             return 203;
                         }
-                        else if($this->request->cookie['language'] == "nn-no")
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "nn-no")
                         {
                             return 160;
                         }
-                        else if($this->request->cookie['language'] == "fi-fi")
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "fi-fi")
                         {
                             return 72;
                         }
-                        else if($this->request->cookie['language'] == "da-dk")
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "da-dk")
                         {
                             return 57;
                         }
-                        else if($this->request->cookie['language'] == "de-de")
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "de-de")
                         {
                             return 81;
                         }
