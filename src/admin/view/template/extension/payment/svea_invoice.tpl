@@ -26,11 +26,13 @@
     <div class="panel-body">
         <!--general settings -->
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-sveainvoice" class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-sm-2 control-label">Version</div>
-                    <div class="col-sm-9"><?php echo $svea_version_text; ?></div>
-                    <input type="hidden" value="<?php echo $svea_version; ?>" name="svea_invoice_version" id="svea_invoice_version" />
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_version_text; ?></label>
+                <div class="col-sm-10" style="padding-top: 9px;">
+                    <div><?php echo $entry_version; ?></div>
+                    <a href="<?php echo $entry_module_repo; ?>"><?php echo $entry_version_info; ?></a>
                 </div>
+            </div>
                 <div class="form-group">
                     <label for="svea_invoice_geo_zone_id" class="col-sm-2 control-label"><?php echo $entry_geo_zone; ?></label>
                     <div class="col-sm-9">

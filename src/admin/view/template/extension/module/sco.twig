@@ -41,12 +41,12 @@
                         <div class="tab-pane container active" id="tab-general" style="max-width:1600px;">
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label" for="input-status">Module version</label>
+                                <label class="col-sm-2 col-form-label" for="input-status">{{ entry_version_text }}</label>
                                 <div class="col-sm-10" class="form-control">
                                     <div>
-                                    {{ module_version }}
+                                    {{ entry_version }}
                                     </div>
-                                    <a href="{{ module_repo_url }}">{{ module_version_info }}</a>
+                                    <a href="{{ entry_module_repo }}">{{ entry_version_info }}</a>
                                 </div>
                             </div>
 
@@ -583,10 +583,10 @@
                         <div class="tab-pane active" id="tab-general">
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-status">{{ text_module_version }}</label>
+                                <label class="col-sm-2 control-label" for="input-status">{{ entry_version_text }}</label>
                                 <div class="col-sm-10" style="padding-top: 9px;">
-                                    <div>{{ module_version }}</div>
-                                    <a href="{{ module_repo_url }}">{{ module_version_info }}</a>
+                                    <div>{{ entry_version }}</div>
+                                    <a href="{{ entry_module_repo }}">{{ entry_version_info }}</a>
                                 </div>
                             </div>
 

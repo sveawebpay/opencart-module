@@ -25,13 +25,15 @@
                 <div class="card-body">
         <!--general settings -->
         <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-sveainvoice" class="form-module">
-                <div class="form-group row">
-                    <div class="col-sm-2 col-form-label">Version</div>
-                    <div class="col-sm-9">
-                        <input type="text" readonly class="form-control-plaintext" value="{{ payment_svea_version_text }}">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="input-status">{{ entry_version_text }}</label>
+                <div class="col-sm-10" class="form-control">
+                    <div>
+                        {{ entry_version }}
                     </div>
-                    <input class="form-control" type="hidden" value="{{ payment_svea_version }}" name="payment_svea_invoice_version" id="payment_svea_invoice_version" />
+                    <a href="{{ entry_module_repo }}">{{ entry_version_info }}</a>
                 </div>
+            </div>
                 <div class="form-group row">
                     <label for="payment_svea_invoice_geo_zone_id" class="col-sm-2 col-form-label">{{ entry_geo_zone }}</label>
                     <div class="col-sm-9">
@@ -246,11 +248,11 @@
                     <!--general settings -->
                     <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-sveainvoice" class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Version</label>
-                            <div class="col-sm-9">
-                                <p class="form-control-static">{{ payment_svea_version_text }}</p>
+                            <label class="col-sm-2 control-label" for="input-status">{{ entry_version_text }}</label>
+                            <div class="col-sm-10" style="padding-top: 9px;">
+                                <div>{{ entry_version }}</div>
+                                <a href="{{ entry_module_repo }}">{{ entry_version_info }}</a>
                             </div>
-                            <input class="form-control" type="hidden" value="{{ payment_svea_version }}" name="payment_svea_invoice_version" id="payment_svea_invoice_version" />
                         </div>
                         <div class="form-group">
                             <label for="payment_svea_invoice_geo_zone_id" class="col-sm-2 control-label">{{ entry_geo_zone }}</label>

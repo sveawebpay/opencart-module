@@ -14,9 +14,6 @@ $_['tab_checkout_page_settings']    = 'Checkout page-settings';
 $_['tab_iframe_settings']           = 'Iframe-settings';
 
 // General
-$_['text_module_version']           = 'Module version';
-$_['text_module_version_info_new']  = 'There is a new version available. Click to download.';
-$_['text_module_version_info']      = 'You have the latest version of the module. Click here to go to the documentation.';
 $_['entry_status']				    = 'Status';
 $_['entry_status_tooltip']          = 'Enable/Disable Svea Checkout';
 $_['text_show_widget_on_product_page'] = 'Show product price widget on product page';

@@ -13,6 +13,17 @@ $_['entry_sort_order']   = 'Sorteringsordning:';
 $_['entry_payment_description']   = 'Beskrivning i kassan:';
 $_['entry_shipping_billing']   = 'Frakt samma som fakturering:';
 $_['entry_shipping_billing_text']   = 'När vi hämtar adress i kassan skriver vi alltid över fakturaadressen. Den här inställningen skriver över även fraktadressen. Viktigt! Ställ in på Ja om det inte står något annat i ert kontrakt med Svea:';
+$_['entry_version_text']           = 'Modulversion';
+$_['entry_version'] = getModuleVersion();
+if(getNewVersionAvailable())
+{
+    $_['entry_version_info']      = 'En ny version finns tillgänglig. Klicka för nedladdning.';
+}
+else
+{
+    $_['entry_version_info']      = 'Du har den senaste versionen. Klicka för att gå till dokumentationen';
+}
+$_['entry_module_repo'] = 'https://github.com/sveawebpay/opencart-module/releases';
 
 // Authentication
 $_['entry_merchant_id']  = 'Butiks id:';

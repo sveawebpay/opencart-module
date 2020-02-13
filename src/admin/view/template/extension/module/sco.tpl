@@ -53,10 +53,10 @@
                         <div class="tab-pane active" id="tab-general">
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-status">Version</label>
+                                <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_version_text; ?></label>
                                 <div class="col-sm-10" style="padding-top: 9px;">
-                                    <div><?php echo $module_version; ?></div>
-                                    <a href="<?php echo $module_repo_url; ?>"><?php echo $module_version_info; ?></a>
+                                    <div><?php echo $entry_version; ?></div>
+                                    <a href="<?php echo $entry_module_repo; ?>"><?php echo $entry_version_info; ?></a>
                                 </div>
                             </div>
 

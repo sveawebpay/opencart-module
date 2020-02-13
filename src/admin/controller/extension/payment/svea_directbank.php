@@ -1,8 +1,9 @@
 <?php
 
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
+
 class ControllerExtensionPaymentSveadirectbank extends Controller
 {
-    protected $svea_version;
     private $error = array();
 
     private $userTokenString = "user_";
@@ -25,7 +26,6 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
     
     public function index()
     {
-        $this->svea_version = $this->getModuleVersion();
         $this->setVersionStrings();
         $this->load->language('extension/payment/svea_directbank');
         $this->load->language('extension/payment/svea_shared');
@@ -50,8 +50,11 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
             $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true));
         }
 
-        $data[$this->paymentString . 'svea_version_text'] = $this->getSveaVersion();
-        $data[$this->paymentString . 'svea_version'] = $this->svea_version;
+        $data['entry_version_text'] = $this->language->get('entry_version_text');
+        $data['entry_version'] = $this->language->get('entry_version');
+        $data['entry_version_info'] = $this->language->get('entry_version_info');
+        $data['entry_module_repo'] = $this->language->get('entry_module_repo');
+
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
@@ -174,31 +177,6 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         } else {
             return FALSE;
         }
-    }
-
-    protected function getSveaVersion()
-    {
-        $update_url = "https://github.com/sveawebpay/opencart-module/archive/master.zip";
-        $docs_url = "https://github.com/sveawebpay/opencart-module/releases";
-        $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/src/svea/version.json";
-        $json = file_get_contents($url);
-        $data = json_decode($json);
-
-        if ($data->version <= $this->svea_version) {
-            return $this->svea_version . "<br/> You have the latest version.";
-        } else {
-            return $this->svea_version . '<br />
-                There is a new version available.<br />
-                <a href="' . $docs_url . '" title="Go to release notes on github">View version details</a> or <br />
-                <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
-
-        }
-    }
-
-    protected function getModuleVersion()
-    {
-        $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
-        return $jsonData['version'];
     }
 
     public function install()

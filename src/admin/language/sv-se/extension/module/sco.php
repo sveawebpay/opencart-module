@@ -14,9 +14,6 @@ $_['tab_checkout_page_settings']    = 'Checkout-sidinställningar';
 $_['tab_iframe_settings']           = 'Iframe-inställningar';
 
 // General
-$_['text_module_version']				    = 'Modulversion';
-$_['text_module_version_info_new']  = 'En ny version finns tillgänglig. Klicka för nedladdning.';
-$_['text_module_version_info']      = 'Du har den senaste versionen. Klicka för att gå till dokumentationen.';
 $_['entry_status']				    = 'Status';
 $_['entry_status_tooltip']		    = 'Aktivera/Inaktivera Svea Checkout';
 $_['text_show_widget_on_product_page'] = 'Visa delbetalningswidget';

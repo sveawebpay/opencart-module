@@ -14,9 +14,6 @@ $_['tab_checkout_page_settings']    = 'Checkout sivun asetukset';
 $_['tab_iframe_settings']           = 'Iframe asetukset';
 
 // General
-$_['text_module_version']           = 'Moduuli versio';
-$_['text_module_version_info_new']  = 'Uusi versio on saatavilla. Lataa se tästä.';
-$_['text_module_version_info']      = 'Käytössäsi on viimeisin versio. Siirry dokumentaatioon.';
 $_['entry_status']				    = 'Status';
 $_['entry_status_tooltip']          = 'Kytke päälle/Kytke pois päältä Svea Checkout';
 $_['text_show_widget_on_product_page'] = 'Näytä tuotteen hinta -widget';

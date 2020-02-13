@@ -333,7 +333,7 @@ class ModelExtensionSveaCheckout extends Model
 
             if ($billing_country) {
                 $data['payment_country'] = $this->db->escape($billing_country['name']);
-                $data['payment_country_id'] = (int)$billing_country['country_id'];
+                $data['payment_country_id'] = $this->db->escape((int)$billing_country['country_id']);
                 $data['payment_address_format'] = $this->db->escape($billing_country['address_format']);
             }
 
@@ -387,7 +387,7 @@ class ModelExtensionSveaCheckout extends Model
 
             if ($shipping_country) {
                 $data['shipping_country'] = $this->db->escape($shipping_country['name']);
-                $data['shipping_country_id'] = (int)$shipping_country['country_id'];
+                $data['shipping_country_id'] = $this->db->escape((int)$shipping_country['country_id']);
                 $data['shipping_address_format'] = $this->db->escape($shipping_country['address_format']);
             }
         }
@@ -400,29 +400,21 @@ class ModelExtensionSveaCheckout extends Model
         }
 
         $query .= "     date_modified = NOW()
-				   WHERE order_id = '" . (int)$order_id . "'
+				   WHERE order_id = '" . $this->db->escape((int)$order_id) . "'
 				   LIMIT 1 ";
 
         $this->db->query($query);
 
-        $oc_order_status_id = $this->getOrderStatusIdFromResponse($response);
+        $opencartOrderStatusIdFromSveaResponse = $this->getOrderStatusIdFromResponse($response);
         $this->load->model('checkout/order');
         $module_sco_order_id = $response['orderid'];
         $comment =  'Svea Checkout Order Id: '. $module_sco_order_id;
 
         // CONFIRM ORDER
-        $current_oc_order_status = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . (int)$order_id . "'")->row;
-        if($oc_order_status_id != $current_oc_order_status['order_status_id'] && $oc_order_status_id != 0) {
-            $this->model_checkout_order->addOrderHistory($order_id, $oc_order_status_id, $comment, false);
+        $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$order_id) . "'")->row;
+        if($currentOpencartOrderStatus['order_status_id'] == 0 && $opencartOrderStatusIdFromSveaResponse == $this->config->get('config_order_status_id')) {
+            $this->model_checkout_order->addOrderHistory($order_id, $opencartOrderStatusIdFromSveaResponse, $comment, false);
         }
-
-        // Set order status
-        /*if ($oc_order_status_id !== null) {
-            $query = "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . $oc_order_status_id . "',";
-            $query .= " date_modified = NOW() WHERE order_id = '" . (int)$order_id . "' LIMIT 1 ";
-            $this->db->query($query);
-        }*/
-
         return true;
     }
 
@@ -432,9 +424,12 @@ class ModelExtensionSveaCheckout extends Model
 
         if (isset($response['status'])) {
             $module_sco_order_status_string = strtolower($response['status']);
-            if ($module_sco_order_status_string == 'final') {
+            if ($module_sco_order_status_string == 'final')
+            {
                 $oc_order_status_id = $this->config->get('config_order_status_id');
-            } else if ($module_sco_order_status_string == 'cancelled') {
+            }
+            else
+            {
                 $oc_order_status_id = 0;
             }
         }

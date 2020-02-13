@@ -16,6 +16,17 @@ $_['entry_sort_order']        = 'Sort Order:';
 $_['entry_payment_description']   = 'Description in checkout:';
 $_['entry_shipping_billing']   = 'Shipping same as billing:';
 $_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billing address, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise:';
+$_['entry_version_text']           = 'Version';
+$_['entry_version'] = getModuleVersion();
+if(getNewVersionAvailable())
+{
+    $_['entry_version_info']      = 'There is a new version available. Click to download.';
+}
+else
+{
+    $_['entry_version_info']      = 'You have the latest version of the module. Click here to go to the documentation.';
+}
+$_['entry_module_repo'] = 'https://github.com/sveawebpay/opencart-module/releases';
 
 // Authentication
 $_['entry_username']          = 'Username:';

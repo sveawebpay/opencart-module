@@ -13,6 +13,17 @@ $_['entry_sort_order']   = 'Sorteringsordning:';
 $_['entry_payment_description']   = 'Beskrivelse i kassen:';
 $_['entry_shipping_billing']   = 'Shipping same as billing:';
 $_['entry_shipping_billing_text']   = 'On get address in checkout we always overwrite the billingaddress, this setting also overwrites shipping address. Important! This should be set to yes if your contract with Svea does not tell otherwise.:';
+$_['entry_version_text']           = 'Modulversjon';
+$_['entry_version'] = getModuleVersion();
+if(getNewVersionAvailable())
+{
+    $_['entry_version_info']      = 'Det er ny versjon tilgjengelig. Klikk for å laste ned.';
+}
+else
+{
+    $_['entry_version_info']      = 'Du har siste versjon av modulen. Gå til dokumetasjon.';
+}
+$_['entry_module_repo'] = 'https://github.com/sveawebpay/opencart-module/releases';
 
 // Authentication
 $_['entry_merchant_id']  = 'Butikk id:';

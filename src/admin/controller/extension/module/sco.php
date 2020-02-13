@@ -32,10 +32,10 @@ class ControllerExtensionModuleSco extends Controller
     
     public function index()
     {
-        $this->module_version = $this->getModuleVersion();
         $this->setVersionStrings();
         // get language
         $this->load->language('extension/module/sco');
+        $this->load->language('extension/payment/svea_shared');
         $data = array();
 
         // If POST Request - Update module settings
@@ -208,12 +208,6 @@ class ControllerExtensionModuleSco extends Controller
         $this->response->setOutput($formattedString);
     }
 
-    protected function getModuleVersion()
-    {
-        $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
-        return $jsonData['version'];
-    }
-
     /*
      * Add event listener for checkout/checkout, and add custom redirect logic
      * when this is called
@@ -300,7 +294,10 @@ class ControllerExtensionModuleSco extends Controller
 
         // General
         $data['version'] = VERSION;
-        $data['text_module_version'] = $this->language->get('text_module_version');
+        $data['entry_version_text'] = $this->language->get('entry_version_text');
+        $data['entry_version'] = $this->language->get('entry_version');
+        $data['entry_version_info'] = $this->language->get('entry_version_info');
+        $data['entry_module_repo'] = $this->language->get('entry_module_repo');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_status_tooltip'] = $this->language->get('entry_status_tooltip');
         $data['entry_' . $this->moduleString . 'sco_show_widget_on_product_page'] = $this->language->get('text_show_widget_on_product_page');
@@ -350,23 +347,7 @@ class ControllerExtensionModuleSco extends Controller
         $data[$this->moduleString . 'sco_iframe_hide_change_address_tooltip'] = $this->language->get('text_iframe_hide_change_address_tooltip');
         $data['entry_' . $this->moduleString . 'sco_force_flow'] = $this->language->get('text_force_flow');
         $data['entry_' . $this->moduleString . 'sco_force_flow_tooltip'] = $this->language->get('text_force_flow_tooltip');
-
-
-        $module_info_data_url = $url = "https://raw.githubusercontent.com/sveawebpay/opencart-module/master/src/svea/version.json";
-        $json_info = file_get_contents($module_info_data_url);
-        $decoded_data = json_decode($json_info);
-        $latest_version = $decoded_data->version;
-
-
-        $data['module_version'] = $this->module_version;
-        if ($latest_version > $this->module_version) {
-            $data['module_repo_url'] = 'https://github.com/sveawebpay/opencart-module/archive/master.zip';
-            $data['module_version_info'] = $this->language->get('text_module_version_info_new');
-        } else {
-            $data['module_repo_url'] = 'https://github.com/sveawebpay/opencart-module/blob/master/README.md';
-            $data['module_version_info'] = $this->language->get('text_module_version_info');
-        }
-
+        
         return $data;
     }
 
