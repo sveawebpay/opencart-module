@@ -1,8 +1,9 @@
 <?php
 
+require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
+
 class ControllerExtensionTotalSveaFee extends Controller
 {
-    protected $total_svea_version;
     private $error = array();
 
     private $userTokenString = "user_";
@@ -23,9 +24,8 @@ class ControllerExtensionTotalSveaFee extends Controller
 
     public function index()
     {
-        $this->total_svea_version = $this->getModuleVersion();
-
         $this->load->language('extension/total/svea_fee');
+        $this->load->language('extension/payment/svea_shared');
 
         $this->setVersionStrings();
         
@@ -49,8 +49,12 @@ class ControllerExtensionTotalSveaFee extends Controller
             $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', 'SSL'));
         }
 
-        $data[$this->totalString . 'svea_version'] = $this->getSveaVersion();
         $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['entry_version_text'] = $this->language->get('entry_version_text');
+        $data['entry_version'] = $this->language->get('entry_version');
+        $data['entry_version_info'] = $this->language->get('entry_version_info');
+        $data['entry_module_repo'] = $this->language->get('entry_module_repo');
 
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');

@@ -45,6 +45,7 @@
                         <li><a href="#tab-authorization" data-toggle="tab"><?php echo $tab_authorization; ?></a></li>
                         <li><a href="#tab-checkout-page-settings" data-toggle="tab"><?php echo $tab_checkout_page_settings; ?></a></li>
                         <li><a href="#tab-iframe-settings" data-toggle="tab"><?php echo $tab_iframe_settings; ?></a></li>
+                        <li><a href="#tab-debug-settings" data-toggle="tab"><?php echo $tab_debug_settings; ?></a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -530,6 +531,103 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-process-require-authentication">
+                                    <span data-toggle="tooltip" title="<?php echo $entry_sco_require_electronic_id_authentication_tooltip; ?>"><?php echo $entry_sco_require_electronic_id_authentication; ?></span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($sco_enable_electronic_id_authentication == '1') { ?>
+                                        <input type="radio" name="sco_enable_electronic_id_authentication" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_enable_electronic_id_authentication" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if ($sco_enable_electronic_id_authentication != '1') { ?>
+                                        <input type="radio" name="sco_enable_electronic_id_authentication" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_enable_electronic_id_authentication" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Debug settings -->
+                        <div class="tab-pane" id="tab-debug-settings">
+                            <div class="form-group" style="display: block;text-align:center;">
+                                <label class="control-label" style="color:red"><?php echo $text_debug_warning?></label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    <span data-toggle="tooltip" title="<?php echo $text_debug_create_order_on_success_page_tooltip?>"><?php echo $text_debug_create_order_on_success_page?></span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($sco_create_order_on_success_page == 1) { ?>
+                                        <input type="radio" name="sco_create_order_on_success_page" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_create_order_on_success_page" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if ($sco_create_order_on_success_page != 1) { ?>
+                                        <input type="radio" name="sco_create_order_on_success_page" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_create_order_on_success_page" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    <span data-toggle="tooltip" title="<?php echo $text_debug_create_order_on_received_push_tooltip?>"><?php echo $text_debug_create_order_on_received_push?></span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($sco_create_order_on_received_push == 1) { ?>
+                                        <input type="radio" name="sco_create_order_on_received_push" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_create_order_on_received_push" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if ($sco_create_order_on_received_push != 1) { ?>
+                                        <input type="radio" name="sco_create_order_on_received_push" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="sco_create_order_on_received_push" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-sco-order-id">
+                                    <span data-toggle="tooltip" title="<?php echo $text_debug_simulate_push_tooltip?>"><?php echo $text_debug_simulate_push?></span>
+                                </label>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" id="input-sco-order-id" class="form-control" value="" placeholder="checkoutOrderId"/>
+                                        <span class="input-group-btn">
+                                                <button id="sco-push-button" class="btn btn-primary" type="button">
+                                                    <?php echo $text_debug_simulate_push_button?>
+                                                </button>
+                                        </span>
+                                    </div>
+                                    <label id="sco-push-button-result" style="display: none;"></label>
+                                </div>
+                            </div>
                         </div>
                         </div>
                     </div>
@@ -566,6 +664,8 @@
         const loaderEl = $('#sco-newsletter-list-loader');
         const newsletterListEl = $('#sco-newsletter-list-container');
         const copyToClipboardEl = $('#sco-copy-to-clipboard');
+        const pushButtonEl = $('#sco-push-button');
+        const pushButtonResultEl = $('#sco-push-button-result');
 
         $('[data-toggle="popover"]').popover();
 
@@ -588,6 +688,23 @@
                         let errorMessage = '<?php echo $entry_sco_error_fetching_newsletter_consent_list ?>';
                         newsletterListEl.html('<div class="alert alert-danger" role="alert" style="display: block;">' + errorMessage + '</div>');
                     }
+                }
+            });
+        });
+
+        pushButtonEl.on('click', function (){
+            $.ajax({
+                type: 'POST',
+                url: '../index.php?route=extension/svea/push&svea_order=' + $('#input-sco-order-id').val(),
+                success: function (){
+                    pushButtonResultEl.text("<?php echo $text_debug_simulate_push_sent ?>");
+                    pushButtonResultEl.css("color", "green");
+                    pushButtonResultEl.show();
+                },
+                error: function (){
+                    pushButtonResultEl.text("<?php echo $text_debug_simulate_push_error ?>");
+                    pushButtonResultEl.css("color", "red");
+                    pushButtonResultEl.show();
                 }
             });
         });

@@ -160,6 +160,8 @@ class ControllerExtensionPaymentSveapartpayment extends SveaCommon {
 
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
 
+        $svea = $this->addRoundingRowIfApplicable($svea, $this->cart->getTotal(), $addons, $currencyValue);
+
         //Seperates the street from the housenumber according to testcases for NL and DE
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
             $addressArr = \Svea\WebPay\Helper\Helper::splitStreetAddress( $order['payment_address_1'] );

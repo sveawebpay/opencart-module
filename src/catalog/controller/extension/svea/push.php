@@ -43,14 +43,19 @@ class ControllerExtensionSveaPush extends Controller
                 die($e->getMessage());
             }
 
-            $this->updateOrders($response);
-
+            if($this->config->get($this->moduleString . 'sco_create_order_on_received_push') == 1)
+            {
+                $this->updateOrders($response);
+            }
+            else
+            {
+                $this->log->write('Svea: Push received for checkoutOrderId ' . $checkout_order_id . ' but create order on push setting was disabled.');
+            }
             // Set response header
             header("HTTP/1.1 200 OK");
         } else {
             header("HTTP/1.1 400 BadRequest");
         }
-
         // End of logic!
         exit;
     }

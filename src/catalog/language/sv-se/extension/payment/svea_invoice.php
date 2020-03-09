@@ -50,3 +50,5 @@ $_['text_svea_fee']   = 'Svea Fakturaavgift';
 $_['unit']            = 'st';
 
 $_['text_tax_class']                = 'Momsklass';
+
+$_['text_svea_rounding'] = 'Rounding';

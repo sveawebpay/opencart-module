@@ -101,7 +101,10 @@ class ControllerExtensionSveaSuccess extends Controller
             return;
         }
 
-        $this->updateOrders($response);
+        if($this->config->get($this->moduleString . 'sco_create_order_on_success_page') == 1)
+        {
+            $this->updateOrders($response);
+        }
 
         $data['button_continue'] = $this->language->get('button_continue');
         $data['continue'] = $this->url->link('common/home');

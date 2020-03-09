@@ -50,10 +50,24 @@ $_['entry_shop_terms_uri']          = 'Butikens köpvillkor';
 $_['entry_shop_terms_uri_tooltip']  = 'Länk till dina butiksvillkor, länken skickas till Svea och visas i botten av iframen. Om fältet är tomt så kommer modulen att försöka hämta butiksvillkoren automatiskt';
 $_['text_iframe_hide_not_you']	    = 'Göm "Inte du?"';
 $_['text_iframe_hide_not_you_tooltip']      = 'Om denna är satt till \'Ja\' så kommer \'Inte du?\'-alternativet i iframen att döljas.';
-$_['text_iframe_hide_anonymous']	= 'Hide anonymous flow';
+$_['text_iframe_hide_anonymous']	= 'Göm "anonyma-flödet"?';
 $_['text_iframe_hide_anonymous_tooltip']    = 'Om denna är satt till \'Ja\' så kommer anonymaflödet i iframen att döljas.';
-$_['text_iframe_hide_change_address'] = 'Hide "Change address"-option';
+$_['text_iframe_hide_change_address'] = 'Göm "Ändra adress"?';
 $_['text_iframe_hide_change_address_tooltip'] = 'Om denna är satt till \'Ja\' så kommer kunder inte kunna byta adress i iframen.';
+$_['text_require_electronic_id_authentication'] = 'Kräv BankId(eller motsvarande)';
+$_['text_require_electronic_id_authentication_tooltip'] = 'Om aktiverad så kommer alla slutkunder behöva identifiera sig med BankId(eller motsvarande i andra länder) för att kunna avsluta ett köp';
+
+// Debug settings
+$_['text_debug_warning']                                = 'Varning! Ändra inga inställningar här om du inte vet vad du gör';
+$_['text_debug_create_order_on_success_page']           = 'Skapa order på tack-sidan';
+$_['text_debug_create_order_on_success_page_tooltip']   = 'Opencart ordern skapas i samband med att kunden landar på tack-sidan och ordern är godkänd(standardinställning:Ja)';
+$_['text_debug_create_order_on_received_push']          = 'Skapa order på mottagen push';
+$_['text_debug_create_order_on_received_push_tooltip']  = 'Opencart ordern skapas när en push från Svea anländer(standardinställning:Ja)';
+$_['text_debug_simulate_push']                          = 'Simulera push från Svea';
+$_['text_debug_simulate_push_tooltip']                  = 'Om en order ej skapats upp i Opencart trots att den finns i Sveas admin så kan du ange ett checkoutOrderId i fältet och klicka på knappen så kommer modulen att simulera en push vilket resulterar i att ordern skapas upp i Opencart';
+$_['text_debug_simulate_push_button']                   = 'Skicka push';
+$_['text_debug_simulate_push_sent']                     = 'Pushen blev skickad!';
+$_['text_debug_simulate_push_error']                    = 'Ett fel uppstod, kolla i Opencarts loggar för mera info.';
 
 // Error
 $_['error_permission']			    = 'Varning: Du har inte rättigheter att redigera Svea checkoutmodulen.';

@@ -26,7 +26,7 @@ else
 {
     $_['entry_version_info']      = 'You have the latest version of the module. Click here to go to the documentation.';
 }
-$_['entry_module_repo'] = 'https://github.com/sveawebpay/opencart-module/releases';
+$_['entry_module_repo'] = 'https://github.com/sveawebpay/opencart-module/';
 
 // Authentication
 $_['entry_username']          = 'Username:';

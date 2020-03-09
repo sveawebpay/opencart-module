@@ -48,3 +48,6 @@ $_['text_svea_fee']   = 'Svea Invoice fee';
 $_['unit']            = 'pcs';
 
 $_['text_tax_class']                = 'Tax Class';
+
+// Add this to a shared language file in the future
+$_['text_svea_rounding'] = 'Rounding';

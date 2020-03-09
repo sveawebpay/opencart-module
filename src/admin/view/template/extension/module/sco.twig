@@ -33,6 +33,7 @@
                         <li class="nav-item"><a class="nav-link" href="#tab-authorization" data-toggle="tab">{{ tab_authorization }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="#tab-checkout-page-settings" data-toggle="tab">{{ tab_checkout_page_settings }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="#tab-iframe-settings" data-toggle="tab">{{ tab_iframe_settings }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab-debug-settings" data-toggle="tab">{{ tab_debug_settings }}</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -96,8 +97,8 @@
                                 <label class="col-sm-2 col-form-label" for="input-process-hide-svea-comments">
                                     <span data-toggle="tooltip" title="{{ entry_module_sco_hide_svea_comments_tooltip }}"> {{ entry_module_sco_hide_svea_comments }} </span>
                                 </label>
-                                <div class="col-sm-10">
-                                    <label class="radio-inline">
+                                <div class="col-sm-10" >
+                                    <label class="radio-inline" style="padding-top:15px">
                                         {% if module_sco_hide_svea_comments == 1 %}
                                             <input type="radio" name="module_sco_hide_svea_comments" value="1" checked="checked" />
                                             {{ text_yes }}
@@ -124,7 +125,7 @@
                                 <label class="col-sm-2 col-form-label">
                                     <span data-toggle="tooltip" title="{{ entry_checkout_default_country_tooltip }}">{{ entry_checkout_default_country }}</span>
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-10" style="padding-top:15px">
                                     <select name="module_sco_checkout_default_country_id" class="form-control">
                                         {% for country in countries %}
                                         {% if country.country_id  ==  module_sco_checkout_default_country_id %}
@@ -476,6 +477,31 @@
                                 </div>
                             {% endfor %}
                             <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-process-require-authentication">
+                                    <span data-toggle="tooltip" title="{{ text_require_electronic_id_authentication_tooltip }} "> {{ text_require_electronic_id_authentication }} </span>
+                                </label>
+                                <div class="col-sm-10" style="padding-top:15px">
+                                    <label class="radio-inline">
+                                        {% if module_sco_enable_electronic_id_authentication == 1 %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="1" />
+                                            {{ text_yes }}
+                                        {% endif %}
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_enable_electronic_id_authentication != 1 %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="input-process-force-flow">
                                     <span data-toggle="tooltip" title="{{ entry_module_sco_force_flow_tooltip }}"> {{ entry_module_sco_force_flow }} </span>
                                 </label>
@@ -517,6 +543,78 @@
                                             B2C
                                         {% endif %}
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Debug settings -->
+                        <div class="tab-pane container fade" id="tab-debug-settings" style="max-width:1600px;">
+                            <div class="form-group row" style="display:block;text-align:center">
+                                <label class="col-form-label" style="color:red" >{{ text_debug_warning }}</label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">
+                                    <span data-toggle="tooltip" title="{{ text_debug_create_order_on_success_page_tooltip }}"> {{ text_debug_create_order_on_success_page }} </span>
+                                </label>
+                                <div class="col-sm-10" style="padding-top:15px">
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_success_page == 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="1" />
+                                            {{ text_yes }}
+                                        {% endif %}
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_success_page != 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">
+                                    <span data-toggle="tooltip" title="{{ text_debug_create_order_on_received_push_tooltip }}"> {{ text_debug_create_order_on_received_push }} </span>
+                                </label>
+                                <div class="col-sm-10" style="padding-top:15px">
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_received_push == 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="1" />
+                                            {{ text_yes }}
+                                        {% endif %}
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_received_push != 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-sco-order-id">
+                                    <span data-toggle="tooltip" title="{{ text_debug_simulate_push_tooltip }}"> {{ text_debug_simulate_push }} </span>
+                                </label>
+                                <div class="col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <input type="text" id="input-sco-order-id" class="form-control" value="" placeholder="checkoutOrderId"/>
+                                        <span class="input-group-btn input-group-append">
+                                                <button id="sco-push-button" class="btn btn-primary" type="button">
+                                                    {{ text_debug_simulate_push_button }}
+                                                </button>
+                                        </span>
+                                    </div>
+                                    <label id="sco-push-button-result" style="display: none;"></label>
                                 </div>
                             </div>
                         </div>
@@ -575,6 +673,7 @@
                         <li><a href="#tab-authorization" data-toggle="tab">{{ tab_authorization }}</a></li>
                         <li><a href="#tab-checkout-page-settings" data-toggle="tab">{{ tab_checkout_page_settings }}</a></li>
                         <li><a href="#tab-iframe-settings" data-toggle="tab">{{ tab_iframe_settings }}</a></li>
+                        <li><a href="#tab-debug-settings" data-toggle="tab">{{ tab_debug_settings }}</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -1062,6 +1161,103 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-process-require-authentication">
+                                    <span data-toggle="tooltip" title="{{ text_require_electronic_id_authentication_tooltip }} "> {{ text_require_electronic_id_authentication }} </span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        {% if module_sco_enable_electronic_id_authentication == 1 %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="1" />
+                                            {{ text_yes }}
+                                        {% endif %}
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_enable_electronic_id_authentication != 1 %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_enable_electronic_id_authentication" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Debug settings -->
+                        <div class="tab-pane" id="tab-debug-settings">
+                            <div class="form-group" style="display: block;text-align:center;">
+                                <label class="control-label" style="color:red" >{{ text_debug_warning }}</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    <span data-toggle="tooltip" title="{{ text_debug_create_order_on_success_page_tooltip }}"> {{ text_debug_create_order_on_success_page }} </span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_success_page == 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="1" />
+                                            {{ text_yes }}
+                                        {% endif %}
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_success_page != 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_success_page" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    <span data-toggle="tooltip" title="{{ text_debug_create_order_on_received_push_tooltip }}"> {{ text_debug_create_order_on_received_push }} </span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_received_push == 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="1" checked="checked" />
+                                            {{ text_yes }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="1" />
+                                            {{ text_yes }}
+                                        {% endif %}
+                                    </label>
+                                    <label class="radio-inline">
+                                        {% if module_sco_create_order_on_received_push != 1 %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="0" checked="checked" />
+                                            {{ text_no }}
+                                        {% else %}
+                                            <input type="radio" name="module_sco_create_order_on_received_push" value="0" />
+                                            {{ text_no }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-sco-order-id">
+                                    <span data-toggle="tooltip" title="{{ text_debug_simulate_push_tooltip }}"> {{ text_debug_simulate_push }} </span>
+                                </label>
+                                    <div class="col-sm-5">
+                                        <div class="input-group">
+                                            <input type="text" id="input-sco-order-id" class="form-control" value="" placeholder="checkoutOrderId"/>
+                                            <span class="input-group-btn">
+                                                <button id="sco-push-button" class="btn btn-primary" type="button">
+                                                    {{ text_debug_simulate_push_button }}
+                                                </button>
+                                        </span>
+                                        </div>
+                                        <label id="sco-push-button-result" style="display: none;"></label>
+                                    </div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -1095,6 +1291,8 @@
         const loaderEl = $('#sco-newsletter-list-loader');
         const newsletterListEl = $('#sco-newsletter-list-container');
         const copyToClipboardEl = $('#sco-copy-to-clipboard');
+        const pushButtonEl = $('#sco-push-button');
+        const pushButtonResultEl = $('#sco-push-button-result');
 
         $('[data-toggle="popover"]').popover();
 
@@ -1120,6 +1318,23 @@
                     }
                 });
             });
+
+        pushButtonEl.on('click', function (){
+            $.ajax({
+                type: 'POST',
+                url: '../index.php?route=extension/svea/push&payment_svea_order=' + $('#input-sco-order-id').val(),
+                success: function (){
+                    pushButtonResultEl.text("{{ text_debug_simulate_push_sent }}");
+                    pushButtonResultEl.css("color", "green");
+                    pushButtonResultEl.show();
+                },
+                error: function (){
+                    pushButtonResultEl.text("{{ text_debug_simulate_push_error }}");
+                    pushButtonResultEl.css("color", "red");
+                    pushButtonResultEl.show();
+                }
+            });
+        });
         });
     const copyToClipboard = str => {
         const el = document.createElement('textarea');

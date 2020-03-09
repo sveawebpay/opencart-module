@@ -97,6 +97,8 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         $addons = $this->addTaxRateToAddons();
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
 
+        $svea = $this->addRoundingRowIfApplicable($svea, $this->cart->getTotal(), $addons, $currencyValue);
+
         $payPageLanguage = "";
         switch ($order['payment_iso_code_2']) {
             case "DE":

@@ -6,10 +6,7 @@ class ControllerExtensionModuleSco extends Controller
 {
     private $error = array();
 
-    // Use this name as params prefix (Svea checkout)
-    private $module_version;
-    
-    //backwards compatability
+    //backwards compatibility
     private $userTokenString = "user_";
     private $linkString = "marketplace/extension";
     private $paymentString ="payment_";
@@ -117,13 +114,16 @@ class ControllerExtensionModuleSco extends Controller
             'show_widget_on_product_page' => '0',
             'checkout_terms_uri' => '',
             'checkout_default_country_id' => '',
-            'iframe_hide_not_you' => 0,
-            'iframe_hide_anonymous' => 0,
-            'iframe_hide_change_address' => 0,
-            'force_flow' => 0,
-            'force_b2b' => 0,
-            'gather_newsletter_consent' => 0,
-            'hide_svea_comments' => 0
+            'iframe_hide_not_you' => '0',
+            'iframe_hide_anonymous' => '0',
+            'iframe_hide_change_address' => '0',
+            'force_flow' => '0',
+            'force_b2b' => '0',
+            'gather_newsletter_consent' => '0',
+            'hide_svea_comments' => '0',
+            'create_order_on_success_page' => '1',
+            'create_order_on_received_push' => '1',
+            'enable_electronic_id_authentication' => '0'
         );
         $data['options_on_checkout_page'] = array(
             $this->moduleString . 'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
@@ -291,6 +291,7 @@ class ControllerExtensionModuleSco extends Controller
         $data['tab_authorization'] = $this->language->get('tab_authorization');
         $data['tab_checkout_page_settings'] = $this->language->get('tab_checkout_page_settings');
         $data['tab_iframe_settings'] = $this->language->get('tab_iframe_settings');
+        $data['tab_debug_settings'] = $this->language->get('tab_debug_settings');
 
         // General
         $data['version'] = VERSION;
@@ -347,7 +348,21 @@ class ControllerExtensionModuleSco extends Controller
         $data[$this->moduleString . 'sco_iframe_hide_change_address_tooltip'] = $this->language->get('text_iframe_hide_change_address_tooltip');
         $data['entry_' . $this->moduleString . 'sco_force_flow'] = $this->language->get('text_force_flow');
         $data['entry_' . $this->moduleString . 'sco_force_flow_tooltip'] = $this->language->get('text_force_flow_tooltip');
-        
+        $data['entry_' . $this->moduleString . 'sco_require_electronic_id_authentication'] = $this->language->get('text_require_electronic_id_authentication');
+        $data['entry_' . $this->moduleString . 'sco_require_electronic_id_authentication_tooltip'] = $this->language->get('text_require_electronic_id_authentication_tooltip');
+
+        // Debug settings
+        $data['text_debug_warning']                                 = $this->language->get('text_debug_warning');
+        $data['text_debug_create_order_on_success_page']            = $this->language->get('text_debug_create_order_on_success_page');
+        $data['text_debug_create_order_on_success_page_tooltip']    = $this->language->get('text_debug_create_order_on_success_page_tooltip');
+        $data['text_debug_create_order_on_received_push']           = $this->language->get('text_debug_create_order_on_received_push');
+        $data['text_debug_create_order_on_received_push_tooltip']   = $this->language->get('text_debug_create_order_on_received_push_tooltip');
+        $data['text_debug_simulate_push']                           = $this->language->get('text_debug_simulate_push');
+        $data['text_debug_simulate_push_tooltip']                   = $this->language->get('text_debug_simulate_push_tooltip');
+        $data['text_debug_simulate_push_button']                    = $this->language->get('text_debug_simulate_push_button');
+        $data['text_debug_simulate_push_sent']                      = $this->language->get('text_debug_simulate_push_sent');
+        $data['text_debug_simulate_push_error']                     = $this->language->get('text_debug_simulate_push_error');
+
         return $data;
     }
 

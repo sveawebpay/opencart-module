@@ -69,6 +69,8 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
         $addons = $this->addTaxRateToAddons();
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
 
+        $svea = $this->addRoundingRowIfApplicable($svea, $this->cart->getTotal(), $addons, $currencyValue);
+
         $server_url = $this->setServerURL();
         $returnUrl = $server_url.'index.php?route=extension/payment/svea_card/responseSvea';
         $callbackUrl = $server_url.'index.php?route=extension/payment/svea_card/callbackSvea';

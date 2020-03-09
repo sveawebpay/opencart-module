@@ -145,7 +145,7 @@ Note! Requires [vQmod](https://github.com/vqmod).
 
 Example:
 
-![Product price widget](docs/image/Widget.png "Product price widget")
+![Product price widget](docs/Widget.png "Product price widget")
 
 ## 2.4 Important information <a name="i2-4"></a>
 

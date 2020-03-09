@@ -92,7 +92,11 @@ class ModelExtensionSveaUpgrade extends Model
                     $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_params_table'");
                     if($tableExists->num_rows)
                     {
-                        $this->db->query("ALTER TABLE " . DB_PREFIX . "svea_params_table RENAME TO " . DB_PREFIX . "svea_wp_campaigns");
+                        $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_wp_campaigns'");
+                        if(!$tableExists->num_rows)
+                        {
+                            $this->db->query("ALTER TABLE " . DB_PREFIX . "svea_params_table RENAME TO " . DB_PREFIX . "svea_wp_campaigns");
+                        }
                     }
                     break;
 
@@ -100,12 +104,20 @@ class ModelExtensionSveaUpgrade extends Model
                     $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "order_sco'");
                     if($tableExists->num_rows)
                     {
-                        $this->db->query("ALTER TABLE " . DB_PREFIX . "order_sco RENAME TO " . DB_PREFIX . "svea_sco_order");
+                        $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_sco_order'");
+                        if(!$tableExists->num_rows)
+                        {
+                            $this->db->query("ALTER TABLE " . DB_PREFIX . "order_sco RENAME TO " . DB_PREFIX . "svea_sco_order");
+                        }
                     }
                     $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . $this->moduleString . "sco_campaigns'");
                     if($tableExists->num_rows)
                     {
-                        $this->db->query("ALTER TABLE " . DB_PREFIX . $this->moduleString . "sco_campaigns RENAME TO " . DB_PREFIX . "svea_sco_campaigns");
+                        $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_sco_campaigns'");
+                        if(!$tableExists->num_rows)
+                        {
+                            $this->db->query("ALTER TABLE " . DB_PREFIX . $this->moduleString . "sco_campaigns RENAME TO " . DB_PREFIX . "svea_sco_campaigns");
+                        }
                     }
                     break;
             }

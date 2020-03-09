@@ -12,6 +12,7 @@ $_['tab_general']				    = 'General';
 $_['tab_authorization']			    = 'Authorization';
 $_['tab_checkout_page_settings']    = 'Checkout page-settings';
 $_['tab_iframe_settings']           = 'Iframe-settings';
+$_['tab_debug_settings']            = 'Debug';
 
 // General
 $_['entry_status']				    = 'Status';
@@ -66,6 +67,21 @@ $_['text_iframe_hide_change_address'] = 'Hide "Change address"-option';
 $_['text_iframe_hide_change_address_tooltip'] = 'If set to \'Yes\' the customer won\'t be able to change their address in the iframe.';
 $_['text_force_flow'] = 'Force B2B or B2C flow';
 $_['text_force_flow_tooltip'] = 'If enabled the B2B or B2C flow will be forced. If B2B flow is forced only company customers will be able to finalize purchases and vice-versa.';
+$_['text_require_electronic_id_authentication'] = 'Require electronic id authentication';
+$_['text_require_electronic_id_authentication_tooltip'] = 'If enabled all orders will require electronic id authentication by the end-customer.';
+
+
+// Debug settings
+$_['text_debug_warning']                                = 'Warning! Do not change any settings here unless you know what you\'re doing';
+$_['text_debug_create_order_on_success_page']           = 'Create order on success page';
+$_['text_debug_create_order_on_success_page_tooltip']   = 'Opencart order is created when the customer lands on success page (default:yes)';
+$_['text_debug_create_order_on_received_push']          = 'Create order on received push';
+$_['text_debug_create_order_on_received_push_tooltip']  = 'Opencart order is created when a callback from Svea is received (default:yes)';
+$_['text_debug_simulate_push']                          = 'Simulate push';
+$_['text_debug_simulate_push_tooltip']                  = 'If an order hasn\'t been created in Opencart but the order exists in Svea\'s admin, you can enter the checkoutOrderId in the field here and the module will try to create the order in Opencart';
+$_['text_debug_simulate_push_button']                   = 'Send push';
+$_['text_debug_simulate_push_sent']                     = 'Push was sent!';
+$_['text_debug_simulate_push_error']                    = 'An error occurred while receiving the push, check the logs for more information';
 
 // Error
 $_['error_permission']			    = 'Warning: You do not have permission to modify the Svea Checkout module!';

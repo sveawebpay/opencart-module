@@ -117,8 +117,15 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $this->setMerchantData($order_builder);
 
+        if($this->config->get($this->moduleString . 'sco_enable_electronic_id_authentication'))
+        {
+            $order_builder->setRequireElectronicIdAuthentication(true);
+        }
+
         $add_ons = $this->addTaxRateToAddons();
         $this->addAddonRowsToSveaOrder($order_builder, $add_ons, $currency_value);
+
+        $this->addRoundingRowIfApplicable($order_builder, $this->cart->getTotal(), $add_ons, $currency_value);
 
         $isScoUpdate = false;
         $isChangedState = $this->isChangedState();

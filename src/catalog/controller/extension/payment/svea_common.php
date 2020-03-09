@@ -1,5 +1,7 @@
 <?php
 
+use Svea\WebPay\WebPayItem;
+
 require_once(DIR_APPLICATION . '../svea/config/configInclude.php');
 
 class SveaCommon extends Controller
@@ -23,7 +25,7 @@ class SveaCommon extends Controller
                 $product['name'] = mb_substr($product['name'], 0, 37) . "...";
             }
 
-            $item = \Svea\WebPay\WebPayItem::orderRow()
+            $item = WebPayItem::orderRow()
                 ->setQuantity(intval($product['quantity']))
                 ->setName($product['name'])
                 ->setArticleNumber($product['model'])//->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
@@ -56,7 +58,7 @@ class SveaCommon extends Controller
                 $product['name'] = mb_substr($product['name'], 0, 37) . "...";
             }
 
-            $item = \Svea\WebPay\WebPayItem::orderRow()
+            $item = WebPayItem::orderRow()
                 ->setQuantity(intval($product['quantity']))
                 ->setName($product['name'])
                 ->setArticleNumber($product['model'])//->setDescription($product['model'])//should be used for $product['option'] which is array, but too risky since limit is String(40)
@@ -91,7 +93,7 @@ class SveaCommon extends Controller
                     $voucher['description'] = mb_substr($voucher['description'], 0, 37) . "...";
                 }
                 $svea = $svea
-                    ->addOrderRow(\Svea\WebPay\WebPayItem::orderRow()
+                    ->addOrderRow(WebPayItem::orderRow()
                         ->setQuantity(1)
                         ->setAmountIncVat(floatval($voucher['amount']))
                         ->setVatPercent(0)//no vat when buying a voucher
@@ -109,7 +111,7 @@ class SveaCommon extends Controller
             if ($addon['value'] >= 0) {
                 $vat = floatval($addon['value'] * $currencyValue) * (round($addon['tax_rate']) / 100);
                 $svea = $svea
-                    ->addOrderRow(\Svea\WebPay\WebPayItem::orderRow()
+                    ->addOrderRow(WebPayItem::orderRow()
                         ->setQuantity(1)
                         ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
                         ->setVatPercent(round($addon['tax_rate']))
@@ -120,7 +122,7 @@ class SveaCommon extends Controller
             } //used voucher(-)
             elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
                 $svea = $svea
-                    ->addDiscount(\Svea\WebPay\WebPayItem::fixedDiscount()
+                    ->addDiscount(WebPayItem::fixedDiscount()
                         ->setDiscountId($addon['code'])
                         ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
                         ->setVatPercent(0)//no vat when using a voucher
@@ -184,7 +186,7 @@ class SveaCommon extends Controller
         {
             if($val['amountIncVat'] > 0) {
                 $rowName = mb_substr($discountName . " " . $this->language->get('text_tax_class') . ":" . $val['vatPercent'] . '%', 0, 40);
-                array_push($discountRows, \Svea\Webpay\WebpayItem::fixedDiscount()
+                array_push($discountRows, WebpayItem::fixedDiscount()
                     ->setAmountIncVat($discountAmount * $val['amountIncVat'])
                     ->setVatPercent($val['vatPercent'])
                     ->setName(isset($rowName) ? $rowName : "")
@@ -298,6 +300,45 @@ class SveaCommon extends Controller
         }
 
         return $total_data['totals'];
+    }
+
+    public function addRoundingRowIfApplicable($orderBuilder, $cartTotal, $addons, $currencyValue)
+    {
+        $sveaTotal = 0;
+        foreach($orderBuilder->rows as $val)
+        {
+            if(is_a($val, 'Svea\WebPay\BuildOrder\RowBuilders\FixedDiscount'))
+            {
+                $sveaTotal -= round($val->amountIncVat, 2);
+            }
+            else
+            {
+                $sveaTotal += round($val->amountIncVat,2) * $val->quantity;
+            }
+        }
+        $addonsTotal = 0;
+        foreach($addons as $addon)
+        {
+            $vat = $currencyValue * ($addon['value'] * ($addon['tax_rate'] / 100));
+            $addonsTotal += ($currencyValue * $addon['value']) + $vat;
+        }
+
+        $opencartTotal = round($cartTotal + $addonsTotal,2);
+
+        $difference = $opencartTotal * $currencyValue - $sveaTotal;
+
+        if(round(abs($difference), 2) !== 0 && abs($difference) < 1)
+        {
+            $this->load->language('extension/payment/svea_invoice');
+            $orderBuilder = $orderBuilder->addOrderRow(WebPayItem::orderRow()
+                ->setQuantity(1)
+                ->setAmountIncVat(floatval(round($difference, 2)))
+                ->setVatPercent(0)
+                ->setArticleNumber("ROUNDING")
+                ->setName($this->language->get('text_svea_rounding'))
+            );
+        }
+        return $orderBuilder;
     }
 
 }

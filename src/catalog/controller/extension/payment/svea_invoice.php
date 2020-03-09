@@ -152,6 +152,8 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
 
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);
 
+        $svea = $this->addRoundingRowIfApplicable($svea, $this->cart->getTotal(), $addons, $currencyValue);
+
         //Seperates the street from the housenumber according to testcases for NL and DE
         if($order["payment_iso_code_2"] == "DE" || $order["payment_iso_code_2"] == "NL") {
             $addressArr = \Svea\WebPay\Helper\Helper::splitStreetAddress( $order[$this->paymentString . 'address_1'] );
@@ -244,46 +246,6 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
                 //If Auto deliver order is set, DeliverOrder
                 if($this->config->get($this->paymentString . 'svea_invoice_auto_deliver') === '1') {
                     $deliverObj = \Svea\WebPay\WebPay::deliverOrder($conf);
-                    //Product rows
-                    $deliverObj = $this->addOrderRowsToWebServiceOrder($deliverObj, $products,$currencyValue);
-
-                    // no need to do formatAddons again
-
-                    //extra charge addons like shipping and invoice fee
-                    foreach ($addons as $addon) {
-                        if($addon['value'] >= 0){
-                            $vat = floatval($addon['value'] * $currencyValue) * (round($addon['tax_rate']) / 100 );
-                            $deliverObj = $deliverObj
-                                ->addOrderRow(\Svea\WebPay\WebPayItem::orderRow()
-                                ->setQuantity(1)
-                                ->setAmountIncVat(floatval($addon['value'] * $currencyValue) + $vat)
-                                ->setVatPercent(round($addon['tax_rate']))
-                                ->setName(isset($addon['title']) ? $addon['title'] : "")
-                                ->setArticleNumber($addon['code'])
-                                ->setDescription(isset($addon['text']) ? $addon['text'] : "")
-                            );
-
-                            //voucher(-)
-                            } elseif ($addon['value'] < 0 && $addon['code'] == 'voucher') {
-                                $deliverObj = $deliverObj
-                                    ->addDiscount(\Svea\WebPay\WebPayItem::fixedDiscount()
-                                        ->setDiscountId($addon['code'])
-                                        ->setAmountIncVat(floatval(abs($addon['value']) * $currencyValue))
-                                        ->setVatPercent(0)//no vat when using a voucher
-                                        ->setName(isset($addon['title']) ? $addon['title'] : "")
-                                        ->setDescription(isset($addon['text']) ? $addon['text'] : "")
-                                );
-                            }
-                            //discounts (-)
-                            else {
-                                $taxRates = \Svea\WebPay\Helper\Helper::getTaxRatesInOrder($deliverObj);
-                                $discountRows = \Svea\WebPay\Helper\Helper::splitMeanToTwoTaxRates( (abs($addon['value']) * $currencyValue), $addon['tax_rate'], $addon['title'], isset($addon['text']) ? $addon['text'] : "", $taxRates );
-                                foreach($discountRows as $row) {
-                                    $deliverObj = $deliverObj->addDiscount( $row );
-                            }
-                        }
-                    }
-
                     // try to do deliverOrder request
                     try {
                         $deliverObj = $deliverObj

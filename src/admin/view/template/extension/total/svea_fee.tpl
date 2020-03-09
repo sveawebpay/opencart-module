@@ -28,8 +28,11 @@
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-svea_fee" class="form-horizontal">
                     <!-- common to all countries -->
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Version</label>
-                        <div class="col-sm-9"><?php echo $svea_version; ?></div>
+                        <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_version_text; ?></label>
+                        <div class="col-sm-10" style="padding-top: 9px;">
+                            <div><?php echo $entry_version; ?></div>
+                            <a href="<?php echo $entry_module_repo; ?>"><?php echo $entry_version_info; ?></a>
+                        </div>
                     </div>
                     <!-- Countrycode specific -->
                     <div class="tab-content" id="tab-invoice" >

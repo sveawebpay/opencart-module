@@ -115,7 +115,7 @@ class OpencartSveaConfig implements \Svea\WebPay\Config\ConfigurationProvider
 
     public function getIntegrationVersion()
     {
-        return $this->config->get($this->payment_method . '_version');
+        return getModuleVersion();
     }
 
     public function getCheckoutMerchantId($country = NULL){}

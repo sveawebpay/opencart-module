@@ -23,7 +23,7 @@ else
 {
     $_['entry_version_info']      = 'Du har siste versjon av modulen. Gå til dokumetasjon.';
 }
-$_['entry_module_repo'] = 'https://github.com/sveawebpay/opencart-module/releases';
+$_['entry_module_repo'] = 'https://github.com/sveawebpay/opencart-module/';
 
 // Authentication
 $_['entry_merchant_id']  = 'Butikk id:';
