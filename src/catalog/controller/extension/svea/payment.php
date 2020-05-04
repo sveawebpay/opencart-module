@@ -62,6 +62,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             unset($this->session->data['order_id']);
             unset($this->session->data[$this->moduleString . 'sco_order_id']);
             unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
+            unset($module_sco_order_id);
         }
 
         $email = isset($this->request->post['email']) ? $this->request->post['email'] : null;

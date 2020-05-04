@@ -105,6 +105,11 @@ $_['paymenttype_paymentplan']       = 'Delbetalning';
 $_['paymenttype_accountcredit']     = 'Kontokredit';
 $_['paymenttype_undefined']         = 'Betalning';
 $_['paymenttype_trustly']           = 'Trustly';
+$_['paymenttype_swish']             = 'Swish';
+$_['paymenttype_leasingunapproved'] = 'Leasing(Manuell kontroll)';
+$_['paymenttype_leasingapproved']   = 'Leasing(Automatiskt godkänd)';
+$_['paymenttype_leasing']           = 'Leasing';
+$_['paymenttype_directbank']        = 'Direktbetalning';
 
 $_['widget_pay_monthly']              = 'Delbetala från';
 $_['widget_month']                  = 'månad';

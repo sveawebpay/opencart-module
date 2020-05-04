@@ -15,6 +15,7 @@ $(document).ready(function () {
   var snippetContainerEl = $('#sco-snippet-section');
   var changePostcodeEl = $('.change-postcode');
   var snippetLoaderEl = $('#sco-snippet-loader');
+  var lastPostCode = null;
 
   snippetLoaderEl.hide();
 
@@ -129,7 +130,16 @@ $(document).ready(function () {
     continueBtnStep2.text(backBtnText);
     continueBtnStep2.removeClass('sco-continue-btn');
     continueBtnStep2.addClass('sco-back-btn');
-    initialCheckoutPayment();
+    if(postCodeEl.val() !== lastPostCode)
+    {
+        lastPostCode = postCodeEl.val();
+        initialCheckoutPayment(true);
+    }
+    else
+    {
+        initialCheckoutPayment();
+    }
+
   });
 
 

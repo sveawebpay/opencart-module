@@ -92,7 +92,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
 
         //Product rows
         $products = $this->cart->getProducts();
-        $svea = $this->addOrderRowsToHostedServiceOrder($svea, $products, $currencyValue);
+        $svea = $this->addOrderRowsToWebServiceOrder($svea, $products, $currencyValue);
 
         $addons = $this->addTaxRateToAddons();
         $svea = $this->addAddonRowsToSveaOrder($svea, $addons, $currencyValue);

@@ -265,34 +265,62 @@ class ModelExtensionSveaCheckout extends Model
 
         $this->load->language('extension/svea/checkout');
 
-        if (isset($response['paymenttype'])) {
-            if($response['paymenttype'] == "SVEACARDPAY" || $response['paymenttype'] == "SVEACARDPAY_PF")
+        if (isset($response['paymenttype']))
+        {
+            switch($response['paymenttype'])
             {
-                $response['paymenttype'] = $this->language->get("paymenttype_card_payment");
-            }
-            else if($response['paymenttype'] == "INVOICE")
-            {
-                $response['paymenttype'] = $this->language->get("paymenttype_invoice");
-            }
-            else if($response['paymenttype'] == "ADMININVOICE")
-            {
-                $response['paymenttype'] = $this->language->get("paymenttype_admininvoice");
-            }
-            else if($response['paymenttype'] == "PAYMENTPLAN")
-            {
-                $response['paymenttype'] = $this->language->get("paymenttype_paymentplan");
-            }
-            else if($response['paymenttype'] == "ACCOUNTCREDIT")
-            {
-                $response['paymenttype'] = $this->language->get("paymenttype_accountcredit");
-            }
-            else if($response['paymenttype'] == "TRUSTLY")
-            {
-                $response['paymenttype'] = $this->language->get("paymenttype_trustly");
-            }
-            else
-            {
-                $response['paymenttype'] = $this->language->get("paymenttype_undefined");
+                case "SVEACARDPAY_PF":
+                case "SVEACARDPAY":
+                    $response['paymenttype'] = $this->language->get("paymenttype_card_payment");
+                    break;
+                case "INVOICE":
+                    $response['paymenttype'] = $this->language->get("paymenttype_invoice");
+                    break;
+                case "ADMININVOICE":
+                    $response['paymenttype'] = $this->language->get("paymenttype_admininvoice");
+                    break;
+                case "PAYMENTPLAN":
+                    $response['paymenttype'] = $this->language->get("paymenttype_paymentplan");
+                    break;
+                case "ACCOUNTCREDIT":
+                    $response['paymenttype'] = $this->language->get("paymenttype_accountcredit");
+                    break;
+                case "TRUSTLY":
+                    $response['paymenttype'] = $this->language->get("paymenttype_trustly");
+                    break;
+                case "LEASINGUNAPPROVED":
+                    $response['paymenttype'] = $this->language->get("paymenttype_leasingunapproved");
+                    break;
+                case "LEASINGAPPROVED":
+                    $response['paymenttype'] = $this->language->get("paymenttype_leasingapproved");
+                    break;
+                case "LEASING":
+                    $response['paymenttype'] = $this->language->get("paymenttype_leasing");
+                    break;
+                case "SWISH":
+                    $response['paymenttype'] = $this->language->get("paymenttype_swish");
+                    break;
+                case "BANKAXESS":
+                case "DBAKTIAFI":
+                case "DBALANDSBANKENFI":
+                case "DBDANSKEBANKSE":
+                case "DBNORDEAEE":
+                case "DBNORDEAFI":
+                case "DBNORDEASE":
+                case "DBPOHJOLAFI":
+                case "DBSAMPOFI":
+                case "DBSEBFTGSE":
+                case "DBSEBSE":
+                case "DBSHBFI":
+                case "DBSHBSE":
+                case "DBSPANKKIFI":
+                case "DBSWEDBANKSE":
+                case "DBTAPIOLAFI":
+                case "SKRILL":
+                    $response['paymenttype'] = $this->language->get("paymenttype_directbank");
+                    break;
+                default:
+                    $response['paymenttype'] = $this->language->get("paymenttype_undefined");
             }
             $data['payment_method'] = $this->db->escape("Svea Checkout " . $response['paymenttype']);
         }
@@ -494,7 +522,7 @@ class ModelExtensionSveaCheckout extends Model
         if (is_array($data['cart']['items']) || is_object($data['cart']['items'])) {
             $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$data['clientordernumber'] . "' ORDER BY sort_order");
             foreach ($data['cart']['items'] as $order_row) {
-                if ($order_row['name'] == "InvoiceFee") {
+                if ($order_row['articlenumber'] == "6eaceaec-fffc-41ad-8095-c21de609bcfd") {
                     if (is_array($totals->rows) || is_object($totals->rows)) {
                         foreach ($totals->rows as $total) {
                             if ($total['code'] == 'sco_invoice_fee') {

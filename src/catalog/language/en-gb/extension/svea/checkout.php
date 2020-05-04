@@ -105,6 +105,11 @@ $_['paymenttype_paymentplan']       = 'Payment Plan';
 $_['paymenttype_accountcredit']     = 'Account Credit';
 $_['paymenttype_undefined']         = 'Payment';
 $_['paymenttype_trustly']           = 'Trustly';
+$_['paymenttype_swish']             = 'Swish';
+$_['paymenttype_leasingunapproved'] = 'Leasing(Manual review)';
+$_['paymenttype_leasingapproved']   = 'Leasing(Auto approved)';
+$_['paymenttype_leasing']           = 'Leasing';
+$_['paymenttype_directbank']        = 'Direct Payment';
 
 $_['widget_pay_monthly']            = 'Pay monthly from';
 $_['widget_month']                  = 'month';
