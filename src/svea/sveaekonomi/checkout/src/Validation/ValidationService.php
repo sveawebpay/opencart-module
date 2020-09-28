@@ -81,7 +81,13 @@ abstract class ValidationService
     protected function mustBeInteger($data, $dataTitle)
     {
         $this->mustNotBeEmpty($data, $dataTitle);
-        if (!is_int($data)) {
+        // Handle 64-bit numeric confirmations in 32-bit environment
+        if (is_int($data) || (is_float($data) && $data > 2147483647))
+        {
+
+        }
+        else
+        {
             throw new SveaInputValidationException(
                 "$dataTitle must be passed as integer!",
                 ExceptionCodeList::INPUT_VALIDATION_ERROR

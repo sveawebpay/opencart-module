@@ -21,11 +21,6 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
     	$data['button_confirm'] = $this->language->get('button_confirm');
         $data['button_back'] = $this->language->get('button_back');
 
-        if ($this->request->get['route'] != 'checkout/guest_step_3') {
-            $data['back'] = 'index.php?route=checkout/payment';
-        } else {
-            $data['back'] = 'index.php?rout=checkout/guest_step_2';
-        }
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $data['countryCode'] = $order_info['payment_iso_code_2'];
@@ -162,18 +157,27 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
         $conf = ($this->config->get($this->paymentString . 'svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_card')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_card');
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf); //HostedPaymentResponse
         $response = $resp->getResponse();
-        $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
-        if($response->resultcode !== '0'){
-            if ($response->accepted === 1){
-                //$this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+        if($response->resultcode !== '0')
+        {
+            if ($response->accepted === 1)
+            {
+                $cleanClientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bug fix for gateway concatenating ".err" on transactionId
+                $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
+                if($currentOpencartOrderStatus['order_status_id'] == 0)
+                {
+                    $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+                }
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
-            }else{
+            }
+            else
+            {
                 $this->renderFailure($response);
             }
-        }else{
+        }
+        else
+        {
             $this->renderFailure($response);
         }
-
     }
     /**
      * Update order history with status
@@ -187,32 +191,36 @@ class ControllerExtensionPaymentSveacard extends SveaCommon {
         $conf = ($this->config->get($this->paymentString . 'svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_card')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_card');
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
-        $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
 
-            if ($response->accepted === 1){
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId,true);
-                if($this->config->get($this->paymentString . 'svea_card_auto_deliver') == 1)
+        if ($response->accepted === 1){
+            $cleanClientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bug fix for gateway concatenating ".err" on transactionId
+            $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
+            if($currentOpencartOrderStatus != null && $currentOpencartOrderStatus['order_status_id'] == 0)
+            {
+                $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+            }
+            if($this->config->get($this->paymentString . 'svea_card_auto_deliver') == 1)
+            {
+                $order_info = $this->model_checkout_order->getOrder($cleanClientOrderNumber);
+                $countryCode = $order_info['payment_iso_code_2'];
+
+                $deliver_object = \Svea\WebPay\WebPay::deliverOrder($conf)
+                    ->setCountryCode($countryCode)
+                    ->setTransactionId($response->transactionId)
+                    ->setOrderDate(date('c'))
+                    ->deliverCardOrder()
+                    ->doRequest();
+
+                if($deliver_object->accepted === 1)
                 {
-                    $order_info = $this->model_checkout_order->getOrder($clean_clientOrderNumber);
-                    $countryCode = $order_info['payment_iso_code_2'];
-
-                    $deliver_object = \Svea\WebPay\WebPay::deliverOrder($conf)
-                        ->setCountryCode($countryCode)
-                        ->setTransactionId($response->transactionId)
-                        ->setOrderDate(date('c'))
-                        ->deliverCardOrder()
-                        ->doRequest();
-
-                    if($deliver_object->accepted === 1)
-                    {
-                        $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_complete_status')[0], 'Svea: Order was captured automatically.',false);
-                    }
-                    else
-                    {
-                        $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber, $this->config->get('config_order_status_id'), 'Svea: Unable to capture transaction automatically. Reason: ' . $deliver_object->errormessage, false);
-                    }
+                    $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber,$this->config->get('config_complete_status')[0], 'Svea: Order was captured automatically.',false);
+                }
+                else
+                {
+                    $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber, $this->config->get('config_order_status_id'), 'Svea: Unable to capture transaction automatically. Reason: ' . $deliver_object->errormessage, false);
                 }
             }
+        }
     }
 
     private function renderFailure($rejection){

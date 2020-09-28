@@ -83,11 +83,7 @@ It's possible to hide the comments added by the module by enabling "Hide Svea co
 ## 2.1 Administrating orders <a name="i2-1"></a>
 **Important!** The Svea order id information saved in the Comment field must not be changed for the action to work. You may add to the information, but not change or remove it.
 
-To deliver an order just set the order status in the order history to one of the statuses that's configured in System->Settings->Store->Option->Complete Order Status
-
-To credit or cancel an order just select any other status that's not selected in the above setting.
-
-**Important! You have to change your fraud status to something else than the statuses in "Processing order statues", "Complete order statuses" and "Pending order status" otherwise the actions might not be sent to Svea.**
+When configuring the payment methods that you're going to use you have to select which order statuses that you want to apply for a certain action. There are two lists on every payment method that you can configure and you have to select atleast one status in each of the lists. By then changing the order status on the order to one of the statuses in the lists, the corresponding action will be sent to Svea's servers.
 
 Actions available:
 

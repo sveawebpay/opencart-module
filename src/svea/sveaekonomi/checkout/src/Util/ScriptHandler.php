@@ -102,19 +102,6 @@ class ScriptHandler
         self::executeScript('phpunit', "--configuration $configurationFilePath");
     }
 
-    /**
-     * Create documentation with phpDocumentor
-     */
-    public static function createPhpDocumentation()
-    {
-        $rootPath = getcwd();
-        $srcPath = $rootPath . self::SRC_PATH;
-        $documentationFolderPath = $rootPath . '/docs/api';
-        $cachePath = $documentationFolderPath . '/cache';
-
-        self::executeScript('phpdoc', "-d $srcPath -t $documentationFolderPath --cache-folder  $cachePath");
-    }
-
     private static function executeScript($command, $params)
     {
         $rootPath = getcwd();

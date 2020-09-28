@@ -43,7 +43,7 @@ class ControllerExtensionSveaOrder extends Controller
             {
                 $this->load->model('extension/svea/order');
                 $sveaOrderId = $this->getSveaOrderId($orderInfo['payment_code'], $orderInfo['order_id']);
-                $action = $this->getActionFromStatus($this->request->post['order_status_id']);
+                $action = $this->getActionFromStatus($this->request->post['order_status_id'], $orderInfo['payment_code']);
                 $config = $this->getConfiguration($orderInfo['payment_code'], $orderInfo['payment_iso_code_2']);
                 if(isset($config))
                 {
@@ -205,10 +205,11 @@ class ControllerExtensionSveaOrder extends Controller
         $this->setVersionStrings();
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
-        if ($status == "CANCELLED" || $status == "CREDITED" || $status == "ERROR") {
+        if ($status == "CANCELLED" || $status == "CREDITED" || $status == "ERROR" || ($paymentMethod == "svea_directbank" && $status == "DELIVERED")) {
             if($this->hideSveaComment($paymentMethod) == false) {
                 $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order is already credited or cancelled at Svea, no request was sent to the server.";
             }
+            return;
         } else if ($status == "ERROR") {
             $json['error'] = "Svea: An error occurred. Status was not recognized. No request was sent.";
         }
@@ -527,28 +528,65 @@ class ControllerExtensionSveaOrder extends Controller
         }
     }
 
-    public function getActionFromStatus($status)
+    public function getActionFromStatus($status, $paymentMethod)
     {
-        /*
-         * nop = No operation, we don't want to communicate with Svea if the function returns this
-         */
-        foreach ($this->config->get('config_complete_status') as $deliverGroupStatus) {
-            if ($deliverGroupStatus == $status) {
-                return "deliver";
-            }
+        $this->setVersionStrings();
+        if($paymentMethod == "sco")
+        {
+
+            $deliverStatuses = $this->config->get($this->moduleString . 'sco_deliver_status');
+            $creditStatuses = $this->config->get($this->moduleString . 'sco_cancel_credit_status');
+        }
+        else
+        {
+            $deliverStatuses = $this->config->get($this->paymentString . $paymentMethod . '_deliver_status');
+            $creditStatuses = $this->config->get($this->paymentString . $paymentMethod . '_cancel_credit_status');
         }
 
-        foreach ($this->config->get('config_processing_status') as $processingGroupStatus) {
-            if ($processingGroupStatus == $status) {
+        //Fallback module if settings haven't been updated since after version 4.10.1
+        if($deliverStatuses == null && $creditStatuses == null)
+        {
+            foreach ($this->config->get('config_complete_status') as $deliverGroupStatus) {
+                if ($deliverGroupStatus == $status) {
+                    return "deliver";
+                }
+            }
+
+            foreach ($this->config->get('config_processing_status') as $processingGroupStatus) {
+                if ($processingGroupStatus == $status) {
+                    return "nop";
+                }
+            }
+
+            if ($this->config->get('config_order_status_id') == $status || $this->config->get('config_fraud_status_id') == $status) {
                 return "nop";
             }
+
+            return "credit"; // If we haven't returned in any previous statement we assume that the user wants to credit this order
         }
 
-        if ($this->config->get('config_order_status_id') == $status || $this->config->get('config_fraud_status_id') == $status) {
-            return "nop";
+        if($deliverStatuses != null)
+        {
+            foreach($deliverStatuses as $deliverStatus)
+            {
+                if($deliverStatus == $status)
+                {
+                    return "deliver";
+                }
+            }
         }
 
-        return "credit"; // If we haven't returned in any previous statement we assume that the user wants to credit this order
+        if($creditStatuses != null)
+        {
+            foreach($creditStatuses as $creditStatus)
+            {
+                if($creditStatus == $status)
+                {
+                    return "credit";
+                }
+            }
+        }
+        return "nop"; // No operation
     }
 
     public function getSveaOrderId($paymentMethod, $opencartOrderId)

@@ -57,11 +57,6 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon {
         $data['button_back'] = $this->language->get('button_back');
         $data['continue'] = 'index.php?route=checkout/success';
 
-        if ($this->request->get['route'] != 'checkout/guest_step_3') {
-            $data['back'] = 'index.php?route=checkout/payment';
-        } else {
-            $data['back'] = 'index.php?rout=checkout/guest_step_2';
-        }
 
         //Get the country
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);

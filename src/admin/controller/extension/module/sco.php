@@ -123,7 +123,9 @@ class ControllerExtensionModuleSco extends Controller
             'hide_svea_comments' => '0',
             'create_order_on_success_page' => '1',
             'create_order_on_received_push' => '1',
-            'enable_electronic_id_authentication' => '0'
+            'enable_electronic_id_authentication' => '0',
+            'deliver_status' => array(),
+            'cancel_credit_status' => array()
         );
         $data['options_on_checkout_page'] = array(
             $this->moduleString . 'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
@@ -181,6 +183,43 @@ class ControllerExtensionModuleSco extends Controller
         // Validate permission
         if (!$this->user->hasPermission('modify', 'extension/module/sco')) {
             $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        // Order status list validation
+
+        if(count($this->request->post[$this->moduleString . 'sco_deliver_status']) == 0)
+        {
+            $this->error['warning'] = $this->language->get('error_validation_deliver_status_empty');
+        }
+
+        if(count($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) == 0)
+        {
+            $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
+        }
+
+        $sharedStatuses = array();
+        foreach($this->request->post[$this->moduleString . 'sco_deliver_status'] as $deliverStatus)
+        {
+            foreach($this->request->post[$this->moduleString . 'sco_cancel_credit_status'] as $key => $cancelCreditStatus)
+            {
+                if($deliverStatus == $cancelCreditStatus)
+                {
+                    array_push($sharedStatuses, $cancelCreditStatus);
+                    break;
+                }
+            }
+        }
+        if(count($sharedStatuses) != 0)
+        {
+            $this->load->model('localisation/order_status');
+            $sharedStatusesString = "";
+            foreach($sharedStatuses as $sharedStatus)
+            {
+                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
+
+            }
+            $sharedStatusesString = substr($sharedStatusesString, 0, strlen($sharedStatusesString)-2);
+            $this->error['warning'] = $this->language->get('error_validation_shared_status') . $sharedStatusesString;
         }
 
         return !$this->error;
@@ -270,6 +309,7 @@ class ControllerExtensionModuleSco extends Controller
         $this->model_extension_svea_events->deleteSveaCustomEvents();
     }
 
+    // Needs to be set for OC 2.3, OC 3.0+ loads languages automatically
     private function setLanguage()
     {
         $this->setVersionStrings();
@@ -292,6 +332,7 @@ class ControllerExtensionModuleSco extends Controller
         $data['tab_checkout_page_settings'] = $this->language->get('tab_checkout_page_settings');
         $data['tab_iframe_settings'] = $this->language->get('tab_iframe_settings');
         $data['tab_debug_settings'] = $this->language->get('tab_debug_settings');
+        $data['tab_order_statuses'] = $this->language->get('tab_order_statuses');
 
         // General
         $data['version'] = VERSION;
@@ -351,7 +392,13 @@ class ControllerExtensionModuleSco extends Controller
         $data['entry_' . $this->moduleString . 'sco_require_electronic_id_authentication'] = $this->language->get('text_require_electronic_id_authentication');
         $data['entry_' . $this->moduleString . 'sco_require_electronic_id_authentication_tooltip'] = $this->language->get('text_require_electronic_id_authentication_tooltip');
 
-        // Debug settings
+        // Order statuses
+        $data['entry_deliver_status']                               = $this->language->get('entry_deliver_status');
+        $data['entry_deliver_status_tooltip']                       = $this->language->get('entry_deliver_status_tooltip');
+        $data['entry_cancel_credit_status']                         = $this->language->get('entry_cancel_credit_status');
+        $data['entry_cancel_credit_status_tooltip']                 = $this->language->get('entry_cancel_credit_status_tooltip');
+
+            // Debug settings
         $data['text_debug_warning']                                 = $this->language->get('text_debug_warning');
         $data['text_debug_create_order_on_success_page']            = $this->language->get('text_debug_create_order_on_success_page');
         $data['text_debug_create_order_on_success_page_tooltip']    = $this->language->get('text_debug_create_order_on_success_page_tooltip');

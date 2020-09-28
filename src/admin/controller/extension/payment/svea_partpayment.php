@@ -78,6 +78,12 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         $data['entry_hide_svea_comments'] = $this->language->get('entry_hide_svea_comments');
         $data['entry_hide_svea_comments_tooltip'] = $this->language->get('entry_hide_svea_comments_tooltip');
 
+        // Order statuses
+        $data['entry_deliver_status']                               = $this->language->get('entry_deliver_status');
+        $data['entry_deliver_status_tooltip']                       = $this->language->get('entry_deliver_status_tooltip');
+        $data['entry_cancel_credit_status']                         = $this->language->get('entry_cancel_credit_status');
+        $data['entry_cancel_credit_status_tooltip']                 = $this->language->get('entry_cancel_credit_status_tooltip');
+
         $data['version'] = floatval(VERSION);
 
         //As you might notice the word we're really looking for is "country" not "lang". Leaving it like that so it won't ruin anything though.
@@ -176,11 +182,37 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
             $data[$this->paymentString . 'svea_partpayment_hide_svea_comments'] = $this->config->get($this->paymentString . 'svea_partpayment_hide_svea_comments');
         }
 
+        if (isset($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status'])) {
+            $data[$this->paymentString . 'svea_partpayment_deliver_status'] = $this->request->post[$this->paymentString . 'svea_partpayment_deliver_status'];
+        } else {
+            $data[$this->paymentString . 'svea_partpayment_deliver_status'] = $this->config->get($this->paymentString . 'svea_partpayment_deliver_status');
+        }
+
+        if (isset($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status'])) {
+            $data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] = $this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status'];
+        } else {
+            $data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] = $this->config->get($this->paymentString . 'svea_partpayment_cancel_credit_status');
+        }
+
+        if($data[$this->paymentString . 'svea_partpayment_deliver_status'] == null)
+        {
+            $data[$this->paymentString . 'svea_partpayment_deliver_status'] = array();
+        }
+
+        if($data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] == null)
+        {
+            $data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] = array();
+        }
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
         $data['version'] = VERSION;
+
+        // Add order statuses
+        $this->load->model('localisation/order_status');
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         $this->response->setOutput($this->load->view('extension/payment/svea_partpayment', $data));
 
@@ -190,6 +222,47 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
     {
         if (!$this->user->hasPermission('modify', 'extension/payment/svea_partpayment')) {
             $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        // Order status list validation
+
+        if(!isset($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) || count($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) == 0)
+        {
+            $this->error['warning'] = $this->language->get('error_validation_deliver_status_empty');
+        }
+
+        if(!isset($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']) == 0)
+        {
+            $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
+        }
+
+        $sharedStatuses = array();
+        if(isset($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) && isset($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']))
+        {
+            foreach($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status'] as $deliverStatus)
+            {
+                foreach($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status'] as $key => $cancelCreditStatus)
+                {
+                    if($deliverStatus == $cancelCreditStatus)
+                    {
+                        array_push($sharedStatuses, $cancelCreditStatus);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(count($sharedStatuses) != 0)
+        {
+            $this->load->model('localisation/order_status');
+            $sharedStatusesString = "";
+            foreach($sharedStatuses as $sharedStatus)
+            {
+                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
+
+            }
+            $sharedStatusesString = substr($sharedStatusesString, 0, strlen($sharedStatusesString)-2);
+            $this->error['warning'] = $this->language->get('error_validation_shared_status') . $sharedStatusesString;
         }
 
         if (!$this->error) {

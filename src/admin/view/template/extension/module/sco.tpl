@@ -45,6 +45,7 @@
                         <li><a href="#tab-authorization" data-toggle="tab"><?php echo $tab_authorization; ?></a></li>
                         <li><a href="#tab-checkout-page-settings" data-toggle="tab"><?php echo $tab_checkout_page_settings; ?></a></li>
                         <li><a href="#tab-iframe-settings" data-toggle="tab"><?php echo $tab_iframe_settings; ?></a></li>
+                        <li><a href="#tab-order-statuses" data-toggle="tab"><?php echo $tab_order_statuses; ?></a></li>
                         <li><a href="#tab-debug-settings" data-toggle="tab"><?php echo $tab_debug_settings; ?></a></li>
                     </ul>
 
@@ -554,6 +555,53 @@
                                         <?php echo $text_no; ?>
                                         <?php } ?>
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Order statuses -->
+                        <div class="tab-pane" id="tab-order-statuses">
+
+                            <!-- Complete / Deliver Order status -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-deliver-status"><span data-toggle="tooltip" title="<?php echo $entry_deliver_status_tooltip ?>"><?php echo $entry_deliver_status?></span></label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 150px; overflow: auto;">
+                                        <?php foreach ($order_statuses as $order_status) { ?>
+                                        <div class="checkbox">
+                                            <label>
+                                                <?php if (in_array($order_status['order_status_id'], $sco_deliver_status)) { ?>
+                                                <input type="checkbox" name="sco_deliver_status[]" value="<?php echo $order_status['order_status_id']; ?>" checked="checked" />
+                                                <?php echo $order_status['name']; ?>
+                                                <?php } else { ?>
+                                                <input type="checkbox" name="sco_deliver_status[]" value="<?php echo $order_status['order_status_id']; ?>" />
+                                                <?php echo $order_status['name']; ?>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cancel / Credit Order status -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-cancel-credit-status"><span data-toggle="tooltip" title="<?php echo $entry_cancel_credit_status_tooltip ?>"><?php echo $entry_cancel_credit_status?></span></label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 150px; overflow: auto;">
+                                        <?php foreach ($order_statuses as $order_status) { ?>
+                                        <div class="checkbox">
+                                            <label>
+                                                <?php if (in_array($order_status['order_status_id'], $sco_cancel_credit_status)) { ?>
+                                                <input type="checkbox" name="sco_cancel_credit_status[]" value="<?php echo $order_status['order_status_id']; ?>" checked="checked" />
+                                                <?php echo $order_status['name']; ?>
+                                                <?php } else { ?>
+                                                <input type="checkbox" name="sco_cancel_credit_status[]" value="<?php echo $order_status['order_status_id']; ?>" />
+                                                <?php echo $order_status['name']; ?>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>

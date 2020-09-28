@@ -76,6 +76,10 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         $data['entry_test'] = $this->language->get('entry_test');
         $data['entry_prod'] = $this->language->get('entry_prod');
 
+        // Order statuses
+        $data['entry_cancel_credit_status']                         = $this->language->get('entry_cancel_credit_status');
+        $data['entry_cancel_credit_status_tooltip']                 = $this->language->get('entry_cancel_credit_status_tooltip');
+
         //Definitions lang
         $data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
         $data['entry_testmode'] = $this->language->get('entry_testmode');
@@ -157,11 +161,27 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
             $data[$this->paymentString . 'svea_directbank_hide_svea_comments'] = $this->config->get($this->paymentString . 'svea_directbank_hide_svea_comments');
         }
 
+        if (isset($this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status'])) {
+            $data[$this->paymentString . 'svea_directbank_cancel_credit_status'] = $this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status'];
+        } else {
+            $data[$this->paymentString . 'svea_directbank_cancel_credit_status'] = $this->config->get($this->paymentString . 'svea_directbank_cancel_credit_status');
+        }
+
+        if($data[$this->paymentString . 'svea_directbank_cancel_credit_status'] == null)
+        {
+            $data[$this->paymentString . 'svea_directbank_cancel_credit_status'] = array();
+        }
+
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
         $data['version'] = VERSION;
+
+        // Add order statuses
+        $this->load->model('localisation/order_status');
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         $this->response->setOutput($this->load->view('extension/payment/svea_directbank', $data));
     }
@@ -170,6 +190,13 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
     {
         if (!$this->user->hasPermission('modify', 'extension/payment/svea_directbank')) {
             $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        // Order status list validation
+
+        if(!isset($this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status']) == 0)
+        {
+            $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
         }
 
         if (!$this->error) {

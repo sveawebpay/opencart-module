@@ -9,7 +9,7 @@ class CreditOrderAmount extends AdminImplementationManager
     /**
      * @var string $apiUrl
      */
-    protected $apiUrl = '/api/v1/orders/%d/deliveries/%d';
+    protected $apiUrl = '/api/v1/orders/%s/deliveries/%s';
 
     /**
      * Request body - JSON

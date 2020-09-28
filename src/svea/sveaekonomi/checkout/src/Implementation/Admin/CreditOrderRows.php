@@ -8,7 +8,7 @@ use Svea\Checkout\Validation\ValidationService;
 
 class CreditOrderRows extends AdminImplementationManager
 {
-    protected $apiUrl = '/api/v1/orders/%d/deliveries/%d/credits';
+    protected $apiUrl = '/api/v1/orders/%s/deliveries/%s/credits';
 
     /**
      * @var bool $isNewCreditRow

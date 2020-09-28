@@ -33,6 +33,7 @@
                         <li class="nav-item"><a class="nav-link" href="#tab-authorization" data-toggle="tab">{{ tab_authorization }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="#tab-checkout-page-settings" data-toggle="tab">{{ tab_checkout_page_settings }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="#tab-iframe-settings" data-toggle="tab">{{ tab_iframe_settings }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab-order-statuses" data-toggle="tab">{{ tab_order_statuses }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="#tab-debug-settings" data-toggle="tab">{{ tab_debug_settings }}</a></li>
                     </ul>
 
@@ -546,6 +547,47 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Order statuses -->
+                        <div class="tab-pane container fade" id="tab-order-statuses">
+
+                            <!-- Complete / Deliver Order status -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-deliver-status"><span data-toggle="tooltip" title="{{ entry_deliver_status_tooltip }}">{{ entry_deliver_status }}</span></label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 150px; overflow: auto;"> {% for order_status in order_statuses %}
+                                            <div class="checkbox">
+                                                <label> {% if order_status.order_status_id in module_sco_deliver_status %}
+                                                        <input type="checkbox" name="module_sco_deliver_status[]" value="{{ order_status.order_status_id }}" checked="checked" />
+                                                        {{ order_status.name }}
+                                                    {% else %}
+                                                        <input type="checkbox" name="module_sco_deliver_status[]" value="{{ order_status.order_status_id }}" />
+                                                        {{ order_status.name }}
+                                                    {% endif %} </label>
+                                            </div>
+                                        {% endfor %} </div>
+                                </div>
+                            </div>
+
+                            <!-- Cancel / Credit Order status -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="input-cancel_credit-status"><span data-toggle="tooltip" title="{{ entry_cancel_credit_status_tooltip }}">{{ entry_cancel_credit_status }}</span></label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 150px; overflow: auto;"> {% for order_status in order_statuses %}
+                                            <div class="checkbox">
+                                                <label> {% if order_status.order_status_id in module_sco_cancel_credit_status %}
+                                                        <input type="checkbox" name="module_sco_cancel_credit_status[]" value="{{ order_status.order_status_id }}" checked="checked" />
+                                                        {{ order_status.name }}
+                                                    {% else %}
+                                                        <input type="checkbox" name="module_sco_cancel_credit_status[]" value="{{ order_status.order_status_id }}" />
+                                                        {{ order_status.name }}
+                                                    {% endif %} </label>
+                                            </div>
+                                        {% endfor %} </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Debug settings -->
                         <div class="tab-pane container fade" id="tab-debug-settings" style="max-width:1600px;">
                             <div class="form-group row" style="display:block;text-align:center">
@@ -673,6 +715,7 @@
                         <li><a href="#tab-authorization" data-toggle="tab">{{ tab_authorization }}</a></li>
                         <li><a href="#tab-checkout-page-settings" data-toggle="tab">{{ tab_checkout_page_settings }}</a></li>
                         <li><a href="#tab-iframe-settings" data-toggle="tab">{{ tab_iframe_settings }}</a></li>
+                        <li><a href="#tab-order-statuses" data-toggle="tab">{{ tab_order_statuses }}</a></li>
                         <li><a href="#tab-debug-settings" data-toggle="tab">{{ tab_debug_settings }}</a></li>
                     </ul>
 
@@ -1184,6 +1227,46 @@
                                             {{ text_no }}
                                         {% endif %}
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order statuses -->
+                        <div class="tab-pane" id="tab-order-statuses">
+
+                            <!-- Complete / Deliver Order status -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-deliver-status"><span data-toggle="tooltip" title="{{ entry_deliver_status_tooltip }}">{{ entry_deliver_status }}</span></label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 150px; overflow: auto;"> {% for order_status in order_statuses %}
+                                            <div class="checkbox">
+                                                <label> {% if order_status.order_status_id in module_sco_deliver_status %}
+                                                        <input type="checkbox" name="module_sco_deliver_status[]" value="{{ order_status.order_status_id }}" checked="checked" />
+                                                        {{ order_status.name }}
+                                                    {% else %}
+                                                        <input type="checkbox" name="module_sco_deliver_status[]" value="{{ order_status.order_status_id }}" />
+                                                        {{ order_status.name }}
+                                                    {% endif %} </label>
+                                            </div>
+                                        {% endfor %} </div>
+                                </div>
+                            </div>
+
+                            <!-- Cancel / Credit Order status -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-cancel_credit-status"><span data-toggle="tooltip" title="{{ entry_cancel_credit_status_tooltip }}">{{ entry_cancel_credit_status }}</span></label>
+                                <div class="col-sm-10">
+                                    <div class="well well-sm" style="height: 150px; overflow: auto;"> {% for order_status in order_statuses %}
+                                            <div class="checkbox">
+                                                <label> {% if order_status.order_status_id in module_sco_cancel_credit_status %}
+                                                        <input type="checkbox" name="module_sco_cancel_credit_status[]" value="{{ order_status.order_status_id }}" checked="checked" />
+                                                        {{ order_status.name }}
+                                                    {% else %}
+                                                        <input type="checkbox" name="module_sco_cancel_credit_status[]" value="{{ order_status.order_status_id }}" />
+                                                        {{ order_status.name }}
+                                                    {% endif %} </label>
+                                            </div>
+                                        {% endfor %} </div>
                                 </div>
                             </div>
                         </div>

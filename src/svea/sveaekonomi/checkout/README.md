@@ -652,22 +652,26 @@ The order can only be considered “ready to send to customer” when the Checko
 #### 8.9 Locale
 | Parameter | Description     |
 |-----------|-----------------|
-| sv-SE     | Swedish locale |
-| nn-NO     | Norwegian locale |
-| nb-NO     | Norwegian locale |
-| fi-FI     | Finnish locale |
-| da-DK     | Danish locale |
+| sv-SE     | Swedish locale. |
+| nn-NO     | Norwegian locale. |
+| nb-NO     | Norwegian locale. |
+| fi-FI     | Finnish locale. |
+| da-DK     | Danish locale. |
+| de-DE     | German locale. |
 
 
 #### 8.10 PaymentType
 | Parameter   | Description     |
 |-------------|-----------------|
-| Null        | The customer haven’t confirmed the order or can still change paymentType. |
-| INVOICE     | Invoice |
+| Null        | The customer hasn't confirmed the order. |
+| INVOICE     | Invoice (Svea buys the invoice) |
+| ADMININVOICE | Invoice (Svea only administrates the invoice, not enabled by default) |
 | PAYMENTPLAN |	The customer chose a payment plan |
 | SVEACARDPAY	      | The customer paid the order with card |
 | Directbank(varies)  |	The customer paid the order with direct bank e.g. Nordea, SEB. See below for all available parameters |
 | ACCOUNTCREDIT	  | The customer chose to use their account credit. |
+| LEASINGUNAPPROVED | Leasing (Manual approve process by Sveas leasing department, check Store pay admin page) |
+| LEASINGAPPROVED | Leasing (Automatically approved leasing contract)
 
 Directbanks:
 

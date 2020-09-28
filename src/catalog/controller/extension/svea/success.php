@@ -40,7 +40,7 @@ class ControllerExtensionSveaSuccess extends Controller
             try {
                 $response = $checkout_entry->getOrder();
                 $response = lowerArrayKeys($response);
-                if ($response['status'] != 'Final') {
+                if (strtoupper($response['status']) != 'FINAL') {
                     $this->response->redirect($this->url->link('extension/svea/checkout'));
                     return;
                 }

@@ -45,5 +45,14 @@ $_['entry_distribution_type'] = 'Method of invoice distribution to end-customers
 $_['entry_hide_svea_comments'] = "Hide Svea comments:";
 $_['entry_hide_svea_comments_tooltip'] = "Hides any comments that is added by the module on the order history so that only the customer and admin comments are visible. Does not apply to previously administrated orders. Read readme.md for more information.";
 
+// Order statuses
+$_['entry_deliver_status']                              = 'Deliver order statuses';
+$_['entry_deliver_status_tooltip']                      = 'Setting the order status of a order to one of the order statuses in the list will make the module send a deliver order request to Svea. If the previous status was a deliver order status, no request will be sent.';
+$_['entry_cancel_credit_status']                        = 'Cancel/credit order statuses';
+$_['entry_cancel_credit_status_tooltip']                = 'Setting the order status of a order to one of the order statuses in the list will make the module send a cancel or credit order request to Svea(depending on if the order is previously delivered or not). If the previous status was a cancel/credit order status, no request will be sent.';
+
 // Error
 $_['error_permission']        = 'Warning: You do not have permission to modify the payment module!';
+$_['error_validation_shared_status']            = 'Error: The list of deliver order statuses and the list of cancel/credit order statuses cannot share the same statuses. Please remove the following statuses from one of the lists: ';
+$_['error_validation_deliver_status_empty']     = 'Error: The list of deliver order statuses may not be empty!';
+$_['error_validation_cancel_credit_status_empty']     = 'Error: The list of cancel/credit order statuses may not be empty!';

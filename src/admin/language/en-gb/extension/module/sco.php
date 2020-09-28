@@ -13,6 +13,7 @@ $_['tab_authorization']			    = 'Authorization';
 $_['tab_checkout_page_settings']    = 'Checkout page-settings';
 $_['tab_iframe_settings']           = 'Iframe-settings';
 $_['tab_debug_settings']            = 'Debug';
+$_['tab_order_statuses']            = 'Order statuses';
 
 // General
 $_['entry_status']				    = 'Status';
@@ -83,6 +84,15 @@ $_['text_debug_simulate_push_button']                   = 'Send push';
 $_['text_debug_simulate_push_sent']                     = 'Push was sent!';
 $_['text_debug_simulate_push_error']                    = 'An error occurred while receiving the push, check the logs for more information';
 
+// Order statuses
+$_['entry_deliver_status']                              = 'Deliver order statuses';
+$_['entry_deliver_status_tooltip']                      = 'Setting the order status of a order to one of the order statuses in the list will make the module send a deliver order request to Svea. If the previous status was a deliver order status, no request will be sent.';
+$_['entry_cancel_credit_status']                        = 'Cancel/credit order statuses';
+$_['entry_cancel_credit_status_tooltip']                = 'Setting the order status of a order to one of the order statuses in the list will make the module send a cancel or credit order request to Svea(depending on if the order is previously delivered or not). If the previous status was a cancel/credit order status, no request will be sent.';
+
 // Error
-$_['error_permission']			    = 'Warning: You do not have permission to modify the Svea Checkout module!';
-$_['error_authorization_data']      = 'Warning: To enable this module you need to add a Checkout merchant id and a Checkout Secret word in the authorization section!';
+$_['error_permission']			                = 'Error: You do not have permission to modify the Svea Checkout module!';
+$_['error_authorization_data']                  = 'Error: To enable this module you need to add a Checkout merchant id and a Checkout Secret word in the authorization section!';
+$_['error_validation_shared_status']            = 'Error: The list of deliver order statuses and the list of cancel/credit order statuses cannot share the same statuses. Please remove the following statuses from one of the lists: ';
+$_['error_validation_deliver_status_empty']     = 'Error: The list of deliver order statuses may not be empty!';
+$_['error_validation_cancel_credit_status_empty']     = 'Error: The list of cancel/credit order statuses may not be empty!';

@@ -22,11 +22,6 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
     	$data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
 
-        if ($this->request->get['route'] != 'checkout/guest_step_3') {
-                $data['back'] = 'index.php?route=checkout/payment';
-        } else {
-                $data['back'] = 'index.php?rout=checkout/guest_step_2';
-        }
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $data['countryCode'] = $order_info['payment_iso_code_2'];
         $this->id = 'payment';
@@ -191,15 +186,25 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
 
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, $countryCode, $conf);
         $response = $resp->getResponse();
-        $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
-        if($response->resultcode !== '0'){
-        if ($response->accepted === 1){
-            //$this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+        if($response->resultcode !== '0')
+        {
+            if ($response->accepted === 1)
+            {
+                $cleanClientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bug fix for gateway concatenating ".err" on transactionId
+                $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
+                if($currentOpencartOrderStatus['order_status_id'] == 0)
+                {
+                    $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
+                }
                 $this->response->redirect($this->url->link('checkout/success', '','SSL'));
-            }else{
+            }
+            else
+            {
                 $this->renderFailure($response);
             }
-        }else{
+        }
+        else
+        {
             $this->renderFailure($response);
         }
     }
@@ -216,14 +221,20 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon {
         $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
         $response = $resp->getResponse();
-         $clean_clientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bugfix for gateway concatinating ".err" on number
-            if ($response->accepted === 1){
-                 //sets orderhistory
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId,true);
-            }else{
-                $error = $this->responseCodes($response->resultcode, $response->errormessage);
-                $this->model_checkout_order->addOrderHistory($clean_clientOrderNumber,0,"Payment failed: " . $error,FALSE);
+        $cleanClientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bug fix for gateway concatenating ".err" on transactionId
+        if ($response->accepted === 1)
+        {
+            $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
+            if($currentOpencartOrderStatus != null && $currentOpencartOrderStatus['order_status_id'] == 0)
+            {
+                $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber,$this->config->get('config_order_status_id'),'Svea transactionId: '.$response->transactionId, false);
             }
+        }
+        else
+        {
+            $error = $this->responseCodes($response->resultcode, $response->errormessage);
+            $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber,0,"Payment failed: " . $error,FALSE);
+        }
     }
 
 

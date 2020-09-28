@@ -439,7 +439,7 @@ class ModelExtensionSveaCheckout extends Model
         $comment =  'Svea Checkout Order Id: '. $module_sco_order_id;
 
         // CONFIRM ORDER
-        $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$order_id) . "'")->row;
+        $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $this->db->escape((int)$order_id) . "'")->row;
         if($currentOpencartOrderStatus['order_status_id'] == 0 && $opencartOrderStatusIdFromSveaResponse == $this->config->get('config_order_status_id')) {
             $this->model_checkout_order->addOrderHistory($order_id, $opencartOrderStatusIdFromSveaResponse, $comment, false);
         }

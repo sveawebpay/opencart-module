@@ -135,6 +135,49 @@
                     </select>
                 </div>
             </div>
+            <!-- Complete / Deliver Order status -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-deliver-status"><span data-toggle="tooltip" title="<?php echo $entry_deliver_status_tooltip ?>"><?php echo $entry_deliver_status?></span></label>
+                <div class="col-sm-9">
+                    <div class="well well-sm" style="height: 150px; overflow: auto;">
+                        <?php foreach ($order_statuses as $order_status) { ?>
+                        <div class="checkbox">
+                            <label>
+                                <?php if (in_array($order_status['order_status_id'], $svea_card_deliver_status)) { ?>
+                                <input type="checkbox" name="svea_card_deliver_status[]" value="<?php echo $order_status['order_status_id']; ?>" checked="checked" />
+                                <?php echo $order_status['name']; ?>
+                                <?php } else { ?>
+                                <input type="checkbox" name="svea_card_deliver_status[]" value="<?php echo $order_status['order_status_id']; ?>" />
+                                <?php echo $order_status['name']; ?>
+                                <?php } ?>
+                            </label>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancel / Credit Order status -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-cancel-credit-status"><span data-toggle="tooltip" title="<?php echo $entry_cancel_credit_status_tooltip ?>"><?php echo $entry_cancel_credit_status?></span></label>
+                <div class="col-sm-9">
+                    <div class="well well-sm" style="height: 150px; overflow: auto;">
+                        <?php foreach ($order_statuses as $order_status) { ?>
+                        <div class="checkbox">
+                            <label>
+                                <?php if (in_array($order_status['order_status_id'], $svea_card_cancel_credit_status)) { ?>
+                                <input type="checkbox" name="svea_card_cancel_credit_status[]" value="<?php echo $order_status['order_status_id']; ?>" checked="checked" />
+                                <?php echo $order_status['name']; ?>
+                                <?php } else { ?>
+                                <input type="checkbox" name="svea_card_cancel_credit_status[]" value="<?php echo $order_status['order_status_id']; ?>" />
+                                <?php echo $order_status['name']; ?>
+                                <?php } ?>
+                            </label>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
         <!-- Mode specific -->
         <div class="tab-content">
             <ul class="nav nav-tabs" id="svea_merchant">
