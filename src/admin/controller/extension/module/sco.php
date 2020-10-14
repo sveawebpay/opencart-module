@@ -187,25 +187,28 @@ class ControllerExtensionModuleSco extends Controller
 
         // Order status list validation
 
-        if(count($this->request->post[$this->moduleString . 'sco_deliver_status']) == 0)
+        if(!isset($this->request->post[$this->moduleString . 'sco_deliver_status']) || count($this->request->post[$this->moduleString . 'sco_deliver_status']) == 0)
         {
             $this->error['warning'] = $this->language->get('error_validation_deliver_status_empty');
         }
 
-        if(count($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) == 0)
+        if(!isset($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) || count($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) == 0)
         {
             $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
         }
 
         $sharedStatuses = array();
-        foreach($this->request->post[$this->moduleString . 'sco_deliver_status'] as $deliverStatus)
+        if(isset($this->request->post[$this->moduleString . 'sco_deliver_status']) && isset($this->request->post[$this->moduleString . 'sco_cancel_credit_status']))
         {
-            foreach($this->request->post[$this->moduleString . 'sco_cancel_credit_status'] as $key => $cancelCreditStatus)
+            foreach ($this->request->post[$this->moduleString . 'sco_deliver_status'] as $deliverStatus)
             {
-                if($deliverStatus == $cancelCreditStatus)
+                foreach ($this->request->post[$this->moduleString . 'sco_cancel_credit_status'] as $key => $cancelCreditStatus)
                 {
-                    array_push($sharedStatuses, $cancelCreditStatus);
-                    break;
+                    if ($deliverStatus == $cancelCreditStatus)
+                    {
+                        array_push($sharedStatuses, $cancelCreditStatus);
+                        break;
+                    }
                 }
             }
         }
