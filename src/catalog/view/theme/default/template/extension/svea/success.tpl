@@ -11,7 +11,7 @@
         <?php } ?>
     </ul>
 
-    <section class="checkout-page-container">
+    <section class="">
 
         <div class="sco-main-content">
             <div class="row">

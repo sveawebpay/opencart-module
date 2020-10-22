@@ -108,7 +108,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $order_builder = $checkout_order_entry->getCheckoutOrderBuilder()
             ->setPartnerKey('3D5E28FB-EA86-41FE-98CB-60CCAE8E6075');
 
-        $this->setOrderGeneralData($checkout_order_entry);
+        $this->setOrderGeneralData($checkout_order_entry, $order_id);
 
         $order_builder = $this->addOrderRowsToWebServiceOrder($order_builder, $products, $currency_value);
 
@@ -210,7 +210,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
         return $this->getHashOfOldState() !== $this->getHashOfCurrentState();
     }
 
-    private function setOrderGeneralData($checkout_order_entry)
+    private function setOrderGeneralData($checkout_order_entry, $order_id)
     {
         $this->setVersionStrings();
         $terms_uri =  $this->url->link('information/information', array('information_id' => $this->config->get('config_checkout_id')));
@@ -223,7 +223,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             ->setCountryCode($this->session->data[$this->moduleString . 'sco_country'])// customer country, we recommend basing this on the customer billing address
             ->setCurrency($this->session->data[$this->moduleString . 'sco_currency'])
             ->setCheckoutUri($this->url->link('extension/svea/checkout'))
-            ->setConfirmationUri($this->url->link('extension/svea/success'))
+            ->setConfirmationUri($this->url->link('extension/svea/success' . '&order_id=' . $order_id . '&hash=' . hash('sha512', $order_id . $_COOKIE['OCSESSID'])))
             ->setPushUri(str_replace('&amp;', '&', urldecode($this->url->link('extension/svea/push', array($this->paymentString . 'svea_order' => '{checkout.order.uri}')))))
             ->setTermsUri(str_replace('&amp;', '&',(urldecode($terms_uri))))
             ->setLocale($this->session->data[$this->moduleString . 'sco_locale']);

@@ -23,7 +23,14 @@ class ControllerExtensionSveaSuccess extends Controller
     public function index()
     {
         $this->setVersionStrings();
-        $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
+        $module_sco_order_id = null;
+
+        if(isset($_GET['order_id']) && isset($_GET['hash']))
+        {
+            $query = $this->db->query("SELECT `checkout_id` FROM " . DB_PREFIX . "svea_sco_order WHERE order_id = '" . $this->db->escape((int)$_GET['order_id']) . "'");
+            $module_sco_order_id = (int)$query->row['checkout_id'];
+        }
+
 
         if($module_sco_order_id != null)
         {
@@ -40,7 +47,9 @@ class ControllerExtensionSveaSuccess extends Controller
             try {
                 $response = $checkout_entry->getOrder();
                 $response = lowerArrayKeys($response);
-                if (strtoupper($response['status']) != 'FINAL') {
+                $hashOnOrder = substr((string)$response['merchantsettings']['confirmationuri'], strpos((string)$response['merchantsettings']['confirmationuri'], "hash=")+5);
+
+                if (strtoupper($response['status']) != 'FINAL' || $hashOnOrder != $_GET['hash']) {
                     $this->response->redirect($this->url->link('extension/svea/checkout'));
                     return;
                 }
@@ -90,16 +99,6 @@ class ControllerExtensionSveaSuccess extends Controller
 
         $data['home'] = $this->url->link('common/home');
         $data['text_continue'] = $this->language->get('text_continue');
-
-        if (isset($this->session->data[$this->paymentString . 'svea_last_page']) && $this->session->data[$this->paymentString . 'svea_last_page'] === 'extension/svea/success') {
-            unset($this->session->data[$this->paymentString . 'svea_last_page']);
-            $module_sco_order_id = $this->session->data[$this->moduleString . 'sco_success_order_id'];
-        } else if (isset($this->session->data[$this->paymentString . 'svea_last_page']) && $this->session->data[$this->paymentString . 'svea_last_page'] !== 'extension/svea/success') {
-            $this->session->data[$this->paymentString . 'svea_last_page'] = 'extension/svea/success';
-        } else {
-            $this->response->redirect($this->url->link('checkout/success'));
-            return;
-        }
 
         if($this->config->get($this->moduleString . 'sco_create_order_on_success_page') == 1)
         {
