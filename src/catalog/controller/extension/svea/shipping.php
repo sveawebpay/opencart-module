@@ -69,7 +69,6 @@ class ControllerExtensionSveaShipping extends Controller
         array_multisort($sort_order, SORT_ASC, $methods);
 
         $this->session->data['shipping_methods'] = $methods;
-        $this->session->data['shipping_method'] = (isset($this->session->data['shipping_method'])) ? $this->session->data['shipping_method'] : NULL;
 
         $json['methods'] = array();
 
@@ -85,7 +84,7 @@ class ControllerExtensionSveaShipping extends Controller
                 $json['methods'][] = array(
                     'id' => $quote['code'],
                     'name' => $name,
-                    'selected' => ($this->session->data['shipping_method']['code'] == $quote['code']) ? 1 : 0,
+                    'selected' => (isset($this->session->data['shipping_method']) && $this->session->data['shipping_method']['code'] == $quote['code']) ? 1 : 0,
                 );
             }
         }

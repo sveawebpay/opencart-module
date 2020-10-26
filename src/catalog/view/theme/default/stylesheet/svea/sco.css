@@ -295,13 +295,6 @@ textarea.form-control {
     z-index: 0;
 }
 
-#sco-email:read-only,
-#sco-postcode:read-only {
-    background: transparent;
-    /*color: #939598;*/
-    opacity: .7;
-}
-
 #sco-details {
     display: none;
 }

@@ -6,6 +6,7 @@ class ControllerExtensionSveaOrder extends Controller
 {
     private $paymentString ="payment_";
     private $moduleString = "module_";
+    private $scoOrderData;
 
     public function history()
     {
@@ -205,7 +206,7 @@ class ControllerExtensionSveaOrder extends Controller
         $this->setVersionStrings();
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
-        if ($status == "CANCELLED" || $status == "CREDITED" || $status == "ERROR" || ($paymentMethod == "svea_directbank" && $status == "DELIVERED")) {
+        if ($status == "CANCELLED" || $status == "CREDITED" || $status == "ERROR") {
             if($this->hideSveaComment($paymentMethod) == false) {
                 $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order is already credited or cancelled at Svea, no request was sent to the server.";
             }
@@ -494,9 +495,7 @@ class ControllerExtensionSveaOrder extends Controller
 
             $status = strtoupper($response->status);
         } else {
-            $response = $response->setCheckoutOrderId($sveaOrderId)
-                ->queryCheckoutOrder()
-                ->doRequest();
+            $response = $this->getScoOrderData($sveaOrderId, $countryCode);
 
             $status = strtoupper($response['OrderStatus']);
             if($status == "DELIVERED")
