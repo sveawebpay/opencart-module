@@ -203,13 +203,15 @@ class SveaCommon extends Controller
             $extensions = $this->model_setting_extension->getExtensions('total');
         }
 
-
         foreach ($extensions as $key => $value) {
-            $sort_order[$key] = $this->config->get($this->totalString . '' . $value['code'] . '_sort_order');
+            if (($value['code'] === 'svea_fee') && ($isoCode = $this->getIsoCodeFromAddress())) {
+                $sort_order[$key] = $this->config->get($this->totalString . '' . $value['code'] . '_sort_order_' . $isoCode);
+            } else {
+                $sort_order[$key] = $this->config->get($this->totalString . '' . $value['code'] . '_sort_order');
+            }
         }
 
         array_multisort($sort_order, SORT_ASC, $extensions);
-
 
         $prev = null;
 
@@ -309,4 +311,22 @@ class SveaCommon extends Controller
         return $orderBuilder;
     }
 
+    private function getIsoCodeFromAddress()
+    {
+        if (!empty($this->session->data['payment_address']['address_id'])) {
+            $this->load->model('account/address');
+
+            $address = $this->model_account_address->getAddress(
+                $this->session->data['payment_address']['address_id']
+            );
+
+            return $address['iso_code_2'];
+        }
+
+        if (!empty($this->session->data['payment_address']['iso_code_2'])) {
+            return $this->session->data['payment_address']['iso_code_2'];
+        }
+
+        return 'SE';
+    }
 }
