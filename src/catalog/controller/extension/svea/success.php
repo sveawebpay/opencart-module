@@ -25,16 +25,24 @@ class ControllerExtensionSveaSuccess extends Controller
         $this->setVersionStrings();
         $module_sco_order_id = null;
 
-        if(isset($_GET['order_id']) && isset($_GET['hash']))
+        $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
+
+        $order_id = !empty($_GET['order_id']) ? $_GET['order_id'] : null;
+        $hash = !empty($_GET['hash']) ? $_GET['hash'] : null;
+
+        if ($test_mode) {
+            $order_id = str_replace(hash('crc32', HTTPS_SERVER), '', $order_id);
+        }
+
+        if($order_id && $hash)
         {
-            $query = $this->db->query("SELECT `checkout_id` FROM " . DB_PREFIX . "svea_sco_order WHERE order_id = '" . $this->db->escape((int)$_GET['order_id']) . "'");
+            $query = $this->db->query("SELECT `checkout_id` FROM " . DB_PREFIX . "svea_sco_order WHERE order_id = '" . $this->db->escape((int)$order_id) . "'");
             $module_sco_order_id = (int)$query->row['checkout_id'];
         }
 
 
         if($module_sco_order_id != null)
         {
-            $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
             $config = new OpencartSveaCheckoutConfig($this, 'checkout');
             if ($test_mode) {
                 $config = new OpencartSveaCheckoutConfigTest($this, 'checkout');
@@ -49,7 +57,11 @@ class ControllerExtensionSveaSuccess extends Controller
                 $response = lowerArrayKeys($response);
                 $hashOnOrder = substr((string)$response['merchantsettings']['confirmationuri'], strpos((string)$response['merchantsettings']['confirmationuri'], "hash=")+5);
 
-                if (strtoupper($response['status']) != 'FINAL' || $hashOnOrder != $_GET['hash']) {
+                if ($test_mode) {
+                    $response['clientordernumber'] = str_replace(hash('crc32', HTTPS_SERVER), '', $response['clientordernumber']);
+                }
+
+                if (strtoupper($response['status']) != 'FINAL' || $hashOnOrder != $hash) {
                     $this->response->redirect($this->url->link('extension/svea/checkout'));
                     return;
                 }

@@ -85,6 +85,10 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $order_id = $this->addOrder($order_id, $email);
 
+        if ($this->config->get($this->moduleString . 'sco_test_mode')) {
+            $order_id = hash('crc32', HTTPS_SERVER) . $order_id;
+        }
+
         $currency = strtoupper($this->session->data[$this->moduleString . 'sco_currency']);
 
         $this->load->model('localisation/currency');

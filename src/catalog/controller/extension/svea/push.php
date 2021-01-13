@@ -16,11 +16,16 @@ class ControllerExtensionSveaPush extends Controller
             $this->moduleString = "";
         }
     }
-    
+
     public function index()
     {
         $this->setVersionStrings();
-        
+
+        // Avoid success and callback request to be processed simultaneously
+        if ($this->config->get($this->moduleString . 'sco_create_order_on_success_page') == 1) {
+            sleep(5);
+        }
+
         $checkout_order_id = isset($this->request->get[$this->paymentString . 'svea_order']) ? trim($this->request->get[$this->paymentString . 'svea_order']) : null;
 
         if ($checkout_order_id != null) {
@@ -41,6 +46,10 @@ class ControllerExtensionSveaPush extends Controller
                 $response = lowerArrayKeys($response);
             } catch (Exception $e) {
                 die($e->getMessage());
+            }
+
+            if ($test_mode) {
+                $response['clientordernumber'] = str_replace(hash('crc32', HTTPS_SERVER), '', $response['clientordernumber']);
             }
 
             if($this->config->get($this->moduleString . 'sco_create_order_on_received_push') == 1)
