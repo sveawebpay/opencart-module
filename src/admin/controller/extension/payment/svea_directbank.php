@@ -14,8 +14,7 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->userTokenString = "";
             $this->linkString = "extension/extension";
             $this->paymentString = "";
@@ -23,7 +22,7 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
             $this->appendString = "";
         }
     }
-    
+
     public function index()
     {
         $this->setVersionStrings();
@@ -50,26 +49,26 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
             $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true));
         }
 
-        $data['entry_version_text'] = $this->language->get('entry_version_text');
-        $data['entry_version'] = $this->language->get('entry_version');
-        $data['entry_version_info'] = $this->language->get('entry_version_info');
-        $data['entry_module_repo'] = $this->language->get('entry_module_repo');
+        $data['entry_version_text']        = $this->language->get('entry_version_text');
+        $data['entry_version']             = $this->language->get('entry_version');
+        $data['entry_version_info']        = $this->language->get('entry_version_info');
+        $data['entry_module_repo']         = $this->language->get('entry_module_repo');
 
-        $data['heading_title'] = $this->language->get('heading_title');
-        $data['text_enabled'] = $this->language->get('text_enabled');
-        $data['text_disabled'] = $this->language->get('text_disabled');
-        $data['text_all_zones'] = $this->language->get('text_all_zones');
+        $data['heading_title']             = $this->language->get('heading_title');
+        $data['text_enabled']              = $this->language->get('text_enabled');
+        $data['text_disabled']             = $this->language->get('text_disabled');
+        $data['text_all_zones']            = $this->language->get('text_all_zones');
 
-        $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
-        $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        $data['entry_geo_zone']            = $this->language->get('entry_geo_zone');
+        $data['entry_status']              = $this->language->get('entry_status');
+        $data['entry_sort_order']          = $this->language->get('entry_sort_order');
         $data['entry_payment_description'] = $this->language->get('entry_payment_description');
-        $data['button_save'] = $this->language->get('button_save');
-        $data['button_cancel'] = $this->language->get('button_cancel');
+        $data['button_save']               = $this->language->get('button_save');
+        $data['button_cancel']             = $this->language->get('button_cancel');
 
-        $data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_general']               = $this->language->get('tab_general');
 
-        $data['entry_hide_svea_comments'] = $this->language->get('entry_hide_svea_comments');
+        $data['entry_hide_svea_comments']         = $this->language->get('entry_hide_svea_comments');
         $data['entry_hide_svea_comments_tooltip'] = $this->language->get('entry_hide_svea_comments_tooltip');
 
         //Credentials
@@ -77,24 +76,24 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         $data['entry_prod'] = $this->language->get('entry_prod');
 
         // Order statuses
-        $data['entry_cancel_credit_status']                         = $this->language->get('entry_cancel_credit_status');
-        $data['entry_cancel_credit_status_tooltip']                 = $this->language->get('entry_cancel_credit_status_tooltip');
+        $data['entry_cancel_credit_status']         = $this->language->get('entry_cancel_credit_status');
+        $data['entry_cancel_credit_status_tooltip'] = $this->language->get('entry_cancel_credit_status_tooltip');
 
-        //Definitions lang
+        // Definitions lang
         $data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
-        $data['entry_testmode'] = $this->language->get('entry_testmode');
-        $data['entry_sw'] = $this->language->get('entry_sw');
+        $data['entry_testmode']    = $this->language->get('entry_testmode');
+        $data['entry_sw']          = $this->language->get('entry_sw');
 
-        //Definitions settings
+        // Definitions settings
         $data[$this->paymentString . 'svea_directbank_sort_order'] = $this->config->get($this->paymentString . 'svea_directbank_sort_order');
-        $data[$this->paymentString . 'svea_directbank_testmode'] = $this->config->get($this->paymentString . 'svea_directbank_testmode');
+        $data[$this->paymentString . 'svea_directbank_testmode']   = $this->config->get($this->paymentString . 'svea_directbank_testmode');
 
         $data['version'] = floatval(VERSION);
 
         $data['value_merchant_test'] = $this->config->get($this->paymentString . 'svea_directbank_merchant_id_test');
-        $data['value_sw_test'] = $this->config->get($this->paymentString . 'svea_directbank_sw_test');
+        $data['value_sw_test']       = $this->config->get($this->paymentString . 'svea_directbank_sw_test');
         $data['value_merchant_prod'] = $this->config->get($this->paymentString . 'svea_directbank_merchant_id_prod');
-        $data['value_sw_prod'] = $this->config->get($this->paymentString . 'svea_directbank_sw_prod');
+        $data['value_sw_prod']       = $this->config->get($this->paymentString . 'svea_directbank_sw_prod');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -167,11 +166,9 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
             $data[$this->paymentString . 'svea_directbank_cancel_credit_status'] = $this->config->get($this->paymentString . 'svea_directbank_cancel_credit_status');
         }
 
-        if($data[$this->paymentString . 'svea_directbank_cancel_credit_status'] == null)
-        {
+        if ($data[$this->paymentString . 'svea_directbank_cancel_credit_status'] == null) {
             $data[$this->paymentString . 'svea_directbank_cancel_credit_status'] = array();
         }
-
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -193,30 +190,31 @@ class ControllerExtensionPaymentSveadirectbank extends Controller
         }
 
         // Order status list validation
-
-        if(!isset($this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status']) == 0)
-        {
+        if (!isset($this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_directbank_cancel_credit_status']) == 0) {
             $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
         }
 
         if (!$this->error) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
     public function install()
     {
         $this->setVersionStrings();
+
         $this->load->model('setting/setting');
+
         $this->model_setting_setting->editSetting($this->paymentString . 'svea_directbank', array($this->paymentString . 'svea_directbank_status' => 1));
+
         if (VERSION < 3.0) {
-            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == NULL) {
+            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == null) {
                 $this->model_extension_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
             }
         } else {
-            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == NULL) {
+            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == null) {
                 $this->model_setting_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
             }
         }

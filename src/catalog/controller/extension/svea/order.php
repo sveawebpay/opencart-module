@@ -11,11 +11,10 @@ class ControllerExtensionSveaOrder extends Controller
     public function history()
     {
         $this->load->language('api/order');
+
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
-        }
-        else
-        {
+        } else {
             $keys = array(
                 'order_status_id',
                 'notify',
@@ -29,42 +28,39 @@ class ControllerExtensionSveaOrder extends Controller
                 }
             }
 
-            if (isset($this->request->get['order_id']))
-            {
+            if (isset($this->request->get['order_id'])) {
                 $orderId = $this->request->get['order_id'];
-            }
-            else
-            {
+            } else {
                 $orderId = 0;
             }
+
             $this->load->model('checkout/order');
+
             $orderInfo = $this->model_checkout_order->getOrder($orderId);
 
-            if (strpos($orderInfo['payment_code'], "svea_") !== false || strpos($orderInfo['payment_code'], "sco") !== false)
-            {
+            if (strpos($orderInfo['payment_code'], "svea_") !== false || strpos($orderInfo['payment_code'], "sco") !== false) {
                 $this->load->model('extension/svea/order');
+
                 $sveaOrderId = $this->getSveaOrderId($orderInfo['payment_code'], $orderInfo['order_id']);
                 $action = $this->getActionFromStatus($this->request->post['order_status_id'], $orderInfo['payment_code']);
                 $config = $this->getConfiguration($orderInfo['payment_code'], $orderInfo['payment_iso_code_2']);
-                if(isset($config))
-                {
+
+                if (isset($config)) {
                     if ($action == "deliver") {
                         $json['error'] = $this->deliverOrder($config, $orderInfo['payment_code'], $sveaOrderId, $orderInfo['payment_iso_code_2']);
-                    } else if ($action == "credit") {
+                    } elseif ($action == "credit") {
                         $json['error'] = $this->creditOrder($config, $orderInfo['payment_code'], $sveaOrderId, $orderInfo['payment_iso_code_2'], $orderInfo['order_id']);
-                    } else {
-
                     }
-                    if(isset($json['error'])) {
+
+                    if (isset($json['error'])) {
                         $this->log->write("Svea module error: " . $json['error'] . " Order Id at Svea: " . $sveaOrderId);
                     }
-                }
-                else
-                {
+                } else {
                     $json['error'] = "Svea: Error fetching configuration";
                 }
             }
         }
+
         if (isset($json['error']) && $json['error']) {
             if (isset($this->request->server['HTTP_ORIGIN'])) {
                 $this->response->addHeader('Access-Control-Allow-Origin: ' . $this->request->server['HTTP_ORIGIN']);
@@ -75,56 +71,54 @@ class ControllerExtensionSveaOrder extends Controller
 
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
+
             return $json;
         }
     }
 
     private function hideSveaComment($paymentMethod)
     {
-        switch($paymentMethod)
-        {
+        switch ($paymentMethod) {
             case "sco":
-            {
                 $hideComment = $this->config->get($this->moduleString . 'sco_hide_svea_comments');
                 break;
-            }
+
             case "svea_card":
-            {
                 $hideComment = $this->config->get($this->paymentString . 'svea_card_hide_svea_comments');
                 break;
-            }
+
             case "svea_directbank":
-            {
                 $hideComment = $this->config->get($this->paymentString . 'svea_directbank_hide_svea_comments');
                 break;
-            }
+
             case "svea_invoice":
-            {
                 $hideComment = $this->config->get($this->paymentString . 'svea_invoice_hide_svea_comments');
                 break;
-            }
+
             case "svea_partpayment":
-            {
                 $hideComment = $this->config->get($this->paymentString . 'svea_partpayment_hide_svea_comments');
                 break;
-            }
+
             default:
                 $hideComment = false;
                 break;
+
         }
+
         return $hideComment;
     }
 
     public function deliverOrder($config, $paymentMethod, $sveaOrderId, $countryCode)
     {
         $this->setVersionStrings();
+
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
-        if ($status == "DELIVERED" || $paymentMethod == "svea_directbank"){
-            if($this->hideSveaComment($paymentMethod) == false)
-            {
+        if ($status == "DELIVERED" || $paymentMethod == "svea_directbank") {
+            if ($this->hideSveaComment($paymentMethod) == false) {
                 $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order has already been delivered at Svea, no request was sent to the server.";
             }
+
             return;
         }
 
@@ -139,14 +133,14 @@ class ControllerExtensionSveaOrder extends Controller
                 $response = $response->setInvoiceDistributionType($this->config->get($this->paymentString . $paymentMethod . '_distribution_type'))
                     ->deliverInvoiceOrder()
                     ->doRequest();
-            } else if ($paymentMethod == "svea_partpayment") {
+            } elseif ($paymentMethod == "svea_partpayment") {
                 $response = $response->setInvoiceDistributionType("POST")
                     ->deliverPaymentPlanOrder()
                     ->doRequest();
-            } else if ($paymentMethod == "svea_card") {
+            } elseif ($paymentMethod == "svea_card") {
                 $response = $response->deliverCardOrder()
                     ->doRequest();
-            } else if ($paymentMethod == "sco") {
+            } elseif ($paymentMethod == "sco") {
                 $response = \Svea\WebPay\WebPayAdmin::deliverOrderRows($config)
                     ->setCheckoutOrderId($sveaOrderId)
                     ->setCountryCode($countryCode)
@@ -162,23 +156,21 @@ class ControllerExtensionSveaOrder extends Controller
             if ($response->accepted == 1) {
                 if ($paymentMethod == "svea_invoice") {
                     $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was delivered. " . "Svea invoiceId " . $response->invoiceId;
-                } else if ($paymentMethod == "svea_partpayment") {
+                } elseif ($paymentMethod == "svea_partpayment") {
                     $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was delivered. " . "Svea contractNumber: " . $response->contractNumber;
                 } else {
-                    if($this->hideSveaComment($paymentMethod) == false) {
+                    if ($this->hideSveaComment($paymentMethod) == false) {
                         $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was delivered.";
                     }
                 }
             } else {
                 if ($this->request->post['override'] == 1) {
-                    if(isset($response->errormessage)) {
-                        if($this->hideSveaComment($paymentMethod) == false) {
+                    if (isset($response->errormessage)) {
+                        if ($this->hideSveaComment($paymentMethod) == false) {
                             $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
                         }
-                    }
-                    else
-                    {
-                        if($this->hideSveaComment($paymentMethod) == false) {
+                    } else {
+                        if ($this->hideSveaComment($paymentMethod) == false) {
                             $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. However it was overridden.";
                         }
                     }
@@ -188,15 +180,15 @@ class ControllerExtensionSveaOrder extends Controller
             }
         } catch (Exception $e) {
             if ($this->request->post['override'] == 1) {
-                if($this->hideSveaComment($paymentMethod) == false) {
+                if ($this->hideSveaComment($paymentMethod) == false) {
                     $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
                 }
             } else {
                 $json['error'] = "Svea: An error occurred. Error: " . $e->getMessage() . ". Override the status if you still want to change it.";
             }
         }
-        if(isset($json['error']))
-        {
+
+        if (isset($json['error'])) {
             return $json['error'];
         }
     }
@@ -207,11 +199,12 @@ class ControllerExtensionSveaOrder extends Controller
         $status = $this->queryOrderStatus($config, $paymentMethod, $sveaOrderId, $countryCode);
 
         if ($status == "CANCELLED" || $status == "CREDITED" || $status == "ERROR") {
-            if($this->hideSveaComment($paymentMethod) == false) {
+            if ($this->hideSveaComment($paymentMethod) == false) {
                 $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order is already credited or cancelled at Svea, no request was sent to the server.";
             }
+
             return;
-        } else if ($status == "ERROR") {
+        } elseif ($status == "ERROR") {
             $json['error'] = "Svea: An error occurred. Status was not recognized. No request was sent.";
         }
 
@@ -226,13 +219,13 @@ class ControllerExtensionSveaOrder extends Controller
                 if ($paymentMethod == "svea_invoice") {
                     $response = $response->cancelInvoiceOrder()
                         ->doRequest();
-                } else if ($paymentMethod == "svea_partpayment") {
+                } elseif ($paymentMethod == "svea_partpayment") {
                     $response = $response->cancelPaymentPlanOrder()
                         ->doRequest();
-                } else if ($paymentMethod == "svea_card") {
+                } elseif ($paymentMethod == "svea_card") {
                     $response = $response->cancelCardOrder()
                         ->doRequest();
-                } else if ($paymentMethod == "sco") {
+                } elseif ($paymentMethod == "sco") {
                     $response = $response->cancelCheckoutOrder()
                         ->doRequest();
 
@@ -243,34 +236,32 @@ class ControllerExtensionSveaOrder extends Controller
                 }
 
                 if ($response->accepted == 1) {
-                    if($this->hideSveaComment($paymentMethod) == false) {
+                    if ($this->hideSveaComment($paymentMethod) == false) {
                         $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was cancelled at Svea.";
                     }
                 } else {
                     if ($this->request->post['override'] == 1) {
-                        if($this->hideSveaComment($paymentMethod) == false) {
+                        if ($this->hideSveaComment($paymentMethod) == false) {
                             $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
                         }
                     } else {
-                        if(isset($response->errormessage)) {
+                        if (isset($response->errormessage)) {
                             $json['error'] = "Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " Override the status if you still want to change it.";
-                        }
-                        else {
+                        } else {
                             $json['error'] = "Svea: Request wasn't accepted by Svea. Override the status if you still want to change it.";
                         }
                     }
                 }
-
             } catch (Exception $e) {
                 if ($this->request->post['override'] == 1) {
-                    if($this->hideSveaComment($paymentMethod) == false) {
+                    if ($this->hideSveaComment($paymentMethod) == false) {
                         $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
                     }
                 } else {
                     $json['error'] = "Svea: An error occurred. Error: " . $e->getMessage() . ". Override the status if you still want to change it.";
                 }
             }
-        } else if ($status == "DELIVERED") {
+        } elseif ($status == "DELIVERED") {
             try {
                 $response = \Svea\WebPay\WebPayAdmin::creditOrderRows($config)
                     ->setCountryCode($countryCode)
@@ -283,19 +274,19 @@ class ControllerExtensionSveaOrder extends Controller
                         ->setInvoiceDistributionType($this->config->get($this->paymentString . 'svea_invoice_distribution_type'))
                         ->creditInvoiceOrderRows()
                         ->doRequest();
-                } else if ($paymentMethod == "svea_partpayment") {
+                } elseif ($paymentMethod == "svea_partpayment") {
                     $response = $response->setContractNumber($this->getDeliverId($paymentMethod, $opencartOrderId, $countryCode))
                         ->creditPaymentPlanOrderRows()
                         ->doRequest();
-                } else if ($paymentMethod == "svea_card") {
+                } elseif ($paymentMethod == "svea_card") {
                     $response = $response->addNumberedOrderRows($this->getNumberedRows($config, $paymentMethod, $sveaOrderId, $countryCode))
                         ->creditCardOrderRows()
                         ->doRequest();
-                } else if ($paymentMethod == "svea_directbank") {
+                } elseif ($paymentMethod == "svea_directbank") {
                     $response = $response->addNumberedOrderRows($this->getNumberedRows($config, $paymentMethod, $sveaOrderId, $countryCode))
                         ->creditDirectBankOrderRows()
                         ->doRequest();
-                } else if ($paymentMethod == "sco") {
+                } elseif ($paymentMethod == "sco") {
                     if ($this->canOrderBeCreditedByDeliveryRows($sveaOrderId, $countryCode)) {
                         $response = $response->setCheckoutOrderId($sveaOrderId)
                             ->setDeliveryId($this->getDeliverId($paymentMethod, $opencartOrderId, $countryCode))
@@ -306,9 +297,7 @@ class ControllerExtensionSveaOrder extends Controller
                             $response = new \StdClass();
                             $response->accepted = 1;
                         }
-
-
-                    } else if ($this->canOrderBeCreditedByAmount($sveaOrderId, $countryCode)) {
+                    } elseif ($this->canOrderBeCreditedByAmount($sveaOrderId, $countryCode)) {
                         $response = \Svea\WebPay\WebPayAdmin::creditAmount($config)
                             ->setCheckoutOrderId($sveaOrderId)
                             ->setCountryCode($countryCode)
@@ -328,36 +317,31 @@ class ControllerExtensionSveaOrder extends Controller
                 }
 
                 if ($response->accepted == 1) {
-                    if($this->hideSveaComment($paymentMethod) == false) {
+                    if ($this->hideSveaComment($paymentMethod) == false) {
                         $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Order was credited.";
                     }
-                }
-                else
-                {
+                } else {
                     if ($this->request->post['override'] == 1) {
-                        if(isset($response->errormessage)) {
-                            if($this->hideSveaComment($paymentMethod) == false) {
+                        if (isset($response->errormessage)) {
+                            if ($this->hideSveaComment($paymentMethod) == false) {
                                 $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " However it was overridden.";
                             }
-                        }
-                        else
-                        {
-                            if($this->hideSveaComment($paymentMethod) == false) {
+                        } else {
+                            if ($this->hideSveaComment($paymentMethod) == false) {
                                 $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. However it was overridden.";
                             }
                         }
                     } else {
-                        if(isset($response->errormessage)) {
+                        if (isset($response->errormessage)) {
                             $json['error'] = "Svea: Request wasn't accepted by Svea. Reason: " . $response->errormessage . " Override the status if you still want to change it.";
-                        }
-                        else {
+                        } else {
                             $json['error'] = "Svea: Request wasn't accepted by Svea. Override the status if you still want to change it.";
                         }
                     }
                 }
             } catch (Exception $e) {
                 if ($this->request->post['override'] == 1) {
-                    if($this->hideSveaComment($paymentMethod) == false) {
+                    if ($this->hideSveaComment($paymentMethod) == false) {
                         $this->request->post['comment'] = $this->request->post['comment'] . " Svea: Request wasn't accepted by Svea. Reason: " . $e->getMessage() . ". However it was overridden.";
                     }
                 } else {
@@ -365,8 +349,7 @@ class ControllerExtensionSveaOrder extends Controller
                 }
             }
         }
-        if(isset($json['error']))
-        {
+        if (isset($json['error'])) {
             return $json['error'];
         }
     }
@@ -422,13 +405,13 @@ class ControllerExtensionSveaOrder extends Controller
         if ($paymentMethod == "svea_invoice") {
             $response = $response->queryInvoiceOrder()
                 ->doRequest();
-        } else if ($paymentMethod == "svea_partpayment") {
+        } elseif ($paymentMethod == "svea_partpayment") {
             $response = $response->queryPaymentPlanOrder()
                 ->doRequest();
-        } else if ($paymentMethod == "svea_card") {
+        } elseif ($paymentMethod == "svea_card") {
             $response = $response->queryCardOrder()
                 ->doRequest();
-        } else if ($paymentMethod == "svea_directbank") {
+        } elseif ($paymentMethod == "svea_directbank") {
             $response = $response->queryDirectBankOrder()
                 ->doRequest();
         } else {
@@ -462,6 +445,7 @@ class ControllerExtensionSveaOrder extends Controller
     {
         $orderData = $this->getScoOrderData($checkoutOrderId, $countryCode);
         $deliveries = $orderData['Deliveries'];
+
         return $deliveries[0]['DeliveryAmount'];
     }
 
@@ -478,18 +462,17 @@ class ControllerExtensionSveaOrder extends Controller
                 ->doRequest();
 
             $status = strtoupper($response->orderDeliveryStatus);
-        } else if ($paymentMethod == "svea_partpayment") {
+        } elseif ($paymentMethod == "svea_partpayment") {
             $response = $response->queryPaymentPlanOrder()
                 ->doRequest();
 
             $status = strtoupper($response->orderDeliveryStatus);
-        } else if ($paymentMethod == "svea_card") {
+        } elseif ($paymentMethod == "svea_card") {
             $response = $response->queryCardOrder()
                 ->doRequest();
 
             $status = strtoupper($response->status);
-
-        } else if ($paymentMethod == "svea_directbank") {
+        } elseif ($paymentMethod == "svea_directbank") {
             $response = $response->queryDirectBankOrder()
                 ->doRequest();
 
@@ -498,16 +481,11 @@ class ControllerExtensionSveaOrder extends Controller
             $response = $this->getScoOrderData($sveaOrderId, $countryCode);
 
             $status = strtoupper($response['OrderStatus']);
-            if($status == "DELIVERED")
-            {
-                foreach($response['Actions'] as $action)
-                {
-                    if($action == "CanCancelOrder")
-                    {
+            if ($status == "DELIVERED") {
+                foreach ($response['Actions'] as $action) {
+                    if ($action == "CanCancelOrder") {
                         $status = "OPEN";
-                    }
-                    else if($action == "CanCancelAmount")
-                    {
+                    } elseif ($action == "CanCancelAmount") {
                         $status = "OPEN";
                     }
                 }
@@ -516,11 +494,11 @@ class ControllerExtensionSveaOrder extends Controller
 
         if ($status == "CANCELLED" || $status == "ANNULLED") {
             return "CANCELLED";
-        } else if ($status == "DELIVERED" || $status == "SUCCESS") {
+        } elseif ($status == "DELIVERED" || $status == "SUCCESS") {
             return "DELIVERED";
-        } else if ($status == "CREATED" || $status == "AUTHORIZED" || $status == "OPEN" || $status == "CONFIRMED") {
+        } elseif ($status == "CREATED" || $status == "AUTHORIZED" || $status == "OPEN" || $status == "CONFIRMED") {
             return "CREATED";
-        } else if ($status == "CREDITED" || $status == "CREDSUCCESS") {
+        } elseif ($status == "CREDITED" || $status == "CREDSUCCESS") {
             return "CREDITED";
         } else {
             return "ERROR";
@@ -530,21 +508,16 @@ class ControllerExtensionSveaOrder extends Controller
     public function getActionFromStatus($status, $paymentMethod)
     {
         $this->setVersionStrings();
-        if($paymentMethod == "sco")
-        {
-
+        if ($paymentMethod == "sco") {
             $deliverStatuses = $this->config->get($this->moduleString . 'sco_deliver_status');
             $creditStatuses = $this->config->get($this->moduleString . 'sco_cancel_credit_status');
-        }
-        else
-        {
+        } else {
             $deliverStatuses = $this->config->get($this->paymentString . $paymentMethod . '_deliver_status');
             $creditStatuses = $this->config->get($this->paymentString . $paymentMethod . '_cancel_credit_status');
         }
 
-        //Fallback module if settings haven't been updated since after version 4.10.1
-        if($deliverStatuses == null && $creditStatuses == null)
-        {
+        // Fallback module if settings haven't been updated since after version 4.10.1
+        if ($deliverStatuses == null && $creditStatuses == null) {
             foreach ($this->config->get('config_complete_status') as $deliverGroupStatus) {
                 if ($deliverGroupStatus == $status) {
                     return "deliver";
@@ -564,23 +537,17 @@ class ControllerExtensionSveaOrder extends Controller
             return "credit"; // If we haven't returned in any previous statement we assume that the user wants to credit this order
         }
 
-        if($deliverStatuses != null)
-        {
-            foreach($deliverStatuses as $deliverStatus)
-            {
-                if($deliverStatus == $status)
-                {
+        if ($deliverStatuses != null) {
+            foreach ($deliverStatuses as $deliverStatus) {
+                if ($deliverStatus == $status) {
                     return "deliver";
                 }
             }
         }
 
-        if($creditStatuses != null)
-        {
-            foreach($creditStatuses as $creditStatus)
-            {
-                if($creditStatus == $status)
-                {
+        if ($creditStatuses != null) {
+            foreach ($creditStatuses as $creditStatus) {
+                if ($creditStatus == $status) {
                     return "credit";
                 }
             }
@@ -592,7 +559,9 @@ class ControllerExtensionSveaOrder extends Controller
     {
         if ($paymentMethod == 'sco') {
             $this->load->model('extension/svea/checkout');
+
             $scoOrder = $this->model_extension_svea_checkout->getCheckoutOrder($opencartOrderId);
+
             if ($scoOrder != null || isset($scoOrder['checkout_id'])) {
                 return (int)$scoOrder['checkout_id'];
             } else {
@@ -600,11 +569,14 @@ class ControllerExtensionSveaOrder extends Controller
             }
         } else {
             $this->load->model('extension/svea/order');
+
             $orderHistoryComments = $this->model_extension_svea_order->getOrderHistoryComment($this->request->get['order_id']);
             $sveaOrderId = 0;
+
             foreach ($orderHistoryComments->rows as $orderHistoryComment) {
                 $sveaOrderIdExists = strpos($orderHistoryComment['comment'], 'Svea order id', 0);
                 $sveaTransactionIdExists = strpos($orderHistoryComment['comment'], 'Svea transactionId', 0);
+
                 if ($sveaOrderIdExists !== false) {
                     preg_match_all('/\d+/', $orderHistoryComment['comment'], $sveaOrderId);
                 } elseif ($sveaTransactionIdExists !== false) {
@@ -625,45 +597,48 @@ class ControllerExtensionSveaOrder extends Controller
             $checkoutOrderId = $this->getSveaOrderId($paymentMethod, $opencartOrderId);
             $order = $this->getScoOrderData($checkoutOrderId, $countryCode);
             $deliveries = $order['Deliveries'];
+
             return $deliveries[0]['Id'];
         } else {
             $this->load->model('extension/svea/order');
+
             $commentHistoryArray = $this->model_extension_svea_order->getOrderHistoryComment($this->request->get['order_id']);
+
             foreach ($commentHistoryArray->rows as $comment) {
                 if (strpos($comment['comment'], 'Svea invoiceId', 0) == true || strpos($comment['comment'], 'Svea contractNumber', 0) == true || strpos($comment['comment'], 'Svea transactionId', 0) == true) {
                     preg_match_all('/\d+/', $comment['comment'], $deliverId);
                 }
             }
-            if(isset($deliverId[0][0]))
-            {
+
+            if (isset($deliverId[0][0])) {
                 return $deliverId[0][0];
-            }
-            else
-            {
+            } else {
                 $sveaOrderId = $this->getSveaOrderId($paymentMethod, $opencartOrderId);
                 $order = \Svea\WebPay\WebpayAdmin::queryOrder($this->getConfiguration($paymentMethod, $countryCode))
                     ->setCountryCode($countryCode)
                     ->setOrderId($sveaOrderId);
-                switch($paymentMethod)
-                {
+
+                switch ($paymentMethod) {
                     case "svea_invoice":
                         $response = $order->queryInvoiceOrder()->doRequest();
-                        if($response->accepted == 1)
-                        {
+                        if ($response->accepted == 1) {
                             return $response->numberedOrderRows[0]->invoiceId;
                         }
                         break;
+
                     case "svea_partpayment":
                         $response = $order->queryPaymentPlanOrder()->doRequest();
-                        if($response->accepted == 1)
-                        {
+                        if ($response->accepted == 1) {
                             return $response->paymentPlanDetailsContractNumber;
                         }
                         break;
+
                     default:
                         return 0;
                         break;
+
                 }
+
                 return 0;
             }
         }
@@ -674,7 +649,9 @@ class ControllerExtensionSveaOrder extends Controller
         if (isset($this->scoOrderData)) {
             return $this->scoOrderData;
         }
+
         $config = $this->getConfiguration("sco", $countryCode);
+
         $this->scoOrderData = \Svea\WebPay\WebPayAdmin::queryOrder($config)
             ->setCheckoutOrderId($checkoutOrderId)
             ->setCountryCode($countryCode)
@@ -688,13 +665,12 @@ class ControllerExtensionSveaOrder extends Controller
     {
         $this->setVersionStrings();
 
-        if ($paymentMethod == "sco")
-        {
+        if ($paymentMethod == "sco") {
             $config = ($this->config->get($this->moduleString . 'sco_test_mode') == '1') ? new OpencartSveaCheckoutConfigTest($this, 'checkout') : new OpencartSveaCheckoutConfig($this, 'checkout');
         } else {
             $configCountryCode = $paymentMethod == "svea_invoice" || $paymentMethod == "svea_partpayment" ? '_' . $countryCode : '';
 
-            if ($this->config->get($this->paymentString . $paymentMethod . "_testmode" . $configCountryCode) !== NULL) {
+            if ($this->config->get($this->paymentString . $paymentMethod . "_testmode" . $configCountryCode) !== null) {
                 $config = ($this->config->get($this->paymentString . $paymentMethod . "_testmode" . $configCountryCode) == "1") ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
             }
         }
@@ -703,8 +679,7 @@ class ControllerExtensionSveaOrder extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->paymentString = "";
             $this->moduleString = "";
         }
@@ -720,21 +695,17 @@ class ControllerExtensionSveaOrder extends Controller
             if ($paymentMethod == "svea_card") {
                 $response = $response->queryCardOrder()
                     ->doRequest();
-            } else if ($paymentMethod == "svea_directbank") {
+            } elseif ($paymentMethod == "svea_directbank") {
                 $response = $response->queryDirectBankOrder()
                     ->doRequest();
             }
-            if($response->accepted == 1)
-            {
+
+            if ($response->accepted == 1) {
                 return $response->numberedOrderRows;
-            }
-            else
-            {
+            } else {
                 $this->log->write("getNumberedRows(): Could not fetch transaction.");
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->log->write($e->getMessage());
         }
     }

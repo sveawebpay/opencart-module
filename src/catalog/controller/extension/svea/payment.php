@@ -12,8 +12,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->moduleString = "";
             $this->paymentString = "";
             $this->extensionString = "extension/extension";
@@ -24,32 +23,30 @@ class ControllerExtensionSveaPayment extends SveaCommon
     public function index()
     {
         $this->setVersionStrings();
-        unset( $this->session->data[$this->paymentString . 'svea_last_page'] );
-        unset( $this->session->data[$this->moduleString . 'sco_success_order_id'] );
+        unset($this->session->data[$this->paymentString . 'svea_last_page']);
+        unset($this->session->data[$this->moduleString . 'sco_success_order_id']);
 
         $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
 
-
         $config = new OpencartSveaCheckoutConfig($this, 'checkout');
+
         if ($this->config->get($this->moduleString . 'sco_test_mode')) {
             $config = new OpencartSveaCheckoutConfigTest($this, 'checkout');
         }
 
-        if(isset($this->session->data[$this->moduleString . 'sco_order_id']))
-        {
+        if (isset($this->session->data[$this->moduleString . 'sco_order_id'])) {
             $status_check = \Svea\WebPay\WebPay::checkout($config);
             $status_check->setCheckoutOrderId($module_sco_order_id);
-            try{
+
+            try {
                 $status_check_response = $status_check->getOrder();
-                if($status_check_response['Status'] != 'Created')
-                {
+                if ($status_check_response['Status'] != 'Created') {
                     unset($this->session->data['order_id']);
                     unset($this->session->data[$this->moduleString . 'sco_order_id']);
                     unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
                     unset($module_sco_order_id);
                 }
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 unset($this->session->data['order_id']);
                 unset($this->session->data[$this->moduleString . 'sco_order_id']);
                 unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
@@ -58,6 +55,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
         }
 
         $forceCreate = (isset($this->request->get['create']) && $this->request->get['create'] === 'true') ? true : false;
+
         if ($forceCreate === true) {
             unset($this->session->data['order_id']);
             unset($this->session->data[$this->moduleString . 'sco_order_id']);
@@ -66,16 +64,16 @@ class ControllerExtensionSveaPayment extends SveaCommon
         }
 
         $email = isset($this->request->post['email']) ? $this->request->post['email'] : null;
-        if(isset($this->session->data['order_id']))
-        {
+
+        if (isset($this->session->data['order_id'])) {
             $query_response = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id='" . $this->db->escape($this->session->data['order_id']) . "';")->row;
-            if($query_response['order_status_id'] != 0)
-            {
+            if ($query_response['order_status_id'] != 0) {
                 unset($this->session->data['order_id']);
                 unset($this->session->data[$this->moduleString . 'sco_order_id']);
                 unset($this->session->data[$this->moduleString . 'sco_cart_hash']);
             }
-       }
+        }
+
         $order_id = (isset($this->session->data['order_id'])) ? (int)$this->session->data['order_id'] : null;
 
         $this->load->language('extension/svea/checkout');
@@ -92,44 +90,41 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $currency = strtoupper($this->session->data[$this->moduleString . 'sco_currency']);
 
         $this->load->model('localisation/currency');
+
         $currency_info = $this->model_localisation_currency->getCurrencyByCode($currency);
         $currency_value = $currency_info['value'];
 
         $products = $this->cart->getProducts();
 
-        if(empty($products) && empty($this->session->data['vouchers']))
-        {
+        if (empty($products) && empty($this->session->data['vouchers'])) {
             $this->load->language('common/cart');
             header('HTTP/1.1 500 PHP Library Error');
             header('Content-Type: application/json; charset=UTF-8');
             $er = array();
             $er['message'] = $this->language->get('text_empty');
+
             die(json_encode($er));
         }
 
         $checkout_order_entry = \Svea\WebPay\WebPay::checkout($config);
 
-        $order_builder = $checkout_order_entry->getCheckoutOrderBuilder()
-            ->setPartnerKey('3D5E28FB-EA86-41FE-98CB-60CCAE8E6075');
+        $order_builder = $checkout_order_entry->getCheckoutOrderBuilder()->setPartnerKey('3D5E28FB-EA86-41FE-98CB-60CCAE8E6075');
 
         $this->setOrderGeneralData($checkout_order_entry, $order_id);
 
         $order_builder = $this->addOrderRowsToWebServiceOrder($order_builder, $products, $currency_value);
 
         $this->addPresetValues($order_builder);
-
         $this->addIdentityFlags($order_builder);
-
         $this->setMerchantData($order_builder);
 
-        if($this->config->get($this->moduleString . 'sco_enable_electronic_id_authentication'))
-        {
+        if ($this->config->get($this->moduleString . 'sco_enable_electronic_id_authentication')) {
             $order_builder->setRequireElectronicIdAuthentication(true);
         }
 
         $add_ons = $this->addTaxRateToAddons();
-        $this->addAddonRowsToSveaOrder($order_builder, $add_ons, $currency_value);
 
+        $this->addAddonRowsToSveaOrder($order_builder, $add_ons, $currency_value);
         $this->addRoundingRowIfApplicable($order_builder, $this->cart->getTotal(), $add_ons, $currency_value);
 
         $isScoUpdate = false;
@@ -156,10 +151,10 @@ class ControllerExtensionSveaPayment extends SveaCommon
                 $response = lowerArrayKeys($response);
                 $this->session->data[$this->moduleString . 'sco_order_id'] = $response['orderid'];
 
-                // - update oc_order_sco.checkout_id
+                // Update oc_order_sco.checkout_id
                 $this->updateCheckoutRow($order_id, $response);
 
-                // - this will used for success page, and for optional second call
+                // This will used for success page, and for optional second call
                 $this->session->data[$this->paymentString . 'svea_last_page'] = 'extension/svea/payment';
                 $this->session->data[$this->moduleString . 'sco_success_order_id'] = $response['orderid'];
 
@@ -173,10 +168,10 @@ class ControllerExtensionSveaPayment extends SveaCommon
             header('Content-Type: application/json; charset=UTF-8');
             $er = array();
             $er['message'] = $e->getMessage();
-            $er['isScoUpdate'] = $isScoUpdate; // this is update request flag
+            $er['isScoUpdate'] = $isScoUpdate;
+
             die(json_encode($er));
         }
-
     }
 
     private function getHashOfCurrentState()
@@ -189,8 +184,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
         unset($session_copy[$this->paymentString . 'svea_last_page']);
         unset($session_copy[$this->moduleString . 'sco_success_order_id']);
 
-        if(isset($this->request->post['sco_newsletter']))
-        {
+        if (isset($this->request->post['sco_newsletter'])) {
             return md5(serialize($session_copy) . serialize($products) . serialize($this->request->post['sco_newsletter']));
         }
 
@@ -200,12 +194,14 @@ class ControllerExtensionSveaPayment extends SveaCommon
     private function getHashOfOldState()
     {
         $this->setVersionStrings();
+
         return isset($this->session->data[$this->moduleString . 'sco_cart_hash']) ? $this->session->data[$this->moduleString . 'sco_cart_hash'] : null;
     }
 
     private function saveHashOfCurrentState()
     {
         $this->setVersionStrings();
+
         $this->session->data[$this->moduleString . 'sco_cart_hash'] = $this->getHashOfCurrentState();
     }
 
@@ -217,19 +213,22 @@ class ControllerExtensionSveaPayment extends SveaCommon
     private function setOrderGeneralData($checkout_order_entry, $order_id)
     {
         $this->setVersionStrings();
+
         $terms_uri =  $this->url->link('information/information', array('information_id' => $this->config->get('config_checkout_id')));
         $config_terms_uri_secured = $this->config->get($this->moduleString . 'sco_checkout_terms_uri_secured');
         $config_terms_uri = $this->config->get($this->moduleString . 'sco_checkout_terms_uri');
+
         if ($config_terms_uri != "") {
             $terms_uri =  $this->createUrl($config_terms_uri, $config_terms_uri_secured);
         }
+
         $checkout_order_entry
             ->setCountryCode($this->session->data[$this->moduleString . 'sco_country'])// customer country, we recommend basing this on the customer billing address
             ->setCurrency($this->session->data[$this->moduleString . 'sco_currency'])
             ->setCheckoutUri($this->url->link('extension/svea/checkout'))
             ->setConfirmationUri($this->url->link('extension/svea/success' . '&order_id=' . $order_id . '&hash=' . hash('sha512', $order_id . $_COOKIE['OCSESSID'])))
             ->setPushUri(str_replace('&amp;', '&', urldecode($this->url->link('extension/svea/push', array($this->paymentString . 'svea_order' => '{checkout.order.uri}')))))
-            ->setTermsUri(str_replace('&amp;', '&',(urldecode($terms_uri))))
+            ->setTermsUri(str_replace('&amp;', '&', (urldecode($terms_uri))))
             ->setLocale($this->session->data[$this->moduleString . 'sco_locale']);
     }
 
@@ -274,12 +273,11 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $total_data = array(
             'totals' => &$totals,
-            'taxes' => &$taxes,
-            'total' => &$total
+            'taxes'  => &$taxes,
+            'total'  => &$total
         );
 
         $this->load->model($this->extensionString);
-
 
         if (VERSION < 3.0) {
             $results = $this->model_extension_extension->getExtensions('total');
@@ -309,7 +307,6 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         array_multisort($sort_order, SORT_ASC, $totals);
 
-
         // LOOP CART
         foreach ($this->cart->getProducts() as $product) {
 
@@ -329,7 +326,6 @@ class ControllerExtensionSveaPayment extends SveaCommon
                     'value'                   => $option['value'],
                     'type'                    => $option['type']
                 );
-
             }
 
             // ADD PRODUCT TO ARRAY
@@ -346,9 +342,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
                 'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']),
                 'reward'     => $product['reward']
             );
-
-        }// - end foreach products
-
+        }
 
         // MAKE EMPTY ARRAY
         $vouchers = array();
@@ -374,7 +368,6 @@ class ControllerExtensionSveaPayment extends SveaCommon
             }
         }
 
-
         $order = array(
             'order_id'					=> $order_id,
             'invoice_prefix' 			=> $this->config->get('config_invoice_prefix'),
@@ -388,64 +381,60 @@ class ControllerExtensionSveaPayment extends SveaCommon
             'email'						=> $email,
             'telephone' 				=> $telephone,
             'fax' 						=> $fax,
-            'custom_field'				=> NULL,
-            'payment_firstname' 		=> NULL,
-            'payment_lastname' 			=> NULL,
-            'payment_company' 			=> NULL,
-            'payment_address_1' 		=> NULL,
-            'payment_address_2' 		=> NULL,
-            'payment_city' 				=> NULL,
-            'payment_postcode' 			=> NULL,
-            'payment_country' 			=> NULL,
-            'payment_country_id' 		=> NULL,
-            'payment_zone' 				=> NULL,
-            'payment_zone_id' 			=> NULL,
-            'payment_address_format' 	=> NULL,
-            'payment_custom_field' 		=> NULL,
+            'custom_field'				=> null,
+            'payment_firstname' 		=> null,
+            'payment_lastname' 			=> null,
+            'payment_company' 			=> null,
+            'payment_address_1' 		=> null,
+            'payment_address_2' 		=> null,
+            'payment_city' 				=> null,
+            'payment_postcode' 			=> null,
+            'payment_country' 			=> null,
+            'payment_country_id' 		=> null,
+            'payment_zone' 				=> null,
+            'payment_zone_id' 			=> null,
+            'payment_address_format' 	=> null,
+            'payment_custom_field' 		=> null,
             'payment_method' 			=> $this->language->get('text_payment_method'),
             'payment_code'				=> 'sco',
-            'shipping_firstname' 		=> NULL,
-            'shipping_lastname' 		=> NULL,
-            'shipping_company' 			=> NULL,
-            'shipping_address_1' 		=> NULL,
-            'shipping_address_2' 		=> NULL,
-            'shipping_city' 			=> NULL,
-            'shipping_postcode' 		=> NULL,
-            'shipping_country' 			=> NULL,
-            'shipping_country_id' 		=> NULL,
-            'shipping_zone' 			=> NULL,
-            'shipping_zone_id' 			=> NULL,
-            'shipping_address_format' 	=> NULL,
-            'shipping_custom_field' 	=> NULL,
-            'shipping_method' 			=> isset($this->session->data['shipping_method']['title']) 	? $this->session->data['shipping_method']['title'] 					: NULL,
-            'shipping_code' 			=> isset($this->session->data['shipping_method']['code'])  	? $this->session->data['shipping_method']['code']  					: NULL,
-            'comment' 					=> isset($this->session->data['comment']) 					? $this->session->data['comment'] 									: NULL,
-            'affiliate_id' 				=> isset($affiliate_id) 									? $affiliate_id 													: NULL,
-            'commission' 				=> isset($commission) 										? $commission 														: NULL,
-            'marketing_id' 				=> isset($marketing_id) 									? $marketing_id 													: NULL,
-            'tracking' 					=> isset($tracking) 										? $tracking 														: NULL,
+            'shipping_firstname' 		=> null,
+            'shipping_lastname' 		=> null,
+            'shipping_company' 			=> null,
+            'shipping_address_1' 		=> null,
+            'shipping_address_2' 		=> null,
+            'shipping_city' 			=> null,
+            'shipping_postcode' 		=> null,
+            'shipping_country' 			=> null,
+            'shipping_country_id' 		=> null,
+            'shipping_zone' 			=> null,
+            'shipping_zone_id' 			=> null,
+            'shipping_address_format' 	=> null,
+            'shipping_custom_field' 	=> null,
+            'shipping_method' 			=> isset($this->session->data['shipping_method']['title']) 	? $this->session->data['shipping_method']['title'] 					: null,
+            'shipping_code' 			=> isset($this->session->data['shipping_method']['code'])  	? $this->session->data['shipping_method']['code']  					: null,
+            'comment' 					=> isset($this->session->data['comment']) 					? $this->session->data['comment'] 									: null,
+            'affiliate_id' 				=> isset($affiliate_id) 									? $affiliate_id 													: null,
+            'commission' 				=> isset($commission) 										? $commission 														: null,
+            'marketing_id' 				=> isset($marketing_id) 									? $marketing_id 													: null,
+            'tracking' 					=> isset($tracking) 										? $tracking 														: null,
             'currency_id' 				=> isset($this->session->data[$this->moduleString . 'sco_currency']) 				? $this->currency->getId($this->session->data[$this->moduleString . 'sco_currency']) 		: '0',
             'currency_code' 			=> isset($this->session->data[$this->moduleString . 'sco_currency']) 				? $this->session->data[$this->moduleString . 'sco_currency'] 								: 'SEK',
             'currency_value' 			=> isset($this->session->data[$this->moduleString . 'sco_currency']) 				? $this->currency->getValue($this->session->data[$this->moduleString . 'sco_currency'])	: '0',
-            'ip' 						=> isset($this->request->server['REMOTE_ADDR']) 			? $this->request->server['REMOTE_ADDR'] 							: NULL,
-            'forwarded_ip' 				=> isset($this->request->server['HTTP_X_FORWARDED_FOR']) 	? $this->request->server['HTTP_X_FORWARDED_FOR'] 					: NULL,
-            'user_agent' 				=> isset($this->request->server['HTTP_USER_AGENT']) 		? $this->request->server['HTTP_USER_AGENT'] 						: NULL,
-            'accept_language' 			=> isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) 	? $this->request->server['HTTP_ACCEPT_LANGUAGE'] 					: NULL,
+            'ip' 						=> isset($this->request->server['REMOTE_ADDR']) 			? $this->request->server['REMOTE_ADDR'] 							: null,
+            'forwarded_ip' 				=> isset($this->request->server['HTTP_X_FORWARDED_FOR']) 	? $this->request->server['HTTP_X_FORWARDED_FOR'] 					: null,
+            'user_agent' 				=> isset($this->request->server['HTTP_USER_AGENT']) 		? $this->request->server['HTTP_USER_AGENT'] 						: null,
+            'accept_language' 			=> isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) 	? $this->request->server['HTTP_ACCEPT_LANGUAGE'] 					: null,
             'language_id' 				=> $this->config->get('config_language_id'),
             'vouchers'					=> $vouchers,
-            'products'					=> isset($products) ? $products : NULL,
+            'products'					=> isset($products) ? $products : null,
             'totals'					=> $totals,
             'total' 					=> $total,
         );
 
         $this->load->model('extension/svea/checkout');
 
-        // - get order id
         $order_id = $this->model_extension_svea_checkout->addOrder($order);
 
-        /*
-         * Read from session
-         * */
         $locale = isset($this->session->data[$this->moduleString . 'sco_locale']) ? strtolower($this->session->data[$this->moduleString . 'sco_locale']) : 'sv-se';
 
         $this->model_extension_svea_checkout->addCheckoutOrder($order_id, $locale);
@@ -466,15 +455,13 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $country = $this->model_extension_svea_checkout->getCountry($response['countrycode']);
 
         $data = array(
-            'order_id' => $response['clientordernumber'],
+            'order_id'    => $response['clientordernumber'],
             'checkout_id' => $response['orderid'],
-            'status' => isset( $response['status'] ) ? $response['status'] : null,
-
-            'type'   => isset( $response['customer']['iscompany'] ) ? ( $response['customer']['iscompany'] ? 'company' : 'person') : 'person',
-
-            'locale' => isset( $response['locale'] ) ? $response['locale'] : null,
-            'currency' => isset( $response['currency'] ) ? $response['currency'] : null,
-            'country' =>   $country['name'],
+            'status'      => isset($response['status']) ? $response['status'] : null,
+            'type'        => isset($response['customer']['iscompany']) ? ($response['customer']['iscompany'] ? 'company' : 'person') : 'person',
+            'locale'      => isset($response['locale']) ? $response['locale'] : null,
+            'currency'    => isset($response['currency']) ? $response['currency'] : null,
+            'country'     =>   $country['name'],
         );
 
         $this->model_extension_svea_checkout->updateCheckoutOrder($data);
@@ -487,7 +474,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $phoneNumber = $this->customer->isLogged() ? $this->customer->getTelephone() : null;
         $isCompany = $this->config->get($this->moduleString . 'sco_force_flow') ? $this->config->get($this->moduleString . 'sco_force_b2b') : null;
 
-        if(!is_null($email)){
+        if (!is_null($email)) {
             $presetEmail = \Svea\WebPay\WebPayItem::presetValue()
                 ->setTypeName(\Svea\WebPay\Checkout\Model\PresetValue::EMAIL_ADDRESS)
                 ->setValue($email)
@@ -496,7 +483,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $order_builder->addPresetValue($presetEmail);
         }
 
-        if(!is_null($postcode)){
+        if (!is_null($postcode)) {
             $presetPostalCode = \Svea\WebPay\WebPayItem::presetValue()
                 ->setTypeName(\Svea\WebPay\Checkout\Model\PresetValue::POSTAL_CODE)
                 ->setValue($postcode)
@@ -505,7 +492,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $order_builder->addPresetValue($presetPostalCode);
         }
 
-        if(!is_null($phoneNumber)){
+        if (!is_null($phoneNumber)) {
             $presetPhoneNumber = \Svea\WebPay\WebPayItem::presetValue()
                 ->setTypeName(\Svea\WebPay\Checkout\Model\PresetValue::PHONE_NUMBER)
                 ->setValue($phoneNumber)
@@ -514,7 +501,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $order_builder->addPresetValue($presetPhoneNumber);
         }
 
-        if(!is_null($isCompany)){
+        if (!is_null($isCompany)) {
             $presetIsCompany = \Svea\WebPay\WebPayItem::presetValue()
                 ->setTypeName(\Svea\WebPay\Checkout\Model\PresetValue::IS_COMPANY)
                 ->setValue((bool)$isCompany) // cast to boolean since integration package requires it
@@ -526,41 +513,37 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
     private function addIdentityFlags($order_builder)
     {
-        $hideNotYou = $this->config->get($this->moduleString . 'sco_iframe_hide_not_you');
-        $hideAnonymous = $this->config->get($this->moduleString . 'sco_iframe_hide_anonymous');
+        $hideNotYou        = $this->config->get($this->moduleString . 'sco_iframe_hide_not_you');
+        $hideAnonymous     = $this->config->get($this->moduleString . 'sco_iframe_hide_anonymous');
         $hideChangeAddress = $this->config->get($this->moduleString . 'sco_iframe_hide_change_address');
 
-        if(isset($hideNotYou) && $hideNotYou == 1)
-        {
+        if (isset($hideNotYou) && $hideNotYou == 1) {
             $order_builder->addIdentityFlag(\Svea\WebPay\Checkout\Model\IdentityFlags::HIDENOTYOU);
         }
 
-        if(isset($hideAnonymous) && $hideAnonymous == 1)
-        {
+        if (isset($hideAnonymous) && $hideAnonymous == 1) {
             $order_builder->addIdentityFlag(\Svea\WebPay\Checkout\Model\IdentityFlags::HIDEANONYMOUS);
         }
 
-        if(isset($hideChangeAddress) && $hideChangeAddress == 1)
-        {
+        if (isset($hideChangeAddress) && $hideChangeAddress == 1) {
             $order_builder->addIdentityFlag(\Svea\WebPay\Checkout\Model\IdentityFlags::HIDECHANGEADDRESS);
         }
     }
 
     private function setMerchantData($order_builder)
     {
-        if(isset($this->request->post['sco_newsletter']) && $this->request->post['sco_newsletter'] == "true")
-        {
+        if (isset($this->request->post['sco_newsletter']) && $this->request->post['sco_newsletter'] == "true") {
             $order_builder->setMerchantData("{\"newsletter\":\"true\"}");
-        }
-        else
-        {
+        } else {
             $order_builder->setMerchantData("{\"newsletter\":\"false\"}");
         }
     }
 
-    private function createUrl($route, $secure) {
+    private function createUrl($route, $secure)
+    {
         $url = ($secure ? 'https://' : 'http://');
         $url .= $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/' . $route;
+
         return $url;
     }
 }

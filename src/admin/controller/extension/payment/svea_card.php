@@ -25,7 +25,7 @@ class ControllerExtensionPaymentSveacard extends Controller
             //Remove whitespace  from input, outcommented cause do not filter correct
             $inputArray = array();
             foreach ($this->request->post as $k => $i) {
-                $inputArray[$k] = $i;//($k == $this->paymentString . 'svea_card_sw_test' || $this->paymentString . 'svea_card_sw_prod') ? str_replace(" ","",$i) : $i;
+                $inputArray[$k] = $i;
             }
 
             //Save all settings
@@ -36,59 +36,59 @@ class ControllerExtensionPaymentSveacard extends Controller
             $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true));
         }
 
-        $data['entry_version_text'] = $this->language->get('entry_version_text');
-        $data['entry_version'] = $this->language->get('entry_version');
-        $data['entry_version_info'] = $this->language->get('entry_version_info');
-        $data['entry_module_repo'] = $this->language->get('entry_module_repo');
+        $data['entry_version_text']        = $this->language->get('entry_version_text');
+        $data['entry_version']             = $this->language->get('entry_version');
+        $data['entry_version_info']        = $this->language->get('entry_version_info');
+        $data['entry_module_repo']         = $this->language->get('entry_module_repo');
 
-        $data['heading_title'] = $this->language->get('heading_title');
-        $data['text_enabled'] = $this->language->get('text_enabled');
-        $data['text_disabled'] = $this->language->get('text_disabled');
-        $data['text_all_zones'] = $this->language->get('text_all_zones');
-        $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
-        $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        $data['heading_title']             = $this->language->get('heading_title');
+        $data['text_enabled']              = $this->language->get('text_enabled');
+        $data['text_disabled']             = $this->language->get('text_disabled');
+        $data['text_all_zones']            = $this->language->get('text_all_zones');
+        $data['entry_geo_zone']            = $this->language->get('entry_geo_zone');
+        $data['entry_status']              = $this->language->get('entry_status');
+        $data['entry_sort_order']          = $this->language->get('entry_sort_order');
         $data['entry_payment_description'] = $this->language->get('entry_payment_description');
-        $data['entry_card_logos'] = $this->language->get('entry_card_logos');
+        $data['entry_card_logos']          = $this->language->get('entry_card_logos');
 
-        $data['button_save'] = $this->language->get('button_save');
-        $data['button_cancel'] = $this->language->get('button_cancel');
+        $data['button_save']               = $this->language->get('button_save');
+        $data['button_cancel']             = $this->language->get('button_cancel');
 
-        $data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_general']               = $this->language->get('tab_general');
 
         //Credentials
         $data['entry_test'] = $this->language->get('entry_test');
         $data['entry_prod'] = $this->language->get('entry_prod');
 
-        $data['entry_auto_deliver'] = $this->language->get('entry_auto_deliver');
+        $data['entry_auto_deliver']             = $this->language->get('entry_auto_deliver');
         $data['entry_auto_deliver_description'] = $this->language->get('entry_auto_deliver_description');
 
-        $data['entry_hide_svea_comments'] = $this->language->get('entry_hide_svea_comments');
+        $data['entry_hide_svea_comments']         = $this->language->get('entry_hide_svea_comments');
         $data['entry_hide_svea_comments_tooltip'] = $this->language->get('entry_hide_svea_comments_tooltip');
 
         // Order statuses
-        $data['entry_deliver_status']                               = $this->language->get('entry_deliver_status');
-        $data['entry_deliver_status_tooltip']                       = $this->language->get('entry_deliver_status_tooltip');
-        $data['entry_cancel_credit_status']                         = $this->language->get('entry_cancel_credit_status');
-        $data['entry_cancel_credit_status_tooltip']                 = $this->language->get('entry_cancel_credit_status_tooltip');
+        $data['entry_deliver_status']               = $this->language->get('entry_deliver_status');
+        $data['entry_deliver_status_tooltip']       = $this->language->get('entry_deliver_status_tooltip');
+        $data['entry_cancel_credit_status']         = $this->language->get('entry_cancel_credit_status');
+        $data['entry_cancel_credit_status_tooltip'] = $this->language->get('entry_cancel_credit_status_tooltip');
 
-        //Definitions lang
-        $data['entry_testmode'] = $this->language->get('entry_testmode');
+        // Definitions lang
+        $data['entry_testmode']    = $this->language->get('entry_testmode');
         $data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
-        $data['entry_sw'] = $this->language->get('entry_sw');
+        $data['entry_sw']          = $this->language->get('entry_sw');
         $data['entry_merchant_id'] = $this->language->get('entry_merchant_id');
-        $data['entry_sw'] = $this->language->get('entry_sw');
+        $data['entry_sw']          = $this->language->get('entry_sw');
 
-        //Definitions settings
+        // Definitions settings
         $data[$this->paymentString . 'svea_card_sort_order'] = $this->config->get($this->paymentString . 'svea_card_sort_order');
         $data[$this->paymentString . 'svea_card_testmode'] = $this->config->get($this->paymentString . 'svea_card_testmode');
 
         $data['version'] = floatval(VERSION);
 
         $data['value_merchant_test'] = $this->config->get($this->paymentString . 'svea_card_merchant_id_test');
-        $data['value_sw_test'] = $this->config->get($this->paymentString . 'svea_card_sw_test');
+        $data['value_sw_test']       = $this->config->get($this->paymentString . 'svea_card_sw_test');
         $data['value_merchant_prod'] = $this->config->get($this->paymentString . 'svea_card_merchant_id_prod');
-        $data['value_sw_prod'] = $this->config->get($this->paymentString . 'svea_card_sw_prod');
+        $data['value_sw_prod']       = $this->config->get($this->paymentString . 'svea_card_sw_prod');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -105,7 +105,7 @@ class ControllerExtensionPaymentSveacard extends Controller
         }
         $data['card_logos'] = array(
             'MASTERCARD.png' => 'view/image/payment/svea_direct/MASTERCARD.png',
-            'VISA.png' => 'view/image/payment/svea_direct/VISA.png'
+            'VISA.png'       => 'view/image/payment/svea_direct/VISA.png'
         );
 
         $data['breadcrumbs'] = array();
@@ -186,13 +186,11 @@ class ControllerExtensionPaymentSveacard extends Controller
             $data[$this->paymentString . 'svea_card_cancel_credit_status'] = $this->config->get($this->paymentString . 'svea_card_cancel_credit_status');
         }
 
-        if($data[$this->paymentString . 'svea_card_deliver_status'] == null)
-        {
+        if ($data[$this->paymentString . 'svea_card_deliver_status'] == null) {
             $data[$this->paymentString . 'svea_card_deliver_status'] = array();
         }
 
-        if($data[$this->paymentString . 'svea_card_cancel_credit_status'] == null)
-        {
+        if ($data[$this->paymentString . 'svea_card_cancel_credit_status'] == null) {
             $data[$this->paymentString . 'svea_card_cancel_credit_status'] = array();
         }
 
@@ -212,31 +210,25 @@ class ControllerExtensionPaymentSveacard extends Controller
     private function validate()
     {
         $this->setVersionStrings();
+
         if (!$this->user->hasPermission('modify', 'extension/payment/svea_card')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         // Order status list validation
-
-        if(!isset($this->request->post[$this->paymentString . 'svea_card_deliver_status']) || count($this->request->post[$this->paymentString . 'svea_card_deliver_status']) == 0)
-        {
+        if (!isset($this->request->post[$this->paymentString . 'svea_card_deliver_status']) || count($this->request->post[$this->paymentString . 'svea_card_deliver_status']) == 0) {
             $this->error['warning'] = $this->language->get('error_validation_deliver_status_empty');
         }
 
-        if(!isset($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status']) == 0)
-        {
+        if (!isset($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status']) == 0) {
             $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
         }
 
         $sharedStatuses = array();
-        if(isset($this->request->post[$this->paymentString . 'svea_card_deliver_status']) && isset($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status']))
-        {
-            foreach($this->request->post[$this->paymentString . 'svea_card_deliver_status'] as $deliverStatus)
-            {
-                foreach($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status'] as $key => $cancelCreditStatus)
-                {
-                    if($deliverStatus == $cancelCreditStatus)
-                    {
+        if (isset($this->request->post[$this->paymentString . 'svea_card_deliver_status']) && isset($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status'])) {
+            foreach ($this->request->post[$this->paymentString . 'svea_card_deliver_status'] as $deliverStatus) {
+                foreach ($this->request->post[$this->paymentString . 'svea_card_cancel_credit_status'] as $key => $cancelCreditStatus) {
+                    if ($deliverStatus == $cancelCreditStatus) {
                         array_push($sharedStatuses, $cancelCreditStatus);
                         break;
                     }
@@ -244,37 +236,40 @@ class ControllerExtensionPaymentSveacard extends Controller
             }
         }
 
-        if(count($sharedStatuses) != 0)
-        {
+        if (count($sharedStatuses) != 0) {
             $this->load->model('localisation/order_status');
-            $sharedStatusesString = "";
-            foreach($sharedStatuses as $sharedStatus)
-            {
-                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
 
+            $sharedStatusesString = "";
+
+            foreach ($sharedStatuses as $sharedStatus) {
+                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
             }
+
             $sharedStatusesString = substr($sharedStatusesString, 0, strlen($sharedStatusesString)-2);
             $this->error['warning'] = $this->language->get('error_validation_shared_status') . $sharedStatusesString;
         }
 
         if (!$this->error) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
     public function install()
     {
         $this->setVersionStrings();
+
         $this->load->model('setting/setting');
+
         $this->model_setting_setting->editSetting($this->paymentString . 'svea_card', array($this->paymentString . 'svea_card_status' => 1));
+
         if (VERSION < 3.0) {
-            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == NULL) {
+            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == null) {
                 $this->model_extension_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
             }
         } else {
-            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == NULL) {
+            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == null) {
                 $this->model_setting_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
             }
         }
@@ -288,8 +283,7 @@ class ControllerExtensionPaymentSveacard extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->userTokenString = "";
             $this->linkString = "extension/extension";
             $this->paymentString = "";

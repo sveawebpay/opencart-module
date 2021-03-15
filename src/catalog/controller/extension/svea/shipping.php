@@ -8,27 +8,27 @@ class ControllerExtensionSveaShipping extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->moduleString = "";
             $this->extensionString = "extension/extension";
             $this->shippingString = "";
         }
     }
-    
+
     public function index()
     {
         $this->setVersionStrings();
-        $email = (isset($this->request->post['email'])) ? $this->request->post['email'] : NULL;
-        $postcode = (isset($this->request->post['postcode'])) ? $this->request->post['postcode'] : NULL;
+
+        $email = (isset($this->request->post['email'])) ? $this->request->post['email'] : null;
+        $postcode = (isset($this->request->post['postcode'])) ? $this->request->post['postcode'] : null;
 
         $this->session->data[$this->moduleString . 'sco_email'] = $email;
         $this->session->data[$this->moduleString . 'sco_postcode'] = $postcode;
 
         $address = array(
-            'postcode' => $postcode,
+            'postcode'   => $postcode,
             'country_id' => isset($this->session->data[$this->moduleString . 'sco_country_id']) ? strtoupper($this->session->data[$this->moduleString . 'sco_country_id']) : $this->config->get('config_country_id'),
-            'zone_id' => $this->config->get('config_zone_id'),
+            'zone_id'    => $this->config->get('config_zone_id'),
             'iso_code_2' => isset($this->session->data[$this->moduleString . 'sco_country']) ? $this->session->data[$this->moduleString . 'sco_country'] : strtoupper($this->language->get('code')),
         );
 
@@ -37,13 +37,12 @@ class ControllerExtensionSveaShipping extends Controller
 
         $this->load->model($this->extensionString);
 
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $results = $this->model_extension_extension->getExtensions('shipping');
-        }
-        else {
+        } else {
             $results = $this->model_setting_extension->getExtensions('shipping');
         }
+
         foreach ($results as $result) {
             if ($this->config->get($this->shippingString .$result['code'] . '_status')) {
                 $this->load->model('extension/shipping/' . $result['code']);
@@ -51,10 +50,10 @@ class ControllerExtensionSveaShipping extends Controller
 
                 if ($quote) {
                     $methods[$result['code']] = array(
-                        'title' => $quote['title'],
-                        'quote' => $quote['quote'],
+                        'title'      => $quote['title'],
+                        'quote'      => $quote['quote'],
                         'sort_order' => $quote['sort_order'],
-                        'error' => $quote['error']
+                        'error'      => $quote['error']
                     );
                 }
             }
@@ -77,33 +76,29 @@ class ControllerExtensionSveaShipping extends Controller
 
         foreach ($methods as $method) {
             foreach ($method['quote'] as $quote) {
-
                 $name = (count($method['quote']) > 0) ? sprintf($text_multi, $method['title'], $quote['title']) : $method['title'];
                 $name = ($quote['cost']) ? sprintf($text_cost, $name, $quote['text']) : $name;
 
                 $json['methods'][] = array(
-                    'id' => $quote['code'],
-                    'name' => $name,
+                    'id'       => $quote['code'],
+                    'name'     => $name,
                     'selected' => (isset($this->session->data['shipping_method']) && $this->session->data['shipping_method']['code'] == $quote['code']) ? 1 : 0,
                 );
             }
         }
 
         if (!count($json['methods'])) {
-
             $this->load->language('extension/svea/checkout');
 
             $json['methods'][] = array(
-                'id' => '',
-                'name' => $this->language->get('error_shipping'),
+                'id'       => '',
+                'name'     => $this->language->get('error_shipping'),
                 'selected' => 0,
             );
-
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-
     }
 
     public function save()
@@ -122,5 +117,4 @@ class ControllerExtensionSveaShipping extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 }
