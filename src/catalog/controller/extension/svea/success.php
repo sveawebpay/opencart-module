@@ -12,21 +12,20 @@ class ControllerExtensionSveaSuccess extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->paymentString = "";
             $this->moduleString = "";
             $this->extensionString = "extension/extension";
             $this->totalString = "";
         }
     }
+
     public function index()
     {
         $this->setVersionStrings();
+
         $module_sco_order_id = null;
-
         $test_mode = $this->config->get($this->moduleString . 'sco_test_mode');
-
         $order_id = !empty($_GET['order_id']) ? $_GET['order_id'] : null;
         $hash = !empty($_GET['hash']) ? $_GET['hash'] : null;
 
@@ -34,16 +33,14 @@ class ControllerExtensionSveaSuccess extends Controller
             $order_id = str_replace(hash('crc32', HTTPS_SERVER), '', $order_id);
         }
 
-        if($order_id && $hash)
-        {
+        if ($order_id && $hash) {
             $query = $this->db->query("SELECT `checkout_id` FROM " . DB_PREFIX . "svea_sco_order WHERE order_id = '" . $this->db->escape((int)$order_id) . "'");
             $module_sco_order_id = (int)$query->row['checkout_id'];
         }
 
-
-        if($module_sco_order_id != null)
-        {
+        if ($module_sco_order_id != null) {
             $config = new OpencartSveaCheckoutConfig($this, 'checkout');
+
             if ($test_mode) {
                 $config = new OpencartSveaCheckoutConfigTest($this, 'checkout');
             }
@@ -68,9 +65,7 @@ class ControllerExtensionSveaSuccess extends Controller
             } catch (Exception $e) {
                 die($e->getMessage());
             }
-        }
-        else
-        {
+        } else {
             $this->response->redirect($this->url->link('extension/svea/checkout'));
             return;
         }
@@ -100,20 +95,19 @@ class ControllerExtensionSveaSuccess extends Controller
 
         $this->load->language('extension/svea/checkout');
 
-        $data['title'] = $this->config->get('config_meta_title');
+        $data['title']         = $this->config->get('config_meta_title');
 
-        $data['base'] = ($this->request->server['HTTPS']) ? $this->config->get('config_ssl') : $this->config->get('config_url');
-        $data['description'] = $this->config->get('config_meta_description');
-        $data['keywords'] = $this->config->get('config_meta_keyword');
-        $data['lang'] = $this->language->get('code');
-        $data['direction'] = $this->language->get('direction');
-        $data['name'] = $this->config->get('config_name');
+        $data['base']          = ($this->request->server['HTTPS']) ? $this->config->get('config_ssl') : $this->config->get('config_url');
+        $data['description']   = $this->config->get('config_meta_description');
+        $data['keywords']      = $this->config->get('config_meta_keyword');
+        $data['lang']          = $this->language->get('code');
+        $data['direction']     = $this->language->get('direction');
+        $data['name']          = $this->config->get('config_name');
 
-        $data['home'] = $this->url->link('common/home');
+        $data['home']          = $this->url->link('common/home');
         $data['text_continue'] = $this->language->get('text_continue');
 
-        if($this->config->get($this->moduleString . 'sco_create_order_on_success_page') == 1)
-        {
+        if ($this->config->get($this->moduleString . 'sco_create_order_on_success_page') == 1) {
             $this->updateOrders($response);
         }
 
@@ -142,7 +136,7 @@ class ControllerExtensionSveaSuccess extends Controller
             'href' => $this->url->link('checkout/success')
         );
 
-        $data['snippet'] = (isset($response['gui']['snippet'])) ? $response['gui']['snippet'] : NULL;
+        $data['snippet'] = (isset($response['gui']['snippet'])) ? $response['gui']['snippet'] : null;
 
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
@@ -152,10 +146,8 @@ class ControllerExtensionSveaSuccess extends Controller
 
     private function updateOrders($response)
     {
-        // - update sco order
         $this->updateCheckoutOrder($response);
 
-        // - update order
         $this->updateOrder($response);
     }
 
@@ -171,28 +163,24 @@ class ControllerExtensionSveaSuccess extends Controller
 
         $country = $this->model_extension_svea_checkout->getCountry($response['countrycode']);
 
-        if(isset($response['merchantdata']))
-        {
+        if (isset($response['merchantdata'])) {
             $merchantData = json_decode($response['merchantdata']);
-            if($merchantData->newsletter == "true")
-            {
+            if ($merchantData->newsletter == "true") {
                 $newsletterConsent = true;
-            }
-            else
-            {
+            } else {
                 $newsletterConsent = false;
             }
         }
 
         $data = array(
-            'order_id' => $response['clientordernumber'],
+            'order_id'    => $response['clientordernumber'],
             'checkout_id' => $response['orderid'],
-            'status' => isset($response['status']) ? $response['status'] : null,
-            'type' => isset($response['customer']['iscompany']) ? ($response['customer']['iscompany'] ? 'company' : 'person') : 'person',
-            'locale' => isset($response['locale']) ? $response['locale'] : null,
-            'currency' => isset($response['currency']) ? $response['currency'] : null,
-            'country' => $country['name'],
-            'newsletter' => isset($newsletterConsent) ? $newsletterConsent : 0
+            'status'      => isset($response['status']) ? $response['status'] : null,
+            'type'        => isset($response['customer']['iscompany']) ? ($response['customer']['iscompany'] ? 'company' : 'person') : 'person',
+            'locale'      => isset($response['locale']) ? $response['locale'] : null,
+            'currency'    => isset($response['currency']) ? $response['currency'] : null,
+            'country'     => $country['name'],
+            'newsletter'  => isset($newsletterConsent) ? $newsletterConsent : 0
         );
 
         $this->model_extension_svea_checkout->updateCheckoutOrder($data);

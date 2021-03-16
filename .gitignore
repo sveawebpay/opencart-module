@@ -1,4 +1,5 @@
 .idea
+.DS_Store
 /nbproject/
 /nbproject/private/
 src/svea/**/.git

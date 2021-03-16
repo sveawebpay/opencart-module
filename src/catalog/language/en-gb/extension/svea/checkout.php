@@ -46,6 +46,7 @@ $_['text_newsletter']				= 'Do you want to subscribe to our newsletter?';
 $_['text_thank_you']				= 'Thanks for your order! We hope you will be satisfied with the products you just ordered. If you have any questions about your order, please contact us, the easiest way to reach us is by e-mail <a href="mailto:%s">%s</a>';
 $_['text_pay_now']					= 'You know that you can easily change the payment method at this page if you prefer to pay by card or delbetalnig.';
 
+$_['text_test_mode']			    = 'You are now running Svea Checkout in test mode!';
 $_['text_payment_method']			= 'Svea Checkout';
 $_['text_override_subtotal']		= 'Subtotal';
 $_['text_override_shipping']		= 'Shipping';
