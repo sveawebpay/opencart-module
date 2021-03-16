@@ -96,6 +96,7 @@ class ControllerExtensionSveaCheckout extends Controller
         $this->setCheckoutCountry($this->getCheckoutCountry());
 
         $data['status_default_checkout'] = $this->config->get($this->moduleString . 'sco_status_checkout');
+        $data['status_test_mode'] = $this->config->get($this->moduleString . 'sco_test_mode');
 
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_postcode'] = $this->language->get('entry_postcode');
@@ -137,6 +138,7 @@ class ControllerExtensionSveaCheckout extends Controller
             }
         }
 
+        $data['text_test_mode']       = $this->language->get('text_test_mode');
         $data['text_comment']         = $this->language->get('text_comment');
         $data['status_coupon']        = $this->config->get($this->totalString . 'coupon_status');
         $data['text_coupon']          = $this->language->get('text_coupon');

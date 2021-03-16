@@ -19,6 +19,11 @@
             {% endif %}
             <div class="row">
                 <div class="col-sm-12 sco-form step-1">
+                    {%  if status_test_mode == 1 %}
+                        <div class="alert alert-success text-center" role="alert">
+                            {{ text_test_mode }}
+                        </div>
+                    {% endif %}
                     <div class="cover-layer"></div>
                     <div id="sco-cart"></div>
                     <div class="action-icons">

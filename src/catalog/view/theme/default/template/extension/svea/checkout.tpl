@@ -19,6 +19,11 @@
             <?php } ?>
             <div class="row">
                 <div class="col-sm-12 sco-form step-1">
+                    <?php  if ($status_test_mode == 1) { ?>
+                        <div class="alert alert-success text-center" role="alert">
+                            <?php echo $text_test_mode; ?>
+                        </div>
+                    <?php } ?>
                     <div class="cover-layer"></div>
                     <div id="sco-cart"></div>
                     <div class="action-icons">
