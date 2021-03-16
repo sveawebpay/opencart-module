@@ -1,5 +1,5 @@
 # Index <a name="index"></a>
- 
+
 * [I. Information](#i-information)
 * [1. Installation & configuration](#i1)
     * [1.1 General](#i1-1)
@@ -17,8 +17,8 @@
 
 ## OpenCart - Svea Checkout and Svea payment modules
 
-* Supports OpenCart 2.3.0.2 - 3.1.0.0_a1 (older versions can be found in the branches)
-* Requires PHP 5.3 or higher (namespace support)
+* Supports OpenCart 2.3.0.2 - 3.0.3.7 (older versions can be found in the branches)
+* Requires PHP 5.4 or higher
 
 Features:
 
@@ -75,7 +75,7 @@ If you are using the regular the standalone Svea Invoice payment method, follow 
 * Also, the coupon discount amount (in admin, under sales/coupon) must be specified excluding tax. The coupon tax discount will then be calculated in accordance with OpenCart standard behaviour, and is specified in the order history.
 * The recommended order total sort order is: sub-total (lowest), Svea invoice fee, shipping, coupon, taxes, store credit, voucher and total.
 
-### Hide Svea comments 
+### Hide Svea comments
 It's possible to hide the comments added by the module by enabling "Hide Svea comments" on the administration page of the payment method. This will however not hide messages that contain critical information, for example invoiceIds or contractNumbers.
 
 # 2. Miscellaneous <a name="i2"></a>
