@@ -2,7 +2,7 @@
 
 class ControllerExtensionSveaComment extends Controller
 {
-    public function index() 
+    public function index()
     {
         $json = array();
 
@@ -18,5 +18,4 @@ class ControllerExtensionSveaComment extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 }

@@ -13,11 +13,10 @@ class ControllerExtensionModuleSco extends Controller
     private $moduleString = "module_";
     private $appendString = "_before";
     private $eventString = "setting/event";
-    
+
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->userTokenString = "";
             $this->linkString = "extension/extension";
             $this->paymentString = "";
@@ -26,7 +25,7 @@ class ControllerExtensionModuleSco extends Controller
             $this->eventString = "extension/event";
         }
     }
-    
+
     public function index()
     {
         $this->setVersionStrings();
@@ -45,8 +44,7 @@ class ControllerExtensionModuleSco extends Controller
             $this->load->model('extension/svea/upgrade');
             $this->model_extension_svea_upgrade->upgradeDatabase('sco');
 
-            if($this->request->post[$this->moduleString . 'sco_show_widget_on_product_page'] == 1)
-            {
+            if ($this->request->post[$this->moduleString . 'sco_show_widget_on_product_page'] == 1) {
                 $this->updateCampaigns();
             }
 
@@ -73,60 +71,59 @@ class ControllerExtensionModuleSco extends Controller
 
         // Set cancel url
         $data['cancel'] = $this->url->link('extension/module', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
-        if(VERSION < 3.0)
-        {
+
+        if (VERSION < 3.0) {
             $data['token'] = $this->session->data['token'];
-        }
-        else
-        {
+        } else {
             $data['user_token'] = $this->session->data['user_token'];
         }
 
         $this->load->model('localisation/country');
         $fields = array(
-            'checkout_merchant_id_se' => null,
-            'checkout_secret_word_se' => null,
-            'checkout_merchant_id_no' => null,
-            'checkout_secret_word_no' => null,
-            'checkout_merchant_id_fi' => null,
-            'checkout_secret_word_fi' => null,
-            'checkout_merchant_id_dk' => null,
-            'checkout_secret_word_dk' => null,
-            'checkout_merchant_id_de' => null,
-            'checkout_secret_word_de' => null,
-            'checkout_test_merchant_id_se' => null,
-            'checkout_test_secret_word_se' => null,
-            'checkout_test_merchant_id_no' => null,
-            'checkout_test_secret_word_no' => null,
-            'checkout_test_merchant_id_fi' => null,
-            'checkout_test_secret_word_fi' => null,
-            'checkout_test_merchant_id_dk' => null,
-            'checkout_test_secret_word_dk' => null,
-            'checkout_test_merchant_id_de' => null,
-            'checkout_test_secret_word_de' => null,
-            'status' => '0',
-            'test_mode' => '1',
-            'status_checkout' => '0',
-            'product_option' => '0',
-            'show_coupons_on_checkout' => '1',
-            'show_voucher_on_checkout' => '1',
-            'show_order_comment_on_checkout' => '1',
-            'show_widget_on_product_page' => '0',
-            'checkout_terms_uri' => '',
-            'checkout_default_country_id' => '',
-            'iframe_hide_not_you' => '0',
-            'iframe_hide_anonymous' => '0',
-            'iframe_hide_change_address' => '0',
-            'force_flow' => '0',
-            'force_b2b' => '0',
-            'gather_newsletter_consent' => '0',
-            'hide_svea_comments' => '0',
-            'create_order_on_success_page' => '1',
-            'create_order_on_received_push' => '1',
+            'checkout_merchant_id_se'             => null,
+            'checkout_secret_word_se'             => null,
+            'checkout_merchant_id_no'             => null,
+            'checkout_secret_word_no'             => null,
+            'checkout_merchant_id_fi'             => null,
+            'checkout_secret_word_fi'             => null,
+            'checkout_merchant_id_dk'             => null,
+            'checkout_secret_word_dk'             => null,
+            'checkout_merchant_id_de'             => null,
+            'checkout_secret_word_de'             => null,
+            'checkout_test_merchant_id_se'        => null,
+            'checkout_test_secret_word_se'        => null,
+            'checkout_test_merchant_id_no'        => null,
+            'checkout_test_secret_word_no'        => null,
+            'checkout_test_merchant_id_fi'        => null,
+            'checkout_test_secret_word_fi'        => null,
+            'checkout_test_merchant_id_dk'        => null,
+            'checkout_test_secret_word_dk'        => null,
+            'checkout_test_merchant_id_de'        => null,
+            'checkout_test_secret_word_de'        => null,
+            'status'                              => '0',
+            'test_mode'                           => '1',
+            'status_checkout'                     => '0',
+            'product_option'                      => '0',
+            'show_coupons_on_checkout'            => '1',
+            'show_voucher_on_checkout'            => '1',
+            'show_order_comment_on_checkout'      => '1',
+            'show_widget_on_product_page'         => '0',
+            'checkout_terms_uri'                  => '',
+            'checkout_default_country_id'         => '',
+            'iframe_hide_not_you'                 => '0',
+            'iframe_hide_anonymous'               => '0',
+            'iframe_hide_change_address'          => '0',
+            'force_flow'                          => '0',
+            'force_b2b'                           => '0',
+            'gather_newsletter_consent'           => '0',
+            'hide_svea_comments'                  => '0',
+            'create_order_on_success_page'        => '1',
+            'create_order_on_received_push'       => '1',
             'enable_electronic_id_authentication' => '0',
-            'deliver_status' => array(),
-            'cancel_credit_status' => array()
+            'deliver_status'                      => array(),
+            'cancel_credit_status'                => array()
         );
+
         $data['options_on_checkout_page'] = array(
             $this->moduleString . 'sco_show_coupons_on_checkout' => $this->language->get('text_show_coupons_on_checkout'),
             $this->moduleString . 'sco_show_voucher_on_checkout' => $this->language->get('text_show_voucher_on_checkout'),
@@ -161,7 +158,14 @@ class ControllerExtensionModuleSco extends Controller
 
         // Add countries Sweden, Norway, Finland, Denmark and Germany
         $data['countries'] = array();
-        array_push($data['countries'],$this->model_localisation_country->getCountry(203),$this->model_localisation_country->getCountry(160),$this->model_localisation_country->getCountry(72),$this->model_localisation_country->getCountry(57),$this->model_localisation_country->getCountry(81));
+        array_push(
+            $data['countries'],
+            $this->model_localisation_country->getCountry(203),
+            $this->model_localisation_country->getCountry(160),
+            $this->model_localisation_country->getCountry(72),
+            $this->model_localisation_country->getCountry(57),
+            $this->model_localisation_country->getCountry(81)
+        );
 
         // Load common controllers
         $data['header'] = $this->load->controller('common/header');
@@ -186,41 +190,33 @@ class ControllerExtensionModuleSco extends Controller
         }
 
         // Order status list validation
-
-        if(!isset($this->request->post[$this->moduleString . 'sco_deliver_status']) || count($this->request->post[$this->moduleString . 'sco_deliver_status']) == 0)
-        {
+        if (!isset($this->request->post[$this->moduleString . 'sco_deliver_status']) || count($this->request->post[$this->moduleString . 'sco_deliver_status']) == 0) {
             $this->error['warning'] = $this->language->get('error_validation_deliver_status_empty');
         }
 
-        if(!isset($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) || count($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) == 0)
-        {
+        if (!isset($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) || count($this->request->post[$this->moduleString . 'sco_cancel_credit_status']) == 0) {
             $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
         }
 
         $sharedStatuses = array();
-        if(isset($this->request->post[$this->moduleString . 'sco_deliver_status']) && isset($this->request->post[$this->moduleString . 'sco_cancel_credit_status']))
-        {
-            foreach ($this->request->post[$this->moduleString . 'sco_deliver_status'] as $deliverStatus)
-            {
-                foreach ($this->request->post[$this->moduleString . 'sco_cancel_credit_status'] as $key => $cancelCreditStatus)
-                {
-                    if ($deliverStatus == $cancelCreditStatus)
-                    {
+        if (isset($this->request->post[$this->moduleString . 'sco_deliver_status']) && isset($this->request->post[$this->moduleString . 'sco_cancel_credit_status'])) {
+            foreach ($this->request->post[$this->moduleString . 'sco_deliver_status'] as $deliverStatus) {
+                foreach ($this->request->post[$this->moduleString . 'sco_cancel_credit_status'] as $key => $cancelCreditStatus) {
+                    if ($deliverStatus == $cancelCreditStatus) {
                         array_push($sharedStatuses, $cancelCreditStatus);
                         break;
                     }
                 }
             }
         }
-        if(count($sharedStatuses) != 0)
-        {
+        if (count($sharedStatuses) != 0) {
             $this->load->model('localisation/order_status');
             $sharedStatusesString = "";
-            foreach($sharedStatuses as $sharedStatus)
-            {
-                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
 
+            foreach ($sharedStatuses as $sharedStatus) {
+                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
             }
+
             $sharedStatusesString = substr($sharedStatusesString, 0, strlen($sharedStatusesString)-2);
             $this->error['warning'] = $this->language->get('error_validation_shared_status') . $sharedStatusesString;
         }
@@ -241,12 +237,10 @@ class ControllerExtensionModuleSco extends Controller
 
         $formattedString = null;
 
-        foreach($list as $key)
-        {
+        foreach ($list as $key) {
             $formattedString = $formattedString . $key['email'] . "\n";
         }
 
-        //$this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput($formattedString);
     }
 
@@ -266,19 +260,16 @@ class ControllerExtensionModuleSco extends Controller
             'extension/svea/checkout/redirectToScoPage'
         );
 
-        if(VERSION < 3.0)
-        {
-            if($this->model_extension_event->getEvent($this->moduleString . 'sco_add_history_order_from_admin' . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == NULL) {
+        if (VERSION < 3.0) {
+            if ($this->model_extension_event->getEvent($this->moduleString . 'sco_add_history_order_from_admin' . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == null) {
                 $this->model_extension_svea_events->addSveaCustomEvent(
                     $this->moduleString . 'sco_add_history_order_from_admin' . $this->appendString,
                     'catalog/controller/api/order/history/before',
                     'extension/svea/order/history'
                 );
             }
-        }
-        else
-        {
-            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == NULL) {
+        } else {
+            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == null) {
                 $this->model_extension_svea_events->addSveaCustomEvent(
                     $this->moduleString . 'sco_add_history_order_from_admin' . $this->appendString,
                     'catalog/controller/api/order/history/before',
@@ -297,14 +288,11 @@ class ControllerExtensionModuleSco extends Controller
         $this->load->model('extension/svea/events');
         $this->load->model($this->eventString);
 
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->model_extension_event->deleteEvent($this->moduleString . 'sco_edit_checkout_url' . $this->appendString);
             $this->model_extension_event->deleteEvent($this->moduleString . 'sco_add_history_order_from_admin');
             $this->model_extension_event->deleteEvent($this->moduleString . 'sco_edit_order_from_admin' . $this->appendString);
-        }
-        else
-        {
+        } else {
             $this->model_setting_event->deleteEvent($this->moduleString . 'sco_edit_checkout_url' . $this->appendString);
             $this->model_setting_event->deleteEvent($this->moduleString . 'sco_add_history_order_from_admin');
             $this->model_setting_event->deleteEvent($this->moduleString . 'sco_edit_order_from_admin' . $this->appendString);
@@ -370,6 +358,7 @@ class ControllerExtensionModuleSco extends Controller
         // Checkout page settings
         $data['entry_status_checkout'] = $this->language->get('entry_status_checkout');
         $data['entry_status_checkout_tooltip'] = $this->language->get('entry_status_checkout_tooltip');
+
         //Options on checkout page on line 109
         $data[$this->moduleString . 'sco_show_coupons_on_checkout_tooltip'] = $this->language->get('text_show_coupons_on_checkout_tooltip');
         $data[$this->moduleString . 'sco_show_voucher_on_checkout_tooltip'] = $this->language->get('text_show_voucher_on_checkout_tooltip');
@@ -401,7 +390,7 @@ class ControllerExtensionModuleSco extends Controller
         $data['entry_cancel_credit_status']                         = $this->language->get('entry_cancel_credit_status');
         $data['entry_cancel_credit_status_tooltip']                 = $this->language->get('entry_cancel_credit_status_tooltip');
 
-            // Debug settings
+        // Debug settings
         $data['text_debug_warning']                                 = $this->language->get('text_debug_warning');
         $data['text_debug_create_order_on_success_page']            = $this->language->get('text_debug_create_order_on_success_page');
         $data['text_debug_create_order_on_success_page_tooltip']    = $this->language->get('text_debug_create_order_on_success_page_tooltip');
@@ -448,8 +437,7 @@ class ControllerExtensionModuleSco extends Controller
 
         $result = $this->model_extension_svea_campaigns->checkIfOrderScoTableExists();
 
-        if (!$result->num_rows)
-        {
+        if (!$result->num_rows) {
             $this->model_extension_svea_campaigns->createOrderScoTable();
         }
     }
@@ -462,20 +450,18 @@ class ControllerExtensionModuleSco extends Controller
 
         //Create table for SCO campaigns if it doesn't exist
         $this->model_extension_svea_campaigns->createScoCampaignsTableIfNotExist();
+
         //Truncate table every time the campaigns are updated
         $this->model_extension_svea_campaigns->truncateScoCampaignsTable();
 
         $testMode = $this->config->get($this->moduleString . 'sco_test_mode');
-
         $config = ($testMode == "1") ? new OpencartSveaCheckoutConfigTest($this) : new OpencartSveaCheckoutConfig($this);
         $testString = ($testMode == "1") ? "'" . $this->moduleString . "sco_checkout_test_merchant_id_%'" : "'" . $this->moduleString . "sco_checkout_merchant_id_%'";
 
         $countries = $this->model_extension_svea_campaigns->fetchScoCountries($testString);
 
-        foreach ($countries->rows as $country)
-        {
-            if ($country['value'] != "")
-            {
+        foreach ($countries->rows as $country) {
+            if ($country['value'] != "") {
                 $request = \Svea\WebPay\WebPay::checkout($config);
 
                 $presetValueIsCompany = \Svea\WebPay\WebPayItem::presetValue()
@@ -486,17 +472,13 @@ class ControllerExtensionModuleSco extends Controller
                 $request->setCountryCode(strtoupper(substr($country['key'], -2)))
                     ->addPresetValue($presetValueIsCompany);
 
-                try
-                {
+                try {
                     $response = $request->getAvailablePartPaymentCampaigns();
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     $this->log->write("Unable to fetch campaigns for countryCode '" . substr($country['key'], -2) . "' Reason: " . $e->getMessage());
                 }
 
-                if ($response != null)
-                {
+                if ($response != null) {
                     $this->model_extension_svea_campaigns->insertScoCampaignsToTable($response, $country);
                 }
             }
