@@ -152,11 +152,35 @@ class ControllerExtensionSveaCheckout extends Controller
 
         $data['status_voucher']       = $this->config->get($this->totalString . 'voucher_status');
         $data['text_voucher']         = $this->language->get('text_voucher');
+        
+        $this->document->addScript($this->getThemeDependentResourceSrc('javascript/svea/sco.js'));
+        $this->document->addStyle($this->getThemeDependentResourceSrc('stylesheet/svea/sco.css'));
 
         $data['footer']               = $this->load->controller('common/footer');
         $data['header']               = $this->load->controller('common/header');
 
         $this->response->setOutput($this->load->view('extension/svea/checkout', $data));
+    }
+    
+    protected function getThemeDirName()
+    {
+        if ((VERSION >= 3.0 && $this->config->get('config_theme') == 'default') || (VERSION < 3.0 && $this->config->get('config_theme') == 'theme_default')) {
+			$theme_dir = $this->config->get('theme_default_directory');
+		} else {
+			$theme_dir = $this->config->get('config_theme');
+		}
+        return $theme_dir;
+    }
+    
+    protected function getThemeDependentResourceSrc($resource)
+    {
+        $theme_dir = $this->getThemeDirName();
+        $filename = DIR_TEMPLATE . $theme_dir . '/' . $resource;
+        if ( !file_exists($filename) ) {
+            $theme_dir = 'default'; // expect resource to be always existing in the default theme dir
+            $filename = DIR_TEMPLATE . $theme_dir . '/' . $resource; 
+        }
+        return 'catalog/view/theme/' . $theme_dir . '/' . $resource . '?' . filemtime($filename);
     }
 
     public function redirectToScoPage()
