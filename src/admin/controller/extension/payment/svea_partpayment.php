@@ -23,70 +23,71 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         $this->load->model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
-
             $this->model_setting_setting->editSetting($this->paymentString . 'svea_partpayment', $this->request->post);
             $this->load->model('extension/svea/upgrade');
             $this->model_extension_svea_upgrade->upgradeDatabase('svea_partpayment');
+
             //get latest PaymentPlan params from Svea when saving settings
             $this->loadPaymentPlanParams();
 
             $this->session->data['success'] = $this->language->get('text_success');
             $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true));
         }
-        $data['entry_version_text'] = $this->language->get('entry_version_text');
-        $data['entry_version'] = $this->language->get('entry_version');
-        $data['entry_version_info'] = $this->language->get('entry_version_info');
-        $data['entry_module_repo'] = $this->language->get('entry_module_repo');
 
-        $data['heading_title'] = $this->language->get('heading_title');
-        $data['text_enabled'] = $this->language->get('text_enabled');
-        $data['text_disabled'] = $this->language->get('text_disabled');
-        $data['text_all_zones'] = $this->language->get('text_all_zones');
+        $data['entry_version_text']          = $this->language->get('entry_version_text');
+        $data['entry_version']               = $this->language->get('entry_version');
+        $data['entry_version_info']          = $this->language->get('entry_version_info');
+        $data['entry_module_repo']           = $this->language->get('entry_module_repo');
 
-        $data['entry_shipping_billing'] = $this->language->get('entry_shipping_billing');
+        $data['heading_title']               = $this->language->get('heading_title');
+        $data['text_enabled']                = $this->language->get('text_enabled');
+        $data['text_disabled']               = $this->language->get('text_disabled');
+        $data['text_all_zones']              = $this->language->get('text_all_zones');
+
+        $data['entry_shipping_billing']      = $this->language->get('entry_shipping_billing');
         $data['entry_shipping_billing_text'] = $this->language->get('entry_shipping_billing_text');
-        $data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
-        $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
-        $data['entry_payment_description'] = $this->language->get('entry_payment_description');
-        $data['button_save'] = $this->language->get('button_save');
-        $data['button_cancel'] = $this->language->get('button_cancel');
-        $data['tab_general'] = $this->language->get('tab_general');
+        $data['entry_geo_zone']              = $this->language->get('entry_geo_zone');
+        $data['entry_status']                = $this->language->get('entry_status');
+        $data['entry_sort_order']            = $this->language->get('entry_sort_order');
+        $data['entry_payment_description']   = $this->language->get('entry_payment_description');
+        $data['button_save']                 = $this->language->get('button_save');
+        $data['button_cancel']               = $this->language->get('button_cancel');
+        $data['tab_general']                 = $this->language->get('tab_general');
         //Credentials
-        $data['entry_username'] = $this->language->get('entry_username');
-        $data['entry_password'] = $this->language->get('entry_password');
-        $data['entry_clientno'] = $this->language->get('entry_clientno');
-        $data['entry_product'] = $this->language->get('entry_product');
-        $data['entry_product_text'] = $this->language->get('entry_product_text');
+        $data['entry_username']              = $this->language->get('entry_username');
+        $data['entry_password']              = $this->language->get('entry_password');
+        $data['entry_clientno']              = $this->language->get('entry_clientno');
+        $data['entry_product']               = $this->language->get('entry_product');
+        $data['entry_product_text']          = $this->language->get('entry_product_text');
 
-        $data['entry_sweden'] = $this->language->get('entry_sweden');
-        $data['entry_finland'] = $this->language->get('entry_finland');
-        $data['entry_denmark'] = $this->language->get('entry_denmark');
-        $data['entry_norway'] = $this->language->get('entry_norway');
-        $data['entry_germany'] = $this->language->get('entry_germany');
-        $data['entry_netherlands'] = $this->language->get('entry_netherlands');
+        $data['entry_sweden']                = $this->language->get('entry_sweden');
+        $data['entry_finland']               = $this->language->get('entry_finland');
+        $data['entry_denmark']               = $this->language->get('entry_denmark');
+        $data['entry_norway']                = $this->language->get('entry_norway');
+        $data['entry_germany']               = $this->language->get('entry_germany');
+        $data['entry_netherlands']           = $this->language->get('entry_netherlands');
 
-        $data['entry_testmode'] = $this->language->get('entry_testmode');
-        $data['entry_auto_deliver'] = $this->language->get('entry_auto_deliver');
-        $data['entry_auto_deliver_text'] = $this->language->get('entry_auto_deliver_text');
-        $data['entry_post'] = $this->language->get('entry_post');
-        $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_yes'] = $this->language->get('entry_yes');
-        $data['entry_no'] = $this->language->get('entry_no');
-        $data['entry_min_amount'] = $this->language->get('entry_min_amount');
+        $data['entry_testmode']              = $this->language->get('entry_testmode');
+        $data['entry_auto_deliver']          = $this->language->get('entry_auto_deliver');
+        $data['entry_auto_deliver_text']     = $this->language->get('entry_auto_deliver_text');
+        $data['entry_post']                  = $this->language->get('entry_post');
+        $data['entry_email']                 = $this->language->get('entry_email');
+        $data['entry_yes']                   = $this->language->get('entry_yes');
+        $data['entry_no']                    = $this->language->get('entry_no');
+        $data['entry_min_amount']            = $this->language->get('entry_min_amount');
 
-        $data['entry_hide_svea_comments'] = $this->language->get('entry_hide_svea_comments');
+        $data['entry_hide_svea_comments']         = $this->language->get('entry_hide_svea_comments');
         $data['entry_hide_svea_comments_tooltip'] = $this->language->get('entry_hide_svea_comments_tooltip');
 
         // Order statuses
-        $data['entry_deliver_status']                               = $this->language->get('entry_deliver_status');
-        $data['entry_deliver_status_tooltip']                       = $this->language->get('entry_deliver_status_tooltip');
-        $data['entry_cancel_credit_status']                         = $this->language->get('entry_cancel_credit_status');
-        $data['entry_cancel_credit_status_tooltip']                 = $this->language->get('entry_cancel_credit_status_tooltip');
+        $data['entry_deliver_status']               = $this->language->get('entry_deliver_status');
+        $data['entry_deliver_status_tooltip']       = $this->language->get('entry_deliver_status_tooltip');
+        $data['entry_cancel_credit_status']         = $this->language->get('entry_cancel_credit_status');
+        $data['entry_cancel_credit_status_tooltip'] = $this->language->get('entry_cancel_credit_status_tooltip');
 
         $data['version'] = floatval(VERSION);
 
-        //As you might notice the word we're really looking for is "country" not "lang". Leaving it like that so it won't ruin anything though.
+        // As you might notice the word we're really looking for is "country" not "lang". Leaving it like that so it won't ruin anything though.
         $cred = array();
         $cred[] = array("lang" => "SE", "value_username" => $this->config->get($this->paymentString . 'svea_partpayment_username_SE'), "name_username" => $this->paymentString . 'svea_partpayment_username_SE', "value_password" => $this->config->get($this->paymentString . 'svea_partpayment_password_SE'), "name_password" => $this->paymentString . 'svea_partpayment_password_SE', "value_clientno" => $this->config->get($this->paymentString . 'svea_partpayment_clientno_SE'), "name_clientno" => $this->paymentString . 'svea_partpayment_clientno_SE', "min_amount_name" => $this->paymentString . 'svea_partpayment_min_amount_SE', "min_amount_value" => $this->config->get($this->paymentString . 'svea_partpayment_min_amount_SE'), "value_testmode" => $this->config->get($this->paymentString . 'svea_partpayment_testmode_SE'), "name_testmode" => $this->paymentString . 'svea_partpayment_testmode_SE');
         $cred[] = array("lang" => "NO", "value_username" => $this->config->get($this->paymentString . 'svea_partpayment_username_NO'), "name_username" => $this->paymentString . 'svea_partpayment_username_NO', "value_password" => $this->config->get($this->paymentString . 'svea_partpayment_password_NO'), "name_password" => $this->paymentString . 'svea_partpayment_password_NO', "value_clientno" => $this->config->get($this->paymentString . 'svea_partpayment_clientno_NO'), "name_clientno" => $this->paymentString . 'svea_partpayment_clientno_NO', "min_amount_name" => $this->paymentString . 'svea_partpayment_min_amount_NO', "min_amount_value" => $this->config->get($this->paymentString . 'svea_partpayment_min_amount_NO'), "value_testmode" => $this->config->get($this->paymentString . 'svea_partpayment_testmode_NO'), "name_testmode" => $this->paymentString . 'svea_partpayment_testmode_NO');
@@ -123,10 +124,8 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
             'href' => $this->url->link('extension/payment/svea_partpayment', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true)
         );
 
-
         $data['action'] = $this->url->link('extension/payment/svea_partpayment', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=payment', true);
         $data['cancel'] = $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
-
 
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_geo_zone_id'])) {
             $data[$this->paymentString . 'svea_partpayment_geo_zone_id'] = $this->request->post[$this->paymentString . 'svea_partpayment_geo_zone_id'];
@@ -138,44 +137,49 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
 
         $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
-        //order status
+        // Order status
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_status'])) {
             $data[$this->paymentString . 'svea_partpayment_status'] = $this->request->post[$this->paymentString . 'svea_partpayment_status'];
         } else {
             $data[$this->paymentString . 'svea_partpayment_status'] = $this->config->get($this->paymentString . 'svea_partpayment_status');
         }
-        //sort order
+
+        // Sort order
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_sort_order'])) {
             $data[$this->paymentString . 'svea_partpayment_sort_order'] = $this->request->post[$this->paymentString . 'svea_partpayment_sort_order'];
         } else {
             $data[$this->paymentString . 'svea_partpayment_sort_order'] = $this->config->get($this->paymentString . 'svea_partpayment_sort_order');
         }
-        //payment info
+
+        // Payment info
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_payment_description'])) {
             $data[$this->paymentString . 'svea_partpayment_payment_description'] = $this->request->post[$this->paymentString . 'svea_partpayment_payment_description'];
         } else {
             $data[$this->paymentString . 'svea_partpayment_payment_description'] = $this->config->get($this->paymentString . 'svea_partpayment_payment_description');
         }
-        //auto deliver
+
+        // Auto deliver
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_auto_deliver'])) {
             $data[$this->paymentString . 'svea_partpayment_auto_deliver'] = $this->request->post[$this->paymentString . 'svea_partpayment_auto_deliver'];
         } else {
             $data[$this->paymentString . 'svea_partpayment_auto_deliver'] = $this->config->get($this->paymentString . 'svea_partpayment_auto_deliver');
         }
-        //shipping billing
+
+        // Shipping billing
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_shipping_billing'])) {
             $data[$this->paymentString . 'svea_partpayment_shipping_billing'] = $this->request->post[$this->paymentString . 'svea_partpayment_shipping_billing'];
         } else {
             $data[$this->paymentString . 'svea_partpayment_shipping_billing'] = $this->config->get($this->paymentString . 'svea_partpayment_shipping_billing');
         }
-        //show price on product
+
+        // Show price on product
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_product_price'])) {
             $data[$this->paymentString . 'svea_partpayment_product_price'] = $this->request->post[$this->paymentString . 'svea_partpayment_product_price'];
         } else {
             $data[$this->paymentString . 'svea_partpayment_product_price'] = $this->config->get($this->paymentString . 'svea_partpayment_product_price');
         }
 
-        //hide svea comments
+        // Hide svea comments
         if (isset($this->request->post[$this->paymentString . 'svea_partpayment_hide_svea_comments'])) {
             $data[$this->paymentString . 'svea_partpayment_hide_svea_comments'] = $this->request->post[$this->paymentString . 'svea_partpayment_hide_svea_comments'];
         } else {
@@ -194,13 +198,11 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
             $data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] = $this->config->get($this->paymentString . 'svea_partpayment_cancel_credit_status');
         }
 
-        if($data[$this->paymentString . 'svea_partpayment_deliver_status'] == null)
-        {
+        if ($data[$this->paymentString . 'svea_partpayment_deliver_status'] == null) {
             $data[$this->paymentString . 'svea_partpayment_deliver_status'] = array();
         }
 
-        if($data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] == null)
-        {
+        if ($data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] == null) {
             $data[$this->paymentString . 'svea_partpayment_cancel_credit_status'] = array();
         }
 
@@ -215,7 +217,6 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         $this->response->setOutput($this->load->view('extension/payment/svea_partpayment', $data));
-
     }
 
     private function validate()
@@ -225,26 +226,19 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         }
 
         // Order status list validation
-
-        if(!isset($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) || count($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) == 0)
-        {
+        if (!isset($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) || count($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) == 0) {
             $this->error['warning'] = $this->language->get('error_validation_deliver_status_empty');
         }
 
-        if(!isset($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']) == 0)
-        {
+        if (!isset($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']) || count($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']) == 0) {
             $this->error['warning'] = $this->language->get('error_validation_cancel_credit_status_empty');
         }
 
         $sharedStatuses = array();
-        if(isset($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) && isset($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status']))
-        {
-            foreach($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status'] as $deliverStatus)
-            {
-                foreach($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status'] as $key => $cancelCreditStatus)
-                {
-                    if($deliverStatus == $cancelCreditStatus)
-                    {
+        if (isset($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status']) && isset($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status'])) {
+            foreach ($this->request->post[$this->paymentString . 'svea_partpayment_deliver_status'] as $deliverStatus) {
+                foreach ($this->request->post[$this->paymentString . 'svea_partpayment_cancel_credit_status'] as $key => $cancelCreditStatus) {
+                    if ($deliverStatus == $cancelCreditStatus) {
                         array_push($sharedStatuses, $cancelCreditStatus);
                         break;
                     }
@@ -252,23 +246,23 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
             }
         }
 
-        if(count($sharedStatuses) != 0)
-        {
+        if (count($sharedStatuses) != 0) {
             $this->load->model('localisation/order_status');
-            $sharedStatusesString = "";
-            foreach($sharedStatuses as $sharedStatus)
-            {
-                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
 
+            $sharedStatusesString = "";
+
+            foreach ($sharedStatuses as $sharedStatus) {
+                $sharedStatusesString = $sharedStatusesString . $this->model_localisation_order_status->getOrderStatus($sharedStatus)['name'] . ", ";
             }
+
             $sharedStatusesString = substr($sharedStatusesString, 0, strlen($sharedStatusesString)-2);
             $this->error['warning'] = $this->language->get('error_validation_shared_status') . $sharedStatusesString;
         }
 
         if (!$this->error) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -283,9 +277,10 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
 
         $this->setVersionStrings();
         $countryCode = array("SE", "NO", "FI", "DK", "NL", "DE");
+
         for ($i = 0; $i < sizeof($countryCode); $i++) {
 
-            // we need to use the database config settings directly, as $this->config may contain old data that we just edited
+            // We need to use the database config settings directly, as $this->config may contain old data that we just edited
             $settings = $this->model_setting_setting->getSetting($this->paymentString . 'svea_partpayment');
 
             $username = $settings[$this->paymentString . 'svea_partpayment_username_' . $countryCode[$i]];
@@ -295,8 +290,7 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
 
             //get params if config is set
             if ($username != "" && $password != "" && $client_id != "") {
-
-                if ($testmode !== NULL) {
+                if ($testmode !== null) {
                     $conf = ($testmode == "1") ? new OpencartSveaConfigTest($this->config) : new OpencartSveaConfig($this->config);
 
                     // need to update $this->config with username et al from $settings
@@ -312,13 +306,13 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
                     } catch (Exception $e) {
                         $this->log->write("Failed to update PaymentPlanParams" . $e->getMessage());
 
-                        return; // without updating table.
+                        return;
                     }
 
-                    if (isset($svea_params->accepted) && $svea_params->accepted == TRUE) {
+                    if (isset($svea_params->accepted) && $svea_params->accepted == true) {
                         $formatted_params = $this->sveaFormatParams($svea_params);
 
-                        if ($formatted_params != NULL) {
+                        if ($formatted_params != null) {
                             $this->model_extension_svea_campaigns->insertSveaCampaignsToTable($formatted_params, $countryCode[$i]);
                         }
                     }
@@ -335,32 +329,32 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         } else {
             foreach ($response->campaignCodes as $responseResultItem) {
                 try {
-                    $campaignCode = (isset($responseResultItem->campaignCode)) ? $responseResultItem->campaignCode : "";
-                    $description = (isset($responseResultItem->description)) ? $responseResultItem->description : "";
-                    $paymentplantype = (isset($responseResultItem->paymentPlanType)) ? $responseResultItem->paymentPlanType : "";
-                    $contractlength = (isset($responseResultItem->contractLengthInMonths)) ? $responseResultItem->contractLengthInMonths : "";
-                    $monthlyannuityfactor = (isset($responseResultItem->monthlyAnnuityFactor)) ? $responseResultItem->monthlyAnnuityFactor : "";
-                    $initialfee = (isset($responseResultItem->initialFee)) ? $responseResultItem->initialFee : "";
-                    $notificationfee = (isset($responseResultItem->notificationFee)) ? $responseResultItem->notificationFee : "";
+                    $campaignCode           = (isset($responseResultItem->campaignCode)) ? $responseResultItem->campaignCode : "";
+                    $description            = (isset($responseResultItem->description)) ? $responseResultItem->description : "";
+                    $paymentplantype        = (isset($responseResultItem->paymentPlanType)) ? $responseResultItem->paymentPlanType : "";
+                    $contractlength         = (isset($responseResultItem->contractLengthInMonths)) ? $responseResultItem->contractLengthInMonths : "";
+                    $monthlyannuityfactor   = (isset($responseResultItem->monthlyAnnuityFactor)) ? $responseResultItem->monthlyAnnuityFactor : "";
+                    $initialfee             = (isset($responseResultItem->initialFee)) ? $responseResultItem->initialFee : "";
+                    $notificationfee        = (isset($responseResultItem->notificationFee)) ? $responseResultItem->notificationFee : "";
                     $interestratepercentage = (isset($responseResultItem->interestRatePercent)) ? $responseResultItem->interestRatePercent : "";
-                    $interestfreemonths = (isset($responseResultItem->numberOfInterestFreeMonths)) ? $responseResultItem->numberOfInterestFreeMonths : "";
-                    $paymentfreemonths = (isset($responseResultItem->numberOfPaymentFreeMonths)) ? $responseResultItem->numberOfPaymentFreeMonths : "";
-                    $fromamount = (isset($responseResultItem->fromAmount)) ? $responseResultItem->fromAmount : "";
-                    $toamount = (isset($responseResultItem->toAmount)) ? $responseResultItem->toAmount : "";
+                    $interestfreemonths     = (isset($responseResultItem->numberOfInterestFreeMonths)) ? $responseResultItem->numberOfInterestFreeMonths : "";
+                    $paymentfreemonths      = (isset($responseResultItem->numberOfPaymentFreeMonths)) ? $responseResultItem->numberOfPaymentFreeMonths : "";
+                    $fromamount             = (isset($responseResultItem->fromAmount)) ? $responseResultItem->fromAmount : "";
+                    $toamount               = (isset($responseResultItem->toAmount)) ? $responseResultItem->toAmount : "";
 
-                    $result[] = Array(
-                        "campaignCode" => $campaignCode,
-                        "description" => $description,
-                        "paymentPlanType" => $paymentplantype,
-                        "contractLengthInMonths" => $contractlength,
-                        "monthlyAnnuityFactor" => $monthlyannuityfactor,
-                        "initialFee" => $initialfee,
-                        "notificationFee" => $notificationfee,
-                        "interestRatePercent" => $interestratepercentage,
+                    $result[] = array(
+                        "campaignCode"               => $campaignCode,
+                        "description"                => $description,
+                        "paymentPlanType"            => $paymentplantype,
+                        "contractLengthInMonths"     => $contractlength,
+                        "monthlyAnnuityFactor"       => $monthlyannuityfactor,
+                        "initialFee"                 => $initialfee,
+                        "notificationFee"            => $notificationfee,
+                        "interestRatePercent"        => $interestratepercentage,
                         "numberOfInterestFreeMonths" => $interestfreemonths,
-                        "numberOfPaymentFreeMonths" => $paymentfreemonths,
-                        "fromAmount" => $fromamount,
-                        "toAmount" => $toamount
+                        "numberOfPaymentFreeMonths"  => $paymentfreemonths,
+                        "fromAmount"                 => $fromamount,
+                        "toAmount"                   => $toamount
                     );
                 } catch (Exception $e) {
                     $this->log->write($e->getMessage());
@@ -382,13 +376,15 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
         $this->setVersionStrings();
 
         $this->load->model('setting/setting');
+
         $this->model_setting_setting->editSetting($this->paymentString . 'svea_partpayment', array($this->paymentString . 'svea_partpayment_status' => 1));
+
         if (VERSION < 3.0) {
-            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == NULL) {
+            if ($this->model_extension_event->getEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history") == null) {
                 $this->model_extension_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
             }
         } else {
-            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == NULL) {
+            if ($this->model_setting_event->getEventByCode($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString) == null) {
                 $this->model_setting_event->addEvent($this->moduleString . "sco_add_history_order_from_admin" . $this->appendString, "catalog/controller/api/order/history/before", "extension/svea/order/history");
             }
         }
@@ -403,8 +399,7 @@ class ControllerExtensionPaymentSveapartpayment extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->userTokenString = "";
             $this->linkString = "extension/extension";
             $this->paymentString = "";

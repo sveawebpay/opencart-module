@@ -9,8 +9,7 @@ class ControllerExtensionSveaCart extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->paymentString = "";
             $this->moduleString = "";
             $this->extensionString = "extension/extension";
@@ -30,30 +29,28 @@ class ControllerExtensionSveaCart extends Controller
         $data['text_change_cart'] = $this->language->get('text_change_cart');
         $data['heading_cart'] = $this->language->get('heading_cart');
 
-        // PRODUCTS
+        // Products
         $data['products'] = array();
 
         foreach ($products as $product) {
-
             $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
             $product['price'] = $product['price'];
 
             $data['products'][] = array(
                 'product_id' => $product['product_id'],
-                'model' => $product['model'],
-                'name' => $product['name'],
-                'quantity' => $product['quantity'],
-                'price' => $product['price'],
-                'option' => $product['option'],
+                'model'      => $product['model'],
+                'name'       => $product['name'],
+                'quantity'   => $product['quantity'],
+                'price'      => $product['price'],
+                'option'     => $product['option'],
             );
         }
 
-        // VOUCHERS
+        // Vouchers
         $data['vouchers'] = array();
 
         if (!empty($this->session->data['vouchers'])) {
             foreach ($this->session->data['vouchers'] as $key => $voucher) {
-
                 $voucher['amount'] = $this->currency->format($voucher['amount'], $this->session->data['currency']);
 
                 $data['vouchers'][] = array(
@@ -64,7 +61,7 @@ class ControllerExtensionSveaCart extends Controller
             }
         }
 
-        // TOTALS
+        // Totals
         $this->load->model($this->extensionString);
 
         $totals = array();
@@ -73,18 +70,16 @@ class ControllerExtensionSveaCart extends Controller
 
         $total_data = array(
             'totals' => &$totals,
-            'taxes' => &$taxes,
-            'total' => &$total
+            'taxes'  => &$taxes,
+            'total'  => &$total
         );
 
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $results = $this->model_extension_extension->getExtensions('total');
-        }
-        else
-        {
+        } else {
             $results = $this->model_setting_extension->getExtensions('total');
         }
+
         $sort_order = array();
 
         foreach ($results as $key => $value) {
@@ -114,7 +109,7 @@ class ControllerExtensionSveaCart extends Controller
             $total['value'] = $this->currency->format($total['value'], $this->session->data['currency']);
             $data['totals'][] = array(
                 'title' => $total['title'],
-                'text' => $total['value']
+                'text'  => $total['value']
             );
         }
 
@@ -125,5 +120,4 @@ class ControllerExtensionSveaCart extends Controller
     {
         return str_replace($this->language->get('decimal_point') . '00', '', $price);
     }
-
 }

@@ -11,8 +11,7 @@ class ModelExtensionSveaEvents extends Model
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->userTokenString = "";
             $this->linkString = "extension/extension";
             $this->paymentString = "";
@@ -36,20 +35,17 @@ class ModelExtensionSveaEvents extends Model
                 $payment_code = $payment_method['code'];
                 if (strpos($payment_code, $this->paymentString . 'svea') !== false) {
                     $svea_active_payments_count++;
-                } else if ($payment_code === 'sco') {
+                } elseif ($payment_code === 'sco') {
                     $module_sco_active = true;
                 }
             }
         }
 
         if ($svea_active_payments_count === 0 && $module_sco_active === false) {
-            if (VERSION < 3.0)
-            {
+            if (VERSION < 3.0) {
                 $this->model_extension_event->deleteEvent($this->paymentString . 'sco_edit_order_from_admin' . $this->appendString);
                 $this->model_extension_event->deleteEvent($this->paymentString . 'sco_add_history_order_from_admin'. $this->appendString);
-            }
-            else
-            {
+            } else {
                 $this->model_setting_event->deleteEvent($this->paymentString . 'sco_edit_order_from_admin' . $this->appendString);
                 $this->model_setting_event->deleteEvent($this->paymentString . 'sco_add_history_order_from_admin' . $this->appendString);
             }
@@ -59,16 +55,15 @@ class ModelExtensionSveaEvents extends Model
     public function addSveaCustomEvent($code, $trigger, $action)
     {
         $this->setVersionStrings();
+
         $this->load->model($this->eventString);
+
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "event WHERE `code` = '" . $this->db->escape($code) . "'");
 
         if (count($query->rows) === 0) {
-            if(VERSION < 3.0)
-            {
+            if (VERSION < 3.0) {
                 $this->model_extension_event->addEvent($code, $trigger, $action);
-            }
-            else
-            {
+            } else {
                 $this->model_setting_event->addEvent($code, $trigger, $action);
             }
         }

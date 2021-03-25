@@ -13,8 +13,7 @@ class ControllerExtensionTotalSveaFee extends Controller
 
     public function setVersionStrings()
     {
-        if(VERSION < 3.0)
-        {
+        if (VERSION < 3.0) {
             $this->userTokenString = "";
             $this->extensionString = "extension/extension";
             $this->totalString = "";
@@ -28,14 +27,14 @@ class ControllerExtensionTotalSveaFee extends Controller
         $this->load->language('extension/payment/svea_shared');
 
         $this->setVersionStrings();
-        
+
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
 
-            // if fee enabled in any country, set it as enabled in the order_total listing
+            // If fee enabled in any country, set it as enabled in the order_total listing
             $total_svea_fee_status = ($this->request->post[$this->totalString . 'svea_fee_status_SE'] ||
                 $this->request->post[$this->totalString . 'svea_fee_status_NO'] ||
                 $this->request->post[$this->totalString . 'svea_fee_status_DK'] ||
@@ -43,35 +42,35 @@ class ControllerExtensionTotalSveaFee extends Controller
                 $this->request->post[$this->totalString . 'svea_fee_status_NL'] ||
                 $this->request->post[$this->totalString . 'svea_fee_status_DE'])
                 ? true : false;
-            // stores config settings to db
+
             $this->model_setting_setting->editSetting($this->totalString . 'svea_fee', array_merge($this->request->post, array($this->totalString . 'svea_fee_status' => $total_svea_fee_status)));
             $this->session->data['success'] = $this->language->get('text_success');
             $this->response->redirect($this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', 'SSL'));
         }
 
-        $data['heading_title'] = $this->language->get('heading_title');
+        $data['heading_title']      = $this->language->get('heading_title');
 
         $data['entry_version_text'] = $this->language->get('entry_version_text');
-        $data['entry_version'] = $this->language->get('entry_version');
+        $data['entry_version']      = $this->language->get('entry_version');
         $data['entry_version_info'] = $this->language->get('entry_version_info');
-        $data['entry_module_repo'] = $this->language->get('entry_module_repo');
+        $data['entry_module_repo']  = $this->language->get('entry_module_repo');
 
-        $data['text_enabled'] = $this->language->get('text_enabled');
-        $data['text_disabled'] = $this->language->get('text_disabled');
-        $data['text_none'] = $this->language->get('text_none');
+        $data['text_enabled']       = $this->language->get('text_enabled');
+        $data['text_disabled']      = $this->language->get('text_disabled');
+        $data['text_none']          = $this->language->get('text_none');
 
-        $data['button_save'] = $this->language->get('button_save');
-        $data['button_cancel'] = $this->language->get('button_cancel');
-        $data['tab_general'] = $this->language->get('tab_general');
-        $data['version'] = floatval(VERSION);
+        $data['button_save']        = $this->language->get('button_save');
+        $data['button_cancel']      = $this->language->get('button_cancel');
+        $data['tab_general']        = $this->language->get('tab_general');
+        $data['version']            = floatval(VERSION);
 
-        // localisation of our config settings names
-        $data['entry_fee'] = $this->language->get('entry_fee');
-        $data['entry_tax_class'] = $this->language->get('entry_tax_class');
-        $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        // Localisation of our config settings names
+        $data['entry_fee']          = $this->language->get('entry_fee');
+        $data['entry_tax_class']    = $this->language->get('entry_tax_class');
+        $data['entry_status']       = $this->language->get('entry_status');
+        $data['entry_sort_order']   = $this->language->get('entry_sort_order');
 
-        // create & fill array of config credentials for each country
+        // Create & fill array of config credentials for each country
         $cred = array();
 
         $cred[] = array(
@@ -82,6 +81,7 @@ class ControllerExtensionTotalSveaFee extends Controller
             $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_SE'),
             $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_SE')
         );
+
         $cred[] = array(
             "lang" => "NO",
             $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_NO'),
@@ -89,6 +89,7 @@ class ControllerExtensionTotalSveaFee extends Controller
             $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_NO'),
             $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_NO')
         );
+
         $cred[] = array(
             "lang" => "FI",
             $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_FI'),
@@ -96,6 +97,7 @@ class ControllerExtensionTotalSveaFee extends Controller
             $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_FI'),
             $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_FI')
         );
+
         $cred[] = array(
             "lang" => "DK",
             $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_DK'),
@@ -110,6 +112,7 @@ class ControllerExtensionTotalSveaFee extends Controller
             $this->totalString . 'svea_fee_status' => $this->config->get($this->totalString . 'svea_fee_status_NL'),
             $this->totalString . 'svea_fee_sort_order' => $this->config->get($this->totalString . 'svea_fee_sort_order_NL')
         );
+
         $cred[] = array(
             "lang" => "DE",
             $this->totalString . 'svea_fee_fee' => $this->config->get($this->totalString . 'svea_fee_fee_DE'),
@@ -149,7 +152,6 @@ class ControllerExtensionTotalSveaFee extends Controller
         // actions urls for the save/cancel buttons
         $data['action'] = $this->url->link('extension/total/svea_fee', $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'], true);
         $data['cancel'] = $this->url->link($this->linkString, $this->userTokenString . 'token=' . $this->session->data[$this->userTokenString . 'token'] . '&type=total', true);
-
 
         $this->load->model('localisation/tax_class');
 
@@ -195,14 +197,13 @@ class ControllerExtensionTotalSveaFee extends Controller
                 There is a new version available.<br />
                 <a href="' . $docs_url . '" title="Go to release notes on github">View version details</a> or <br />
                 <a title="Download zip" href="' . $update_url . '"><img width="67" src="view/image/download.png"></a>';
-
         }
-
     }
 
     protected function getModuleVersion()
     {
         $jsonData = json_decode(file_get_contents(DIR_APPLICATION . '../svea/version.json'), true);
+
         return $jsonData['version'];
     }
 }

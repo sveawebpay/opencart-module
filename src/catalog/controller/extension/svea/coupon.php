@@ -8,7 +8,7 @@ class ControllerExtensionSveaCoupon extends Controller
 
         $data['text_coupon_code'] = $this->language->get('text_coupon_code');
         $data['item_coupon'] = $this->language->get('item_coupon');
-        $data['coupon'] = NULL;
+        $data['coupon'] = null;
 
         if ((isset($this->session->data['coupon'])) && (!empty($this->session->data['coupon']))) {
             $this->load->model('extension/total/coupon');
@@ -22,7 +22,7 @@ class ControllerExtensionSveaCoupon extends Controller
     {
         $json = array();
 
-        $this->session->data['coupon'] = NULL;
+        $this->session->data['coupon'] = null;
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -35,7 +35,7 @@ class ControllerExtensionSveaCoupon extends Controller
         $this->load->language('extension/svea/checkout');
         $this->load->model('extension/total/coupon');
 
-        $coupon = (isset($this->request->post['coupon'])) ? trim($this->request->post['coupon']) : NULL;
+        $coupon = (isset($this->request->post['coupon'])) ? trim($this->request->post['coupon']) : null;
         $result = $this->model_extension_total_coupon->getCoupon($coupon);
 
         if (empty($coupon)) {

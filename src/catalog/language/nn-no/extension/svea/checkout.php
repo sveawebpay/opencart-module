@@ -46,6 +46,7 @@ $_['text_newsletter']				= 'Vil du registrere deg for gjøre motta nyhetsbrev?';
 $_['text_thank_you']				= 'Takk for din ordre. Vi håper du blir fornyd med ditt nye kjøp. Har du noen spørsmål om din ordre, vennligst ta kontakt. Den letteste måten er å kontakte oss via e-post <a href="mailto:%s">%s</a>';
 $_['text_pay_now']					= 'Du kan enkelt endre betalingsmetode på denne siden, hvis du foretrekker å betale med kort eller delbetaling.';
 
+$_['text_test_mode']			    = 'Du kjører nå Svea Checkout i testmodus!';
 $_['text_payment_method']			= 'Svea Checkout';
 $_['text_override_subtotal']		= 'Delsum';
 $_['text_override_shipping']		= 'Frakt';
