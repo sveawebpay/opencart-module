@@ -252,7 +252,7 @@ class SveaCommon extends Controller
         }
 
         // Remove order totals that won't be added as rows to createOrder
-        $ignoredTotals = 'sub_total, total, taxes, tax';
+        $ignoredTotals = 'total_without_tax, sub_total, total, taxes, tax';
         $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
 
         foreach ($total_data['totals'] as $key => $orderTotal) {
