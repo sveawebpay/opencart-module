@@ -8,7 +8,7 @@ $_['entry_postcode']				= 'Postkod';
 $_['entry_new_password']			= 'Ange ditt nya lösenord';
 
 $_['heading_order']					= 'Beställningsdetaljer';
-$_['heading_shipping']				= 'Frakt';
+$_['heading_shipping']				= 'Beräkna frakt – vänligen ange ert postnummer';
 $_['heading_misc']					= 'Övrigt';
 $_['heading_cart']					= 'Varukorg';
 $_['heading_payment']				= 'Betalning';
