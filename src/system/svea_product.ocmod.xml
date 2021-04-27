@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
-	<code>SveaWebPay.product-price</code>
-	<name>SveaWebPay Product Price</name>
+	<code>svea.product-price</code>
+	<name>Svea Product Price</name>
 	<version>4.5.2</version>
 	<author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
 	<link>https://github.com/sveawebpay/opencart-module</link>
