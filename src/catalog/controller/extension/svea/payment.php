@@ -225,16 +225,11 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $checkout_order_entry
             ->setCountryCode($this->session->data[$this->moduleString . 'sco_country'])// customer country, we recommend basing this on the customer billing address
             ->setCurrency($this->session->data[$this->moduleString . 'sco_currency'])
-            ->setCheckoutUri($this->convertOCUrlToUri($this->url->link('extension/svea/checkout')))
-            ->setConfirmationUri($this->convertOCUrlToUri($this->url->link('extension/svea/success', '&order_id=' . $order_id . '&hash=' . hash('sha512', $order_id . $_COOKIE['OCSESSID']))))
-            ->setPushUri($this->convertOCUrlToUri($this->url->link('extension/svea/push', array($this->paymentString . 'svea_order' => '{checkout.order.uri}'))))
-            ->setTermsUri($this->convertOCUrlToUri($terms_uri))
+            ->setCheckoutUri($this->url->link('extension/svea/checkout'))
+            ->setConfirmationUri($this->url->link('extension/svea/success' . '&order_id=' . $order_id . '&hash=' . hash('sha512', $order_id . $_COOKIE['OCSESSID'])))
+            ->setPushUri(str_replace('&amp;', '&', urldecode($this->url->link('extension/svea/push', array($this->paymentString . 'svea_order' => '{checkout.order.uri}')))))
+            ->setTermsUri(str_replace('&amp;', '&', (urldecode($terms_uri))))
             ->setLocale($this->session->data[$this->moduleString . 'sco_locale']);
-    }
-    
-    protected function convertOCUrlToUri($url)
-    {
-        return str_replace('&amp;', '&', urldecode($url)); // in std OC html_entity_decode is used in such cases
     }
 
     private function addOrder($order_id, $email)

@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
-	<code>svea.checkout-product-price</code>
-	<name>Svea Checkout Product Price</name>
-	<version>4.5.2</version>
-	<author>Fredrik Sundell / Svea Ekonomi AB, Svea WebPay</author>
-	<link>https://github.com/sveawebpay/opencart-module</link>
-	
-	<file path="catalog/controller/product/product.php">
+    <id>Svea Checkout Product Price</id>
+    <version>4.5.2</version>
+    <vqmver>2.6.3</vqmver>
+    <author>Fredrik Sundell / Svea Ekonomi AB, Svea WebPay</author>
+    <file name="catalog/controller/product/product.php">
         <operation name="svea controller load data to view">
-            <search><![CDATA[
-				$data['options'] = array();
-			]]></search>
-            <add position="before"><![CDATA[
+            <search position="before"><![CDATA[  $data['options'] = array(); ]]></search>
+            <add><![CDATA[
 
                     $userTokenString = "user_";
                     $linkString = "marketplace/extension";
@@ -81,77 +77,71 @@
                     }
 
                     }
-			]]></add>
+       ]]></add>
         </operation>
-        <operation path="sco controller helper functions">
-            <search><![CDATA[
-				public function write() {
-			]]></search>
-            <add position="before"><![CDATA[
-				public function getCheckoutCountry()
-				{
-					$moduleString = "module_";
+        <operation name="sco controller helper functions">
+            <search position="before"><![CDATA[  public function write() { ]]></search>
+            <add><![CDATA[
+                    public function getCheckoutCountry()
+                    {
+                        $moduleString = "module_";
 
-					if(VERSION < 3.0)
-					{
-						$moduleString = "";
-					}
+                        if(VERSION < 3.0)
+                        {
+                            $moduleString = "";
+                        }
 
-					if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "sv-se")
-					{
-						return 203;
-					}
-					else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "nn-no")
-					{
-						return 160;
-					}
-					else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "fi-fi")
-					{
-						return 72;
-					}
-					else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "da-dk")
-					{
-						return 57;
-					}
-					else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "de-de")
-					{
-						return 81;
-					}
-					else
-					{
-						return $this->config->get($moduleString . 'sco_checkout_default_country_id');
-					}
-				}
-			]]></add>
+                        if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "sv-se")
+                        {
+                            return 203;
+                        }
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "nn-no")
+                        {
+                            return 160;
+                        }
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "fi-fi")
+                        {
+                            return 72;
+                        }
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "da-dk")
+                        {
+                            return 57;
+                        }
+                        else if(isset($this->request->cookie['language']) && $this->request->cookie['language'] == "de-de")
+                        {
+                            return 81;
+                        }
+                        else
+                        {
+                            return $this->config->get($moduleString . 'sco_checkout_default_country_id');
+                        }
+                    }
+       ]]></add>
         </operation>
     </file>
-    <file path="catalog/view/theme/*/template/product/product.twig" error="skip">
+    <file name="catalog/view/theme/*/template/product/product.twig">
         <!--inserted between cart and review divs in product.twig -->
         <operation name="sco widget for OC 3.0+">
-            <search><![CDATA[
-				<div id="product"
-			]]> </search>
-            <add position="before"><![CDATA[
-				{% if scoShowWidget is defined and scoShowWidget == 1 %}
-				{{ sco_svea_widget }}
-				{% endif %}
+            <search position="before">
+                <![CDATA[  <div id="product">  ]]> </search>
+            <add><![CDATA[
+            {% if scoShowWidget is defined and scoShowWidget == 1 %}
+            {{ sco_svea_widget }}
+            {% endif %}
             ]]></add>
         </operation>
     </file>
-    <file path="catalog/view/theme/*/template/product/product.tpl" error="skip">
+    <file name="catalog/view/theme/*/template/product/product.tpl">
         <!--inserted between cart and review divs in product.tpl -->
         <operation name="sco widget for OC 2.3-">
-            <search><![CDATA[
-				<div id="product"
-			]]></search>
-            <add position="before"><![CDATA[
-				<?php if($scoShowWidget)
-				{
-					echo $sco_svea_widget;
-				}
-				?>
-			]]></add>
+            <search position="before">
+                <![CDATA[  <div id="product">  ]]> </search>
+            <add><![CDATA[
+            <?php if($scoShowWidget)
+            {
+                echo $sco_svea_widget;
+            }
+            ?>]]></add>
         </operation>
     </file>
-	
 </modification>

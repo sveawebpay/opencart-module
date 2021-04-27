@@ -35,20 +35,9 @@ class ControllerExtensionSveaCart extends Controller
         foreach ($products as $product) {
             $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
             $product['price'] = $product['price'];
-            
-            if ($product['image']) {
-                if (VERSION < 3.0) {
-                    $image = $this->model_tool_image->resize($product['image'], $this->config->get($this->config->get('config_theme') . '_image_cart_width'), $this->config->get($this->config->get('config_theme') . '_image_cart_height'));
-                } else {
-                    $image = $this->model_tool_image->resize($product['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
-                }
-            } else {
-                $image = '';
-            }
 
             $data['products'][] = array(
                 'product_id' => $product['product_id'],
-                'thumb'      => $image,    
                 'model'      => $product['model'],
                 'name'       => $product['name'],
                 'quantity'   => $product['quantity'],
