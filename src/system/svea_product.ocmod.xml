@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
-    <id>SveaWebPay Product Price</id>
-    <version>4.5.2</version>
-    <vqmver>2.6.3</vqmver>
-    <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
-    <file name="catalog/controller/product/product.php">
+	<code>SveaWebPay.product-price</code>
+	<name>SveaWebPay Product Price</name>
+	<version>4.5.2</version>
+	<author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
+	<link>https://github.com/sveawebpay/opencart-module</link>
+	
+	<file path="catalog/controller/product/product.php">
         <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
         <operation name="svea controller load data to view">
-            <search position="before"><![CDATA[  $data['options'] = array(); ]]></search>
-            <add><![CDATA[
+            <search><![CDATA[
+				$data['options'] = array();
+			]]></search>
+            <add position="before"><![CDATA[
 
                     $paymentString = "payment_";
                     if(VERSION < 3.0)
@@ -24,7 +28,7 @@
                     $svea_country = $this->model_localisation_country->getCountry($this->config->get('config_country_id'));
                     $svea_show_paymentplan = $this->model_extension_payment_svea_partpayment->getProductPriceMode();
 
-                    $calculate_price = isset($product_info['special']) ? $product_info['special'] : $product_info['price'];
+                    $calculate_price = !empty($product_info['special']) ? $product_info['special'] : $product_info['price'];
                     if ($svea_show_paymentplan === '1' && $svea_country['iso_code_2'] != "DE") {
                         $currency_decimals = $this->session->data['currency'] == 'EUR' ? 1 : 0;
                         $prices = array();
@@ -72,65 +76,70 @@
        ]]></add>
         </operation>
         <!--inserted somewhere as their own functions in controller product.php -->
-        <operation name="svea controller helper functions">
-            <search position="before"><![CDATA[  public function write() { ]]></search>
-            <add><![CDATA[
-                    /**
-                     * svea helper function
-                     */
-                    private function sveaPaymentPlanParamsHelper($price,$params){
-                        $values = array();
-                                if (!empty($params)) {
-                        foreach ($params as $key => $value) {
-                              if ($price >= $value['fromAmount'] && $price <= $value['toAmount']) {
-                                $pair = array();
-                                $pair['pricePerMonth'] = ($value['initialFee'] + (ceil($price * $value['monthlyAnnuityFactor']) + $value['notificationFee']) * $value['contractLengthInMonths']) / $value['contractLengthInMonths'];
+        <operation path="svea controller helper functions">
+            <search><![CDATA[
+				public function write() {
+			]]></search>
+            <add position="before"><![CDATA[
+				/**
+				 * svea helper function
+				 */
+				private function sveaPaymentPlanParamsHelper($price,$params){
+					$values = array();
+							if (!empty($params)) {
+					foreach ($params as $key => $value) {
+						  if ($price >= $value['fromAmount'] && $price <= $value['toAmount']) {
+							$pair = array();
+							$pair['pricePerMonth'] = ($value['initialFee'] + (ceil($price * $value['monthlyAnnuityFactor']) + $value['notificationFee']) * $value['contractLengthInMonths']) / $value['contractLengthInMonths'];
 
-                                foreach ($value as $key => $val) {
-                                    if ($key == 'campaignCode') {
-                                        $pair[$key] = $val;
-                                    }
+							foreach ($value as $key => $val) {
+								if ($key == 'campaignCode') {
+									$pair[$key] = $val;
+								}
 
-                                if($key == 'description'){
-                                    $pair[$key] = $val;
-                                }
+							if($key == 'description'){
+								$pair[$key] = $val;
+							}
 
-                                if($key == 'paymentPlanType')
-                                    $pair[$key] = $val;
-                                }
-                                array_push($values, $pair);
-                              }
+							if($key == 'paymentPlanType')
+								$pair[$key] = $val;
+							}
+							array_push($values, $pair);
+						  }
 
-                            }
-                        }
-                    return $values;
-                    }
-       ]]></add>
+						}
+					}
+					return $values;
+				}
+			]]></add>
         </operation>
     </file>
-    <file name="catalog/view/theme/*/template/product/product.tpl">
+    <file path="catalog/view/theme/*/template/product/product.tpl" error="skip">
         <!--inserted between cart and review divs in product.tpl -->
         <operation name="wp widget for OC 2.3-">
-            <search position="before">
-                <![CDATA[  <div id="product">  ]]> </search>
-            <add><![CDATA[
-                        <?php
+            <search><![CDATA[
+				<div id="product"
+			]]> </search>
+            <add position="before"><![CDATA[
+                <?php
                     if (isset($svea_widget)) {
                     echo $svea_widget;
-                    } ?>
+                } ?>
 
             ]]></add>
         </operation>
     </file>
-    <file name="catalog/view/theme/*/template/product/product.twig">
+    <file path="catalog/view/theme/*/template/product/product.twig" error="skip">
         <operation name="wp widget for OC 3.0+">
-            <search position="before">
-                <![CDATA[  <div id="product">  ]]> </search>
-            <add><![CDATA[
-            {% if payment_svea_widget is defined %}
-            {{ payment_svea_widget }}
-            {% endif %}
+            <search><![CDATA[
+				<div id="product"
+			]]> </search>
+            <add position="before"><![CDATA[
+				{% if payment_svea_widget is defined %}
+					{{ payment_svea_widget }}
+				{% endif %}
             ]]></add>
         </operation>
     </file>
+	
 </modification>
