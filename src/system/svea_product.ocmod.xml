@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <code>svea.product-price</code>
+    <name>Svea Product Price</name>
+    <version>4.5.2</version>
+    <author>Anneli Halld'n, Kristian Grossman-Madsen / Svea Ekonomi AB, SveaWebPay</author>
+    <link>https://github.com/sveawebpay/opencart-module</link>
+    
+    <file path="catalog/controller/product/product.php">
+        <!--inserted after line 319 where $data['price'] is being set in controller product.php -->
+        <operation name="svea controller load data to view">
+            <search><![CDATA[
+                $data['options'] = array();
+            ]]></search>
+            <add position="before"><![CDATA[
+
+                $paymentString = "payment_";
+                if(VERSION < 3.0)
+                {
+                    $paymentString = "";
+                }
+                
+                $data[$paymentString . 'svea_widget'] = $this->load->controller('extension/svea/widget_product_price', $product_info);
+                
+            ]]></add>
+        </operation>
+       
+    </file>
+    <file path="catalog/view/theme/*/template/product/product.tpl" error="skip">
+        <!--inserted between cart and review divs in product.tpl -->
+        <operation name="wp widget for OC 2.3-">
+            <search><![CDATA[
+                <div id="product"
+            ]]> </search>
+            <add position="before"><![CDATA[
+                <?php
+                    if (isset($svea_widget)) {
+                    echo $svea_widget;
+                } ?>
+
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/product.twig" error="skip">
+        <operation name="wp widget for OC 3.0+">
+            <search><![CDATA[
+                <div id="product"
+            ]]> </search>
+            <add position="before"><![CDATA[
+                {% if payment_svea_widget is defined %}
+                    {{ payment_svea_widget }}
+                {% endif %}
+            ]]></add>
+        </operation>
+    </file>
+    
+</modification>
