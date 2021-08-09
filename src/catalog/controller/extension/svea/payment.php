@@ -87,7 +87,11 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $order_id = hash('crc32', HTTPS_SERVER) . $order_id;
         }
 
-        $currency = strtoupper($this->session->data[$this->moduleString . 'sco_currency']);
+        if ($this->config->get($this->moduleString . 'sco_currency')) {
+            $currency = strtoupper($this->session->data[$this->moduleString . 'sco_currency']);
+        } else {
+            $currency = strtoupper($this->session->data['currency']);
+        }
 
         $this->load->model('localisation/currency');
 
@@ -222,14 +226,48 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $terms_uri =  $this->createUrl($config_terms_uri, $config_terms_uri_secured);
         }
 
+        if ($this->config->get($this->moduleString . 'sco_currency')) {
+            $currency = strtoupper($this->session->data[$this->moduleString . 'sco_currency']);
+        } else {
+            $currency = strtoupper($this->session->data['currency']);
+        }
+
+        if ($this->config->get($this->moduleString . 'sco_locale')) {
+            $locale = strtoupper($this->session->data[$this->moduleString . 'sco_locale']);
+        } else {
+            $locale = strtoupper($this->session->data['language']);
+        }
+
+        $country_id = $this->config->get('config_country_id');
+
+        if ($this->customer->isLogged()) {
+            $this->load->model('account/address');
+
+            $address = $this->model_account_address->getAddress($this->customer->getAddressId());
+
+            if (!empty($address['country_id'])) {
+                $country_id = $address['country_id'];
+            }
+        }
+
+        $this->load->model('localisation/country');
+
+        $country = $this->model_localisation_country->getCountry($country_id);
+
+        if (!empty($country['iso_code_2'])) {
+            $country_code = $country['iso_code_2'];
+        } else {
+            $country_code = 'SE';
+        }
+
         $checkout_order_entry
-            ->setCountryCode($this->session->data[$this->moduleString . 'sco_country'])// customer country, we recommend basing this on the customer billing address
-            ->setCurrency($this->session->data[$this->moduleString . 'sco_currency'])
+            ->setCountryCode($country_code) // customer country, we recommend basing this on the customer billing address
+            ->setCurrency($currency)
             ->setCheckoutUri($this->url->link('extension/svea/checkout'))
             ->setConfirmationUri($this->url->link('extension/svea/success' . '&order_id=' . $order_id . '&hash=' . hash('sha512', $order_id . $_COOKIE['OCSESSID'])))
             ->setPushUri(str_replace('&amp;', '&', urldecode($this->url->link('extension/svea/push', array($this->paymentString . 'svea_order' => '{checkout.order.uri}')))))
             ->setTermsUri(str_replace('&amp;', '&', (urldecode($terms_uri))))
-            ->setLocale($this->session->data[$this->moduleString . 'sco_locale']);
+            ->setLocale($locale);
     }
 
     private function addOrder($order_id, $email)
@@ -263,7 +301,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $email 				= $customer_info['email'];
             $telephone 			= $customer_info['telephone'];
             $fax 				= $customer_info['fax'];
-            $custom_field 		= unserialize($customer_info['custom_field']);
+            $custom_field 		= !empty($customer_info['custom_field']) ? json_decode($customer_info['custom_field'], true) : null;
         }
 
         $sort_order	= array();
