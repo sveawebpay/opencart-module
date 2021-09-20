@@ -531,11 +531,15 @@ class ModelExtensionSveaCheckout extends Model
                         foreach ($totals->rows as $total) {
                             if ($total['code'] == 'tax') {
                                 $this->load->language('extension/module/sco');
+
+                                $invoice_fee_name = !empty($order_row['name']) ? $order_row['name'] : $this->language->get('sco_invoice_fee');
                                 $total['value'] = $total['value'] + $order_row['unitprice'] - ($order_row['unitprice'] / ((100 + $order_row['vatpercent']) / 100));
+
                                 $this->db->query("UPDATE " . DB_PREFIX . "order_total SET value = '" . (float)$total['value'] . "' WHERE " . "order_total_id = " . (int)$total['order_total_id']); // Update tax
-                                $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int)$data['clientordernumber'] . "', code = '" . $this->db->escape("sco_invoice_fee") . "', title = '" . $this->db->escape($data['name']) . "', `value` = '" . ($order_row['unitprice'] / ((100 + $order_row['vatpercent']) / 100)) . "', sort_order = '" . (int)($total['sort_order'] - 1) . "'");
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int)$data['clientordernumber'] . "', code = '" . $this->db->escape("sco_invoice_fee") . "', title = '" . $this->db->escape($invoice_fee_name) . "', `value` = '" . ($order_row['unitprice'] / ((100 + $order_row['vatpercent']) / 100)) . "', sort_order = '" . (int)($total['sort_order'] - 1) . "'");
                             } elseif ($total['code'] == 'total') {
                                 $total['value'] = $total['value'] + $order_row['unitprice'];
+
                                 $this->db->query("UPDATE " . DB_PREFIX . "order_total SET value = '" . (float)$total['value'] . "' WHERE " . "order_total_id = " . (int)$total['order_total_id']);
                                 $this->db->query("UPDATE " . DB_PREFIX . "order SET total = '" . (float)$total['value'] . "' WHERE " . "order_id = " . (int)$data['clientordernumber']);
                                 return true;
@@ -573,7 +577,6 @@ class ModelExtensionSveaCheckout extends Model
             LIMIT 1
         ");
     }
-
 
     public function getCustomersByEmail($email)
     {

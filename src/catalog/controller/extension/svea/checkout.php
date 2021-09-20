@@ -17,26 +17,34 @@ class ControllerExtensionSveaCheckout extends Controller
     {
         $this->setVersionStrings();
 
-        if ($country == 203) {
-            $this->session->data[$this->moduleString . 'sco_locale'] = "sv-se";
-            $this->session->data[$this->moduleString . 'sco_currency'] = "SEK";
-            $this->session->data['currency'] = 'SEK';
-        } elseif ($country == 160) {
-            $this->session->data[$this->moduleString . 'sco_locale'] = "nn-no";
-            $this->session->data[$this->moduleString . 'sco_currency'] = "NOK";
-            $this->session->data['currency'] = 'NOK';
-        } elseif ($country == 72) {
-            $this->session->data[$this->moduleString . 'sco_locale'] = "fi-fi";
-            $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
-            $this->session->data['currency'] = 'EUR';
-        } elseif ($country == 57) {
-            $this->session->data[$this->moduleString . 'sco_locale'] = "da-dk";
-            $this->session->data[$this->moduleString . 'sco_currency'] = "DKK";
-            $this->session->data['currency'] = 'DKK';
-        } elseif ($country == 81) {
-            $this->session->data[$this->moduleString . 'sco_locale'] = "de-de";
-            $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
-            $this->session->data['currency'] = 'EUR';
+        $country = in_array($country, [203, 160, 72, 57, 81]) ? $country : 203;
+
+        switch ($country) {
+            case 160:
+                $this->session->data[$this->moduleString . 'sco_locale'] = "nn-no";
+                $this->session->data[$this->moduleString . 'sco_currency'] = "NOK";
+                $this->session->data['currency'] = 'NOK';
+                break;
+            case 72:
+                $this->session->data[$this->moduleString . 'sco_locale'] = "fi-fi";
+                $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
+                $this->session->data['currency'] = 'EUR';
+                break;
+            case 57:
+                $this->session->data[$this->moduleString . 'sco_locale'] = "da-dk";
+                $this->session->data[$this->moduleString . 'sco_currency'] = "DKK";
+                $this->session->data['currency'] = 'DKK';
+                break;
+            case 81:
+                $this->session->data[$this->moduleString . 'sco_locale'] = "de-de";
+                $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
+                $this->session->data['currency'] = 'EUR';
+                break;
+            default:
+                $this->session->data[$this->moduleString . 'sco_locale'] = "sv-se";
+                $this->session->data[$this->moduleString . 'sco_currency'] = "SEK";
+                $this->session->data['currency'] = 'SEK';
+                break;
         }
 
         $this->load->model('localisation/country');
@@ -51,18 +59,19 @@ class ControllerExtensionSveaCheckout extends Controller
     {
         $this->setVersionStrings();
 
-        if ($this->request->cookie['language'] == "sv-se") {
-            return 203;
-        } elseif ($this->request->cookie['language'] == "nn-no") {
-            return 160;
-        } elseif ($this->request->cookie['language'] == "fi-fi") {
-            return 72;
-        } elseif ($this->request->cookie['language'] == "da-dk") {
-            return 57;
-        } elseif ($this->request->cookie['language'] == "de-de") {
-            return 81;
-        } else {
-            return $this->config->get($this->moduleString . 'sco_checkout_default_country_id');
+        switch ($this->session->data['language']) {
+            case 'sv-se':
+                return 203;
+            case 'nn-no':
+                return 160;
+            case 'fi-fi':
+                return 72;
+            case 'da-dk':
+                return 57;
+            case 'de-de':
+                return 81;
+            default:
+                return $this->config->get($this->moduleString . 'sco_checkout_default_country_id');
         }
     }
 
