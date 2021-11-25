@@ -62,6 +62,7 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
     public function getCheckoutMerchantId($country = NULL)
     {
         $this->setVersionStrings();
+
         if(VERSION < 3.0)
         {
             if($this->config->config->get($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country)) !== NULL)
@@ -70,7 +71,12 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
             }
             else
             {
-                throw new Exception('Could not fetch Merchant Id. CountryCode: ' . $country . ' Environment: Stage');
+                $this->config->load->model('localisation/country');
+
+                $country_id = $this->config->config->get($this->moduleString . 'sco_checkout_default_country_id');
+                $country = $this->config->model_localisation_country->getCountry($country_id);
+
+                return $this->config->config->get($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country['iso_code_2']));
             }
         }
         else
@@ -82,7 +88,12 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
             }
             else
             {
-                throw new Exception('Could not fetch Merchant Id. CountryCode: ' . $country . ' Environment: Stage');
+                $this->config->load->model('localisation/country');
+
+                $country_id = $this->config->config->get($this->moduleString . 'sco_checkout_default_country_id');
+                $country = $this->config->model_localisation_country->getCountry($country_id);
+
+                return $this->config->config->get($this->moduleString . 'sco_checkout_test_merchant_id_' . strtolower($country['iso_code_2']));
             }
         }
     }
@@ -98,7 +109,12 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
             }
             else
             {
-                throw new Exception('Could not fetch secret word. CountryCode: ' . $country . ' Environment: Stage');
+                $this->config->load->model('localisation/country');
+
+                $country_id = $this->config->config->get($this->moduleString . 'sco_checkout_default_country_id');
+                $country = $this->config->model_localisation_country->getCountry($country_id);
+
+                return $this->config->config->get($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country['iso_code_2']));
             }
         }
         else
@@ -110,7 +126,12 @@ class OpencartSveaCheckoutConfigTest implements \Svea\WebPay\Config\Configuratio
             }
             else
             {
-                throw new Exception('Could not fetch secret word. CountryCode: ' . $country . ' Environment: Stage');
+                $this->config->load->model('localisation/country');
+
+                $country_id = $this->config->config->get($this->moduleString . 'sco_checkout_default_country_id');
+                $country = $this->config->model_localisation_country->getCountry($country_id);
+
+                return $this->config->config->get($this->moduleString . 'sco_checkout_test_secret_word_' . strtolower($country['iso_code_2']));
             }
         }
     }

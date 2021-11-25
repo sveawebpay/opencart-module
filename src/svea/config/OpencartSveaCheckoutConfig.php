@@ -94,7 +94,12 @@ class OpencartSveaCheckoutConfig implements \Svea\WebPay\Config\ConfigurationPro
             }
             else
             {
-                throw new Exception('Could not fetch secret word. CountryCode: ' . $countryCode . ' Environment: Prod');
+                $this->config->load->model('localisation/country');
+
+                $country_id = $this->config->config->get($this->moduleString . 'sco_checkout_default_country_id');
+                $country = $this->config->model_localisation_country->getCountry($country_id);
+
+                return $this->config->config->get($this->moduleString . 'sco_checkout_secret_word_' . strtolower($country['iso_code_2']));
             }
         }
         else
@@ -106,7 +111,12 @@ class OpencartSveaCheckoutConfig implements \Svea\WebPay\Config\ConfigurationPro
             }
             else
             {
-                throw new Exception('Could not fetch secret word. CountryCode: ' . $countryCode . ' Environment: Prod');
+                $this->config->load->model('localisation/country');
+
+                $country_id = $this->config->config->get($this->moduleString . 'sco_checkout_default_country_id');
+                $country = $this->config->model_localisation_country->getCountry($country_id);
+
+                return $this->config->config->get($this->moduleString . 'sco_checkout_secret_word_' . strtolower($country['iso_code_2']));
             }
         }
     }

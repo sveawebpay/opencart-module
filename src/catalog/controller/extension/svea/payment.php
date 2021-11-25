@@ -226,29 +226,32 @@ class ControllerExtensionSveaPayment extends SveaCommon
             $terms_uri =  $this->createUrl($config_terms_uri, $config_terms_uri_secured);
         }
 
-        if ($this->session->data[$this->moduleString . 'sco_currency']) {
-            $currency = strtoupper($this->session->data[$this->moduleString . 'sco_currency']);
+        if ($this->session->data['svea_checkout']['currency']) {
+            $currency = strtoupper($this->session->data['svea_checkout']['currency']);
         } else {
             $currency = strtoupper($this->session->data['currency']);
         }
 
-        if ($this->session->data[$this->moduleString . 'sco_locale']) {
-            $locale = strtolower($this->session->data[$this->moduleString . 'sco_locale']);
+        if ($this->session->data['svea_checkout']['locale']) {
+            $locale = strtolower($this->session->data['svea_checkout']['locale']);
         } else {
             $locale = strtolower($this->session->data['language']);
         }
 
-        if ($this->session->data[$this->moduleString . 'sco_country']) {
-            $country_code = strtoupper($this->session->data[$this->moduleString . 'sco_country']);
+        if ($this->session->data['svea_checkout']['country_code']) {
+            $country_code = strtoupper($this->session->data['svea_checkout']['country_code']);
         } else {
-            $country_code = 'SE';
+            $country_code = 'GB';
         }
+
+        $cookie_name = (session_name()) ? session_name() : 'OCSESSID';
+        $cookie = isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : null;
 
         $checkout_order_entry
             ->setCountryCode($country_code)
             ->setCurrency($currency)
             ->setCheckoutUri($this->url->link('extension/svea/checkout'))
-            ->setConfirmationUri($this->url->link('extension/svea/success' . '&order_id=' . $order_id . '&hash=' . hash('sha512', $order_id . $_COOKIE['OCSESSID'])))
+            ->setConfirmationUri($this->url->link('extension/svea/success' . '&order_id=' . $order_id . '&hash=' . hash('sha512', $order_id . $cookie)))
             ->setPushUri(str_replace('&amp;', '&', urldecode($this->url->link('extension/svea/push', array($this->paymentString . 'svea_order' => '{checkout.order.uri}')))))
             ->setTermsUri(str_replace('&amp;', '&', (urldecode($terms_uri))))
             ->setLocale($locale);
@@ -439,9 +442,9 @@ class ControllerExtensionSveaPayment extends SveaCommon
             'commission' 				=> isset($commission) 										? $commission 														: null,
             'marketing_id' 				=> isset($marketing_id) 									? $marketing_id 													: null,
             'tracking' 					=> isset($tracking) 										? $tracking 														: null,
-            'currency_id' 				=> isset($this->session->data[$this->moduleString . 'sco_currency']) 				? $this->currency->getId($this->session->data[$this->moduleString . 'sco_currency']) 		: '0',
-            'currency_code' 			=> isset($this->session->data[$this->moduleString . 'sco_currency']) 				? $this->session->data[$this->moduleString . 'sco_currency'] 								: 'SEK',
-            'currency_value' 			=> isset($this->session->data[$this->moduleString . 'sco_currency']) 				? $this->currency->getValue($this->session->data[$this->moduleString . 'sco_currency'])	: '0',
+            'currency_id' 				=> isset($this->session->data['svea_checkout']['currency']) ? $this->currency->getId($this->session->data['svea_checkout']['currency']) : '0',
+            'currency_code' 			=> isset($this->session->data['svea_checkout']['currency']) ? $this->session->data['svea_checkout']['currency'] : 'SEK',
+            'currency_value' 			=> isset($this->session->data['svea_checkout']['currency']) ? $this->currency->getValue($this->session->data['svea_checkout']['currency']) : '0',
             'ip' 						=> isset($this->request->server['REMOTE_ADDR']) 			? $this->request->server['REMOTE_ADDR'] 							: null,
             'forwarded_ip' 				=> isset($this->request->server['HTTP_X_FORWARDED_FOR']) 	? $this->request->server['HTTP_X_FORWARDED_FOR'] 					: null,
             'user_agent' 				=> isset($this->request->server['HTTP_USER_AGENT']) 		? $this->request->server['HTTP_USER_AGENT'] 						: null,
@@ -457,7 +460,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
 
         $order_id = $this->model_extension_svea_checkout->addOrder($order);
 
-        $locale = isset($this->session->data[$this->moduleString . 'sco_locale']) ? strtolower($this->session->data[$this->moduleString . 'sco_locale']) : 'sv-se';
+        $locale = isset($this->session->data['svea_checkout']['locale']) ? strtolower($this->session->data['svea_checkout']['locale']) : 'sv-se';
 
         $this->model_extension_svea_checkout->addCheckoutOrder($order_id, $locale);
 

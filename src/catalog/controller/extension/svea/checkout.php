@@ -13,66 +13,83 @@ class ControllerExtensionSveaCheckout extends Controller
         }
     }
 
-    private function setCheckoutCountry($country)
+    public function getDefaultCountry($country_id = null)
     {
-        $this->setVersionStrings();
-
-        $country = in_array($country, [203, 160, 72, 57, 81]) ? $country : 203;
-
-        switch ($country) {
+        switch ($country_id) {
+            case 203:
+                return [
+                    'country_code' => 'SE',
+                    'country_id'   => 203,
+                    'locale'       => 'sv-se',
+                    'currency'     => 'SEK',
+                ];
             case 160:
-                $this->session->data[$this->moduleString . 'sco_locale'] = "nn-no";
-                $this->session->data[$this->moduleString . 'sco_currency'] = "NOK";
-                $this->session->data['currency'] = 'NOK';
-                break;
+                return [
+                    'country_code' => 'NO',
+                    'country_id'   => 160,
+                    'locale'       => 'nn-no',
+                    'currency'     => 'NOK',
+                ];
             case 72:
-                $this->session->data[$this->moduleString . 'sco_locale'] = "fi-fi";
-                $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
-                $this->session->data['currency'] = 'EUR';
-                break;
+                return [
+                    'country_code' => 'FI',
+                    'country_id'   => 72,
+                    'locale'       => 'fi-fi',
+                    'currency'     => 'EUR',
+                ];
             case 57:
-                $this->session->data[$this->moduleString . 'sco_locale'] = "da-dk";
-                $this->session->data[$this->moduleString . 'sco_currency'] = "DKK";
-                $this->session->data['currency'] = 'DKK';
-                break;
+                return [
+                    'country_code' => 'DK',
+                    'country_id'   => 57,
+                    'locale'       => 'da-dk',
+                    'currency'     => 'DKK',
+                ];
             case 81:
-                $this->session->data[$this->moduleString . 'sco_locale'] = "de-de";
-                $this->session->data[$this->moduleString . 'sco_currency'] = "EUR";
-                $this->session->data['currency'] = 'EUR';
-                break;
+                return [
+                    'country_code' => 'DE',
+                    'country_id'   => 81,
+                    'locale'       => 'de-de',
+                    'currency'     => 'EUR',
+                ];
             default:
-                $this->session->data[$this->moduleString . 'sco_locale'] = "sv-se";
-                $this->session->data[$this->moduleString . 'sco_currency'] = "SEK";
-                $this->session->data['currency'] = 'SEK';
-                break;
+                if (is_numeric($this->config->get('module_sco_checkout_default_country_id'))) {
+                    $default = $this->getDefaultCountry($this->config->get('module_sco_checkout_default_country_id'));
+                }
+
+                $parts = explode('-', $this->session->data['language']);
+                $country_code = !empty($parts[1]) ? $parts[1] : 'SE';
+
+                return [
+                    'country_code' => $country_code,
+                    'country_id'   => !empty($default['country_id']) ? $default['country_id'] : $this->config->get('module_sco_checkout_default_country_id'),
+                    'locale'       => !empty($default['locale']) ? $default['locale'] : $this->session->data['language'],
+                    'currency'     => !empty($default['currency']) ? $default['currency'] : $this->session->data['currency'],
+                ];
         }
-
-        $this->load->model('localisation/country');
-
-        $countryCode = $this->model_localisation_country->getCountry($country);
-
-        $this->session->data[$this->moduleString . 'sco_country'] = $countryCode['iso_code_2'];
-        $this->session->data[$this->moduleString . 'sco_country_id'] = $country;
     }
 
     public function getCheckoutCountry()
     {
-        $this->setVersionStrings();
-
         switch ($this->session->data['language']) {
             case 'sv-se':
-                return 203;
+                $settings = $this->getDefaultCountry(203);
             case 'nn-no':
-                return 160;
+                $settings = $this->getDefaultCountry(160);
             case 'fi-fi':
-                return 72;
+                $settings = $this->getDefaultCountry(72);
             case 'da-dk':
-                return 57;
+                $settings = $this->getDefaultCountry(57);
             case 'de-de':
-                return 81;
+                $settings = $this->getDefaultCountry(81);
             default:
-                return $this->config->get($this->moduleString . 'sco_checkout_default_country_id');
+                $settings = $this->getDefaultCountry();
         }
+
+        $this->session->data['svea_checkout']['country_code'] = $settings['country_code'];
+        $this->session->data['svea_checkout']['country_id'] = $settings['country_id'];
+        $this->session->data['svea_checkout']['locale'] = $settings['locale'];
+        $this->session->data['svea_checkout']['currency'] = $settings['currency'];
+        $this->session->data['currency'] = $settings['currency'];
     }
 
     public function index()
@@ -102,7 +119,7 @@ class ControllerExtensionSveaCheckout extends Controller
         }
         /* Check status - end */
 
-        $this->setCheckoutCountry($this->getCheckoutCountry());
+        $this->getCheckoutCountry();
 
         $data['status_default_checkout'] = $this->config->get($this->moduleString . 'sco_status_checkout');
         $data['status_test_mode'] = $this->config->get($this->moduleString . 'sco_test_mode');

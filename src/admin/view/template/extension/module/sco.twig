@@ -129,11 +129,15 @@
                                 <div class="col-sm-10" style="padding-top:15px">
                                     <select name="module_sco_checkout_default_country_id" class="form-control">
                                         {% for country in countries %}
-                                        {% if country.country_id  ==  module_sco_checkout_default_country_id %}
-                                        <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
-                                         {% else %}
-                                        <option value="{{ country.country_id }}">{{ country.name }}</option>
-                                        {% endif %}
+                                            {% if country.country_id == module_sco_checkout_default_country_id %}
+                                            <option value="{{ country.country_id }}" selected="selected">
+                                                {{ country.name }}
+                                            </option>
+                                            {% else %}
+                                            <option value="{{ country.country_id }}">
+                                                {{ country.name }}
+                                            </option>
+                                            {% endif %}
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -811,10 +815,14 @@
                                     <div class="col-sm-10">
                                         <select name="module_sco_checkout_default_country_id" class="form-control">
                                             {% for country in countries %}
-                                                {% if country.country_id  ==  module_sco_checkout_default_country_id %}
-                                                    <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
+                                                {% if country.country_id == module_sco_checkout_default_country_id %}
+                                                <option value="{{ country.country_id }}" selected="selected">
+                                                    {{ country.name }}
+                                                </option>
                                                 {% else %}
-                                                    <option value="{{ country.country_id }}">{{ country.name }}</option>
+                                                <option value="{{ country.country_id }}">
+                                                    {{ country.name }}
+                                                </option>
                                                 {% endif %}
                                             {% endfor %}
                                         </select>

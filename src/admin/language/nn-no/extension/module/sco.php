@@ -29,6 +29,7 @@ $_['entry_sweden']                  = 'Sverige';
 $_['entry_norway']                  = 'Norge';
 $_['entry_finland']                 = 'Finland';
 $_['entry_denmark']                 = 'Danmark';
+$_['entry_germany']                 = 'Tyskland';
 
 $_['entry_stage_environment']       = 'Stage/Testmiljø';
 $_['entry_prod_environment']        = 'Produksjonsmiljø';

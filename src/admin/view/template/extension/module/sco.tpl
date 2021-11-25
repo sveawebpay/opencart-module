@@ -137,11 +137,15 @@
                                 <div class="col-sm-10">
                                     <select name="sco_checkout_default_country_id" class="form-control">
                                         <?php foreach ($countries as $country) { ?>
-                                        <?php if ($country['country_id'] == $sco_checkout_default_country_id) { ?>
-                                        <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-                                        <?php } else { ?>
-                                        <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-                                        <?php } ?>
+                                            <?php if ($country['country_id'] == $sco_checkout_default_country_id) { ?>
+                                                <option value="<?php echo $country['country_id']; ?>" selected="selected">
+                                                    <?php echo $country['name']; ?>
+                                                </option>
+                                            <?php } else { ?>
+                                                <option value="<?php echo $country['country_id']; ?>">
+                                                    <?php echo $country['name']; ?>
+                                                </option>
+                                            <?php } ?>
                                         <?php } ?>
                                     </select>
                                 </div>
