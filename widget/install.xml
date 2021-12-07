@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Svea - Widget for monthly cost</name>
+    <version>1.0</version>
+    <author>David Villa</author>
+    <link>https://www.svea.com/</link>
+    <code>svea_widget_monthly_cost</code>
+    <description>Show monthly cost on product page</description>
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA[if ($product_info) {]]></search>
+            <add position="before"><![CDATA[
+                // Modification for Svea Checout Widget
+                $this->load->model('extension/svea/widget');
+                $data['svea_widget'] = $this->model_extension_svea_widget->calculate_montly_cost($product_info);
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/product.twig">
+        <operation>
+            <search><![CDATA[{% if minimum > 1 %}]]></search>
+            <add position="after" offset="2"><![CDATA[
+                {% if svea_widget %}
+                    {{ svea_widget }}
+                {% endif %}
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[{# svea-widget #}]]></search>
+            <add position="replace"><![CDATA[
+                {% if svea_widget %}
+                    {{ svea_widget }}
+                {% endif %}
+            ]]></add>
+        </operation>
+    </file>
+</modification>

@@ -17,8 +17,8 @@
 
 ## OpenCart - Svea Checkout and Svea payment modules
 
-* Supports OpenCart 2.3.0.2 - 3.0.3.7 (older versions can be found in the branches)
-* Requires PHP 5.4 or higher
+* Supports OpenCart 3.0.0.0 - 3.0.3.7 (older versions can be found in the branches)
+* Requires PHP 7.3 or higher
 
 Features:
 
@@ -132,16 +132,27 @@ To fix this you have to go in to your database and to the table oc_order and fin
 
 
 ## 2.3 Product Price Widget <a name="i2-3"></a>
-
 Enabling the product price widget on either Svea Checkout, Svea Invoice or Svea Part payment will result in a "price box" appearing on the product page.
 
-Only applicable in Sweden, Norway, Finland.
-
-Note! Requires [vQmod](https://github.com/vqmod).
+Note! Only applicable in Sweden, Norway, Finland.
 
 Example:
 
 ![Product price widget](docs/Widget.png "Product price widget")
+
+### 2.3.1 Install the Product Price Widget
+The extension uses OCMod to insert the price widget on the product page. You need to install OCMod manually:
+* Under _Extensions -> Installer_, click on _Upload_.
+* Select _widget.ocmod.zip_ from the folder "widget/".
+* Under _Extensions -> Modifications_, click on _Refresh_.
+
+If you have a custom theme and the widget is not visible, you probably need to modify the following file and specify where to place the widget:
+
+`catalog/view/theme/[YOUR THEME]/template/product/product.twig`
+
+Insert the following code where you want to place the widget:
+
+`{# svea-widget #}`
 
 ## 2.4 Important information <a name="i2-4"></a>
 
