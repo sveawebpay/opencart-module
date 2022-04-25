@@ -46,7 +46,11 @@ class ControllerExtensionSveaSuccess extends Controller
             }
 
             $checkout_entry = \Svea\WebPay\WebPay::checkout($config);
-            $checkout_entry->setCountryCode($this->session->data[$this->moduleString . 'sco_country']);
+
+            if (!empty($this->session->data['svea_checkout']['country_code'])) {
+                $checkout_entry->setCountryCode($this->session->data['svea_checkout']['country_code']);
+            }
+
             $checkout_entry->setCheckoutOrderId($module_sco_order_id);
 
             try {

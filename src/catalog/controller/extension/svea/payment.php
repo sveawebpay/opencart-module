@@ -222,26 +222,26 @@ class ControllerExtensionSveaPayment extends SveaCommon
         $config_terms_uri_secured = $this->config->get($this->moduleString . 'sco_checkout_terms_uri_secured');
         $config_terms_uri = $this->config->get($this->moduleString . 'sco_checkout_terms_uri');
 
-        if ($config_terms_uri != "") {
+        if (!empty($config_terms_uri)) {
             $terms_uri =  $this->createUrl($config_terms_uri, $config_terms_uri_secured);
         }
 
-        if ($this->session->data['svea_checkout']['currency']) {
+        if (!empty($this->session->data['svea_checkout']['currency'])) {
             $currency = strtoupper($this->session->data['svea_checkout']['currency']);
         } else {
             $currency = strtoupper($this->session->data['currency']);
         }
 
-        if ($this->session->data['svea_checkout']['locale']) {
+        if (!empty($this->session->data['svea_checkout']['locale'])) {
             $locale = strtolower($this->session->data['svea_checkout']['locale']);
         } else {
             $locale = strtolower($this->session->data['language']);
         }
 
-        if ($this->session->data['svea_checkout']['country_code']) {
+        if (!empty($this->session->data['svea_checkout']['country_code'])) {
             $country_code = strtoupper($this->session->data['svea_checkout']['country_code']);
         } else {
-            $country_code = 'GB';
+            $country_code = 'SE';
         }
 
         $cookie_name = (session_name()) ? session_name() : 'OCSESSID';
