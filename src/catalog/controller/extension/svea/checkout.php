@@ -73,22 +73,22 @@ class ControllerExtensionSveaCheckout extends Controller
         switch ($this->session->data['language']) {
             case 'sv-se':
                 $settings = $this->getDefaultCountry(203);
-                return;
+                break;
             case 'nn-no':
                 $settings = $this->getDefaultCountry(160);
-                return;
+                break;
             case 'fi-fi':
                 $settings = $this->getDefaultCountry(72);
-                return;
+                break;
             case 'da-dk':
                 $settings = $this->getDefaultCountry(57);
-                return;
+                break;
             case 'de-de':
                 $settings = $this->getDefaultCountry(81);
-                return;
+                break;
             default:
                 $settings = $this->getDefaultCountry();
-                return;
+                break;
         }
 
         $this->session->data['svea_checkout']['country_code'] = $settings['country_code'];

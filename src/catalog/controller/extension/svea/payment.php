@@ -26,7 +26,9 @@ class ControllerExtensionSveaPayment extends SveaCommon
         unset($this->session->data[$this->paymentString . 'svea_last_page']);
         unset($this->session->data[$this->moduleString . 'sco_success_order_id']);
 
-        $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id']) ? $this->session->data[$this->moduleString . 'sco_order_id'] : null;
+        $module_sco_order_id = isset($this->session->data[$this->moduleString . 'sco_order_id'])
+            ? $this->session->data[$this->moduleString . 'sco_order_id']
+            : null;
 
         $config = new OpencartSveaCheckoutConfig($this, 'checkout');
 
@@ -63,7 +65,9 @@ class ControllerExtensionSveaPayment extends SveaCommon
             unset($module_sco_order_id);
         }
 
-        $email = isset($this->request->post['email']) ? $this->request->post['email'] : null;
+        $email = isset($this->request->post['email'])
+            ? $this->request->post['email']
+            : null;
 
         if (isset($this->session->data['order_id'])) {
             $query_response = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id='" . $this->db->escape($this->session->data['order_id']) . "';")->row;
@@ -74,7 +78,9 @@ class ControllerExtensionSveaPayment extends SveaCommon
             }
         }
 
-        $order_id = (isset($this->session->data['order_id'])) ? (int)$this->session->data['order_id'] : null;
+        $order_id = (isset($this->session->data['order_id']))
+            ? (int)$this->session->data['order_id']
+            : null;
 
         $this->load->language('extension/svea/checkout');
 
