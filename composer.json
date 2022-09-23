@@ -1,0 +1,39 @@
+{
+    "name": "sveawebpay/opencart-module",
+    "description": "Payment extension for OpenCart",
+    "repositories": [
+        {
+            "type":"package",
+            "package": {
+                "name": "sveaekonomi/checkout",
+                "version":"master",
+                "source": {
+                    "url": "https://github.com/sveawebpay/php-checkout.git",
+                    "type": "git",
+                    "reference":"master"
+                }
+            }
+        },
+        {
+            "type":"package",
+            "package": {
+                "name": "sveaekonomi/webpay",
+                "version":"master",
+                "source": {
+                    "url": "https://github.com/sveawebpay/php-integration.git",
+                    "type": "git",
+                    "reference":"master"
+                }
+            }
+        }
+    ],
+    "require": {
+        "sveaekonomi/checkout": "master",
+        "sveaekonomi/webpay": "master"
+    },
+    "config": {
+        "vendor-dir": "src/svea/"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable" : true
+}
