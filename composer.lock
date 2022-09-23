@@ -1,0 +1,39 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "93baffcc250ca6cbd40eb8b9d006a5d7",
+    "packages": [
+        {
+            "name": "sveaekonomi/checkout",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sveawebpay/php-checkout.git",
+                "reference": "master"
+            },
+            "type": "library"
+        },
+        {
+            "name": "sveaekonomi/webpay",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sveawebpay/php-integration.git",
+                "reference": "master"
+            },
+            "type": "library"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}
