@@ -37,11 +37,14 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon
         $this->load->language('extension/payment/svea_directbank');
 
         //Testmode
-        $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
+        $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1)
+            ? new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')
+            : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
 
         try {
-            $svea = \Svea\WebPay\WebPay::getPaymentMethods($conf);
-            $data[$this->paymentString . 'sveaMethods'] = $svea->setContryCode($order_info['payment_iso_code_2'])->doRequest();
+            $svea = \Svea\WebPay\WebPay::listPaymentMethods($conf);
+            $response = $svea->setCountryCode($order_info['payment_iso_code_2'])->doRequest();
+            $data[$this->paymentString . 'sveaMethods'] = $response->paymentmethods;
         } catch (Exception $e) {
             $this->log->write($e->getMessage());
             $response = array("error" => $this->responseCodes(0, $e->getMessage()));
