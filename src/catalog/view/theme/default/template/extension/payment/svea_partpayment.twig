@@ -294,7 +294,7 @@
                     //--></script>
                     <script>
 $(document).ready(function () {
-    if( $('#collapse-checkout-confirm').html().length > 0) {
+    if($('#collapse-checkout-confirm').length > 0 && $('#collapse-checkout-confirm').html().length > 0) {
         var country = $('#input-payment-country option:selected').text();
         /// only execute for finland
         if (country === 'Finland') {
