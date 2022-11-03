@@ -84,7 +84,7 @@ class ControllerExtensionPaymentSveainvoice extends SveaCommon
 
     private function responseCodes($err, $msg = "")
     {
-        $this->load->language('payment/svea_invoice');
+        $this->load->language('extension/payment/svea_invoice');
 
         $definition = $this->language->get("response_$err");
         if (preg_match("/^response/", $definition)) {

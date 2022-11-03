@@ -34,7 +34,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon
         $data['logo'] = "";
         $data[$this->paymentString . 'svea_banks_base'] = "admin/view/image/payment/svea_direct/";
 
-        $this->load->language('payment/svea_directbank');
+        $this->load->language('extension/payment/svea_directbank');
 
         //Testmode
         $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
@@ -209,7 +209,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon
         $this->setVersionStrings();
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/svea_directbank');
-        $this->load->language('payment/svea_directbank');
+        $this->load->language('extension/payment/svea_directbank');
 
         $conf = ($this->config->get($this->paymentString . 'svea_directbank_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_directbank')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_directbank');
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
@@ -238,7 +238,7 @@ class ControllerExtensionPaymentSveadirectbank extends SveaCommon
     {
         $err = (phpversion()>= 5.3) ? $err = strstr($err, "(", true) : $err = mb_strstr($err, "(", true);
 
-        $this->load->language('payment/svea_directbank');
+        $this->load->language('extension/payment/svea_directbank');
 
         $definition = $this->language->get("response_$err");
 
