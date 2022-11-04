@@ -191,7 +191,7 @@ class ControllerExtensionPaymentSveacard extends SveaCommon
 
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/svea_card');
-        $this->load->language('payment/svea_card');
+        $this->load->language('extension/payment/svea_card');
 
         $conf = ($this->config->get($this->paymentString . 'svea_card_testmode') == 1) ? (new OpencartSveaConfigTest($this->config, $this->paymentString . 'svea_card')) : new OpencartSveaConfig($this->config, $this->paymentString . 'svea_card');
         $resp = new \Svea\WebPay\Response\SveaResponse($_REQUEST, 'SE', $conf); //HostedPaymentResponse. Countrycode not important on hosted payments.
@@ -234,6 +234,10 @@ class ControllerExtensionPaymentSveacard extends SveaCommon
     private function responseCodes($err, $msg = "")
     {
         $err = (phpversion()>= 5.3) ? $err = strstr($err, "(", true) : $err = mb_strstr($err, "(", true);
+
+        if (empty($err) && $msg === "Response is not recognized.") {
+            $err = 108;
+        }
 
         $this->load->language('extension/payment/svea_card');
 

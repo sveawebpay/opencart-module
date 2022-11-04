@@ -1,7 +1,4 @@
 .DS_Store
 .idea
-src/svea/**/.git
-src/svea/composer/*
-src/svea/autoload.php
 composer.json
 composer.lock

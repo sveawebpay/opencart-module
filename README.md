@@ -17,7 +17,7 @@
 
 ## OpenCart - Svea Checkout and Svea payment modules
 
-* Supports OpenCart 3.0.0.0 - 3.0.3.7 (older versions can be found in the branches)
+* Supports OpenCart 3.0.0.0 - 3.0.3.8 (older versions can be found in the branches)
 * Requires PHP 7.3 or higher
 
 Features:

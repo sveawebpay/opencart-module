@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'sveawebpay/opencart-module',
+        'pretty_version' => '4.12.5.x-dev',
+        'version' => '4.12.5.9999999-dev',
+        'reference' => 'cf90001cbf11575b40085b0cc18255a1d339a6a2',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'sveaekonomi/checkout' => array(
+            'pretty_version' => '1.3.1',
+            'version' => '1.3.1.0',
+            'reference' => '73c58e6603aa272e32d3f5fa7a04e831b9cc27f4',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../sveaekonomi/checkout',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'sveaekonomi/webpay' => array(
+            'pretty_version' => '3.13.1',
+            'version' => '3.13.1.0',
+            'reference' => '68b0a2c0de3e44fc2c6141022a33691af1bff713',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../sveaekonomi/webpay',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'sveawebpay/opencart-module' => array(
+            'pretty_version' => '4.12.5.x-dev',
+            'version' => '4.12.5.9999999-dev',
+            'reference' => 'cf90001cbf11575b40085b0cc18255a1d339a6a2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);
