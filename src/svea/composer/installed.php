@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'sveawebpay/opencart-module',
-        'pretty_version' => '4.12.5.x-dev',
-        'version' => '4.12.5.9999999-dev',
-        'reference' => 'cf90001cbf11575b40085b0cc18255a1d339a6a2',
+        'pretty_version' => '4.12.6.x-dev',
+        'version' => '4.12.6.9999999-dev',
+        'reference' => 'e93103c5ef6c6fefde00c5f39914d0fae2adf5e5',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'sveawebpay/opencart-module' => array(
-            'pretty_version' => '4.12.5.x-dev',
-            'version' => '4.12.5.9999999-dev',
-            'reference' => 'cf90001cbf11575b40085b0cc18255a1d339a6a2',
+            'pretty_version' => '4.12.6.x-dev',
+            'version' => '4.12.6.9999999-dev',
+            'reference' => 'e93103c5ef6c6fefde00c5f39914d0fae2adf5e5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../../',
             'aliases' => array(),
