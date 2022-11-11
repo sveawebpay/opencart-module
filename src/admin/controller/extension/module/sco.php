@@ -326,7 +326,7 @@ class ControllerExtensionModuleSco extends Controller
         $data['tab_order_statuses'] = $this->language->get('tab_order_statuses');
 
         // General
-        $data['version'] = VERSION;
+        $data['version'] = floatval(VERSION);
         $data['entry_version_text'] = $this->language->get('entry_version_text');
         $data['entry_version'] = $this->language->get('entry_version');
         $data['entry_version_info'] = $this->language->get('entry_version_info');
