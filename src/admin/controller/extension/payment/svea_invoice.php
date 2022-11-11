@@ -232,7 +232,7 @@ class ControllerExtensionPaymentSveaInvoice extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $data['version'] = VERSION;
+        $data['version'] = floatval(VERSION);
 
         // Add order statuses
         $this->load->model('localisation/order_status');
