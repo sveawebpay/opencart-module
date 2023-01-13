@@ -34,7 +34,7 @@ class ControllerExtensionSveaSuccess extends Controller
         }
 
         if ($order_id && $hash) {
-            $query = $this->db->query("SELECT `checkout_id` FROM " . DB_PREFIX . "svea_sco_order WHERE order_id = '" . $this->db->escape((int)$order_id) . "'");
+            $query = $this->db->query("SELECT `checkout_id` FROM `" . DB_PREFIX . "svea_sco_order` WHERE order_id = '" . $this->db->escape((int)$order_id) . "'");
             $module_sco_order_id = (int)$query->row['checkout_id'];
         }
 

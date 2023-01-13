@@ -167,7 +167,7 @@ class ControllerExtensionPaymentSveacard extends SveaCommon
         if ($response->resultcode !== '0') {
             if ($response->accepted === 1) {
                 $cleanClientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bug fix for gateway concatenating ".err" on transactionId
-                $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
+                $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
 
                 if ($currentOpencartOrderStatus['order_status_id'] == 0) {
                     $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber, $this->config->get('config_order_status_id'), 'Svea transactionId: '.$response->transactionId, false);
@@ -199,7 +199,7 @@ class ControllerExtensionPaymentSveacard extends SveaCommon
 
         if ($response->accepted === 1) {
             $cleanClientOrderNumber = str_replace('.err', '', $response->clientOrderNumber);//bug fix for gateway concatenating ".err" on transactionId
-            $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
+            $currentOpencartOrderStatus = $this->db->query("SELECT order_status_id FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $this->db->escape((int)$cleanClientOrderNumber) . "'")->row;
 
             if ($currentOpencartOrderStatus != null && $currentOpencartOrderStatus['order_status_id'] == 0) {
                 $this->model_checkout_order->addOrderHistory($cleanClientOrderNumber, $this->config->get('config_order_status_id'), 'Svea transactionId: '.$response->transactionId, false);

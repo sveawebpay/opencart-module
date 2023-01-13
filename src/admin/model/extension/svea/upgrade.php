@@ -30,10 +30,10 @@ class ModelExtensionSveaUpgrade extends Model
             )   ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
             ');
 
-        $versionQuery = $this->db->query("SELECT version FROM " . DB_PREFIX . "svea_version WHERE module = '$module'");
+        $versionQuery = $this->db->query("SELECT version FROM `" . DB_PREFIX . "svea_version` WHERE module = '$module'");
 
         if ($versionQuery->num_rows == 0) {
-            $this->db->query("INSERT INTO " . DB_PREFIX . "svea_version SET module = '$module', version = 0");
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "svea_version` SET module = '$module', version = 0");
             $version = 0;
         } else {
             $version = $versionQuery->row['version'];
@@ -44,7 +44,7 @@ class ModelExtensionSveaUpgrade extends Model
                 case 'svea_partpayment':
                     $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_params_table'");
                     if ($tableExists->num_rows) {
-                        $this->db->query("ALTER TABLE " . DB_PREFIX . "svea_params_table MODIFY interestRatePercent DOUBLE NOT NULL  ");
+                        $this->db->query("ALTER TABLE `" . DB_PREFIX . "svea_params_table` MODIFY interestRatePercent DOUBLE NOT NULL  ");
                     }
                     break;
                 case 'sco':
@@ -82,7 +82,7 @@ class ModelExtensionSveaUpgrade extends Model
                     if ($tableExists->num_rows) {
                         $tableExists = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "svea_wp_campaigns'");
                         if (!$tableExists->num_rows) {
-                            $this->db->query("ALTER TABLE " . DB_PREFIX . "svea_params_table RENAME TO " . DB_PREFIX . "svea_wp_campaigns");
+                            $this->db->query("ALTER TABLE `" . DB_PREFIX . "svea_params_table` RENAME TO `" . DB_PREFIX . "svea_wp_campaigns`");
                         }
                     }
                     break;
