@@ -70,7 +70,7 @@ class ControllerExtensionSveaPayment extends SveaCommon
             : null;
 
         if (isset($this->session->data['order_id'])) {
-            $query_response = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id='" . $this->db->escape($this->session->data['order_id']) . "';")->row;
+            $query_response = $this->db->query("SELECT order_status_id FROM `" . DB_PREFIX . "order` WHERE order_id='" . $this->db->escape($this->session->data['order_id']) . "';")->row;
             if ($query_response['order_status_id'] != 0) {
                 unset($this->session->data['order_id']);
                 unset($this->session->data[$this->moduleString . 'sco_order_id']);

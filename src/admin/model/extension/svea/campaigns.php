@@ -53,7 +53,7 @@ class ModelExtensionSveaCampaigns extends Model
 
     public function fetchScoCountries($countryString)
     {
-        $countries = $this->db->query("SELECT `key`, `value` FROM " . DB_PREFIX . "setting WHERE `key` LIKE " . $countryString . ";");
+        $countries = $this->db->query("SELECT `key`, `value` FROM `" . DB_PREFIX . "setting` WHERE `key` LIKE " . $countryString . ";");
         return $countries;
     }
 

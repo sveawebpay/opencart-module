@@ -18,7 +18,7 @@ class ModelExtensionPaymentSveaInvoice extends Model
         $this->setVersionStrings();
 
         if ($this->config->get($this->paymentString . 'svea_invoice_status')) {
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get($this->paymentString . 'svea_invoice_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE geo_zone_id = '" . (int)$this->config->get($this->paymentString . 'svea_invoice_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
             if (!$this->config->get($this->paymentString . 'svea_invoice_geo_zone_id')) {
                 $status = true;
@@ -72,7 +72,7 @@ class ModelExtensionPaymentSveaInvoice extends Model
     {
         $this->setVersionStrings();
 
-        $query = $this->db->query("SELECT country_id, name FROM " . DB_PREFIX . "country WHERE status = '1' AND iso_code_2 = '$countryCode' ORDER BY name ASC");
+        $query = $this->db->query("SELECT country_id, name FROM `" . DB_PREFIX . "country` WHERE status = '1' AND iso_code_2 = '$countryCode' ORDER BY name ASC");
         $country = $query->rows;
 
         return array("country_id" => $country[0]['country_id'], "country_name" => $country[0]['name']);

@@ -58,7 +58,7 @@ class ModelExtensionSveaEvents extends Model
 
         $this->load->model($this->eventString);
 
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "event WHERE `code` = '" . $this->db->escape($code) . "'");
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "event` WHERE `code` = '" . $this->db->escape($code) . "'");
 
         if (count($query->rows) === 0) {
             if (VERSION < 3.0) {
@@ -71,7 +71,7 @@ class ModelExtensionSveaEvents extends Model
 
     private function getExtensions($type)
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension WHERE `type` = '" . $this->db->escape($type) . "'");
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension` WHERE `type` = '" . $this->db->escape($type) . "'");
 
         return $query->rows;
     }

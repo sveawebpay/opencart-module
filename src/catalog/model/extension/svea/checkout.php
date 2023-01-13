@@ -18,7 +18,7 @@ class ModelExtensionSveaCheckout extends Model
     public function getCountryCode($checkout_order_id)
     {
         $checkout_order_id = (int)$checkout_order_id;
-        $query = $this->db->query("SELECT currency FROM " . DB_PREFIX . "svea_sco_order WHERE checkout_id = '" . $checkout_order_id . "'");
+        $query = $this->db->query("SELECT currency FROM `" . DB_PREFIX . "svea_sco_order` WHERE checkout_id = '" . $checkout_order_id . "'");
 
         if ($query->num_rows !== 0) {
             if ($query->row['currency'] == "NOK") {
@@ -515,7 +515,7 @@ class ModelExtensionSveaCheckout extends Model
     public function addInvoiceFee($data)
     {
         if (is_array($data['cart']['items']) || is_object($data['cart']['items'])) {
-            $totals = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$data['clientordernumber'] . "' ORDER BY sort_order");
+            $totals = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$data['clientordernumber'] . "' ORDER BY sort_order");
 
             foreach ($data['cart']['items'] as $order_row) {
                 if ($order_row['articlenumber'] == "6eaceaec-fffc-41ad-8095-c21de609bcfd") {
