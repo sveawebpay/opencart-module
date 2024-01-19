@@ -27,9 +27,13 @@ class ControllerExtensionSveaShipping extends Controller
 
         $address = array(
             'postcode'   => $postcode,
-            'country_id' => isset($this->session->data[$this->moduleString . 'sco_country_id']) ? strtoupper($this->session->data[$this->moduleString . 'sco_country_id']) : $this->config->get('config_country_id'),
+            'country_id' => isset($this->session->data['svea_checkout']['country_id'])
+                ? strtoupper($this->session->data['svea_checkout']['country_id'])
+                : $this->config->get('config_country_id'),
             'zone_id'    => $this->config->get('config_zone_id'),
-            'iso_code_2' => isset($this->session->data[$this->moduleString . 'sco_country']) ? $this->session->data[$this->moduleString . 'sco_country'] : strtoupper($this->language->get('code')),
+            'iso_code_2' => isset($this->session->data['svea_checkout']['country_code'])
+                ? $this->session->data['svea_checkout']['country_code']
+                : strtoupper($this->language->get('code')),
         );
 
         $json = array();
@@ -44,7 +48,7 @@ class ControllerExtensionSveaShipping extends Controller
         }
 
         foreach ($results as $result) {
-            if ($this->config->get($this->shippingString .$result['code'] . '_status')) {
+            if ($this->config->get($this->shippingString . $result['code'] . '_status')) {
                 $this->load->model('extension/shipping/' . $result['code']);
                 $quote = $this->{'model_extension_shipping_' . $result['code']}->getQuote($address);
 
