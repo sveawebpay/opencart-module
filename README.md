@@ -7,6 +7,7 @@
     * [1.3 Standalone payment methods](#i1-3)
     * [1.4 Svea Invoice Fee](#i1-4)
     * [1.5 Additional information](#i1-5)
+    * [1.6 Domain verification file](#i1-6)
 * [2. Miscellaneous](#i2)
     * [2.1 Administrating orders](#i2-1)
     * [2.2 Troubleshooting and recommendations](#i2-2)
@@ -17,7 +18,7 @@
 
 ## OpenCart - Svea Checkout and Svea payment modules
 
-* Supports OpenCart 3.0.0.0 - 3.0.3.9 (older versions can be found in the branches)
+* Supports OpenCart 3.0.0.0 - 3.0.5.0 (older versions can be found in the branches)
 * Requires PHP 7.3 or higher
 
 Features:
@@ -77,6 +78,22 @@ If you are using the regular the standalone Svea Invoice payment method, follow 
 
 ### Hide Svea comments
 It's possible to hide the comments added by the module by enabling "Hide Svea comments" on the administration page of the payment method. This will however not hide messages that contain critical information, for example invoiceIds or contractNumbers.
+
+## 1.6 Domain verification file <a name="i1-6"></a>
+
+To enable Apple Pay domain verification, the domain verification file must be publicly accessible on the store domain.
+
+After installing the module, ensure the verification file is available at:
+
+```
+https://[DOMAIN_NAME]/.well-known/apple-developer-merchantid-domain-association
+```
+
+Requirements:
+
+- The file must be served over HTTPS
+- The exact filename must be preserved (no extensions)
+- Response header must include: `Content-Type: text/plain`
 
 # 2. Miscellaneous <a name="i2"></a>
 
